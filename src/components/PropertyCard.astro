@@ -1,0 +1,182 @@
+---
+// Tarjeta de depa reutilizable (Capital y home).
+// Props de siempre + opcionales: img (URL o imagen importada), imgAlt, href, priority
+import { waLink } from '../data/contacto'
+import HouseIcon from './HouseIcon.astro'
+
+const {
+  district, address, badge, price, monthlyPayment, estimatedRent,
+  img, imgAlt, href, priority = false,
+} = Astro.props
+
+// Formato de soles: 310000 → "S/ 310,000"
+const fmt = (n: number) =>
+  new Intl.NumberFormat('es-PE', { style: 'currency', currency: 'PEN', maximumFractionDigits: 0 }).format(n)
+
+// "Se paga sola" se calcula: solo aparece si la renta cubre la cuota
+const sePagaSola = estimatedRent >= monthlyPayment
+
+// Si no nos pasan href, la tarjeta abre WhatsApp con un mensaje ya escrito
+const link = href ?? waLink(`Hola, me interesa el depa de ${district} (${address}).`)
+const isWhatsApp = link.includes('wa.me')
+
+// img puede ser un texto (URL) o una imagen importada de src/assets (tiene .src)
+const imgSrc = typeof img === 'string' ? img : img?.src
+---
+<article class="card">
+  <!-- Imagen 16:9. Mientras no hay foto, se muestra un bloque con una casita -->
+  <div class="media">
+    {/* TODO: cuando haya fotos reales en src/assets, cambiar este <img> por <Picture /> de astro:assets (AVIF/WebP + tamaños) */}
+    {imgSrc ? (
+      <img
+        src={imgSrc}
+        alt={imgAlt ?? `Departamento en ${district}`}
+        width="640"
+        height="360"
+        loading={priority ? 'eager' : 'lazy'}
+        fetchpriority={priority ? 'high' : undefined}
+        decoding="async"
+      />
+    ) : (
+      <div class="placeholder" aria-hidden="true">
+        <HouseIcon />
+      </div>
+    )}
+    {badge && <span class="tag">{badge}</span>}
+  </div>
+
+  <div class="body">
+    <h3 class="title">
+      <!-- Este link cubre toda la tarjeta (ver a::after en el CSS) -->
+      <a href={link} target={isWhatsApp ? '_blank' : undefined} rel={isWhatsApp ? 'noopener noreferrer' : undefined}>
+        {district}{isWhatsApp && <span class="sr-only"> (consultar por WhatsApp)</span>}
+      </a>
+    </h3>
+    <p class="address">{address}</p>
+    <dl class="stats">
+      <div class="stat"><dt>valor</dt><dd>{fmt(price)}</dd></div>
+      <div class="stat"><dt>cuota est.*</dt><dd>{fmt(monthlyPayment)}</dd></div>
+      <div class="stat"><dt>renta est.*</dt><dd>{fmt(estimatedRent)}</dd></div>
+    </dl>
+  </div>
+
+  {sePagaSola && (
+    <p class="footer">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor"
+           stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="m3 8.5 3 3 7-7" />
+      </svg>
+      Se paga sola
+    </p>
+  )}
+</article>
+
+<style>
+  .card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: var(--color-surface);
+    border: var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    container-type: inline-size; /* para achicar los números si la tarjeta es angosta */
+    transition: box-shadow var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out);
+  }
+  .card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+  /* El anillo de foco va en toda la tarjeta, no solo en el título */
+  .card:has(a:focus-visible) { box-shadow: var(--focus-ring); }
+
+  /* ---------- Imagen 16:9 ---------- */
+  .media {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: var(--color-border-subtle);
+  }
+  .media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--dur-slow) var(--ease-out);
+  }
+  .card:hover .media img { transform: scale(1.03); }
+
+  .placeholder {
+    display: grid;
+    place-items: center;
+    height: 100%;
+    background: linear-gradient(135deg, var(--color-navy-50), var(--color-navy-100));
+    color: var(--color-navy-800);
+  }
+  /* :global porque el svg viene del componente HouseIcon */
+  .placeholder :global(svg) { width: 48px; height: 48px; opacity: 0.35; }
+
+  .tag {
+    position: absolute;
+    top: var(--space-3);
+    left: var(--space-3);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+    background: var(--color-navy-800);
+    color: var(--color-text-inverse);
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-bold);
+    letter-spacing: var(--ls-caps);
+    text-transform: uppercase;
+    line-height: 1.4;
+  }
+
+  /* ---------- Cuerpo ---------- */
+  .body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    flex: 1;
+    padding: var(--space-4);
+  }
+  @media (min-width: 1024px) { .body { padding: var(--space-5); } }
+
+  .title a { color: inherit; text-decoration: none; }
+  .title a::after { content: ''; position: absolute; inset: 0; } /* link que cubre la tarjeta */
+  .title a:focus-visible { box-shadow: none; }
+
+  .address { margin: 0; font-size: var(--fs-sm); color: var(--color-text-muted); }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin: var(--space-4) 0 0;
+  }
+  .stat { min-width: 0; }
+  .stat + .stat { border-left: var(--border-subtle); padding-left: var(--space-3); }
+  dt { font-size: 0.8125rem; color: var(--color-text-muted); }
+  dd {
+    margin: var(--space-1) 0 0;
+    font-size: var(--fs-stat);
+    font-weight: var(--fw-semibold);
+    color: var(--color-text-strong);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  @container (max-width: 300px) { dd { font-size: 0.9375rem; } }
+
+  /* ---------- "Se paga sola" ---------- */
+  .footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    margin: 0;
+    padding: var(--space-3);
+    border-top: var(--border-subtle);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-semibold);
+    color: var(--color-success);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card:hover,
+    .card:hover .media img { transform: none; }
+  }
+</style>

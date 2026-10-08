@@ -1,0 +1,20 @@
+---
+import PlaceholderLayout from '../layouts/PlaceholderLayout.astro'
+---
+<PlaceholderLayout title="Propietarios">
+  <!-- Los ids permiten llegar directo con /propietarios#vender y /propietarios#alquiler -->
+  <section id="vender" class="block">
+    <h2>Vende tu depa</h2>
+    <p>Te ayudamos a vender tu propiedad con el enfoque correcto.</p>
+  </section>
+
+  <section id="alquiler" class="block">
+    <h2>Ponlo en alquiler</h2>
+    <p>Nos encargamos de alquilar tu depa para que rinda.</p>
+  </section>
+</PlaceholderLayout>
+
+<style>
+  .block { margin-top: var(--space-12); }
+  .block p { color: var(--color-text-muted); }
+</style>

@@ -1,0 +1,97 @@
+---
+// Botón "Soy propietario" con un menú desplegable (patrón "disclosure").
+// Se abre con clic o tap; Esc o un clic afuera lo cierran.
+---
+<div class="owner" data-dropdown>
+  <button type="button" class="btn btn--primary owner-btn" aria-expanded="false" aria-controls="owner-menu">
+    Soy propietario
+    <svg class="chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"
+         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="m5 8 5 5 5-5" />
+    </svg>
+  </button>
+  <ul id="owner-menu" class="owner-menu" hidden>
+    <li><a href="/propietarios#vender">Vender mi propiedad <span aria-hidden="true">›</span></a></li>
+    <li><a href="/propietarios#alquiler">Poner en alquiler mi propiedad <span aria-hidden="true">›</span></a></li>
+  </ul>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-dropdown]').forEach((root) => {
+    const button = root.querySelector('button')
+    const menu = root.querySelector<HTMLElement>('ul')
+    if (!button || !menu) return
+
+    const setOpen = (open: boolean) => {
+      button.setAttribute('aria-expanded', String(open))
+      menu.hidden = !open
+    }
+    const isOpen = () => button.getAttribute('aria-expanded') === 'true'
+
+    button.addEventListener('click', () => setOpen(!isOpen()))
+
+    // Esc cierra y devuelve el foco al botón
+    root.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && isOpen()) {
+        setOpen(false)
+        button.focus()
+      }
+    })
+
+    // Clic fuera del dropdown: se cierra
+    document.addEventListener('click', (event) => {
+      if (!root.contains(event.target as Node)) setOpen(false)
+    })
+  })
+</script>
+
+<style>
+  .owner { position: relative; width: 100%; }
+  .owner-btn { width: 100%; }
+
+  .chevron {
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+  .owner-btn[aria-expanded='true'] .chevron { transform: rotate(180deg); }
+
+  /* Móvil: el menú se abre debajo, en línea (empuja el contenido) */
+  .owner-menu {
+    margin: var(--space-2) 0 0;
+    padding: var(--space-1);
+    list-style: none;
+    background: #fff;
+    border: var(--border);
+    border-radius: var(--radius-lg);
+  }
+  .owner-menu[hidden] { display: none; }
+
+  .owner-menu a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    min-height: var(--control-h-md); /* 48px */
+    padding: 0 var(--space-4);
+    border-radius: var(--radius-md);
+    color: var(--color-text);
+    font-weight: var(--fw-medium);
+    text-decoration: none;
+  }
+  .owner-menu a:hover { background: var(--color-navy-50); }
+
+  /* Desde 640px: panel flotante debajo del botón */
+  @media (min-width: 640px) {
+    .owner { width: auto; }
+    .owner-btn { width: auto; }
+    .owner-menu {
+      position: absolute;
+      top: calc(100% + var(--space-2));
+      left: 0;
+      z-index: var(--z-dropdown);
+      min-width: max(100%, 260px);
+      margin: 0;
+      white-space: nowrap; /* cada opción en una sola línea */
+      box-shadow: var(--shadow-dropdown);
+    }
+  }
+</style>

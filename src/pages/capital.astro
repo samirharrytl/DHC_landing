@@ -1,0 +1,266 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import PropertyCard from '../components/PropertyCard.astro'
+import PropertyGrid from '../components/PropertyGrid.astro'
+import Button from '../components/Button.astro'
+import Step from '../components/Step.astro'
+import WhatsAppIcon from '../components/WhatsAppIcon.astro'
+// Los depas vienen de un archivo compartido con la home
+import { depas, disclaimer } from '../data/depas'
+import { waLink } from '../data/contacto'
+
+const steps = [
+  { number: 1, title: 'Perfil', text: 'Cuéntanos tu cuota inicial y tus objetivos.' },
+  { number: 2, title: 'Match', text: 'Te mostramos los depas que mejor se ajustan a tu perfil.' },
+  { number: 3, title: 'Visita', text: 'Coordina la visita con el dueño del depa.' },
+  { number: 4, title: 'Firma', text: 'Elige tu inversión y firmamos.' },
+]
+
+// TODO: logos reales de aliados cuando haya permiso para usarlos. Por ahora, espacios de texto.
+const aliados = ['Aliado 1', 'Aliado 2', 'Aliado 3', 'Aliado 4', 'Aliado 5']
+---
+<BaseLayout title="Capital" description="DepaHost Capital: te armamos hasta 3 departamentos que calzan para invertir en Lima.">
+  <!-- ---------- Hero: "DepaHost Capital" es sub-marca, por eso solo va aquí ---------- -->
+  <section class="container hero" data-hero>
+    <p class="eyebrow">by Depa Host Perú</p>
+    <h1>DepaHost Capital</h1>
+    <p class="lead">Te armamos hasta 3 departamentos que calzan.</p>
+    <div class="btn-group ctas">
+      <!-- Es un link de WhatsApp, así que el botón sale verde automáticamente -->
+      <Button href={waLink('Hola, quiero empezar con DepaHost Capital.')}>Empezar por WhatsApp</Button>
+      <Button href="#como-funciona" variant="outline">Ver cómo funciona</Button>
+    </div>
+    
+  </section>
+  <!-- ---------- Cómo funciona ---------- -->
+  <section id="como-funciona" class="container section" aria-labelledby="pasos-title">
+    <h2 id="pasos-title">Cómo funciona</h2>
+    <ol class="stepper">
+      {steps.map((s) => <Step {...s} />)}
+    </ol>
+  </section>
+  <!-- ---------- Depas ---------- -->
+  <section class="container" aria-labelledby="depas-title">
+    <h2 id="depas-title" class="section-title">Depas que se pagan solos</h2>
+    <PropertyGrid>
+      {depas.map((d) => <PropertyCard {...d} />)}
+    </PropertyGrid>
+    <p class="disclaimer">{disclaimer}</p>
+
+    <!-- Toda la barra es un solo link -->
+    <a class="top10" href="#top-10">
+      <span>Los 10 depas para invertir ahora</span>
+      <span class="btn btn--secondary btn--sm top10-btn" aria-hidden="true">
+        <span class="long">Ver el top 10</span><span class="short">Ver</span> →
+      </span>
+    </a>
+  </section>
+
+
+
+  <!-- ---------- Top 10 (pendiente) ---------- -->
+  <section id="top-10" class="container" aria-labelledby="top10-title">
+    <h2 id="top10-title">Los 10 depas para invertir ahora</h2>
+    <p class="lead">Ranking en construcción.</p>
+  </section>
+
+  <!-- ---------- Aliados ---------- -->
+  <section class="container section allies" aria-labelledby="allies-title">
+    <h2 id="allies-title" class="allies-label">Aliados</h2>
+    <ul class="allies-list">
+      {aliados.map((nombre) => <li>{nombre}</li>)}
+    </ul>
+  </section>
+
+  <!-- ---------- Formulario en inglés ---------- -->
+  <section class="intl" lang="en" aria-labelledby="intl-title">
+    <div class="container intl-inner">
+      <div>
+        <h2 id="intl-title" class="intl-title">Also in English for international investors</h2>
+        <p class="intl-sub">We help you find high-yield rental apartments in Lima.</p>
+      </div>
+
+      <!-- TODO: definir qué hace este formulario (¿guardar datos en un CRM y/o abrir WhatsApp?).
+           Por ahora no tiene lógica de envío: action="#" a propósito. -->
+      <form class="intl-form" action="#" method="post" data-intl-form>
+        <div class="field">
+          <label for="intl-name">Full name</label>
+          <input id="intl-name" name="name" type="text" autocomplete="name" placeholder="e.g. Jane Smith" required />
+        </div>
+        <div class="field">
+          <label for="intl-email">Email</label>
+          <input id="intl-email" name="email" type="email" autocomplete="email" inputmode="email"
+                 placeholder="e.g. jane@email.com" required />
+        </div>
+        <div class="field">
+          <label for="intl-amount">Initial amount (USD)</label>
+          <div class="prefix">
+            <span aria-hidden="true">USD</span>
+            <input id="intl-amount" name="amount" type="text" inputmode="numeric" placeholder="e.g. 50,000" />
+          </div>
+        </div>
+        <button type="submit" class="btn btn--whatsapp submit">
+          <WhatsAppIcon />
+          Talk to us on WhatsApp
+        </button>
+      </form>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  // TODO: comportamiento del formulario pendiente de decisión de Samir
+  // (¿guardar datos en un CRM y/o abrir WhatsApp?). Mientras tanto NO se envía nada:
+  // preventDefault() evita que el navegador mande los datos o los ponga en la URL.
+  const form = document.querySelector<HTMLFormElement>('[data-intl-form]')
+  form?.addEventListener('submit', (event) => {
+    event.preventDefault()
+  })
+</script>
+
+<style>
+  /* ---------- Hero ---------- */
+  .hero { padding-block: var(--space-8) var(--space-10); }
+  .eyebrow {
+    margin: 0 0 var(--space-2);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-semibold);
+    color: var(--color-text-muted);
+  }
+  .ctas { margin-top: var(--space-6); }
+  @media (min-width: 1024px) {
+    .hero { padding-block: var(--space-16) var(--space-12); }
+  }
+
+  .section-title { margin-bottom: var(--space-6); }
+
+  /* ---------- Barra Top 10 ---------- */
+  .top10 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    min-height: 64px;
+    margin-top: var(--space-8);
+    padding: var(--space-3) var(--space-4);
+    border: var(--border-width-strong) solid var(--color-border-strong);
+    border-radius: var(--radius-md);
+    color: var(--color-text-strong);
+    font-weight: var(--fw-semibold);
+    text-decoration: none;
+    transition: background-color var(--dur-fast) var(--ease-out);
+  }
+  .top10:hover { background: var(--color-navy-50); }
+  .top10-btn { flex: none; }
+  .long { display: none; }
+
+  @media (min-width: 640px) {
+    .top10 { padding: var(--space-3) var(--space-6); font-size: 1.125rem; }
+    .long { display: inline; }
+    .short { display: none; }
+  }
+
+  /* ---------- Pasos ---------- */
+  /* Móvil: vertical (lo maneja Step). Desde 640px: 4 columnas */
+  .stepper {
+    margin: var(--space-8) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  @media (min-width: 640px) {
+    .stepper { display: grid; grid-template-columns: repeat(4, 1fr); }
+  }
+
+  /* ---------- Aliados ---------- */
+  .allies-label { font-size: 1.25rem; }
+  .allies-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-6);
+    margin: var(--space-4) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .allies-list li {
+    display: grid;
+    place-items: center;
+    min-height: 44px;
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius-md);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-semibold);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: var(--ls-caps);
+  }
+  @media (min-width: 640px) {
+    .allies-list { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (min-width: 1024px) {
+    .allies {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-8);
+    }
+    .allies-list {
+      display: flex;
+      flex: 1;
+      justify-content: space-between;
+      gap: 0;
+      margin: 0;
+    }
+    .allies-list li { flex: 1; border: 0; border-left: var(--border-subtle); border-radius: 0; }
+  }
+
+  /* ---------- Formulario en inglés ---------- */
+  .intl {
+    padding-block: var(--space-8);
+    background: var(--color-surface-alt);
+    border-top: var(--border-subtle);
+  }
+  .intl-inner { display: grid; gap: var(--space-6); }
+  .intl-title { font-size: 1.125rem; letter-spacing: 0; }
+  .intl-sub { margin: var(--space-1) 0 0; font-size: var(--fs-sm); color: var(--color-text-muted); }
+
+  .intl-form { display: grid; gap: var(--space-4); }
+  .field { display: flex; flex-direction: column; gap: var(--space-1); }
+  label { font-size: var(--fs-sm); font-weight: var(--fw-medium); color: var(--color-text); }
+
+  input {
+    width: 100%;
+    height: var(--control-h-md); /* 48px */
+    padding: 0 14px;
+    font-size: 16px; /* 16px evita que iOS haga zoom */
+    border: 1px solid var(--color-border-input);
+    border-radius: var(--radius-md);
+    background: #fff;
+    color: var(--color-text);
+  }
+  input:focus-visible { border-color: var(--color-navy-800); }
+
+  /* "USD" visual dentro del campo */
+  .prefix { position: relative; }
+  .prefix span {
+    position: absolute;
+    top: 50%;
+    left: 14px;
+    transform: translateY(-50%);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-semibold);
+    color: var(--color-text-muted);
+  }
+  .prefix input { padding-left: 52px; }
+
+  .submit { width: 100%; }
+
+  @media (min-width: 640px) {
+    .intl-form { grid-template-columns: repeat(2, 1fr); align-items: end; }
+    .submit { width: auto; }
+  }
+  @media (min-width: 1024px) {
+    .intl { padding-block: var(--space-6); }
+    .intl-inner { grid-template-columns: 1.4fr 4fr; align-items: end; gap: var(--space-3); }
+    .intl-form { grid-template-columns: 1fr 1fr 1fr auto; gap: var(--space-3); }
+  }
+</style>

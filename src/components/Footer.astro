@@ -1,0 +1,108 @@
+---
+// Footer compartido: banda navy con llamada a WhatsApp + fila legal
+import Logo from './Logo.astro'
+import Button from './Button.astro'
+import { waLink } from '../data/contacto'
+
+const year = new Date().getFullYear()
+const legalLinks = [
+  { href: '/nosotros', label: 'Nosotros' },
+  { href: '/privacidad', label: 'Política de privacidad' },
+  { href: '/terminos', label: 'Términos' },
+  { href: '/libro-de-reclamaciones', label: 'Libro de Reclamaciones' },
+]
+---
+<footer class="footer">
+  <!-- data-footer-cta: cuando esta banda se ve, se esconde el WhatsApp flotante -->
+  <div class="band" data-footer-cta>
+    <div class="container band-inner">
+      <Logo inverse />
+      <div class="band-text">
+        <p class="title">Cuéntanos qué quieres hacer con el depa.</p>
+        <p class="sub">Reserva, vende, alquila o invierte: te respondemos por WhatsApp.</p>
+      </div>
+      <Button href={waLink('Hola, les cuento qué quiero hacer con mi depa.')} class="band-btn">
+        Escribir por WhatsApp
+      </Button>
+    </div>
+  </div>
+
+  <div class="legal">
+    <div class="container legal-inner">
+      <nav aria-label="Legal">
+        <ul>
+          {legalLinks.map((link) => <li><a href={link.href}>{link.label}</a></li>)}
+        </ul>
+      </nav>
+      <!-- TODO: completar el RUC -->
+      <p>© {year} Depa Host Perú · RUC [pendiente] · depahostperu.com</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: var(--color-navy-900);
+    color: #fff;
+  }
+
+  /* ---------- Banda CTA ---------- */
+  .band { padding-block: var(--space-8); }
+  .band-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-4);
+    text-align: center;
+  }
+  .title { margin: 0; font-size: 1.25rem; font-weight: var(--fw-semibold); }
+  .sub { margin: var(--space-1) 0 0; font-size: 0.9375rem; color: var(--color-text-inverse-muted); }
+  .band-inner :global(.band-btn) { width: 100%; }
+
+  @media (min-width: 640px) {
+    .band-inner :global(.band-btn) { width: auto; }
+  }
+  @media (min-width: 1024px) {
+    .band { padding-block: var(--space-6); min-height: 96px; display: flex; align-items: center; }
+    .band-inner {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: var(--space-8);
+    }
+    .title { font-size: 1.375rem; }
+  }
+
+  /* ---------- Fila legal ---------- */
+  .legal {
+    border-top: 1px solid rgb(255 255 255 / 0.12);
+    padding-block: var(--space-4);
+    font-size: var(--fs-sm);
+    color: var(--color-text-inverse-muted);
+  }
+  .legal-inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .legal ul {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .legal a {
+    display: flex;
+    align-items: center;
+    min-height: var(--control-h-sm); /* 44px en móvil */
+    color: #fff;
+    text-decoration: none;
+  }
+  .legal a:hover { text-decoration: underline; }
+  .legal p { margin: 0; padding-block: var(--space-2); }
+
+  @media (min-width: 1024px) {
+    .legal-inner { flex-direction: row; justify-content: space-between; align-items: center; }
+    .legal ul { flex-direction: row; gap: var(--space-6); }
+  }
+</style>

@@ -1,0 +1,42 @@
+---
+// Contenedor de tarjetas de depas.
+// Móvil: carrusel horizontal (se desliza con el dedo) · Tablet: 2 columnas · Escritorio: 3 columnas
+const { label = 'Departamentos destacados' } = Astro.props
+---
+<div class="property-grid" role="region" aria-label={label} tabindex="0">
+  <slot />
+</div>
+
+<style>
+  .property-grid {
+    display: grid;
+    gap: var(--grid-gap);
+    /* Móvil: carrusel con scroll-snap (cada tarjeta "se acomoda" al soltar) */
+    grid-auto-flow: column;
+    grid-auto-columns: 85%;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+    /* que el carrusel llegue hasta el borde de la pantalla */
+    margin-inline: calc(-1 * var(--gutter));
+    padding-inline: var(--gutter);
+    scroll-padding-inline: var(--gutter);
+    padding-block: var(--space-1) var(--space-4); /* aire para la sombra y el foco */
+  }
+  /* :global porque las tarjetas vienen de otro componente (por el slot) */
+  .property-grid > :global(*) { scroll-snap-align: start; }
+
+  @media (min-width: 640px) {
+    .property-grid {
+      grid-auto-flow: row;
+      grid-auto-columns: auto;
+      grid-template-columns: repeat(2, 1fr);
+      overflow: visible;
+      margin-inline: 0;
+      padding-inline: 0;
+    }
+  }
+  @media (min-width: 1024px) {
+    .property-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>

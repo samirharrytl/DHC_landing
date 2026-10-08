@@ -1,0 +1,78 @@
+---
+// Layout base: todas las páginas lo usan para compartir <head>, header y footer
+import { Font } from 'astro:assets'
+import Header from '../components/Header.astro'
+import Footer from '../components/Footer.astro'
+// Primero los tokens (colores, tamaños…), después los estilos globales que los usan
+import '../styles/tokens.css'
+import '../styles/global.css'
+
+const {
+  title,
+  description = 'Depa Host Perú: reserva, vende, alquila o compra tu depa en Lima.',
+  lang = 'es',
+} = Astro.props
+
+const fullTitle = `${title} | Depa Host Perú`
+// URLs absolutas para redes sociales (usan "site" de astro.config.mjs)
+const pageUrl = new URL(Astro.url.pathname, Astro.site)
+// TODO: reemplazar /og-default.png por una imagen final de marca (1200×630)
+const ogImage = new URL('/og-default.png', Astro.site)
+---
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#012147" />
+
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Open Graph: cómo se ve el link al compartirlo en WhatsApp, Facebook, etc. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Depa Host Perú" />
+    <meta property="og:locale" content="es_PE" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={pageUrl} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Depa Host Perú: el depa en Lima, con la decisión correcta." />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Fuente Inter autoalojada (configurada en astro.config.mjs). preload = se descarga antes -->
+    <Font cssVariable="--font-inter" preload />
+  </head>
+  <body>
+    <!-- Marca invisible arriba de todo: cuando sale de pantalla, el header muestra su sombra -->
+    <div class="scroll-sentinel" data-scroll-sentinel aria-hidden="true"></div>
+
+    <!-- Primer elemento con foco: permite saltar el menú con el teclado -->
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+    <Header />
+    <main id="contenido">
+      <!-- Aquí entra el contenido de cada página -->
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>
+
+<style>
+  .scroll-sentinel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 8px; /* la sombra aparece al bajar más de 8px */
+    pointer-events: none;
+  }
+
+  /* En móvil dejamos aire abajo para que el botón flotante de WhatsApp no tape nada */
+  main { padding-bottom: var(--space-16); }
+  @media (min-width: 640px) { main { padding-bottom: 0; } }
+</style>

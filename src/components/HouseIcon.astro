@@ -1,0 +1,18 @@
+---
+// Casita de línea (decorativa). Se usa donde todavía no hay foto.
+const { strokeWidth = 1.5, class: className } = Astro.props
+---
+<svg
+  class={className}
+  viewBox="0 0 32 32"
+  fill="none"
+  stroke="currentColor"
+  stroke-width={strokeWidth}
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+>
+  <path d="M4 15 16 5l12 10" />
+  <path d="M8 13v14h16V13" />
+  <path d="M13 27v-7h6v7" />
+</svg>
