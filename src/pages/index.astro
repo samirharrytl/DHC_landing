@@ -61,23 +61,6 @@ const servicios = [
       </article>
     ))}
   </section>
-
-  <!-- ---------- Franja puente hacia Capital ---------- -->
-  <section class="container section bridge" aria-labelledby="bridge-title">
-    <div class="bridge-head">
-      <h2 id="bridge-title">Depas que se pagan solos</h2>
-      <p class="bridge-sub">La renta estimada cubre la cuota estimada.*</p>
-    </div>
-    <div class="bridge-grid">
-      <PropertyGrid>
-        {depas.map((d) => <PropertyCard {...d} />)}
-      </PropertyGrid>
-      <p class="disclaimer">{disclaimer}</p>
-    </div>
-    <div class="bridge-cta">
-      <Button href="/capital">Ver DepaHost Capital</Button>
-    </div>
-  </section>
 </BaseLayout>
 
 <style>

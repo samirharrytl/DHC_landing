@@ -10,10 +10,10 @@ import { depas, disclaimer } from '../data/depas'
 import { waLink } from '../data/contacto'
 
 const steps = [
-  { number: 1, title: 'Perfil', text: 'Cuéntanos tu cuota inicial y tus objetivos.' },
-  { number: 2, title: 'Match', text: 'Te mostramos los depas que mejor se ajustan a tu perfil.' },
-  { number: 3, title: 'Visita', text: 'Coordina la visita con el dueño del depa.' },
-  { number: 4, title: 'Firma', text: 'Elige tu inversión y firmamos.' },
+  { number: 1, title: 'Perfil', text: 'Cuéntanos tu inicial y objetivos.' },
+  { number: 2, title: 'Match', text: 'Te mostramos hasta 3 departamentos que calzan.' },
+  { number: 3, title: 'Visita', text: 'Coordinamos visitas a los que más te interesen.' },
+  { number: 4, title: 'Firma', text: 'Elegi tu inversión y firmamos.' },
 ]
 
 // TODO: logos reales de aliados cuando haya permiso para usarlos. Por ahora, espacios de texto.
@@ -22,22 +22,24 @@ const aliados = ['Aliado 1', 'Aliado 2', 'Aliado 3', 'Aliado 4', 'Aliado 5']
 <BaseLayout title="Capital" description="DepaHost Capital: te armamos hasta 3 departamentos que calzan para invertir en Lima.">
   <!-- ---------- Hero: "DepaHost Capital" es sub-marca, por eso solo va aquí ---------- -->
   <section class="container hero" data-hero>
-    <p class="eyebrow">by Depa Host Perú</p>
-    <h1>DepaHost Capital</h1>
-    <p class="lead">Te armamos hasta 3 departamentos que calzan.</p>
-    <div class="btn-group ctas">
-      <!-- Es un link de WhatsApp, así que el botón sale verde automáticamente -->
-      <Button href={waLink('Hola, quiero empezar con DepaHost Capital.')}>Empezar por WhatsApp</Button>
-      <Button href="#como-funciona" variant="outline">Ver cómo funciona</Button>
+    <div class="hero-text">
+      <p class="eyebrow">by Depa Host Perú</p>
+      <h1>DepaHost Capital</h1>
+      <p class="lead">Te armamos hasta 3 departamentos que calzan.</p>
+      <div class="btn-group ctas">
+        <!-- Es un link de WhatsApp, así que el botón sale verde automáticamente -->
+        <Button href={waLink('Hola, quiero empezar con DepaHost Capital.')}>Empezar por WhatsApp</Button>
+        <Button href="#como-funciona" variant="outline">Ver cómo funciona</Button>
+      </div>
     </div>
-    
-  </section>
-  <!-- ---------- Cómo funciona ---------- -->
-  <section id="como-funciona" class="container section" aria-labelledby="pasos-title">
-    <h2 id="pasos-title">Cómo funciona</h2>
-    <ol class="stepper">
-      {steps.map((s) => <Step {...s} />)}
-    </ol>
+
+    <!-- Cómo funciona: pasos a la derecha del título (título solo para lectores de pantalla) -->
+    <div id="como-funciona" class="hero-steps">
+      <h2 id="pasos-title" class="sr-only">Cómo funciona</h2>
+      <ol class="stepper">
+        {steps.map((s) => <Step {...s} />)}
+      </ol>
+    </div>
   </section>
   <!-- ---------- Depas ---------- -->
   <section class="container" aria-labelledby="depas-title">
@@ -129,7 +131,14 @@ const aliados = ['Aliado 1', 'Aliado 2', 'Aliado 3', 'Aliado 4', 'Aliado 5']
   }
   .ctas { margin-top: var(--space-6); }
   @media (min-width: 1024px) {
-    .hero { padding-block: var(--space-16) var(--space-12); }
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+      gap: var(--space-12);
+      align-items: start;
+      padding-block: var(--space-16) var(--space-12);
+    }
+    .hero-steps .stepper { margin-top: 0; }
   }
 
   .section-title { margin-bottom: var(--space-6); }
