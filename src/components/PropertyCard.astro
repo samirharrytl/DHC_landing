@@ -14,15 +14,19 @@ const {
 const fmt = (n: number) =>
   new Intl.NumberFormat('es-PE', { style: 'currency', currency: 'PEN', maximumFractionDigits: 0 }).format(n)
 
-// "Se paga sola" se calcula: solo aparece si la renta cubre la cuota
-const sePagaSola = estimatedRent >= monthlyPayment
-
 // Si no nos pasan href, la tarjeta abre WhatsApp con un mensaje ya escrito
 const link = href ?? waLink(`Hola, me interesa el depa de ${district} (${address}).`)
 const isWhatsApp = link.includes('wa.me')
 
+// "Ver más detalle" aún no tiene página propia; mientras tanto abre WhatsApp con otro mensaje.
+// TODO: apuntar a la página de detalle del depa cuando exista.
+const detailLink = href ?? waLink(`Hola, quisiera ver más detalles del depa de ${district} (${address}).`)
+const isDetailWhatsApp = detailLink.includes('wa.me')
+
+// Texto por el que se busca la tarjeta en el buscador de depas
+const searchText = `${district} ${address}`.toLowerCase()
 ---
-<article class="card">
+<article class="card" data-search={searchText}>
   <!-- Imagen 16:9. Mientras no hay foto, se muestra un bloque con una casita -->
   <div class="media">
     {img ? (
@@ -60,15 +64,16 @@ const isWhatsApp = link.includes('wa.me')
     </dl>
   </div>
 
-  {sePagaSola && (
-    <p class="footer">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor"
-           stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="m3 8.5 3 3 7-7" />
-      </svg>
-      Se paga sola
-    </p>
-  )}
+  <div class="footer-actions">
+    <a class="btn btn--secondary btn--sm" href={link}
+       target={isWhatsApp ? '_blank' : undefined} rel={isWhatsApp ? 'noopener noreferrer' : undefined}>
+      Me interesa
+    </a>
+    <a class="btn btn--secondary btn--sm" href={detailLink}
+       target={isDetailWhatsApp ? '_blank' : undefined} rel={isDetailWhatsApp ? 'noopener noreferrer' : undefined}>
+      Ver más detalle
+    </a>
+  </div>
 </article>
 
 <style>
@@ -84,8 +89,11 @@ const isWhatsApp = link.includes('wa.me')
     transition: box-shadow var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out);
   }
   .card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
-  /* El anillo de foco va en toda la tarjeta, no solo en el título */
-  .card:has(a:focus-visible) { box-shadow: var(--focus-ring); }
+  /* lo oculta el buscador cuando la tarjeta no coincide */
+  .card[hidden] { display: none; }
+  /* El anillo de foco va en toda la tarjeta cuando el foco está en el título
+     (los botones de abajo conservan su propio anillo) */
+  .card:has(.title a:focus-visible) { box-shadow: var(--focus-ring); }
 
   /* ---------- Imagen 16:9 ---------- */
   .media {
@@ -166,19 +174,17 @@ const isWhatsApp = link.includes('wa.me')
   }
   @container (max-width: 300px) { dd { font-size: var(--fs-15); } }
 
-  /* ---------- "Se paga sola" ---------- */
-  .footer {
+  /* ---------- Botones de acción ---------- */
+  .footer-actions {
+    position: relative;
+    z-index: 1; /* encima del link que cubre toda la tarjeta */
     display: flex;
-    align-items: center;
-    justify-content: center;
     gap: var(--space-2);
     margin: 0;
     padding: var(--space-3);
     border-top: var(--border-subtle);
-    font-size: var(--fs-sm);
-    font-weight: var(--fw-semibold);
-    color: var(--color-success);
   }
+  .footer-actions a { flex: 1; min-width: 0; padding-inline: var(--space-3); }
 
   @media (prefers-reduced-motion: reduce) {
     .card:hover,

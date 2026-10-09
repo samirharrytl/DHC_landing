@@ -4,6 +4,7 @@
 import Logo from './Logo.astro'
 import LangSwitch from './LangSwitch.astro'
 import WhatsAppIcon from './WhatsAppIcon.astro'
+import CartIcon from './CartIcon.astro'
 import { waLink } from '../data/contacto'
 
 const links = [
@@ -36,11 +37,21 @@ const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
     <div class="actions">
       <div class="lang-wrap"><LangSwitch /></div>
 
+      <!-- Ingresar: oculto en móvil (no cabe junto al logo + carrito + hamburguesa) -->
+      <a class="btn btn--secondary btn--sm login" href="/ingresar">Ingresar</a>
+
       <!-- WhatsApp: solo ícono en tablet, completo en escritorio, oculto en móvil (ahí está el flotante) -->
       <a class="btn btn--whatsapp btn--sm wa" href={whatsapp} target="_blank" rel="noopener noreferrer">
         <WhatsAppIcon />
         <!-- sr-only: en tablet solo se ve el ícono; desde 1024px se muestra el texto -->
         <span class="sr-only wa-label">WhatsApp</span>
+      </a>
+
+      <!-- Carrito: ícono siempre visible. TODO: la página /carrito todavía no existe -->
+      <a class="cart" href="/carrito" aria-label="Carrito de compras">
+        <CartIcon />
+        <!-- Badge de cantidad: aparece cuando haya items (por ahora oculto con el atributo hidden) -->
+        <span class="cart-count" data-cart-count hidden>0</span>
       </a>
 
       <!-- Botón hamburguesa (<1024px) -->
@@ -239,6 +250,41 @@ const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
   .lang-wrap { display: none; }
   .wa { display: none; }
 
+  /* "Ingresar": oculto en móvil (no cabe junto al logo + carrito + hamburguesa) */
+  .login { display: none; }
+
+  /* Carrito: botón de ícono como la hamburguesa, con badge de cantidad */
+  .cart {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--control-h-sm);
+    height: var(--control-h-sm);
+    border-radius: var(--radius-md);
+    color: var(--color-navy-800);
+  }
+  .cart:hover { background: var(--color-navy-50); }
+  .cart-count {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-pill);
+    background: var(--color-navy-800);
+    color: #fff;
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-bold);
+    line-height: 1;
+  }
+  /* el atributo hidden gana sobre el display:flex del badge */
+  .cart-count[hidden] { display: none; }
+
   .burger {
     display: inline-flex;
     align-items: center;
@@ -257,6 +303,7 @@ const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
   /* Tablet: aparece ES | EN y WhatsApp solo ícono */
   @media (min-width: 640px) {
     .lang-wrap { display: block; }
+    .login { display: inline-flex; }
     .wa { display: inline-flex; width: var(--control-h-sm); padding: 0; }
   }
 

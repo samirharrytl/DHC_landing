@@ -10,32 +10,29 @@ import { depas, disclaimer } from '../data/depas'
 import { waLink } from '../data/contacto'
 
 const steps = [
-  { number: 1, title: 'Perfil', text: 'Cuéntanos tu inicial y objetivos.' },
-  { number: 2, title: 'Match', text: 'Te mostramos hasta 3 departamentos que calzan.' },
-  { number: 3, title: 'Visita', text: 'Coordinamos visitas a los que más te interesen.' },
-  { number: 4, title: 'Firma', text: 'Elegi tu inversión y firmamos.' },
+  { number: 1, title: 'Comparas' },
+  { number: 2, title: 'Consultas' },
+  { number: 3, title: 'Te acompañamos' },
+  { number: 4, title: 'Cierras' },
 ]
 
 // TODO: logos reales de aliados cuando haya permiso para usarlos. Por ahora, espacios de texto.
-const aliados = ['Aliado 1', 'Aliado 2', 'Aliado 3', 'Aliado 4', 'Aliado 5']
+const aliados = ['URBANA', 'LIMA SUR', 'ANDES', 'MIRAFLORES HOTEL', 'NOVA']
 ---
 <BaseLayout title="Capital" description="DepaHost Capital: te armamos hasta 3 departamentos que calzan para invertir en Lima.">
   <!-- ---------- Hero: "DepaHost Capital" es sub-marca, por eso solo va aquí ---------- -->
   <section class="container hero" data-hero>
     <div class="hero-text">
-      <p class="eyebrow">by Depa Host Perú</p>
-      <h1>DepaHost Capital</h1>
-      <p class="lead">Te armamos hasta 3 departamentos que calzan.</p>
+      <h1>Los mejores departamentos para invertir en Lima</h1>
       <div class="btn-group ctas">
         <!-- Es un link de WhatsApp, así que el botón sale verde automáticamente -->
-        <Button href={waLink('Hola, quiero empezar con DepaHost Capital.')}>Empezar por WhatsApp</Button>
-        <Button href="#como-funciona" variant="outline">Ver cómo funciona</Button>
+        <Button href="#proyectos">Ver todos los proyectos</Button>
+        <Button href="#como-funciona" variant="outline">Empecemos</Button>
       </div>
     </div>
 
     <!-- Cómo funciona: pasos a la derecha del título (título solo para lectores de pantalla) -->
     <div id="como-funciona" class="hero-steps">
-      <h2 id="pasos-title" class="sr-only">Cómo funciona</h2>
       <ol class="stepper">
         {steps.map((s) => <Step {...s} />)}
       </ol>
@@ -43,7 +40,22 @@ const aliados = ['Aliado 1', 'Aliado 2', 'Aliado 3', 'Aliado 4', 'Aliado 5']
   </section>
   <!-- ---------- Depas ---------- -->
   <section class="container" aria-labelledby="depas-title">
-    <h2 id="depas-title" class="section-title">Depas que se pagan solos</h2>
+    <!-- Buscador: filtra los depas mientras escribes -->
+    <div class="search" role="search">
+      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="11" cy="11" r="7" />
+        <path d="m20 20-3.5-3.5" />
+      </svg>
+      <input
+        type="search"
+        data-depa-search
+        placeholder="Busca por distrito o dirección…"
+        aria-label="Buscar departamento"
+        autocomplete="off"
+      />
+    </div>
+
     <PropertyGrid>
       {depas.map((d) => <PropertyCard {...d} />)}
     </PropertyGrid>
@@ -56,14 +68,6 @@ const aliados = ['Aliado 1', 'Aliado 2', 'Aliado 3', 'Aliado 4', 'Aliado 5']
         <span class="long">Ver el top 10</span><span class="short">Ver</span> →
       </span>
     </a>
-  </section>
-
-
-
-  <!-- ---------- Top 10 (pendiente) ---------- -->
-  <section id="top-10" class="container" aria-labelledby="top10-title">
-    <h2 id="top10-title">Los 10 depas para invertir ahora</h2>
-    <p class="lead">Ranking en construcción.</p>
   </section>
 
   <!-- ---------- Aliados ---------- -->
@@ -111,6 +115,20 @@ const aliados = ['Aliado 1', 'Aliado 2', 'Aliado 3', 'Aliado 4', 'Aliado 5']
 </BaseLayout>
 
 <script>
+  // ---------- Buscador de depas ----------
+  // Filtra las tarjetas mientras escribes (por distrito o dirección)
+  const search = document.querySelector<HTMLInputElement>('[data-depa-search]')
+  const cards = document.querySelectorAll<HTMLElement>('[data-search]')
+
+  search?.addEventListener('input', () => {
+    const query = search.value.trim().toLowerCase()
+    cards.forEach((card) => {
+      const text = card.dataset.search ?? ''
+      card.hidden = query !== '' && !text.includes(query)
+    })
+  })
+
+  // ---------- Formulario en inglés ----------
   // TODO: comportamiento del formulario pendiente de decisión de Samir
   // (¿guardar datos en un CRM y/o abrir WhatsApp?). Mientras tanto NO se envía nada:
   // preventDefault() evita que el navegador mande los datos o los ponga en la URL.
@@ -133,15 +151,37 @@ const aliados = ['Aliado 1', 'Aliado 2', 'Aliado 3', 'Aliado 4', 'Aliado 5']
   @media (min-width: 1024px) {
     .hero {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
-      gap: var(--space-12);
+      /* el título (izquierda) necesita más ancho para quedar en 2 líneas */
+      grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+      gap: var(--space-8);
       align-items: start;
-      padding-block: var(--space-16) var(--space-12);
+      padding-block: var(--space-6) var(--space-12);
     }
     .hero-steps .stepper { margin-top: 0; }
   }
 
   .section-title { margin-bottom: var(--space-6); }
+
+  /* ---------- Buscador de depas ---------- */
+  .search {
+    position: relative;
+    max-width: 30rem;
+    margin-bottom: var(--space-6);
+  }
+  .search input {
+    /* deja espacio para la lupa a la izquierda */
+    padding-left: calc(var(--space-3) + var(--icon-md) + var(--space-2));
+  }
+  .search-icon {
+    position: absolute;
+    top: 50%;
+    left: var(--space-3);
+    transform: translateY(-50%);
+    width: var(--icon-md);
+    height: var(--icon-md);
+    color: var(--color-text-muted);
+    pointer-events: none;
+  }
 
   /* ---------- Barra Top 10 ---------- */
   .top10 {
