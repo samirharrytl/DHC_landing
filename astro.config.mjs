@@ -10,8 +10,9 @@ export default defineConfig({
   prefetch: true,
 
   build: {
-    // Mete el CSS dentro del HTML: una petición menos al cargar la página
-    inlineStylesheets: 'always',
+    // 'auto' (default) inlinea el CSS pequeño y externaliza el grande:
+    // menos peticiones cuando es chico, y caché del navegador cuando crece.
+    inlineStylesheets: 'auto',
   },
 
   // Fuente Inter autoalojada: Astro la descarga al construir y la sirve desde nuestro sitio

@@ -22,7 +22,7 @@ const { inverse = false } = Astro.props
     min-height: var(--control-h-sm);
     color: var(--color-navy-800);
     font-weight: var(--fw-bold);
-    font-size: 1.125rem;
+    font-size: var(--fs-18);
     letter-spacing: -0.01em;
     text-decoration: none;
     white-space: nowrap;
@@ -32,5 +32,5 @@ const { inverse = false } = Astro.props
   /* Alto del ícono: 32 móvil · 36 tablet · 44 desktop */
   svg { width: 32px; height: 32px; flex: none; }
   @media (min-width: 640px) { svg { width: 36px; height: 36px; } }
-  @media (min-width: 1024px) { svg { width: 44px; height: 44px; } .logo { font-size: 1.25rem; } }
+  @media (min-width: 1024px) { svg { width: 44px; height: 44px; } .logo { font-size: var(--fs-20); } }
 </style>

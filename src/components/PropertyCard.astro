@@ -1,6 +1,7 @@
 ---
 // Tarjeta de depa reutilizable (Capital y home).
 // Props de siempre + opcionales: img (URL o imagen importada), imgAlt, href, priority
+import { Picture } from 'astro:assets'
 import { waLink } from '../data/contacto'
 import HouseIcon from './HouseIcon.astro'
 
@@ -20,19 +21,18 @@ const sePagaSola = estimatedRent >= monthlyPayment
 const link = href ?? waLink(`Hola, me interesa el depa de ${district} (${address}).`)
 const isWhatsApp = link.includes('wa.me')
 
-// img puede ser un texto (URL) o una imagen importada de src/assets (tiene .src)
-const imgSrc = typeof img === 'string' ? img : img?.src
 ---
 <article class="card">
   <!-- Imagen 16:9. Mientras no hay foto, se muestra un bloque con una casita -->
   <div class="media">
-    {/* TODO: cuando haya fotos reales en src/assets, cambiar este <img> por <Picture /> de astro:assets (AVIF/WebP + tamaños) */}
-    {imgSrc ? (
-      <img
-        src={imgSrc}
+    {img ? (
+      <Picture
+        src={img}
         alt={imgAlt ?? `Departamento en ${district}`}
-        width="640"
-        height="360"
+        widths={[480, 640, 960]}
+        sizes="(max-width: 640px) 85vw, (max-width: 1024px) 50vw, 33vw"
+        formats={['avif', 'webp']}
+        fallbackFormat="jpeg"
         loading={priority ? 'eager' : 'lazy'}
         fetchpriority={priority ? 'high' : undefined}
         decoding="async"
@@ -94,6 +94,11 @@ const imgSrc = typeof img === 'string' ? img : img?.src
     overflow: hidden;
     background: var(--color-border-subtle);
   }
+  .media :global(picture) {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
   .media img {
     width: 100%;
     height: 100%;
@@ -150,7 +155,7 @@ const imgSrc = typeof img === 'string' ? img : img?.src
   }
   .stat { min-width: 0; }
   .stat + .stat { border-left: var(--border-subtle); padding-left: var(--space-3); }
-  dt { font-size: 0.8125rem; color: var(--color-text-muted); }
+  dt { font-size: var(--fs-13); color: var(--color-text-muted); }
   dd {
     margin: var(--space-1) 0 0;
     font-size: var(--fs-stat);
@@ -159,7 +164,7 @@ const imgSrc = typeof img === 'string' ? img : img?.src
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
   }
-  @container (max-width: 300px) { dd { font-size: 0.9375rem; } }
+  @container (max-width: 300px) { dd { font-size: var(--fs-15); } }
 
   /* ---------- "Se paga sola" ---------- */
   .footer {

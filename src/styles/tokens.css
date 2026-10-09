@@ -66,6 +66,13 @@
   --fs-xs:      0.75rem;     /* 12  chips, disclaimers (mínimo absoluto) */
   --fs-stat:    clamp(1rem, 0.95rem + 0.25vw, 1.125rem);   /* 16 → 18  valores de la tarjeta */
 
+  /* Tamaños fijos intermedios (complementan la escala de arriba) */
+  --fs-13: 0.8125rem;  /* 13px: disclaimers, labels de stats */
+  --fs-15: 0.9375rem;  /* 15px: botón sm, subtítulos, texto de paso */
+  --fs-18: 1.125rem;   /* 18px: logo, título de paso, links del drawer */
+  --fs-20: 1.25rem;    /* 20px: título del footer, aliados, logo desktop */
+  --fs-22: 1.375rem;   /* 22px: título del footer en desktop */
+
   --lh-tight: 1.1;   /* display */
   --lh-heading: 1.25;
   --lh-body: 1.5;
@@ -117,6 +124,7 @@
   --control-h-sm: 2.75rem;  /* 44  mínimo táctil */
   --control-h-md: 3rem;     /* 48  default */
   --control-h-lg: 3.25rem;  /* 52 */
+  --fab-size: 3.5rem;       /* 56  botón flotante de WhatsApp */
   --icon-sm: 1.25rem;       /* 20 */
   --icon-md: 1.5rem;        /* 24 */
 

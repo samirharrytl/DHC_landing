@@ -1,11 +1,9 @@
 ---
+import { Picture } from 'astro:assets'
 import BaseLayout from '../layouts/BaseLayout.astro'
 import Button from '../components/Button.astro'
 import OwnerDropdown from '../components/OwnerDropdown.astro'
-import PropertyCard from '../components/PropertyCard.astro'
-import PropertyGrid from '../components/PropertyGrid.astro'
-import HouseIcon from '../components/HouseIcon.astro'
-import { depas, disclaimer } from '../data/depas'
+import heroImage from '../assets/Hero Home.jpg'
 
 // Las 3 tarjetas de servicios. icon = nombre del dibujo que se muestra a la izquierda
 const servicios = [
@@ -20,10 +18,17 @@ const servicios = [
 <BaseLayout title="Inicio">
   <!-- ---------- Hero ---------- -->
   <section class="hero" data-hero>
-    <!-- TODO: reemplazar este bloque por la foto real con <Image />
-         (alt: "Sala de un departamento en Lima con vista al mar") -->
-    <div class="hero-media" aria-hidden="true">
-      <HouseIcon strokeWidth={1} />
+    <div class="hero-media">
+      <Picture
+        src={heroImage}
+        alt="Sala de un departamento en Lima con vista al mar"
+        widths={[768, 1280, 1920, 2560]}
+        sizes="100vw"
+        formats={['avif', 'webp']}
+        fallbackFormat="jpeg"
+        quality={70}
+        fetchpriority="high"
+      />
     </div>
 
     <div class="container hero-content">
@@ -70,14 +75,14 @@ const servicios = [
   .hero-content { order: 1; padding-block: var(--space-8) var(--space-6); }
   .hero-media {
     order: 2;
-    display: grid;
-    place-items: center;
+    position: relative;
     aspect-ratio: 4 / 3;
+    overflow: hidden;
     background: linear-gradient(120deg, var(--color-navy-50), var(--color-navy-100) 60%, #c9d4e5);
-    color: var(--color-navy-800);
   }
-  /* :global porque el svg viene del componente HouseIcon */
-  .hero-media :global(svg) { width: 30%; max-width: 220px; opacity: 0.25; }
+  /* La foto (astro:assets genera un <picture>) llena el marco y recorta sin deformar */
+  .hero-media :global(picture) { position: absolute; inset: 0; }
+  .hero-media :global(img) { width: 100%; height: 100%; object-fit: cover; }
 
   .br-sm { display: none; } /* el salto de línea del título solo desde 640px */
   .ctas { margin-top: var(--space-8); }
@@ -99,8 +104,6 @@ const servicios = [
       position: absolute;
       inset: 0;
       aspect-ratio: auto;
-      justify-items: end;
-      padding-right: 12%;
     }
     /* Degradado blanco para que el texto se lea bien sobre la foto */
     .hero-media::after {

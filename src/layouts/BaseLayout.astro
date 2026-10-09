@@ -72,7 +72,8 @@ const ogImage = new URL('/og-default.png', Astro.site)
     pointer-events: none;
   }
 
-  /* En móvil dejamos aire abajo para que el botón flotante de WhatsApp no tape nada */
-  main { padding-bottom: var(--space-16); }
+  /* En móvil dejamos aire abajo para que el botón flotante de WhatsApp no tape nada.
+     Se calcula con el tamaño del FAB (--fab-size) + un margen, para que ambos queden atados. */
+  main { padding-bottom: calc(var(--fab-size) + var(--space-2)); }
   @media (min-width: 640px) { main { padding-bottom: 0; } }
 </style>
