@@ -1,36 +1,61 @@
 ---
-// Logo de texto con una casita. inverse = versión blanca (para fondos navy).
-// TODO: cuando exista el SVG oficial del logo, reemplazar este contenido.
+// Identidad de Depahost Capital. inverse adapta el texto a fondos oscuros.
 const { inverse = false } = Astro.props
 ---
-<a href="/" class:list={['logo', { inverse }]} aria-label="Depa Host Perú, ir al inicio">
-  <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2"
-       stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-    <path d="M4 15 16 5l12 10" />
-    <path d="M8 13v14h16V13" />
-    <path d="M12.5 20.5a5 5 0 0 1 7 0" />
-    <circle cx="16" cy="23.5" r="0.8" fill="currentColor" />
+<a href="/" class:list={['logo', { inverse }]} aria-label="Depahost Capital, Depahost Perú, ir al inicio">
+  <svg class="logo-mark" viewBox="0 0 54 60" fill="none" aria-hidden="true">
+    <path class="mark-base" d="M27 1.5 52 16v28L27 58.5 2 44V16L27 1.5Z" />
+    <path class="mark-cutout" d="M8.5 19.5 27 8.8l18.5 10.7v21L27 51.2 8.5 40.5v-21Z" />
+    <path class="mark-base" d="m10.5 21 14-8.1v16.4l-14 8.1V21Zm18-7.2 15 8.7v17.2l-15 8.7V31.1l8.6-5-8.6-5v-7.3Z" />
   </svg>
-  <span>Depa Host Perú</span>
+  <span class="logo-copy">
+    <span class="logo-name">Depahost Capital</span>
+    <span class="logo-tagline">DEPAHOST PERÚ</span>
+  </span>
 </a>
 
 <style>
   .logo {
     display: inline-flex;
     align-items: center;
-    gap: var(--space-2);
+    gap: 10px;
     min-height: var(--control-h-sm);
-    color: var(--color-navy-800);
-    font-weight: var(--fw-bold);
-    font-size: var(--fs-18);
-    letter-spacing: -0.01em;
+    color: var(--color-text-strong);
     text-decoration: none;
     white-space: nowrap;
   }
-  .logo.inverse { color: #fff; }
+  .logo-mark {
+    --mark-base: var(--color-navy-800);
+    --mark-cutout: #fff;
+    width: 48px;
+    height: 54px;
+    flex: none;
+  }
+  .mark-base { fill: var(--mark-base); }
+  .mark-cutout { fill: var(--mark-cutout); }
+  .logo-copy { display: flex; flex-direction: column; gap: 4px; }
+  .logo-name {
+    color: var(--color-text-strong);
+    font: 400 23px/1 Georgia, 'Times New Roman', serif;
+    letter-spacing: -0.035em;
+  }
+  .logo-tagline {
+    color: var(--color-navy-800);
+    font: 600 9px/1.2 var(--font-sans);
+    letter-spacing: 0.28em;
+    padding-left: 2px;
+  }
+  .logo.inverse .logo-mark {
+    --mark-base: #fff;
+    --mark-cutout: var(--color-navy-900);
+  }
+  .logo.inverse .logo-name,
+  .logo.inverse .logo-tagline { color: #fff; }
 
-  /* Alto del ícono: 32 móvil · 36 tablet · 44 desktop */
-  svg { width: 32px; height: 32px; flex: none; }
-  @media (min-width: 640px) { svg { width: 36px; height: 36px; } }
-  @media (min-width: 1024px) { svg { width: 44px; height: 44px; } .logo { font-size: var(--fs-20); } }
+  @media (max-width: 420px) {
+    .logo { gap: 8px; }
+    .logo-mark { width: 42px; height: 48px; }
+    .logo-name { font-size: 20px; }
+    .logo-tagline { font-size: 8px; }
+  }
 </style>

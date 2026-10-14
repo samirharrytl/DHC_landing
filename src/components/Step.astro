@@ -58,7 +58,7 @@ const { number, title, text } = Astro.props
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: var(--space-3);
+      gap: var(--space-4);
       padding: 0 var(--space-2);
       text-align: center;
     }
@@ -70,5 +70,9 @@ const { number, title, text } = Astro.props
       height: var(--step-line);
     }
     p { max-width: 18ch; margin-inline: auto; }
+  }
+
+  @media (min-width: 1280px) {
+    .step h3 { white-space: nowrap; }
   }
 </style>

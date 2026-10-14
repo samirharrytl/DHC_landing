@@ -8,11 +8,11 @@ import depaMagdalena from '../assets/DepaMagdalena.jpg'
 
 export const depas = [
   { district: 'Lince', address: 'Av. Arequipa cuadra 12', badge: 'Súper precio',
-    price: 310000, monthlyPayment: 2180, estimatedRent: 2350, img: depaLince },
+    price: 310000, profitability: '8-10% anual', yearsPayment : '11 años', img: depaLince },
   { district: 'Surquillo', address: 'Av. Angamos Este cuadra 20', badge: 'Súper oportunidad',
-    price: 285000, monthlyPayment: 2180, estimatedRent: 2350, img: depaSurquillo },
+    price: 285000, profitability: '9-11% anual', yearsPayment : '10 años', img: depaSurquillo },
   { district: 'Magdalena', address: 'Av. del Ejército cuadra 6', badge: 'Últimos en venta',
-    price: 340000, monthlyPayment: 2180, estimatedRent: 2350, img: depaMagdalena },
+    price: 340000, profitability: '7-9% anual', yearsPayment : '12 años', img: depaMagdalena },
 ]
 
 // Nota que va debajo de cada grid de depas.

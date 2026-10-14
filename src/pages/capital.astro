@@ -7,7 +7,6 @@ import Step from '../components/Step.astro'
 import WhatsAppIcon from '../components/WhatsAppIcon.astro'
 // Los depas vienen de un archivo compartido con la home
 import { depas, disclaimer } from '../data/depas'
-import { waLink } from '../data/contacto'
 
 const steps = [
   { number: 1, title: 'Comparas' },
@@ -18,17 +17,21 @@ const steps = [
 
 // TODO: logos reales de aliados cuando haya permiso para usarlos. Por ahora, espacios de texto.
 const aliados = ['URBANA', 'LIMA SUR', 'ANDES', 'MIRAFLORES HOTEL', 'NOVA']
+
+
+const fastFilters = [
+  { label: 'Lince', kind: 'district', value: 'Lince' },
+  { label: 'Surquillo', kind: 'district', value: 'Surquillo' },
+  { label: 'Magdalena', kind: 'district', value: 'Magdalena' },
+  { label: 'Hasta S/ 350,000', kind: 'max-price', value: '350000' },
+  { label: '8–10% anual', kind: 'profitability', value: '8-10% anual' },
+]
 ---
 <BaseLayout title="Capital" description="DepaHost Capital: te armamos hasta 3 departamentos que calzan para invertir en Lima.">
   <!-- ---------- Hero: "DepaHost Capital" es sub-marca, por eso solo va aquí ---------- -->
   <section class="container hero" data-hero>
     <div class="hero-text">
       <h1>Los mejores departamentos para invertir en Lima</h1>
-      <div class="btn-group ctas">
-        <!-- Es un link de WhatsApp, así que el botón sale verde automáticamente -->
-        <Button href="#proyectos">Ver todos los proyectos</Button>
-        <Button href="#como-funciona" variant="outline">Empecemos</Button>
-      </div>
     </div>
 
     <!-- Cómo funciona: pasos a la derecha del título (título solo para lectores de pantalla) -->
@@ -41,6 +44,12 @@ const aliados = ['URBANA', 'LIMA SUR', 'ANDES', 'MIRAFLORES HOTEL', 'NOVA']
   <!-- ---------- Depas ---------- -->
   <section class="container" aria-labelledby="depas-title">
     <!-- Buscador: filtra los depas mientras escribes -->
+    <div class="btn-group ctas">
+      <!-- Es un link de WhatsApp, así que el botón sale verde automáticamente -->
+      <Button href="#proyectos">Ver todos los proyectos</Button>
+      <Button href="#como-funciona" variant="outline">Empecemos</Button>
+    </div>
+
     <div class="search" role="search">
       <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -50,15 +59,31 @@ const aliados = ['URBANA', 'LIMA SUR', 'ANDES', 'MIRAFLORES HOTEL', 'NOVA']
       <input
         type="search"
         data-depa-search
-        placeholder="Busca por distrito o dirección…"
-        aria-label="Buscar departamento"
+        placeholder="Busca por distrito, proyecto o ticket"
+        aria-label="Buscar por distrito, proyecto o ticket"
         autocomplete="off"
       />
+    </div>
+
+    <div class="favorite-filters" role="group" aria-label="Filtros favoritos">
+      {fastFilters.map((filter) => (
+        <button
+          type="button"
+          class="favorite-filter"
+          data-favorite-filter
+          data-filter-kind={filter.kind}
+          data-filter-value={filter.value}
+          aria-pressed="false"
+        >
+          {filter.label}
+        </button>
+      ))}
     </div>
 
     <PropertyGrid>
       {depas.map((d) => <PropertyCard {...d} />)}
     </PropertyGrid>
+    <p class="no-results" data-filter-empty role="status" hidden>No encontramos departamentos con esos criterios.</p>
     <p class="disclaimer">{disclaimer}</p>
 
     <!-- Toda la barra es un solo link -->
@@ -115,16 +140,57 @@ const aliados = ['URBANA', 'LIMA SUR', 'ANDES', 'MIRAFLORES HOTEL', 'NOVA']
 </BaseLayout>
 
 <script>
-  // ---------- Buscador de depas ----------
-  // Filtra las tarjetas mientras escribes (por distrito o dirección)
+  // ---------- Buscador y filtros favoritos ----------
   const search = document.querySelector<HTMLInputElement>('[data-depa-search]')
   const cards = document.querySelectorAll<HTMLElement>('[data-search]')
+  const filterButtons = document.querySelectorAll<HTMLButtonElement>('[data-favorite-filter]')
+  const emptyMessage = document.querySelector<HTMLElement>('[data-filter-empty]')
+  const activeFilters = new Map<string, string>()
 
-  search?.addEventListener('input', () => {
-    const query = search.value.trim().toLowerCase()
+  const normalize = (value: string) => value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, '')
+
+  const updateResults = () => {
+    const query = normalize(search?.value ?? '')
+    let visibleCount = 0
+
     cards.forEach((card) => {
-      const text = card.dataset.search ?? ''
-      card.hidden = query !== '' && !text.includes(query)
+      const text = normalize(card.dataset.search ?? '')
+      const matchesSearch = query === '' || text.includes(query)
+      const matchesFilters = [...activeFilters].every(([kind, value]) => {
+        if (kind === 'district') return normalize(card.dataset.district ?? '') === normalize(value)
+        if (kind === 'max-price') return Number(card.dataset.price) <= Number(value)
+        if (kind === 'profitability') return normalize(card.dataset.profitability ?? '') === normalize(value)
+        return true
+      })
+
+      card.hidden = !(matchesSearch && matchesFilters)
+      if (!card.hidden) visibleCount += 1
+    })
+
+    if (emptyMessage) emptyMessage.hidden = visibleCount > 0
+  }
+
+  search?.addEventListener('input', updateResults)
+
+  filterButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const kind = button.dataset.filterKind
+      const value = button.dataset.filterValue
+      if (!kind || !value) return
+
+      if (activeFilters.get(kind) === value) activeFilters.delete(kind)
+      else activeFilters.set(kind, value)
+
+      filterButtons.forEach((otherButton) => {
+        const isActive = activeFilters.get(otherButton.dataset.filterKind ?? '') === otherButton.dataset.filterValue
+        otherButton.setAttribute('aria-pressed', String(isActive))
+      })
+
+      updateResults()
     })
   })
 
@@ -147,15 +213,15 @@ const aliados = ['URBANA', 'LIMA SUR', 'ANDES', 'MIRAFLORES HOTEL', 'NOVA']
     font-weight: var(--fw-semibold);
     color: var(--color-text-muted);
   }
-  .ctas { margin-top: var(--space-6); }
+  .ctas { margin-top: var(--space-3);margin-bottom: var(--space-5);  }
   @media (min-width: 1024px) {
     .hero {
       display: grid;
       /* el título (izquierda) necesita más ancho para quedar en 2 líneas */
-      grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
       gap: 0;
-      align-items: start;
-      padding-block: var(--space-6) var(--space-12);
+      align-items: center;
+      padding-block: var(--space-6) var(--space-4);
     }
     .hero-steps .stepper { margin-top: 0; }
   }
@@ -165,12 +231,15 @@ const aliados = ['URBANA', 'LIMA SUR', 'ANDES', 'MIRAFLORES HOTEL', 'NOVA']
   /* ---------- Buscador de depas ---------- */
   .search {
     position: relative;
-    max-width: 30rem;
-    margin-bottom: var(--space-6);
+    width: 100%;
+    margin-bottom: var(--space-2);
   }
   .search input {
     /* deja espacio para la lupa a la izquierda */
+    height: 46px;
     padding-left: calc(var(--space-3) + var(--icon-md) + var(--space-2));
+    border-color: var(--color-border);
+    border-radius: 6px;
   }
   .search-icon {
     position: absolute;
@@ -182,6 +251,37 @@ const aliados = ['URBANA', 'LIMA SUR', 'ANDES', 'MIRAFLORES HOTEL', 'NOVA']
     color: var(--color-text-muted);
     pointer-events: none;
   }
+  .favorite-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-bottom: var(--space-6);
+  }
+  .favorite-filter {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 28px;
+    padding: 3px 11px;
+    border: 1px solid var(--color-navy-800);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--color-text-strong);
+    font-size: var(--fs-13);
+    line-height: 1.2;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color var(--dur-fast) var(--ease-out),
+                color var(--dur-fast) var(--ease-out);
+  }
+  .favorite-filter:hover,
+  .favorite-filter[aria-pressed='true'] {
+    background: var(--color-navy-800);
+    color: #fff;
+  }
+  .favorite-filter:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+  .no-results { margin: var(--space-5) 0; color: var(--color-text-muted); }
+  .no-results[hidden] { display: none; }
 
   /* ---------- Barra Top 10 ---------- */
   .top10 {

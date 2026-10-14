@@ -35,23 +35,18 @@ const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
     </nav>
 
     <div class="actions">
-      <div class="lang-wrap"><LangSwitch /></div>
+      <!-- Botón de WhatsApp; en móvil está el botón flotante -->
 
-      <!-- Ingresar: oculto en móvil (no cabe junto al logo + carrito + hamburguesa) -->
-      <a class="btn btn--secondary btn--sm login" href="/ingresar">Ingresar</a>
-
-      <!-- WhatsApp: solo ícono en tablet, completo en escritorio, oculto en móvil (ahí está el flotante) -->
-      <a class="btn btn--whatsapp btn--sm wa" href={whatsapp} target="_blank" rel="noopener noreferrer">
-        <WhatsAppIcon />
-        <!-- sr-only: en tablet solo se ve el ícono; desde 1024px se muestra el texto -->
-        <span class="sr-only wa-label">WhatsApp</span>
+      <!-- Acceso a los departamentos guardados -->
+      <a class="cart" href="/carrito" aria-label="Mis depas">
+        <CartIcon />
+        <span class="cart-label">Mis depas</span>
+        <span class="cart-count" data-cart-count hidden>0</span>
       </a>
 
-      <!-- Carrito: ícono siempre visible. TODO: la página /carrito todavía no existe -->
-      <a class="cart" href="/carrito" aria-label="Carrito de compras">
-        <CartIcon />
-        <!-- Badge de cantidad: aparece cuando haya items (por ahora oculto con el atributo hidden) -->
-        <span class="cart-count" data-cart-count hidden>0</span>
+      <a class="wa" href={whatsapp} target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp">
+        <span class="wa-icon"><WhatsAppIcon size={20} /></span>
+        <span class="wa-label">Contactar</span>
       </a>
 
       <!-- Botón hamburguesa (<1024px) -->
@@ -112,6 +107,49 @@ const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
 </a>
 
 <script>
+  import {
+    getSavedDepas,
+    SAVED_DEPAS_EVENT,
+    SAVED_DEPAS_KEY,
+    setSavedDepas,
+  } from '../data/savedDepas'
+
+  // ---------- Mis depas: contador y acciones para guardar ----------
+  const syncSavedDepas = () => {
+    const savedIds = getSavedDepas()
+
+    document.querySelectorAll<HTMLElement>('[data-cart-count]').forEach((badge) => {
+      badge.textContent = String(savedIds.length)
+      badge.hidden = savedIds.length === 0
+      badge.setAttribute('aria-label', `${savedIds.length} ${savedIds.length === 1 ? 'depa guardado' : 'depas guardados'}`)
+    })
+
+    document.querySelectorAll<HTMLButtonElement>('[data-add-property]').forEach((button) => {
+      const id = button.dataset.propertyId
+      const saved = Boolean(id && savedIds.includes(id))
+      button.setAttribute('aria-pressed', String(saved))
+      button.textContent = saved ? 'Agregado' : 'Me interesa'
+      button.classList.toggle('is-added', saved)
+      if (id) {
+        const name = button.dataset.propertyName ?? id
+        button.setAttribute('aria-label', saved ? `${name} ya está en Mis depas` : `Me interesa: agregar ${name} a Mis depas`)
+      }
+    })
+  }
+
+  document.querySelectorAll<HTMLButtonElement>('[data-add-property]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const id = button.dataset.propertyId
+      if (id) setSavedDepas([...getSavedDepas(), id])
+    })
+  })
+
+  window.addEventListener(SAVED_DEPAS_EVENT, syncSavedDepas)
+  window.addEventListener('storage', (event) => {
+    if (event.key === SAVED_DEPAS_KEY) syncSavedDepas()
+  })
+  syncSavedDepas()
+
   // ---------- Sombra del header al hacer scroll ----------
   // En vez de leer window.scrollY (obliga al navegador a recalcular la página),
   // observamos una marca invisible arriba de todo: si ya no se ve, bajamos más de 8px.
@@ -210,10 +248,18 @@ const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
   .nav { display: none; }
   .nav ul {
     display: flex;
-    gap: var(--space-6);
+    align-items: center;
     margin: 0;
     padding: 0;
     list-style: none;
+  }
+
+  .nav li { display: flex; align-items: center; }
+  .nav li + li::before {
+    content: '|';
+    margin-inline: var(--space-3);
+    color: var(--color-text-muted);
+    font-weight: var(--fw-regular);
   }
 
   .nav a,
@@ -223,21 +269,35 @@ const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
     text-decoration: none;
   }
   .nav a {
+    position: relative;
     display: inline-flex;
     align-items: center;
     min-height: var(--control-h-sm); /* área táctil de 44px */
+    color: var(--color-text-muted);
+    font-size: var(--fs-15);
   }
   .nav a:hover,
   .drawer-links a:hover { color: var(--color-navy-800); }
 
   /* Página actual: más gruesa y subrayada */
-  .nav a[aria-current='page'],
   .drawer-links a[aria-current='page'] {
     color: var(--color-navy-800);
     font-weight: var(--fw-semibold);
     text-decoration: underline;
     text-decoration-thickness: 2px;
     text-underline-offset: 8px;
+  }
+  .nav a[aria-current='page'] {
+    color: var(--color-text-muted);
+  }
+  .nav a[aria-current='page']::after {
+    position: absolute;
+    right: 0;
+    bottom: 2px;
+    left: 0;
+    height: 2px;
+    background: var(--color-navy-800);
+    content: '';
   }
 
   /* ---------- Acciones ---------- */
@@ -250,25 +310,67 @@ const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
   .lang-wrap { display: none; }
   .wa { display: none; }
 
-  /* "Ingresar": oculto en móvil (no cabe junto al logo + carrito + hamburguesa) */
-  .login { display: none; }
-
-  /* Carrito: botón de ícono como la hamburguesa, con badge de cantidad */
-  .cart {
-    position: relative;
+  .wa {
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    min-height: var(--control-h-md);
+    padding: 0 var(--space-4);
+    border: 1px solid var(--color-navy-850);
+    border-radius: 10px;
+    background: var(--color-navy-800);
+    color: #fff;
+    font-size: var(--fs-15);
+    text-decoration: none;
+    white-space: nowrap;
+    box-shadow: var(--shadow-sm);
+    transition: background-color var(--dur-fast) var(--ease-out),
+                transform var(--dur-fast) var(--ease-out);
+  }
+  .wa-icon {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: var(--control-h-sm);
-    height: var(--control-h-sm);
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--color-wa-500);
+    color: #fff;
+  }
+  .wa-icon svg { width: 20px; height: 20px; flex: none; }
+  .wa-label { color: inherit; }
+  .wa:hover { background: var(--color-navy-850); }
+  .wa:active { transform: translateY(1px); }
+
+  /* "Ingresar": oculto en móvil (no cabe junto al logo + carrito + hamburguesa) */
+  .login { display: none; }
+
+  /* Acceso a Mis depas con icono de carpeta y contador */
+  .cart {
+    position: relative;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 3.75rem;
+    min-height: var(--control-h-sm);
+    padding: 2px 4px 0;
     border-radius: var(--radius-md);
     color: var(--color-navy-800);
+    text-decoration: none;
+  }
+  .cart svg { flex: none; }
+  .cart-label {
+    color: var(--color-text);
+    font-size: var(--fs-xs);
+    line-height: 1.2;
+    white-space: nowrap;
   }
   .cart:hover { background: var(--color-navy-50); }
   .cart-count {
     position: absolute;
-    top: 2px;
-    right: 2px;
+    top: -1px;
+    right: 1px;
     min-width: 18px;
     height: 18px;
     padding: 0 4px;
@@ -300,23 +402,20 @@ const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
   }
   .burger:hover { background: var(--color-navy-50); }
 
-  /* Tablet: aparece ES | EN y WhatsApp solo ícono */
+  /* Tablet: aparece ES | EN y el botón de WhatsApp */
   @media (min-width: 640px) {
     .lang-wrap { display: block; }
     .login { display: inline-flex; }
-    .wa { display: inline-flex; width: var(--control-h-sm); padding: 0; }
+    .wa { display: inline-flex; }
   }
 
-  /* Escritorio: menú en línea, WhatsApp completo, sin hamburguesa */
+  /* Escritorio: menú en línea sin hamburguesa */
   @media (min-width: 1024px) {
     .nav { display: block; }
-    .wa { width: auto; padding: 0 var(--space-4); }
-    /* deshace el .sr-only para que el texto "WhatsApp" se vea */
-    .wa-label { position: static; width: auto; height: auto; margin: 0; overflow: visible; clip: auto; }
     .actions .burger { display: none; }
   }
   @media (min-width: 1280px) {
-    .nav ul { gap: var(--space-8); }
+    .nav li + li::before { margin-inline: var(--space-4); }
   }
 
   /* ---------- Drawer ---------- */

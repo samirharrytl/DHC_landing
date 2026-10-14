@@ -3,15 +3,16 @@
 // Props de siempre + opcionales: img (URL o imagen importada), imgAlt, href, priority
 import { Picture } from 'astro:assets'
 import { waLink } from '../data/contacto'
+import { depaId } from '../data/savedDepas'
 import HouseIcon from './HouseIcon.astro'
 
 const {
-  district, address, badge, price, monthlyPayment, estimatedRent,
-  img, imgAlt, href, priority = false,
+  district, address, badge, price, profitability, yearsPayment,
+  img, imgAlt, href, priority = true,
 } = Astro.props
 
 // Formato de soles: 310000 → "S/ 310,000"
-const fmt = (n: number) =>
+const fmtPen  = (n: number) =>
   new Intl.NumberFormat('es-PE', { style: 'currency', currency: 'PEN', maximumFractionDigits: 0 }).format(n)
 
 // Si no nos pasan href, la tarjeta abre WhatsApp con un mensaje ya escrito
@@ -22,11 +23,18 @@ const isWhatsApp = link.includes('wa.me')
 // TODO: apuntar a la página de detalle del depa cuando exista.
 const detailLink = href ?? waLink(`Hola, quisiera ver más detalles del depa de ${district} (${address}).`)
 const isDetailWhatsApp = detailLink.includes('wa.me')
+const propertyId = depaId(district)
 
-// Texto por el que se busca la tarjeta en el buscador de depas
-const searchText = `${district} ${address}`.toLowerCase()
+// Texto y valores por los que se busca y filtra la tarjeta
+const searchText = `${district} ${address} ${price} S/ ${price} ${profitability}`.toLowerCase()
 ---
-<article class="card" data-search={searchText}>
+<article
+  class="card"
+  data-search={searchText}
+  data-district={district}
+  data-price={price}
+  data-profitability={profitability}
+>
   <!-- Imagen 16:9. Mientras no hay foto, se muestra un bloque con una casita -->
   <div class="media">
     {img ? (
@@ -58,17 +66,24 @@ const searchText = `${district} ${address}`.toLowerCase()
     </h3>
     <p class="address">{address}</p>
     <dl class="stats">
-      <div class="stat"><dt>valor</dt><dd>{fmt(price)}</dd></div>
-      <div class="stat"><dt>cuota est.*</dt><dd>{fmt(monthlyPayment)}</dd></div>
-      <div class="stat"><dt>renta est.*</dt><dd>{fmt(estimatedRent)}</dd></div>
+      <div class="stat"><dt>valor</dt><dd>{fmtPen(price)}</dd></div>
+      <div class="stat"><dt>rentabilidad</dt><dd>{profitability}</dd></div>
+      <div class="stat"><dt>se paga en</dt><dd>{yearsPayment}</dd></div>
     </dl>
   </div>
 
   <div class="footer-actions">
-    <a class="btn btn--secondary btn--sm" href={link}
-       target={isWhatsApp ? '_blank' : undefined} rel={isWhatsApp ? 'noopener noreferrer' : undefined}>
+    <button
+      class="btn btn--secondary btn--sm"
+      type="button"
+      data-add-property
+      data-property-id={propertyId}
+      data-property-name={district}
+      aria-pressed="false"
+      aria-label={`Me interesa: agregar ${district} a Mis depas`}
+    >
       Me interesa
-    </a>
+    </button>
     <a class="btn btn--secondary btn--sm" href={detailLink}
        target={isDetailWhatsApp ? '_blank' : undefined} rel={isDetailWhatsApp ? 'noopener noreferrer' : undefined}>
       Ver más detalle
@@ -170,7 +185,7 @@ const searchText = `${district} ${address}`.toLowerCase()
     font-weight: var(--fw-semibold);
     color: var(--color-text-strong);
     font-variant-numeric: tabular-nums;
-    white-space: nowrap;
+
   }
   @container (max-width: 300px) { dd { font-size: var(--fs-15); } }
 
@@ -184,7 +199,9 @@ const searchText = `${district} ${address}`.toLowerCase()
     padding: var(--space-3);
     border-top: var(--border-subtle);
   }
-  .footer-actions a { flex: 1; min-width: 0; padding-inline: var(--space-3); }
+  .footer-actions a,
+  .footer-actions button { flex: 1; min-width: 0; padding-inline: var(--space-3); }
+  .footer-actions button.is-added { background: var(--color-navy-50); color: var(--color-navy-800); }
 
   @media (prefers-reduced-motion: reduce) {
     .card:hover,

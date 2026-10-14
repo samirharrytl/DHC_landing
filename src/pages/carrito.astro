@@ -1,0 +1,208 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import SavedDepa from '../components/SavedDepa.astro'
+import { depas } from '../data/depas'
+import { WHATSAPP_NUMBER } from '../data/contacto'
+---
+<BaseLayout title="Mis depas" description="Revisa y compara los departamentos que guardaste en DepaHost Capital.">
+  <section class="container cart-page" data-cart-page>
+    <header class="cart-heading">
+      <h1>Mis depas</h1>
+      <p>Revisa los departamentos que seleccionaste.</p>
+    </header>
+
+    <div class="cart-layout">
+      <section class="selected-section" aria-labelledby="selected-title">
+        <h2 id="selected-title">Seleccionados <span class="selected-count" data-selected-count>0</span></h2>
+        <div class="saved-list" data-saved-list>
+          {depas.map((depa) => <SavedDepa {...depa} />)}
+          <div class="cart-empty" data-cart-empty hidden>
+            <p>Aún no guardaste departamentos.</p>
+            <a class="btn btn--secondary btn--sm" href="/capital">Explorar departamentos</a>
+          </div>
+        </div>
+      </section>
+
+      <aside class="summary-card" aria-labelledby="summary-title">
+        <h2 id="summary-title">
+          <span class="summary-check" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m5 12 4 4L19 6" />
+            </svg>
+          </span>
+          Resumen de selección
+        </h2>
+        <div class="summary-total-count">
+          <strong data-summary-count>0</strong>
+          <span>seleccionados</span>
+        </div>
+        <ul class="summary-items" data-summary-items aria-label="Departamentos seleccionados"></ul>
+        <div class="investment-total">
+          <span>Inversión total</span>
+          <strong data-investment-total>S/ 0</strong>
+        </div>
+        <a class="btn btn--primary start-button is-disabled" data-contact-selection href="#" target="_blank" rel="noopener noreferrer" aria-disabled="true">
+          Empecemos con estos
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 12h14M13 6l6 6-6 6" />
+          </svg>
+        </a>
+      </aside>
+    </div>
+
+    <p class="saved-note">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z" />
+        <path d="m9 12 2 2 4-4" />
+      </svg>
+      Guardado en este dispositivo. Tu selección seguirá aquí cuando vuelvas.
+    </p>
+  </section>
+</BaseLayout>
+
+<script>
+  import {
+    getSavedDepas,
+    SAVED_DEPAS_EVENT,
+    SAVED_DEPAS_KEY,
+    setSavedDepas,
+  } from '../data/savedDepas'
+  import { WHATSAPP_NUMBER } from '../data/contacto'
+
+  const page = document.querySelector<HTMLElement>('[data-cart-page]')
+  if (page) {
+    const savedItems = [...page.querySelectorAll<HTMLElement>('[data-saved-item]')]
+    const emptyMessage = page.querySelector<HTMLElement>('[data-cart-empty]')
+    const selectedCount = page.querySelector<HTMLElement>('[data-selected-count]')
+    const summaryCount = page.querySelector<HTMLElement>('[data-summary-count]')
+    const summaryItems = page.querySelector<HTMLUListElement>('[data-summary-items]')
+    const investmentTotal = page.querySelector<HTMLElement>('[data-investment-total]')
+    const contactButton = page.querySelector<HTMLAnchorElement>('[data-contact-selection]')
+    const money = new Intl.NumberFormat('es-PE', { style: 'currency', currency: 'PEN', maximumFractionDigits: 0 })
+
+    const renderCart = () => {
+      const savedIds = getSavedDepas()
+      const selected = savedItems.filter((item) => savedIds.includes(item.dataset.savedItem ?? ''))
+      const total = selected.reduce((sum, item) => sum + Number(item.dataset.price ?? 0), 0)
+
+      savedItems.forEach((item) => { item.hidden = !savedIds.includes(item.dataset.savedItem ?? '') })
+      if (emptyMessage) emptyMessage.hidden = selected.length > 0
+      if (selectedCount) selectedCount.textContent = String(selected.length)
+      if (summaryCount) summaryCount.textContent = String(selected.length)
+      if (investmentTotal) investmentTotal.textContent = money.format(total)
+
+      summaryItems?.replaceChildren(...selected.map((item) => {
+        const row = document.createElement('li')
+        const name = document.createElement('span')
+        const price = document.createElement('strong')
+        name.textContent = item.dataset.district ?? 'Departamento'
+        price.textContent = money.format(Number(item.dataset.price ?? 0))
+        row.append(name, price)
+        return row
+      }))
+
+      if (!contactButton) return
+      if (selected.length === 0) {
+        contactButton.href = '#'
+        contactButton.setAttribute('aria-disabled', 'true')
+        contactButton.classList.add('is-disabled')
+        return
+      }
+
+      const lines = selected.map((item) => `- ${item.dataset.district}: ${money.format(Number(item.dataset.price ?? 0))}`)
+      const message = `Hola, quiero conversar sobre estos departamentos:\n${lines.join('\n')}\nInversión total: ${money.format(total)}`
+      contactButton.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`
+      contactButton.removeAttribute('aria-disabled')
+      contactButton.classList.remove('is-disabled')
+    }
+
+    page.querySelectorAll<HTMLButtonElement>('[data-remove-property]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const id = button.dataset.removeProperty
+        if (id) setSavedDepas(getSavedDepas().filter((savedId) => savedId !== id))
+      })
+    })
+
+    contactButton?.addEventListener('click', (event) => {
+      if (contactButton.getAttribute('aria-disabled') === 'true') event.preventDefault()
+    })
+
+    window.addEventListener(SAVED_DEPAS_EVENT, renderCart)
+    window.addEventListener('storage', (event) => {
+      if (event.key === SAVED_DEPAS_KEY) renderCart()
+    })
+    renderCart()
+  }
+</script>
+
+<style>
+  .cart-page { padding-block: var(--space-6) var(--space-12); }
+  .cart-heading { margin-bottom: var(--space-6); text-align: center; }
+  .cart-heading h1 { font-size: var(--fs-h2); letter-spacing: 0; }
+  .cart-heading p { margin: var(--space-2) 0 0; color: var(--color-text-muted); }
+  .cart-layout { display: grid; gap: var(--space-6); align-items: start; }
+  .selected-section h2 {
+    position: relative;
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
+    width: max-content;
+    margin: 0 0 var(--space-5);
+    padding-bottom: var(--space-2);
+    font-size: var(--fs-15);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .selected-section h2::after {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 136px;
+    height: 2px;
+    background: var(--color-navy-800);
+    content: '';
+  }
+  .selected-count { color: var(--color-text-muted); font-weight: var(--fw-regular); }
+  .saved-list { display: grid; gap: var(--space-3); }
+  .cart-empty {
+    display: grid;
+    justify-items: start;
+    gap: var(--space-3);
+    padding: var(--space-6);
+    border: var(--border);
+    border-radius: var(--radius-lg);
+    background: #fff;
+  }
+  .cart-empty[hidden] { display: none; }
+  .cart-empty p { margin: 0; color: var(--color-text-muted); }
+  .summary-card {
+    padding: var(--space-5);
+    border: var(--border);
+    border-radius: var(--radius-lg);
+    background: #fff;
+    box-shadow: var(--shadow-sm);
+  }
+  .summary-card h2 { display: flex; align-items: center; gap: var(--space-3); font-size: var(--fs-18); }
+  .summary-check { display: grid; place-items: center; width: 36px; height: 36px; flex: none; border-radius: 50%; background: var(--color-navy-800); color: #fff; }
+  .summary-check svg { width: 22px; height: 22px; }
+  .summary-total-count { display: flex; align-items: baseline; gap: var(--space-3); padding-block: var(--space-4); }
+  .summary-total-count strong { color: var(--color-navy-800); font-size: 2.75rem; line-height: 1; }
+  .summary-items { display: grid; gap: var(--space-3); margin: 0; padding: var(--space-4) 0; border-block: var(--border-subtle); list-style: none; }
+  .summary-items li { display: flex; justify-content: space-around; gap: var(--space-3); }
+  .summary-items strong { white-space: nowrap; }
+  .investment-total { display: flex; justify-content: space-between; gap: var(--space-3); padding-block: var(--space-4); }
+  .investment-total strong { color: var(--color-navy-800); white-space: nowrap; }
+  .start-button { display: flex; justify-content: space-between; width: 100%; min-height: 52px; padding-inline: var(--space-5); }
+  .start-button svg { width: 22px; height: 22px; flex: none; }
+  .start-button.is-disabled { opacity: 0.55; cursor: not-allowed; }
+  .saved-note { display: flex; align-items: flex-start; gap: var(--space-3); margin: var(--space-5) 0 0; color: var(--color-text-muted); font-size: var(--fs-sm); }
+  .saved-note svg { width: 24px; height: 24px; flex: none; color: var(--color-navy-800); }
+
+  @media (min-width: 900px) {
+    .cart-page { padding-top: var(--space-8); }
+    .cart-heading { position: relative; margin-bottom: var(--space-8); }
+    .cart-heading h1 { font-size: clamp(2rem, 2.5vw, 2.75rem); }
+    .cart-layout { grid-template-columns: minmax(0, 1.65fr) minmax(320px, 1fr); gap: var(--space-6); }
+    .summary-card { position: sticky; top: calc(var(--header-h) + var(--space-4)); padding: var(--space-6); }
+  }
+</style>

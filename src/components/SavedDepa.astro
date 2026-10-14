@@ -1,0 +1,99 @@
+---
+import { Picture } from 'astro:assets'
+import HouseIcon from './HouseIcon.astro'
+import { depaId } from '../data/savedDepas'
+
+const { district, address, badge, price, profitability, yearsPayment, img } = Astro.props
+const id = depaId(district)
+const formatPrice = (value: number) =>
+  new Intl.NumberFormat('es-PE', { style: 'currency', currency: 'PEN', maximumFractionDigits: 0 }).format(value)
+---
+<article class="saved-depa" data-saved-item={id} data-district={district} data-price={price} hidden>
+  <div class="saved-image">
+    {img ? (
+      <Picture
+        src={img}
+        alt={`Departamento en ${district}`}
+        widths={[320, 480, 640]}
+        sizes="(max-width: 640px) 90vw, (max-width: 1024px) 42vw, 240px"
+        formats={['avif', 'webp']}
+        fallbackFormat="jpeg"
+        loading="lazy"
+        decoding="async"
+      />
+    ) : <HouseIcon />}
+  </div>
+  <div class="saved-content">
+    <div class="saved-title-row">
+      <h3>{district}</h3>
+      <div class="saved-actions">
+        <button class="remove-depa" type="button" data-remove-property={id} aria-label={`Quitar ${district} de la selección`}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true">
+            <path d="m6 6 12 12M18 6 6 18" />
+          </svg>
+        </button>
+      </div>
+    </div>
+    <p class="saved-address">{district}, Lima · {address}</p>
+    <div class="saved-facts">
+      <span>{profitability}</span>
+      <span>Se paga en {yearsPayment}</span>
+    </div>
+    <p class="saved-description">{badge}</p>
+    <p class="saved-price">Desde <strong>{formatPrice(price)}</strong></p>
+  </div>
+</article>
+
+<style>
+  .saved-depa {
+    display: grid;
+    grid-template-columns: minmax(112px, 32%) minmax(0, 1fr);
+    gap: var(--space-4);
+    padding: var(--space-3);
+    border: var(--border);
+    border-radius: var(--radius-lg);
+    background: #fff;
+  }
+  .saved-depa[hidden] { display: none; }
+  .saved-image {
+    align-self: stretch;
+    min-height: 150px;
+    overflow: hidden;
+    border-radius: var(--radius-md);
+    background: var(--color-navy-50);
+  }
+  .saved-image :global(picture),
+  .saved-image :global(img) { display: block; width: 100%; height: 100%; }
+  .saved-image :global(img) { object-fit: cover; }
+  .saved-image :global(svg) { width: 48px; height: 48px; margin: 48px auto; color: var(--color-navy-800); }
+  .saved-content { min-width: 0; }
+  .saved-title-row { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); }
+  h3 { font-size: var(--fs-18); color: var(--color-navy-800); }
+  .saved-actions { display: flex; align-items: center; gap: var(--space-2); }
+  .remove-depa {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius-pill);
+    background: transparent;
+    color: var(--color-navy-800);
+    cursor: pointer;
+  }
+  .remove-depa { color: var(--color-text-muted); }
+  .remove-depa svg { width: 20px; height: 20px; }
+  .remove-depa:hover { background: var(--color-navy-50); }
+  .saved-address { margin: var(--space-1) 0 0; color: var(--color-text-muted); font-size: var(--fs-sm); }
+  .saved-facts { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-3); font-size: var(--fs-sm); }
+  .saved-description { margin: var(--space-2) 0 0; color: var(--color-text-muted); font-size: var(--fs-sm); }
+  .saved-price { margin: var(--space-2) 0 0; font-size: var(--fs-sm); }
+  .saved-price strong { margin-left: var(--space-1); color: var(--color-navy-800); font-size: var(--fs-body); }
+
+  @media (max-width: 480px) {
+    .saved-depa { grid-template-columns: 96px minmax(0, 1fr); gap: var(--space-3); padding: var(--space-2); }
+    .saved-image { min-height: 138px; }
+    .saved-facts { gap: var(--space-2); font-size: var(--fs-xs); }
+  }
+</style>
