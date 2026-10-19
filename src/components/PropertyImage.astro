@@ -1,0 +1,38 @@
+---
+// Foto de un depa. Acepta una foto local (optimizada en el build) o una URL de la API
+// (Astro la descarga y optimiza en el build; el dominio debe estar en image.remotePatterns).
+import { Picture } from 'astro:assets'
+import type { ImageOutputFormat } from 'astro'
+import type { PropertyImage } from '../types/property'
+
+interface Props {
+  image: PropertyImage
+  widths: number[]
+  sizes: string
+  priority?: boolean
+}
+
+const { image, widths, sizes, priority = false } = Astro.props
+const formats: ImageOutputFormat[] = ['avif', 'webp']
+const common = {
+  alt: image.alt,
+  widths,
+  sizes,
+  formats,
+  fallbackFormat: 'jpeg' as ImageOutputFormat,
+  loading: priority ? ('eager' as const) : ('lazy' as const),
+  fetchpriority: priority ? ('high' as const) : undefined,
+  decoding: 'async' as const,
+}
+const src = image.src
+---
+
+{typeof src === 'string' ? (
+  image.width && image.height ? (
+    <Picture src={src} width={image.width} height={image.height} {...common} />
+  ) : (
+    <Picture src={src} inferSize {...common} />
+  )
+) : (
+  <Picture src={src} {...common} />
+)}

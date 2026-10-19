@@ -1,11 +1,17 @@
 ---
 // Página "en construcción": título + aviso.
-// El <slot /> permite agregar secciones extra (como en Propietarios).
+// El <slot /> permite agregar secciones extra.
 import BaseLayout from './BaseLayout.astro'
 
-const { title } = Astro.props
+interface Props {
+  title: string
+  description?: string
+}
+
+const { title, description } = Astro.props
 ---
-<BaseLayout title={title}>
+
+<BaseLayout title={title} description={description}>
   <section class="container section">
     <h1>{title}</h1>
     <p class="lead">Página en construcción.</p>

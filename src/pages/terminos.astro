@@ -1,4 +1,65 @@
 ---
-import PlaceholderLayout from '../layouts/PlaceholderLayout.astro'
+// BORRADOR redactado como punto de partida. Debe revisarlo un abogado antes de publicarse.
+import LegalLayout from '../layouts/LegalLayout.astro'
+import { COMPANY } from '../data/empresa'
 ---
-<PlaceholderLayout title="Términos" />
+
+<LegalLayout
+  title="Términos y condiciones"
+  description="Condiciones de uso del sitio depahostperu.com de Depa Host Perú."
+  updated="[fecha pendiente]"
+>
+  <p>
+    Estos términos regulan el uso de depahostperu.com, operado por {COMPANY.legalName} (RUC {COMPANY.ruc}). Al
+    usar el sitio aceptas estas condiciones.
+  </p>
+
+  <h2>1. Qué ofrece el sitio</h2>
+  <p>
+    El sitio presenta servicios de estadías, gestión de venta y alquiler para propietarios, y una selección de
+    departamentos para invertir (DepaHost Capital). La información publicada es referencial y no constituye
+    una oferta vinculante. Las condiciones finales de cada operación se acuerdan por escrito.
+  </p>
+
+  <h2>2. Rentabilidad y cuotas estimadas</h2>
+  <p>
+    Las rentabilidades, plazos de retorno y cuotas que mostramos son estimaciones basadas en supuestos de
+    mercado y de financiamiento indicados junto a cada cálculo. No son rentabilidades garantizadas. Los
+    resultados reales pueden variar. Te recomendamos evaluar cada inversión con tu propio asesor.
+  </p>
+
+  <h2>3. Disponibilidad y precios</h2>
+  <p>
+    Los precios y la disponibilidad de los depas pueden cambiar sin aviso. Un depa marcado como reservado o
+    vendido puede seguir apareciendo por un tiempo mientras actualizamos el sitio.
+  </p>
+
+  <h2>4. Uso permitido</h2>
+  <p>
+    No está permitido usar el sitio para fines ilícitos, enviar información falsa en los formularios, ni
+    intentar acceder a sistemas o datos sin autorización.
+  </p>
+
+  <h2>5. Propiedad intelectual</h2>
+  <p>
+    Los textos, fotos, marcas y diseño del sitio pertenecen a {COMPANY.name} o a sus titulares y no pueden
+    usarse sin autorización.
+  </p>
+
+  <h2>6. Responsabilidad</h2>
+  <p>
+    Hacemos lo posible para que la información sea correcta y esté actualizada, pero no respondemos por
+    decisiones tomadas solo con base en la información referencial del sitio.
+  </p>
+
+  <h2>7. Reclamos</h2>
+  <p>
+    Puedes registrar un reclamo o queja en nuestro{' '}
+    <a href="/libro-de-reclamaciones">Libro de Reclamaciones</a>.
+  </p>
+
+  <h2>8. Ley aplicable</h2>
+  <p>
+    Estos términos se rigen por las leyes del Perú. Cualquier controversia se somete a los jueces de Lima.
+  </p>
+</LegalLayout>

@@ -1,7 +1,12 @@
 ---
 // Casita de línea (decorativa). Se usa donde todavía no hay foto.
+interface Props {
+  strokeWidth?: number
+  class?: string
+}
 const { strokeWidth = 1.5, class: className } = Astro.props
 ---
+
 <svg
   class={className}
   viewBox="0 0 32 32"

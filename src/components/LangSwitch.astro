@@ -2,10 +2,17 @@
 // Selector de idioma ES | EN (se usa en el header y en el menú móvil).
 // Las páginas en inglés aún no existen, por eso EN no es un link.
 ---
+
 <div class="lang">
-  <a href={Astro.url.pathname} hreflang="es" lang="es" aria-current="true">ES</a>
-  <span class="sep" aria-hidden="true">|</span>
-  <span lang="en" aria-disabled="true" title="Próximamente">EN</span>
+  <a href={Astro.url.pathname} hreflang="es" lang="es" aria-current="true">
+    ES
+  </a>
+  <span class="sep" aria-hidden="true">
+    |
+  </span>
+  <span lang="en" aria-disabled="true" title="Próximamente">
+    EN
+  </span>
 </div>
 
 <style>
@@ -25,6 +32,11 @@
     min-width: var(--control-h-sm);
     min-height: var(--control-h-sm);
   }
-  a { color: var(--color-text-strong); text-decoration: none; }
-  span[lang] { cursor: not-allowed; }
+  a {
+    color: var(--color-text-strong);
+    text-decoration: none;
+  }
+  span[lang] {
+    cursor: not-allowed;
+  }
 </style>

@@ -8,47 +8,58 @@
    ========================================================= */
 :root {
   /* ---------- Color · marca ---------- */
-  --color-navy-900: #031A39;   /* footer / banda CTA (muestreado #031A39) */
-  --color-navy-800: #012147;   /* primario: botones, chips, stepper (muestreado #012147–#022248) */
-  --color-navy-850: #00152F;   /* hover primario */
-  --color-navy-950: #000F22;   /* active primario */
-  --color-navy-50:  #F0F3F8;   /* hover de botón outline / fondos suaves */
-  --color-navy-100: #E1E7F0;   /* active de botón outline */
+  --color-navy-900: #031a39; /* footer / banda CTA (muestreado #031A39) */
+  --color-navy-800: #012147; /* primario: botones, chips, stepper (muestreado #012147–#022248) */
+  --color-navy-850: #00152f; /* hover primario */
+  --color-navy-950: #000f22; /* active primario */
+  --color-navy-50: #f0f3f8; /* hover de botón outline / fondos suaves */
+  --color-navy-100: #e1e7f0; /* active de botón outline */
 
   /* ---------- Color · WhatsApp ---------- */
-  --color-wa-700: #094835;     /* fondo botón WhatsApp (muestreado #094835) */
-  --color-wa-800: #063626;     /* hover */
-  --color-wa-900: #04281C;     /* active */
-  --color-wa-500: #25D366;     /* verde oficial, SOLO para el ícono (muestreado #29BD45) */
+  --color-wa-700: #094835; /* fondo botón WhatsApp (muestreado #094835) */
+  --color-wa-800: #063626; /* hover */
+  --color-wa-900: #04281c; /* active */
+  --color-wa-500: #25d366; /* verde oficial, SOLO para el ícono (muestreado #29BD45) */
 
   /* ---------- Color · texto ---------- */
-  --color-text-strong: #0A1128; /* títulos (muestreado #060605 home / #021025 capital) */
-  --color-text:        #2B2B2B; /* cuerpo (muestreado #282828) */
-  --color-text-muted:  #5C5C5C; /* secundario, direcciones, labels (sube desde #6A6A6A–#777777) */
-  --color-text-inverse: #FFFFFF;
-  --color-text-inverse-muted: #B8C4D6; /* subtítulos sobre navy */
+  --color-text-strong: #0a1128; /* títulos (muestreado #060605 home / #021025 capital) */
+  --color-text: #2b2b2b; /* cuerpo (muestreado #282828) */
+  --color-text-muted: #5c5c5c; /* secundario, direcciones, labels (sube desde #6A6A6A–#777777) */
+  --color-text-inverse: #ffffff;
+  --color-text-inverse-muted: #b8c4d6; /* subtítulos sobre navy */
 
   /* ---------- Color · superficies y bordes ---------- */
-  --color-bg:          #FFFFFF;
-  --color-surface:     #FFFFFF;
-  --color-surface-alt: #FBFBFB; /* barra formulario inglés (muestreado #FBFBFB) */
-  --color-border:        #DBDBDB; /* tarjetas (muestreado #DBDBDB / #CACACA) */
-  --color-border-subtle: #E4E4E4; /* divisores internos, línea stepper (muestreado #E4E4E4) */
-  --color-border-input:  #8A8F98; /* inputs: 3.25:1 sobre blanco (WCAG 1.4.11) */
+  --color-bg: #ffffff;
+  --color-surface: #ffffff;
+  --color-surface-alt: #fbfbfb; /* barra formulario inglés (muestreado #FBFBFB) */
+  --color-border: #dbdbdb; /* tarjetas (muestreado #DBDBDB / #CACACA) */
+  --color-border-subtle: #e4e4e4; /* divisores internos, línea stepper (muestreado #E4E4E4) */
+  --color-border-input: #8a8f98; /* inputs: 3.25:1 sobre blanco (WCAG 1.4.11) */
   --color-border-strong: var(--color-navy-800); /* botón outline, barra Top 10 */
 
   /* ---------- Color · estados ---------- */
-  --color-focus:   #2563EB;   /* 5.17:1 sobre blanco, 3.36:1 sobre navy-900 */
-  --color-error:   #B42318;
-  --color-success: #0F7B4A;
-  --color-disabled-bg:   #E5E7EB;
-  --color-disabled-text: #6B7280;
+  --color-focus: #2563eb; /* 5.17:1 sobre blanco, 3.36:1 sobre navy-900 */
+  --color-error: #b42318;
+  --color-success: #0f7b4a;
+  --color-disabled-bg: #e5e7eb;
+  --color-disabled-text: #6b7280;
   --color-overlay: rgb(3 26 57 / 0.5); /* fondo del drawer móvil */
 
   /* ---------- Tipografía ---------- */
   /* --font-inter lo crea Astro (astro.config.mjs → fonts): "Inter" + respaldo ajustado.
      Si no existiera, se usan las fuentes del sistema. */
-  --font-sans: var(--font-inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif);
+  --font-sans: var(
+    --font-inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    Arial,
+    sans-serif
+  );
+  /* Títulos editoriales (Capital, Propietarios). --font-newsreader lo crea Astro. */
+  --font-display: var(--font-newsreader, Georgia, 'Times New Roman', serif);
   /* El logo script "Depa Host Perú" va como SVG, nunca como fuente web. */
 
   --fw-regular: 400;
@@ -57,53 +68,53 @@
   --fw-bold: 700;
 
   /* Escala fluida (min @360px → max @1280px) */
-  --fs-display: clamp(2rem, 1.25rem + 2.5vw, 3.25rem);     /* 32 → 52  H1 hero */
-  --fs-h2:      clamp(1.5rem, 1.1rem + 1.6vw, 2.25rem);    /* 24 → 36  títulos de sección */
-  --fs-h3:      clamp(1.125rem, 1rem + 0.5vw, 1.375rem);   /* 18 → 22  títulos de tarjeta */
-  --fs-lead:    clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);   /* 17 → 20  subtítulo hero */
-  --fs-body:    1rem;        /* 16 */
-  --fs-sm:      0.875rem;    /* 14 */
-  --fs-xs:      0.75rem;     /* 12  chips, disclaimers (mínimo absoluto) */
-  --fs-stat:    clamp(1rem, 0.95rem + 0.25vw, 1.125rem);   /* 16 → 18  valores de la tarjeta */
+  --fs-display: clamp(2rem, 1.25rem + 2.5vw, 3.25rem); /* 32 → 52  H1 hero */
+  --fs-h2: clamp(1.5rem, 1.1rem + 1.6vw, 2.25rem); /* 24 → 36  títulos de sección */
+  --fs-h3: clamp(1.125rem, 1rem + 0.5vw, 1.375rem); /* 18 → 22  títulos de tarjeta */
+  --fs-lead: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem); /* 17 → 20  subtítulo hero */
+  --fs-body: 1rem; /* 16 */
+  --fs-sm: 0.875rem; /* 14 */
+  --fs-xs: 0.75rem; /* 12  chips, disclaimers (mínimo absoluto) */
+  --fs-stat: clamp(1rem, 0.95rem + 0.25vw, 1.125rem); /* 16 → 18  valores de la tarjeta */
 
   /* Tamaños fijos intermedios (complementan la escala de arriba) */
-  --fs-13: 0.8125rem;  /* 13px: disclaimers, labels de stats */
-  --fs-15: 0.9375rem;  /* 15px: botón sm, subtítulos, texto de paso */
-  --fs-18: 1.125rem;   /* 18px: logo, título de paso, links del drawer */
-  --fs-20: 1.25rem;    /* 20px: título del footer, aliados, logo desktop */
-  --fs-22: 1.375rem;   /* 22px: título del footer en desktop */
+  --fs-13: 0.8125rem; /* 13px: disclaimers, labels de stats */
+  --fs-15: 0.9375rem; /* 15px: botón sm, subtítulos, texto de paso */
+  --fs-18: 1.125rem; /* 18px: logo, título de paso, links del drawer */
+  --fs-20: 1.25rem; /* 20px: título del footer, aliados, logo desktop */
+  --fs-22: 1.375rem; /* 22px: título del footer en desktop */
 
-  --lh-tight: 1.1;   /* display */
+  --lh-tight: 1.1; /* display */
   --lh-heading: 1.25;
   --lh-body: 1.5;
   --ls-tight: -0.02em; /* display / h2 */
-  --ls-caps: 0.04em;   /* chips en mayúsculas */
+  --ls-caps: 0.04em; /* chips en mayúsculas */
 
   /* ---------- Espaciado (base 4px) ---------- */
-  --space-1: 0.25rem;  /* 4 */
-  --space-2: 0.5rem;   /* 8 */
-  --space-3: 0.75rem;  /* 12 */
-  --space-4: 1rem;     /* 16 */
-  --space-5: 1.25rem;  /* 20 */
-  --space-6: 1.5rem;   /* 24 */
-  --space-8: 2rem;     /* 32 */
-  --space-10: 2.5rem;  /* 40 */
-  --space-12: 3rem;    /* 48 */
-  --space-16: 4rem;    /* 64 */
-  --space-20: 5rem;    /* 80 */
-  --space-24: 6rem;    /* 96 */
+  --space-1: 0.25rem; /* 4 */
+  --space-2: 0.5rem; /* 8 */
+  --space-3: 0.75rem; /* 12 */
+  --space-4: 1rem; /* 16 */
+  --space-5: 1.25rem; /* 20 */
+  --space-6: 1.5rem; /* 24 */
+  --space-8: 2rem; /* 32 */
+  --space-10: 2.5rem; /* 40 */
+  --space-12: 3rem; /* 48 */
+  --space-16: 4rem; /* 64 */
+  --space-20: 5rem; /* 80 */
+  --space-24: 6rem; /* 96 */
   --section-y: clamp(3rem, 2rem + 4vw, 6rem); /* 48 → 96 padding vertical de sección */
 
   /* ---------- Layout ---------- */
-  --container-max: 75rem;  /* 1200 */
-  --gutter: 1rem;          /* 16 móvil; sube en media queries */
-  --grid-gap: 1rem;        /* 16 móvil; 24 desde 1024 */
-  --header-h: 4rem;        /* 64 móvil; 72 tablet; 80 desktop */
+  --container-max: 75rem; /* 1200 */
+  --gutter: 1rem; /* 16 móvil; sube en media queries */
+  --grid-gap: 1rem; /* 16 móvil; 24 desde 1024 */
+  --header-h: 4rem; /* 64 móvil; 72 tablet; 80 desktop */
 
   /* ---------- Radios ---------- */
-  --radius-sm: 4px;     /* chips */
-  --radius-md: 8px;     /* botones, inputs, barra Top 10 */
-  --radius-lg: 12px;    /* tarjetas, dropdown */
+  --radius-sm: 4px; /* chips */
+  --radius-md: 8px; /* botones, inputs, barra Top 10 */
+  --radius-lg: 12px; /* tarjetas, dropdown */
   --radius-pill: 999px; /* stepper, FAB */
 
   /* ---------- Bordes ---------- */
@@ -118,15 +129,15 @@
   --shadow-lg: 0 8px 24px rgb(3 26 57 / 0.12);
   --shadow-dropdown: 0 12px 32px rgb(3 26 57 / 0.16);
   --shadow-header: 0 1px 0 var(--color-border-subtle), 0 4px 12px rgb(3 26 57 / 0.06);
-  --focus-ring: 0 0 0 2px #FFFFFF, 0 0 0 4px var(--color-focus);
+  --focus-ring: 0 0 0 2px #ffffff, 0 0 0 4px var(--color-focus);
 
   /* ---------- Controles ---------- */
-  --control-h-sm: 2.75rem;  /* 44  mínimo táctil */
-  --control-h-md: 3rem;     /* 48  default */
-  --control-h-lg: 3.25rem;  /* 52 */
-  --fab-size: 3.5rem;       /* 56  botón flotante de WhatsApp */
-  --icon-sm: 1.25rem;       /* 20 */
-  --icon-md: 1.5rem;        /* 24 */
+  --control-h-sm: 2.75rem; /* 44  mínimo táctil */
+  --control-h-md: 3rem; /* 48  default */
+  --control-h-lg: 3.25rem; /* 52 */
+  --fab-size: 3.5rem; /* 56  botón flotante de WhatsApp */
+  --icon-sm: 1.25rem; /* 20 */
+  --icon-md: 1.5rem; /* 24 */
 
   /* ---------- Motion ---------- */
   --dur-fast: 120ms;
@@ -136,26 +147,26 @@
 
   /* ---------- Z-index ---------- */
   --z-base: 0;
-  --z-raised: 10;      /* tarjeta en hover */
-  --z-header: 100;     /* header sticky */
-  --z-dropdown: 200;   /* "Soy propietario", menús */
-  --z-fab: 250;        /* WhatsApp flotante móvil */
-  --z-overlay: 300;    /* fondo del drawer */
-  --z-drawer: 310;     /* drawer de navegación */
+  --z-raised: 10; /* tarjeta en hover */
+  --z-header: 100; /* header sticky */
+  --z-dropdown: 200; /* "Soy propietario", menús */
+  --z-fab: 250; /* WhatsApp flotante móvil */
+  --z-overlay: 300; /* fondo del drawer */
+  --z-drawer: 310; /* drawer de navegación */
   --z-toast: 400;
 }
 
 @media (min-width: 640px) {
   :root {
-    --gutter: 1.5rem;   /* 24 */
+    --gutter: 1.5rem; /* 24 */
     --header-h: 4.5rem; /* 72 */
   }
 }
 @media (min-width: 1024px) {
   :root {
-    --gutter: 2rem;     /* 32 */
+    --gutter: 2rem; /* 32 */
     --grid-gap: 1.5rem; /* 24 */
-    --header-h: 5rem;   /* 80 */
+    --header-h: 5rem; /* 80 */
   }
 }
 

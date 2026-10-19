@@ -5,14 +5,29 @@
 // Regla de diseño: si el link abre WhatsApp (wa.me) SIEMPRE es verde, aunque pidan otra variante.
 import WhatsAppIcon from './WhatsAppIcon.astro'
 
+interface Props {
+  href: string
+  variant?: 'primary' | 'secondary' | 'outline' | 'whatsapp'
+  size?: 'sm' | 'md'
+  block?: boolean
+  class?: string
+}
+
 const { href, variant = 'primary', size = 'md', block = false, class: className } = Astro.props
 
-const isWhatsApp = href?.includes('wa.me')
+const isWhatsApp = href.includes('wa.me')
 const finalVariant = isWhatsApp ? 'whatsapp' : variant === 'outline' ? 'secondary' : variant
 ---
+
 <a
   href={href}
-  class:list={['btn', `btn--${finalVariant}`, size !== 'md' && `btn--${size}`, { 'btn--block': block }, className]}
+  class:list={[
+    'btn',
+    `btn--${finalVariant}`,
+    size !== 'md' && `btn--${size}`,
+    { 'btn--block': block },
+    className,
+  ]}
   target={isWhatsApp ? '_blank' : undefined}
   rel={isWhatsApp ? 'noopener noreferrer' : undefined}
 >

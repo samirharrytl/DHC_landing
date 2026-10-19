@@ -3,6 +3,7 @@
 import Logo from './Logo.astro'
 import Button from './Button.astro'
 import { waLink } from '../data/contacto'
+import { COMPANY } from '../data/empresa'
 
 const year = new Date().getFullYear()
 const legalLinks = [
@@ -12,6 +13,7 @@ const legalLinks = [
   { href: '/libro-de-reclamaciones', label: 'Libro de Reclamaciones' },
 ]
 ---
+
 <footer class="footer">
   <!-- data-footer-cta: cuando esta banda se ve, se esconde el WhatsApp flotante -->
   <div class="band" data-footer-cta>
@@ -31,11 +33,19 @@ const legalLinks = [
     <div class="container legal-inner">
       <nav aria-label="Legal">
         <ul>
-          {legalLinks.map((link) => <li><a href={link.href}>{link.label}</a></li>)}
+          {legalLinks.map((link) => (
+            <li>
+              <a href={link.href}>{link.label}</a>
+            </li>
+          ))}
         </ul>
       </nav>
-      <!-- TODO: completar el RUC -->
-      <p>© {year} Depa Host Perú · RUC [pendiente] · depahostperu.com</p>
+      <p>
+        © {year} Depa Host Perú · RUC {COMPANY.ruc} · depahostperu.com ·
+        <button type="button" class="link-button" data-consent-open>
+          Preferencias de cookies
+        </button>
+      </p>
     </div>
   </div>
 </footer>
@@ -47,7 +57,9 @@ const legalLinks = [
   }
 
   /* ---------- Banda CTA ---------- */
-  .band { padding-block: var(--space-8); }
+  .band {
+    padding-block: var(--space-8);
+  }
   .band-inner {
     display: flex;
     flex-direction: column;
@@ -55,21 +67,40 @@ const legalLinks = [
     gap: var(--space-4);
     text-align: center;
   }
-  .title { margin: 0; font-size: var(--fs-20); font-weight: var(--fw-semibold); }
-  .sub { margin: var(--space-1) 0 0; font-size: var(--fs-15); color: var(--color-text-inverse-muted); }
-  .band-inner :global(.band-btn) { width: 100%; }
+  .title {
+    margin: 0;
+    font-size: var(--fs-20);
+    font-weight: var(--fw-semibold);
+  }
+  .sub {
+    margin: var(--space-1) 0 0;
+    font-size: var(--fs-15);
+    color: var(--color-text-inverse-muted);
+  }
+  .band-inner :global(.band-btn) {
+    width: 100%;
+  }
 
   @media (min-width: 640px) {
-    .band-inner :global(.band-btn) { width: auto; }
+    .band-inner :global(.band-btn) {
+      width: auto;
+    }
   }
   @media (min-width: 1024px) {
-    .band { padding-block: var(--space-6); min-height: 96px; display: flex; align-items: center; }
+    .band {
+      padding-block: var(--space-6);
+      min-height: 96px;
+      display: flex;
+      align-items: center;
+    }
     .band-inner {
       display: grid;
       grid-template-columns: auto 1fr auto;
       gap: var(--space-8);
     }
-    .title { font-size: var(--fs-22); }
+    .title {
+      font-size: var(--fs-22);
+    }
   }
 
   /* ---------- Fila legal ---------- */
@@ -98,11 +129,35 @@ const legalLinks = [
     color: #fff;
     text-decoration: none;
   }
-  .legal a:hover { text-decoration: underline; }
-  .legal p { margin: 0; padding-block: var(--space-2); }
+  .legal a:hover {
+    text-decoration: underline;
+  }
+  .legal p {
+    margin: 0;
+    padding-block: var(--space-2);
+  }
+  .link-button {
+    min-height: var(--control-h-sm);
+    padding: 0;
+    border: 0;
+    background: none;
+    color: #fff;
+    font: inherit;
+    cursor: pointer;
+  }
+  .link-button:hover {
+    text-decoration: underline;
+  }
 
   @media (min-width: 1024px) {
-    .legal-inner { flex-direction: row; justify-content: space-between; align-items: center; }
-    .legal ul { flex-direction: row; gap: var(--space-6); }
+    .legal-inner {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .legal ul {
+      flex-direction: row;
+      gap: var(--space-6);
+    }
   }
 </style>

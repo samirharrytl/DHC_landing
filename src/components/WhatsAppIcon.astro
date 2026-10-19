@@ -1,7 +1,11 @@
 ---
 // Ícono de WhatsApp (globo de chat con teléfono). Es decorativo: aria-hidden.
+interface Props {
+  size?: number
+}
 const { size = 20 } = Astro.props
 ---
+
 <svg
   width={size}
   height={size}

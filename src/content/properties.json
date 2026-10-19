@@ -1,0 +1,224 @@
+[
+  {
+    "id": "05429e0c-2436-4700-8387-9d501a302a00",
+    "slug": "lince-av-arequipa-cuadra-12",
+    "district": {
+      "id": "e5826158-cf2b-4c6e-ae08-71f43c9ddfb5",
+      "name": "Lince",
+      "slug": "lince"
+    },
+    "origin": "owner",
+    "developer": null,
+    "address": "Av. Arequipa cuadra 12",
+    "badge": "Súper precio",
+    "description": null,
+    "price": {
+      "amount": 310000,
+      "currency": "PEN"
+    },
+    "yield": {
+      "min": 8,
+      "max": 10
+    },
+    "paybackYears": 11,
+    "areaM2": null,
+    "bedrooms": null,
+    "bathrooms": null,
+    "images": [
+      {
+        "src": "../assets/depas/lince-av-arequipa.jpg",
+        "alt": "Departamento en Lince"
+      }
+    ],
+    "status": "published",
+    "featured": true,
+    "publishedAt": "2026-10-08T00:00:00.000Z"
+  },
+  {
+    "id": "885cd447-c885-4e24-9871-6fb2b163bc34",
+    "slug": "surquillo-av-angamos-este-cuadra-20",
+    "district": {
+      "id": "8fc4b505-438d-4ea5-bf68-cd6563eca77a",
+      "name": "Surquillo",
+      "slug": "surquillo"
+    },
+    "origin": "owner",
+    "developer": null,
+    "address": "Av. Angamos Este cuadra 20",
+    "badge": "Súper oportunidad",
+    "description": null,
+    "price": {
+      "amount": 285000,
+      "currency": "PEN"
+    },
+    "yield": {
+      "min": 9,
+      "max": 11
+    },
+    "paybackYears": 10,
+    "areaM2": null,
+    "bedrooms": null,
+    "bathrooms": null,
+    "images": [
+      {
+        "src": "../assets/depas/surquillo-av-angamos.jpg",
+        "alt": "Departamento en Surquillo"
+      }
+    ],
+    "status": "published",
+    "featured": true,
+    "publishedAt": "2026-10-08T00:00:00.000Z"
+  },
+  {
+    "id": "bb3d272d-dd3a-4469-9f50-ce87ae933f6c",
+    "slug": "magdalena-av-del-ejercito-cuadra-6",
+    "district": {
+      "id": "7148036f-d8c8-4812-8338-8fa9a6b593b3",
+      "name": "Magdalena",
+      "slug": "magdalena"
+    },
+    "origin": "owner",
+    "developer": null,
+    "address": "Av. del Ejército cuadra 6",
+    "badge": "Últimos en venta",
+    "description": null,
+    "price": {
+      "amount": 340000,
+      "currency": "PEN"
+    },
+    "yield": {
+      "min": 7,
+      "max": 9
+    },
+    "paybackYears": 12,
+    "areaM2": null,
+    "bedrooms": null,
+    "bathrooms": null,
+    "images": [
+      {
+        "src": "../assets/depas/magdalena-av-del-ejercito.jpg",
+        "alt": "Departamento en Magdalena"
+      }
+    ],
+    "status": "published",
+    "featured": true,
+    "publishedAt": "2026-10-08T00:00:00.000Z"
+  },
+  {
+    "id": "3f9b6a52-8d0e-4c1a-9b7e-2a5d7c41e001",
+    "slug": "san-miguel-av-la-marina-cuadra-25",
+    "district": {
+      "id": "9c4e2b11-0000-4b00-8000-000000000001",
+      "name": "San Miguel",
+      "slug": "san-miguel"
+    },
+    "origin": "developer",
+    "developer": {
+      "id": "7a1c0e10-0000-4a00-8000-000000000001",
+      "slug": "urbana",
+      "name": "Urbana"
+    },
+    "address": "Av. La Marina cuadra 25",
+    "badge": null,
+    "description": "Departamentos de 1, 2 y 3 dormitorios. Acabados modernos y zonas comunes completas.",
+    "price": {
+      "amount": 595000,
+      "currency": "PEN"
+    },
+    "yield": {
+      "min": 5.8,
+      "max": 5.8
+    },
+    "paybackYears": 17,
+    "areaM2": null,
+    "bedrooms": null,
+    "bathrooms": null,
+    "images": [
+      {
+        "src": "../assets/depas/magdalena-av-del-ejercito.jpg",
+        "alt": "Departamento modelo del proyecto en San Miguel"
+      }
+    ],
+    "status": "published",
+    "featured": false,
+    "publishedAt": "2026-10-08T00:00:00.000Z"
+  },
+  {
+    "id": "3f9b6a52-8d0e-4c1a-9b7e-2a5d7c41e002",
+    "slug": "miraflores-calle-schell-cuadra-3",
+    "district": {
+      "id": "9c4e2b11-0000-4b00-8000-000000000002",
+      "name": "Miraflores",
+      "slug": "miraflores"
+    },
+    "origin": "developer",
+    "developer": {
+      "id": "7a1c0e10-0000-4a00-8000-000000000001",
+      "slug": "urbana",
+      "name": "Urbana"
+    },
+    "address": "Calle Schell cuadra 3",
+    "badge": null,
+    "description": "Vive en el corazón de Miraflores. Diseño, confort y excelente ubicación.",
+    "price": {
+      "amount": 789000,
+      "currency": "PEN"
+    },
+    "yield": {
+      "min": 6.2,
+      "max": 6.2
+    },
+    "paybackYears": 16,
+    "areaM2": null,
+    "bedrooms": null,
+    "bathrooms": null,
+    "images": [
+      {
+        "src": "../assets/hero-home.jpg",
+        "alt": "Departamento modelo del proyecto en Miraflores"
+      }
+    ],
+    "status": "published",
+    "featured": false,
+    "publishedAt": "2026-10-08T00:00:00.000Z"
+  },
+  {
+    "id": "3f9b6a52-8d0e-4c1a-9b7e-2a5d7c41e003",
+    "slug": "surquillo-av-tomas-marsano-cuadra-8",
+    "district": {
+      "id": "8fc4b505-438d-4ea5-bf68-cd6563eca77a",
+      "name": "Surquillo",
+      "slug": "surquillo"
+    },
+    "origin": "developer",
+    "developer": {
+      "id": "7a1c0e10-0000-4a00-8000-000000000001",
+      "slug": "urbana",
+      "name": "Urbana"
+    },
+    "address": "Av. Tomás Marsano cuadra 8",
+    "badge": null,
+    "description": "Departamentos de 1 y 2 dormitorios. Excelente conexión y amenidades.",
+    "price": {
+      "amount": 499000,
+      "currency": "PEN"
+    },
+    "yield": {
+      "min": 5.6,
+      "max": 5.6
+    },
+    "paybackYears": 18,
+    "areaM2": null,
+    "bedrooms": null,
+    "bathrooms": null,
+    "images": [
+      {
+        "src": "../assets/depas/surquillo-av-angamos.jpg",
+        "alt": "Departamento modelo del proyecto en Surquillo"
+      }
+    ],
+    "status": "published",
+    "featured": false,
+    "publishedAt": "2026-10-08T00:00:00.000Z"
+  }
+]

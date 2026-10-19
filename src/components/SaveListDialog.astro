@@ -1,0 +1,308 @@
+---
+// "Guarda tus depas": pide nombre y celular para hacer seguimiento de los depas marcados.
+// Se abre solo al guardar el segundo depa (una vez cada 7 días si se cierra) o desde
+// cualquier elemento con data-open-save-dialog. Guarda un lead (source saved-list) en la API.
+import Icon from './Icon.astro'
+import Turnstile from './Turnstile.astro'
+---
+
+<dialog class="save-dialog" data-save-dialog aria-labelledby="save-dialog-title">
+  <div class="panel">
+    <button type="button" class="close" data-save-dismiss aria-label="Cerrar">
+      <Icon name="x" size={22} />
+    </button>
+
+    <div data-save-step="form">
+      <span class="mark">
+        <Icon name="heart" size={26} />
+      </span>
+      <h2 id="save-dialog-title" class="display">
+        Guarda tus depas
+      </h2>
+      <p class="sub">Te escribimos con los que marcaste.</p>
+
+      <form class="form" data-save-form novalidate>
+        <div class="field">
+          <label for="save-name">Nombre</label>
+          <input
+            id="save-name"
+            name="name"
+            autocomplete="name"
+            placeholder="Tu nombre"
+            required
+            minlength="2"
+          />
+          <p class="field-error" data-error-for="name" hidden></p>
+        </div>
+        <div class="field">
+          <label for="save-phone">Celular</label>
+          <input
+            id="save-phone"
+            name="phone"
+            type="tel"
+            autocomplete="tel"
+            inputmode="tel"
+            placeholder="9XX XXX XXX"
+            required
+            pattern="\+?[0-9 ()\-]{6,20}"
+          />
+          <p class="field-error" data-error-for="phone" hidden></p>
+        </div>
+        <div class="field">
+          <label for="save-email">
+            Correo <span class="hint">opcional</span>
+          </label>
+          <input id="save-email" name="email" type="email" autocomplete="email" placeholder="tu@correo.com" />
+          <p class="field-error" data-error-for="email" hidden></p>
+        </div>
+
+        <p class="selection" data-save-summary hidden>
+          <Icon name="info" size={18} />
+          <span></span>
+        </p>
+
+        <label class="check">
+          <input type="checkbox" name="consent" required />
+          <span>
+            Acepto la <a href="/privacidad">política de privacidad</a>.
+          </span>
+        </label>
+        <div class="hp" aria-hidden="true">
+          <label>
+            Sitio web <input type="text" name="website" tabindex="-1" autocomplete="off" />
+          </label>
+        </div>
+        <Turnstile />
+
+        <button type="submit" class="btn btn--primary btn--block">
+          Guardar y continuar
+        </button>
+        <p class="form-status" data-form-status role="status" aria-live="polite" hidden></p>
+      </form>
+      <button type="button" class="keep-browsing" data-save-dismiss>
+        Seguir viendo
+      </button>
+      <p class="fine">Sin spam. Solo el seguimiento de tu selección.</p>
+    </div>
+
+    <div data-save-step="done" hidden>
+      <span class="mark mark--done">
+        <Icon name="check" size={26} />
+      </span>
+      <h2 class="display">
+        Listo, <span data-save-name></span>
+      </h2>
+      <p class="sub">Guardamos tu selección. Te escribiremos por WhatsApp para darle seguimiento.</p>
+      <a class="btn btn--primary btn--block" href="/mis-depas">
+        Ver Mis depas
+      </a>
+      <button type="button" class="keep-browsing" data-save-dismiss>
+        Seguir viendo
+      </button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  import { getSavedStore } from '../lib/saved-store'
+  import { getProfileStore } from '../lib/profile'
+  import { api, type LeadCreate } from '../lib/api/client'
+  import { enhanceForm, getUtm } from '../scripts/forms'
+  import { loadCatalog } from '../scripts/catalog'
+
+  const dialog = document.querySelector<HTMLDialogElement>('[data-save-dialog]')
+  const form = dialog?.querySelector<HTMLFormElement>('[data-save-form]')
+
+  if (dialog && form) {
+    const saved = getSavedStore()
+    const profile = getProfileStore()
+    const steps = {
+      form: dialog.querySelector<HTMLElement>('[data-save-step="form"]')!,
+      done: dialog.querySelector<HTMLElement>('[data-save-step="done"]')!,
+    }
+    let finished = false
+
+    const showSummary = async () => {
+      const summary = dialog.querySelector<HTMLElement>('[data-save-summary]')!
+      const ids = saved.list()
+      if (ids.length === 0) {
+        summary.hidden = true
+        return
+      }
+      const catalog = await loadCatalog().catch(() => [])
+      const names = ids
+        .map((id) => catalog.find((item) => item.id === id)?.district)
+        .filter(Boolean) as string[]
+      const label =
+        ids.length === 1 ? '1 departamento seleccionado' : `${ids.length} departamentos seleccionados`
+      const text = summary.querySelector('span')!
+      text.replaceChildren(label)
+      if (names.length) {
+        const strong = document.createElement('strong')
+        strong.textContent = new Intl.ListFormat('es', { type: 'conjunction' }).format([...new Set(names)])
+        text.append(': ', strong)
+      }
+      summary.hidden = false
+    }
+
+    const open = () => {
+      if (dialog.open) return
+      steps.form.hidden = false
+      steps.done.hidden = true
+      void showSummary()
+      dialog.showModal()
+      form.querySelector<HTMLInputElement>('input[name="name"]')?.focus()
+    }
+
+    // Se abre solo al guardar el segundo depa
+    let previous = saved.list().length
+    saved.subscribe((ids) => {
+      if (ids.length >= 2 && ids.length > previous && profile.shouldPrompt()) open()
+      previous = ids.length
+    })
+
+    document.addEventListener('click', (event) => {
+      if ((event.target as Element | null)?.closest('[data-open-save-dialog]')) {
+        event.preventDefault()
+        open()
+      }
+    })
+
+    dialog
+      .querySelectorAll('[data-save-dismiss]')
+      .forEach((button) => button.addEventListener('click', () => dialog.close()))
+    dialog.addEventListener('click', (event) => {
+      if (event.target === dialog) dialog.close()
+    })
+    dialog.addEventListener('close', () => {
+      if (!finished) profile.dismissPrompt()
+    })
+
+    enhanceForm(form, {
+      buildPayload: (fields) =>
+        ({
+          ...fields,
+          source: 'saved-list',
+          locale: 'es',
+          propertyIds: saved.list(),
+          utm: getUtm(),
+        }) as LeadCreate,
+      send: (body) => api.POST('/v1/leads', { body }),
+      whatsappMessage: () => 'Hola, quiero que me ayuden con los depas que guardé en DepaHost Capital.',
+      onSuccess: (_data, f) => {
+        const name = String(new FormData(f).get('name') ?? '')
+        profile.set(name)
+        finished = true
+        dialog.querySelector('[data-save-name]')!.textContent = profile.get()?.firstName ?? ''
+        steps.form.hidden = true
+        steps.done.hidden = false
+        f.reset()
+      },
+    })
+  }
+</script>
+
+<style>
+  .save-dialog {
+    width: min(440px, calc(100vw - 2 * var(--space-4)));
+    max-height: calc(100dvh - 2 * var(--space-4));
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius-lg);
+    background: #fff;
+    color: var(--color-text);
+    box-shadow: var(--shadow-dropdown);
+  }
+  .save-dialog::backdrop {
+    background: var(--color-overlay);
+  }
+  .panel {
+    position: relative;
+    padding: var(--space-8) var(--space-6) var(--space-6);
+    text-align: center;
+  }
+  .close {
+    position: absolute;
+    top: var(--space-2);
+    right: var(--space-2);
+    display: grid;
+    place-items: center;
+    width: var(--control-h-sm);
+    height: var(--control-h-sm);
+    border: 0;
+    border-radius: var(--radius-pill);
+    background: transparent;
+    color: var(--color-text-muted);
+    cursor: pointer;
+  }
+  .close:hover {
+    background: var(--color-navy-50);
+  }
+  .mark {
+    display: inline-grid;
+    place-items: center;
+    color: var(--color-navy-800);
+  }
+  .mark--done {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-pill);
+    background: var(--color-navy-800);
+    color: #fff;
+  }
+  h2 {
+    margin-top: var(--space-2);
+    font-size: 1.875rem;
+    color: var(--color-navy-800);
+  }
+  .sub {
+    margin: var(--space-1) 0 var(--space-5);
+    color: var(--color-text-muted);
+  }
+  .form {
+    gap: var(--space-3);
+    padding-top: var(--space-5);
+    border-top: var(--border-subtle);
+    text-align: left;
+  }
+  .selection {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-2);
+    margin: 0;
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    background: var(--color-navy-50);
+    font-size: var(--fs-sm);
+  }
+  .selection[hidden] {
+    display: none;
+  }
+  .selection :global(svg) {
+    flex: none;
+    margin-top: 1px;
+    color: var(--color-navy-800);
+  }
+  .keep-browsing {
+    min-height: var(--control-h-sm);
+    margin-top: var(--space-2);
+    padding: 0 var(--space-3);
+    border: 0;
+    background: none;
+    color: var(--color-navy-800);
+    font: inherit;
+    font-weight: var(--fw-medium);
+    cursor: pointer;
+  }
+  .keep-browsing:hover {
+    text-decoration: underline;
+  }
+  .fine {
+    margin: 0;
+    font-size: var(--fs-13);
+    color: var(--color-text-muted);
+  }
+  [data-save-step='done'] .btn {
+    margin-top: var(--space-2);
+  }
+</style>

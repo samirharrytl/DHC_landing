@@ -1,0 +1,124 @@
+---
+// "Para ti, según lo que has visto": se arma en el navegador con el historial y Mis depas.
+// Sin historial queda oculta. La lógica de recomendación está en src/lib/recommend.ts.
+import MiniCard from './MiniCard.astro'
+
+interface Props {
+  title?: string
+  seeAllHref?: string
+}
+const { title = 'Para ti, según lo que has visto', seeAllHref = '/capital#lista-depas' } = Astro.props
+---
+
+<section class="container for-you" data-for-you hidden aria-labelledby="for-you-title">
+  <div class="for-you-head">
+    <h2 id="for-you-title" class="display">
+      {title}
+    </h2>
+    <a class="see-all" href={seeAllHref}>
+      Ver todos
+    </a>
+  </div>
+  <div class="for-you-list" data-for-you-list></div>
+  <template data-mini-template>
+    <MiniCard />
+  </template>
+</section>
+
+<script>
+  import { getHistoryStore, getSavedStore } from '../lib/saved-store'
+  import { recommend } from '../lib/recommend'
+  import { asRecommendable, loadCatalog, type CatalogItem } from '../scripts/catalog'
+
+  const section = document.querySelector<HTMLElement>('[data-for-you]')
+  const list = section?.querySelector<HTMLElement>('[data-for-you-list]')
+  const template = section?.querySelector<HTMLTemplateElement>('[data-mini-template]')
+
+  const fill = (item: CatalogItem) => {
+    const fragment = template!.content.cloneNode(true) as DocumentFragment
+    const slot = <T extends HTMLElement>(name: string) => fragment.querySelector<T>(`[data-slot="${name}"]`)!
+    const link = slot<HTMLAnchorElement>('link')
+    link.href = item.url
+    link.textContent = `${item.district} · ${item.address.replace(/ cuadra \d+$/i, '')}`
+    slot('meta').textContent = item.developer
+      ? `${item.district}, Lima · ${item.developer.name}`
+      : `${item.district}, Lima`
+    slot('price').textContent = item.price.label
+    slot('yield').textContent = item.yieldLabel.replace(' anual', '')
+    slot('payback').textContent = item.paybackLabel.replace('Se paga en ', '')
+    if (item.image) {
+      const img = slot<HTMLImageElement>('image')
+      img.src = item.image.src
+      img.srcset = item.image.srcset
+      img.alt = item.image.alt
+      img.sizes = '(max-width: 640px) 90vw, 280px'
+      img.hidden = false
+      slot('placeholder').hidden = true
+    }
+    return fragment
+  }
+
+  if (section && list && template) {
+    const history = getHistoryStore()
+    const saved = getSavedStore()
+    const render = (catalog: CatalogItem[]) => {
+      const picks = recommend(
+        catalog.map(asRecommendable),
+        { viewed: history.list(), saved: saved.list() },
+        4,
+      )
+      section.hidden = picks.length === 0
+      list.replaceChildren(...picks.map((pick) => fill(pick.item)))
+      document.querySelectorAll<HTMLElement>('[data-history-note]').forEach((note) => {
+        note.hidden = picks.length === 0
+      })
+    }
+    if (history.list().length || saved.list().length) {
+      loadCatalog()
+        .then((catalog) => {
+          render(catalog)
+          saved.subscribe(() => render(catalog))
+        })
+        .catch(() => {})
+    }
+  }
+</script>
+
+<style>
+  .for-you {
+    padding-block: var(--space-8) 0;
+  }
+  .for-you[hidden] {
+    display: none;
+  }
+  .for-you-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-bottom: var(--space-4);
+  }
+  .for-you-head h2 {
+    font-size: var(--fs-h3);
+    letter-spacing: 0;
+  }
+  .see-all {
+    color: var(--color-navy-800);
+    font-weight: var(--fw-medium);
+    white-space: nowrap;
+  }
+  .for-you-list {
+    display: grid;
+    gap: var(--space-3);
+  }
+  @media (min-width: 640px) {
+    .for-you-list {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1024px) {
+    .for-you-list {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+</style>

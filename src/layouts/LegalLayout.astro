@@ -1,0 +1,42 @@
+---
+// Páginas legales: texto largo con buen ancho de lectura.
+import BaseLayout from './BaseLayout.astro'
+
+interface Props {
+  title: string
+  description: string
+  updated: string
+}
+const { title, description, updated } = Astro.props
+---
+
+<BaseLayout title={title} description={description}>
+  <article class="container section legal">
+    <h1>{title}</h1>
+    <p class="updated">Última actualización: {updated}</p>
+    <slot />
+  </article>
+</BaseLayout>
+
+<style>
+  .legal {
+    max-width: 75ch;
+  }
+  .updated {
+    margin: var(--space-2) 0 var(--space-8);
+    font-size: var(--fs-sm);
+    color: var(--color-text-muted);
+  }
+  .legal :global(h2) {
+    margin: var(--space-8) 0 var(--space-3);
+    font-size: var(--fs-h3);
+    letter-spacing: 0;
+  }
+  .legal :global(p),
+  .legal :global(li) {
+    color: var(--color-text);
+  }
+  .legal :global(a) {
+    color: var(--color-navy-800);
+  }
+</style>

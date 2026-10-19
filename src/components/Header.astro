@@ -19,6 +19,7 @@ const links = [
 const path = Astro.url.pathname.replace(/\/$/, '') || '/'
 const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
 ---
+
 <header class="header" data-header>
   <div class="container bar">
     <Logo />
@@ -28,24 +29,43 @@ const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
       <ul>
         {links.map((link) => (
           <li>
-            <a href={link.href} aria-current={path === link.href ? 'page' : undefined} data-astro-prefetch>{link.label}</a>
+            <a href={link.href} aria-current={path === link.href ? 'page' : undefined} data-astro-prefetch>
+              {link.label}
+            </a>
           </li>
         ))}
       </ul>
     </nav>
 
     <div class="actions">
-      <!-- Botón de WhatsApp; en móvil está el botón flotante -->
-
-      <!-- Acceso a los departamentos guardados -->
-      <a class="cart" href="/carrito" aria-label="Mis depas">
-        <CartIcon />
-        <span class="cart-label">Mis depas</span>
-        <span class="cart-count" data-cart-count hidden>0</span>
+      <!-- Saludo cuando la persona dejó su nombre en "Guarda tus depas" -->
+      <a class="greeting" href="/mis-depas" data-greeting hidden>
+        <span class="avatar" aria-hidden="true" data-greeting-initial></span>
+        <span>
+          Hola, <span data-greeting-name></span>
+        </span>
       </a>
 
-      <a class="wa" href={whatsapp} target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp">
-        <span class="wa-icon"><WhatsAppIcon size={20} /></span>
+      <!-- Acceso a los departamentos guardados -->
+      <a class="cart" href="/mis-depas" aria-label="Mis depas" data-cart-link>
+        <CartIcon />
+        <span class="cart-label">Mis depas</span>
+        <span class="cart-count" data-cart-count aria-hidden="true" hidden>
+          0
+        </span>
+      </a>
+
+      <!-- Botón de WhatsApp (desde 640px); en móvil está el botón flotante -->
+      <a
+        class="wa"
+        href={whatsapp}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Contactar por WhatsApp"
+      >
+        <span class="wa-icon">
+          <WhatsAppIcon size={20} />
+        </span>
         <span class="wa-label">Contactar</span>
       </a>
 
@@ -58,8 +78,16 @@ const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
         aria-label="Abrir menú"
         data-menu-toggle
       >
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-             stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          aria-hidden="true"
+        >
           <path d="M4 7h16M4 12h16M4 17h16" />
         </svg>
       </button>
@@ -73,8 +101,16 @@ const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
     <div class="drawer-top">
       <Logo />
       <button type="button" class="burger" aria-label="Cerrar menú" data-menu-close>
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-             stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          aria-hidden="true"
+        >
           <path d="M6 6l12 12M18 6 6 18" />
         </svg>
       </button>
@@ -84,7 +120,9 @@ const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
       <ul class="drawer-links">
         {links.map((link) => (
           <li>
-            <a href={link.href} aria-current={path === link.href ? 'page' : undefined} data-astro-prefetch>{link.label}</a>
+            <a href={link.href} aria-current={path === link.href ? 'page' : undefined} data-astro-prefetch>
+              {link.label}
+            </a>
           </li>
         ))}
       </ul>
@@ -101,54 +139,51 @@ const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
 </dialog>
 
 <!-- Botón flotante de WhatsApp (solo móvil <640px) -->
-<a class="fab" href={whatsapp} target="_blank" rel="noopener noreferrer"
-   aria-label="Escríbenos por WhatsApp" data-fab>
+<a
+  class="fab"
+  href={whatsapp}
+  target="_blank"
+  rel="noopener noreferrer"
+  aria-label="Escríbenos por WhatsApp"
+  data-fab
+>
   <WhatsAppIcon size={28} />
 </a>
 
 <script>
-  import {
-    getSavedDepas,
-    SAVED_DEPAS_EVENT,
-    SAVED_DEPAS_KEY,
-    setSavedDepas,
-  } from '../data/savedDepas'
+  import { getSavedStore } from '../lib/saved-store'
+  import { getProfileStore, PROFILE_EVENT } from '../lib/profile'
 
-  // ---------- Mis depas: contador y acciones para guardar ----------
-  const syncSavedDepas = () => {
-    const savedIds = getSavedDepas()
-
+  // ---------- Mis depas: contador ----------
+  // Los botones "Me interesa" viven en cada tarjeta (src/scripts/saved-buttons.ts); aquí solo el contador.
+  const store = getSavedStore()
+  const renderCount = (ids: string[]) => {
     document.querySelectorAll<HTMLElement>('[data-cart-count]').forEach((badge) => {
-      badge.textContent = String(savedIds.length)
-      badge.hidden = savedIds.length === 0
-      badge.setAttribute('aria-label', `${savedIds.length} ${savedIds.length === 1 ? 'depa guardado' : 'depas guardados'}`)
+      badge.textContent = String(ids.length)
+      badge.hidden = ids.length === 0
     })
-
-    document.querySelectorAll<HTMLButtonElement>('[data-add-property]').forEach((button) => {
-      const id = button.dataset.propertyId
-      const saved = Boolean(id && savedIds.includes(id))
-      button.setAttribute('aria-pressed', String(saved))
-      button.textContent = saved ? 'Agregado' : 'Me interesa'
-      button.classList.toggle('is-added', saved)
-      if (id) {
-        const name = button.dataset.propertyName ?? id
-        button.setAttribute('aria-label', saved ? `${name} ya está en Mis depas` : `Me interesa: agregar ${name} a Mis depas`)
-      }
+    document.querySelectorAll<HTMLElement>('[data-cart-link]').forEach((link) => {
+      const count = ids.length
+        ? `, ${ids.length} ${ids.length === 1 ? 'depa guardado' : 'depas guardados'}`
+        : ''
+      link.setAttribute('aria-label', `Mis depas${count}`)
     })
   }
+  store.subscribe(renderCount)
+  renderCount(store.list())
 
-  document.querySelectorAll<HTMLButtonElement>('[data-add-property]').forEach((button) => {
-    button.addEventListener('click', () => {
-      const id = button.dataset.propertyId
-      if (id) setSavedDepas([...getSavedDepas(), id])
+  // ---------- Saludo ----------
+  const profile = getProfileStore()
+  const renderGreeting = () => {
+    const name = profile.get()?.firstName
+    document.querySelectorAll<HTMLElement>('[data-greeting]').forEach((el) => {
+      el.hidden = !name
+      el.querySelector('[data-greeting-name]')!.textContent = name ?? ''
+      el.querySelector('[data-greeting-initial]')!.textContent = name?.charAt(0) ?? ''
     })
-  })
-
-  window.addEventListener(SAVED_DEPAS_EVENT, syncSavedDepas)
-  window.addEventListener('storage', (event) => {
-    if (event.key === SAVED_DEPAS_KEY) syncSavedDepas()
-  })
-  syncSavedDepas()
+  }
+  window.addEventListener(PROFILE_EVENT, renderGreeting)
+  renderGreeting()
 
   // ---------- Sombra del header al hacer scroll ----------
   // En vez de leer window.scrollY (obliga al navegador a recalcular la página),
@@ -234,7 +269,9 @@ const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
     background: #fff;
     transition: box-shadow var(--dur-base) var(--ease-out);
   }
-  .header.is-scrolled { box-shadow: var(--shadow-header); }
+  .header.is-scrolled {
+    box-shadow: var(--shadow-header);
+  }
 
   .bar {
     display: flex;
@@ -245,7 +282,9 @@ const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
   }
 
   /* ---------- Menú de escritorio ---------- */
-  .nav { display: none; }
+  .nav {
+    display: none;
+  }
   .nav ul {
     display: flex;
     align-items: center;
@@ -254,7 +293,10 @@ const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
     list-style: none;
   }
 
-  .nav li { display: flex; align-items: center; }
+  .nav li {
+    display: flex;
+    align-items: center;
+  }
   .nav li + li::before {
     content: '|';
     margin-inline: var(--space-3);
@@ -277,7 +319,9 @@ const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
     font-size: var(--fs-15);
   }
   .nav a:hover,
-  .drawer-links a:hover { color: var(--color-navy-800); }
+  .drawer-links a:hover {
+    color: var(--color-navy-800);
+  }
 
   /* Página actual: más gruesa y subrayada */
   .drawer-links a[aria-current='page'] {
@@ -307,8 +351,9 @@ const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
     gap: var(--space-3);
   }
 
-  .lang-wrap { display: none; }
-  .wa { display: none; }
+  .wa {
+    display: none;
+  }
 
   .wa {
     align-items: center;
@@ -324,8 +369,9 @@ const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
     text-decoration: none;
     white-space: nowrap;
     box-shadow: var(--shadow-sm);
-    transition: background-color var(--dur-fast) var(--ease-out),
-                transform var(--dur-fast) var(--ease-out);
+    transition:
+      background-color var(--dur-fast) var(--ease-out),
+      transform var(--dur-fast) var(--ease-out);
   }
   .wa-icon {
     display: inline-flex;
@@ -337,13 +383,47 @@ const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
     background: var(--color-wa-500);
     color: #fff;
   }
-  .wa-icon svg { width: 20px; height: 20px; flex: none; }
-  .wa-label { color: inherit; }
-  .wa:hover { background: var(--color-navy-850); }
-  .wa:active { transform: translateY(1px); }
+  .wa-icon svg {
+    width: 20px;
+    height: 20px;
+    flex: none;
+  }
+  .wa-label {
+    color: inherit;
+  }
+  .wa:hover {
+    background: var(--color-navy-850);
+  }
+  .wa:active {
+    transform: translateY(1px);
+  }
 
-  /* "Ingresar": oculto en móvil (no cabe junto al logo + carrito + hamburguesa) */
-  .login { display: none; }
+  /* Saludo "Hola, Ana" (desde 640px) */
+  .greeting {
+    display: none;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: var(--control-h-sm);
+    padding-right: var(--space-3);
+    border-right: var(--border-subtle);
+    color: var(--color-text);
+    font-size: var(--fs-15);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .greeting[hidden] {
+    display: none !important;
+  }
+  .avatar {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border: 1.5px solid var(--color-navy-800);
+    border-radius: var(--radius-pill);
+    color: var(--color-navy-800);
+    font-weight: var(--fw-semibold);
+  }
 
   /* Acceso a Mis depas con icono de carpeta y contador */
   .cart {
@@ -359,14 +439,18 @@ const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
     color: var(--color-navy-800);
     text-decoration: none;
   }
-  .cart svg { flex: none; }
+  .cart svg {
+    flex: none;
+  }
   .cart-label {
     color: var(--color-text);
     font-size: var(--fs-xs);
     line-height: 1.2;
     white-space: nowrap;
   }
-  .cart:hover { background: var(--color-navy-50); }
+  .cart:hover {
+    background: var(--color-navy-50);
+  }
   .cart-count {
     position: absolute;
     top: -1px;
@@ -385,7 +469,9 @@ const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
     line-height: 1;
   }
   /* el atributo hidden gana sobre el display:flex del badge */
-  .cart-count[hidden] { display: none; }
+  .cart-count[hidden] {
+    display: none;
+  }
 
   .burger {
     display: inline-flex;
@@ -400,22 +486,30 @@ const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
     color: var(--color-navy-800);
     cursor: pointer;
   }
-  .burger:hover { background: var(--color-navy-50); }
+  .burger:hover {
+    background: var(--color-navy-50);
+  }
 
-  /* Tablet: aparece ES | EN y el botón de WhatsApp */
+  /* Tablet: aparece el botón de WhatsApp */
   @media (min-width: 640px) {
-    .lang-wrap { display: block; }
-    .login { display: inline-flex; }
-    .wa { display: inline-flex; }
+    .wa {
+      display: inline-flex;
+    }
   }
 
   /* Escritorio: menú en línea sin hamburguesa */
   @media (min-width: 1024px) {
-    .nav { display: block; }
-    .actions .burger { display: none; }
+    .nav {
+      display: block;
+    }
+    .actions .burger {
+      display: none;
+    }
   }
   @media (min-width: 1280px) {
-    .nav li + li::before { margin-inline: var(--space-4); }
+    .nav li + li::before {
+      margin-inline: var(--space-4);
+    }
   }
 
   /* ---------- Drawer ---------- */
@@ -432,12 +526,20 @@ const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
     background: #fff;
     color: var(--color-text);
   }
-  .drawer::backdrop { background: var(--color-overlay); }
-  .drawer[open] { animation: drawer-in var(--dur-slow) var(--ease-out); }
+  .drawer::backdrop {
+    background: var(--color-overlay);
+  }
+  .drawer[open] {
+    animation: drawer-in var(--dur-slow) var(--ease-out);
+  }
 
   @keyframes drawer-in {
-    from { transform: translateX(100%); }
-    to { transform: translateX(0); }
+    from {
+      transform: translateX(100%);
+    }
+    to {
+      transform: translateX(0);
+    }
   }
 
   .drawer-panel {
@@ -459,7 +561,9 @@ const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
     padding: 0;
     list-style: none;
   }
-  .drawer-links li + li { border-top: var(--border-subtle); }
+  .drawer-links li + li {
+    border-top: var(--border-subtle);
+  }
   .drawer-links a {
     display: flex;
     align-items: center;
@@ -493,17 +597,34 @@ const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
     opacity: 0;
     visibility: hidden;
     transform: translateY(8px);
-    transition: opacity var(--dur-base) var(--ease-out),
-                transform var(--dur-base) var(--ease-out),
-                visibility var(--dur-base);
+    transition:
+      opacity var(--dur-base) var(--ease-out),
+      transform var(--dur-base) var(--ease-out),
+      visibility var(--dur-base);
   }
-  .fab:hover { background: var(--color-wa-800); }
-  .fab.is-visible { opacity: 1; visibility: visible; transform: none; }
-  :global(html.menu-open) .fab { display: none; }
-  @media (min-width: 640px) { .fab { display: none; } }
+  .fab:hover {
+    background: var(--color-wa-800);
+  }
+  .fab.is-visible {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+  }
+  :global(html.menu-open) .fab {
+    display: none;
+  }
+  @media (min-width: 640px) {
+    .fab {
+      display: none;
+    }
+  }
 
   @media (prefers-reduced-motion: reduce) {
-    .drawer[open] { animation: none; }
-    .fab { transform: none; }
+    .drawer[open] {
+      animation: none;
+    }
+    .fab {
+      transform: none;
+    }
   }
 </style>

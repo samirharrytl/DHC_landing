@@ -1,0 +1,111 @@
+// Búsqueda y filtros de depas. Funciones puras: se usan en el build y en el navegador,
+// y se prueban con Vitest (tests/unit/filters.test.ts).
+import { formatPEN, normalizeText } from './format'
+
+export interface PropertyFilters {
+  district?: string // slug del distrito
+  maxPrice?: number // en soles
+  minYield?: number // rentabilidad mínima anual, en %
+}
+
+/** Lo mínimo que necesita el filtro. En el navegador se arma con los data-* de cada tarjeta. */
+export interface FilterableProperty {
+  districtSlug: string
+  price: number
+  yieldMin: number
+  searchText: string
+}
+
+export type FastFilterKind = 'district' | 'maxPrice' | 'minYield'
+export interface FastFilter {
+  label: string
+  kind: FastFilterKind
+  value: string
+}
+
+interface PropertyLike {
+  district: { name: string; slug: string }
+  address: string
+  badge?: string | null
+  price: { amount: number }
+  yield: { min: number; max: number }
+}
+
+/** Texto por el que se busca una tarjeta: distrito, dirección, badge y precio en varios formatos. */
+export function buildSearchText(p: PropertyLike): string {
+  return normalizeText(
+    [p.district.name, p.address, p.badge ?? '', p.price.amount, formatPEN(p.price.amount)].join(' '),
+  )
+}
+
+export function toFilterable(p: PropertyLike): FilterableProperty {
+  return {
+    districtSlug: p.district.slug,
+    price: p.price.amount,
+    yieldMin: p.yield.min,
+    searchText: buildSearchText(p),
+  }
+}
+
+export function matchesFilters(p: FilterableProperty, query: string, filters: PropertyFilters): boolean {
+  const q = normalizeText(query)
+  if (q && !p.searchText.includes(q)) return false
+  if (filters.district && p.districtSlug !== filters.district) return false
+  if (filters.maxPrice != null && p.price > filters.maxPrice) return false
+  if (filters.minYield != null && p.yieldMin < filters.minYield) return false
+  return true
+}
+
+/** Convierte los filtros activos de la UI (kind → value en texto) en PropertyFilters. */
+export function parseFilters(active: Iterable<[string, string]>): PropertyFilters {
+  const filters: PropertyFilters = {}
+  for (const [kind, value] of active) {
+    if (kind === 'district') filters.district = value
+    if (kind === 'maxPrice' && Number.isFinite(Number(value))) filters.maxPrice = Number(value)
+    if (kind === 'minYield' && Number.isFinite(Number(value))) filters.minYield = Number(value)
+  }
+  return filters
+}
+
+const PRICE_STEP = 50_000
+
+/**
+ * Filtros rápidos derivados de los datos (no escritos a mano):
+ * - un chip por distrito presente
+ * - topes de precio redondeados a S/ 50,000 que dejan fuera al menos un depa
+ * - rentabilidades mínimas que dejan fuera al menos un depa
+ */
+export function buildFastFilters(properties: PropertyLike[], max = { prices: 2, yields: 2 }): FastFilter[] {
+  if (properties.length === 0) return []
+
+  const districts = new Map<string, string>()
+  for (const p of properties) districts.set(p.district.slug, p.district.name)
+  const districtFilters = [...districts]
+    .sort((a, b) => a[1].localeCompare(b[1], 'es'))
+    .map(([slug, name]) => ({ label: name, kind: 'district' as const, value: slug }))
+
+  const prices = properties.map((p) => p.price.amount)
+  const highest = Math.max(...prices)
+  const ceilings = [...new Set(prices.map((n) => Math.ceil(n / PRICE_STEP) * PRICE_STEP))]
+    .filter((ceiling) => ceiling < highest)
+    .sort((a, b) => a - b)
+    .slice(-max.prices)
+  const priceFilters = ceilings.map((ceiling) => ({
+    label: `Hasta ${formatPEN(ceiling)}`,
+    kind: 'maxPrice' as const,
+    value: String(ceiling),
+  }))
+
+  const lowestYield = Math.min(...properties.map((p) => p.yield.min))
+  const yields = [...new Set(properties.map((p) => p.yield.min))]
+    .filter((y) => y > lowestYield)
+    .sort((a, b) => a - b)
+    .slice(0, max.yields)
+  const yieldFilters = yields.map((y) => ({
+    label: `Desde ${y}% anual`,
+    kind: 'minYield' as const,
+    value: String(y),
+  }))
+
+  return [...districtFilters, ...priceFilters, ...yieldFilters]
+}

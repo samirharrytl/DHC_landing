@@ -1,0 +1,62 @@
+---
+// Botón "Me interesa": agrega o quita un depa de Mis depas (lógica en src/scripts/saved-buttons.ts).
+// variant: 'outline' (tarjetas) | 'solid' (detalle y proyectos de inmobiliarias)
+import Icon from './Icon.astro'
+
+interface Props {
+  id: string
+  name: string
+  variant?: 'outline' | 'solid'
+  class?: string
+}
+const { id, name, variant = 'outline', class: className } = Astro.props
+---
+
+<button
+  class:list={[
+    'btn btn--sm save-button',
+    variant === 'solid' ? 'btn--primary' : 'btn--secondary',
+    `save-button--${variant}`,
+    className,
+  ]}
+  type="button"
+  data-add-property
+  data-property-id={id}
+  data-property-name={name}
+  aria-pressed="false"
+  aria-label={`Me interesa: agregar ${name} a Mis depas`}
+>
+  <Icon name="heart" size={18} class="heart" />
+  <span data-save-label>Me interesa</span>
+</button>
+
+<script>
+  import '../scripts/saved-buttons'
+</script>
+
+<style>
+  .save-button :global(.heart) {
+    transition:
+      fill var(--dur-fast) var(--ease-out),
+      transform var(--dur-base) var(--ease-out);
+  }
+  .save-button[aria-pressed='true'] :global(.heart) {
+    fill: currentColor;
+  }
+  .save-button--outline[aria-pressed='true'] {
+    background: var(--color-navy-50);
+  }
+  .save-button--solid[aria-pressed='true'] {
+    background: var(--color-navy-950);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .save-button[aria-pressed='true'] :global(.heart) {
+      animation: beat var(--dur-slow) var(--ease-out);
+    }
+  }
+  @keyframes beat {
+    50% {
+      transform: scale(1.25);
+    }
+  }
+</style>

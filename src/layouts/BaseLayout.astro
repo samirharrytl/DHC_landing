@@ -3,14 +3,25 @@
 import { Font } from 'astro:assets'
 import Header from '../components/Header.astro'
 import Footer from '../components/Footer.astro'
+import ConsentBanner from '../components/ConsentBanner.astro'
+import SaveListDialog from '../components/SaveListDialog.astro'
 // Primero los tokens (colores, tamaños…), después los estilos globales que los usan
 import '../styles/tokens.css'
 import '../styles/global.css'
+
+interface Props {
+  title: string
+  description?: string
+  lang?: 'es' | 'en'
+  /** Páginas que no deben salir en Google (p. ej. Mis depas) */
+  noindex?: boolean
+}
 
 const {
   title,
   description = 'Depa Host Perú: reserva, vende, alquila o compra tu depa en Lima.',
   lang = 'es',
+  noindex = false,
 } = Astro.props
 
 const fullTitle = `${title} | Depa Host Perú`
@@ -19,6 +30,7 @@ const pageUrl = new URL(Astro.url.pathname, Astro.site)
 // TODO: reemplazar /og-default.png por una imagen final de marca (1200×630)
 const ogImage = new URL('/og-default.png', Astro.site)
 ---
+
 <!doctype html>
 <html lang={lang}>
   <head>
@@ -27,6 +39,8 @@ const ogImage = new URL('/og-default.png', Astro.site)
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <meta name="theme-color" content="#012147" />
+    <link rel="canonical" href={pageUrl} />
+    {noindex && <meta name="robots" content="noindex" />}
 
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -46,28 +60,27 @@ const ogImage = new URL('/og-default.png', Astro.site)
 
     <!-- Fuente Inter autoalojada (configurada en astro.config.mjs). preload = se descarga antes -->
     <Font cssVariable="--font-inter" preload />
-
-
-    <script type="text/javascript">
-    (function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", "yussnspsw6");
-</script>
+    <Font cssVariable="--font-newsreader" />
   </head>
   <body>
     <!-- Marca invisible arriba de todo: cuando sale de pantalla, el header muestra su sombra -->
     <div class="scroll-sentinel" data-scroll-sentinel aria-hidden="true"></div>
 
     <!-- Primer elemento con foco: permite saltar el menú con el teclado -->
-    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+    <a class="skip-link" href="#contenido">
+      Saltar al contenido
+    </a>
     <Header />
     <main id="contenido">
       <!-- Aquí entra el contenido de cada página -->
       <slot />
     </main>
     <Footer />
+    <SaveListDialog />
+    <ConsentBanner />
+    <script>
+      import '../scripts/monitoring'
+    </script>
   </body>
 </html>
 
@@ -83,6 +96,12 @@ const ogImage = new URL('/og-default.png', Astro.site)
 
   /* En móvil dejamos aire abajo para que el botón flotante de WhatsApp no tape nada.
      Se calcula con el tamaño del FAB (--fab-size) + un margen, para que ambos queden atados. */
-  main { padding-bottom: calc(var(--fab-size) + var(--space-2)); }
-  @media (min-width: 640px) { main { padding-bottom: 0; } }
+  main {
+    padding-bottom: calc(var(--fab-size) + var(--space-2));
+  }
+  @media (min-width: 640px) {
+    main {
+      padding-bottom: 0;
+    }
+  }
 </style>

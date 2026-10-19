@@ -1,0 +1,194 @@
+---
+// Buscador + filtros rápidos (chips). Va dentro de un bloque con data-filter-root junto a las
+// tarjetas; la lógica está en src/scripts/property-filters.ts.
+import type { FastFilter } from '../lib/filters'
+import Icon from './Icon.astro'
+
+interface Props {
+  filters: FastFilter[]
+  placeholder?: string
+  /** Muestra el botón "Buscar" (la búsqueda igual filtra mientras se escribe) */
+  withButton?: boolean
+  /** Muestra "N proyectos encontrados" */
+  count?: { singular: string; plural: string }
+}
+
+const {
+  filters,
+  placeholder = 'Busca por distrito, dirección o precio',
+  withButton = false,
+  count,
+} = Astro.props
+---
+
+<div class="search-filters">
+  <form class:list={['search', { 'search--button': withButton }]} role="search">
+    <Icon name="search" size={22} class="search-icon" />
+    <input
+      type="search"
+      data-filter-search
+      placeholder={placeholder}
+      aria-label={placeholder}
+      autocomplete="off"
+    />
+    {withButton && (
+      <button type="submit" class="btn btn--primary search-button">
+        <Icon name="search" size={18} />
+        Buscar
+      </button>
+    )}
+  </form>
+
+  <div class="chips-row">
+    {filters.length > 0 && (
+      <div class="chips" role="group" aria-label="Filtros rápidos">
+        {filters.map((filter) => (
+          <button
+            type="button"
+            class="chip"
+            data-favorite-filter
+            data-filter-kind={filter.kind}
+            data-filter-value={filter.value}
+            aria-pressed="false"
+          >
+            {filter.label}
+            <Icon name="x" size={14} class="chip-x" />
+          </button>
+        ))}
+      </div>
+    )}
+    <button type="button" class="clear" data-clear-filters hidden>
+      Limpiar filtros
+      <Icon name="refresh" size={16} />
+    </button>
+  </div>
+
+  {count && (
+    <p
+      class="count"
+      data-results-count
+      data-singular={count.singular}
+      data-plural={count.plural}
+      aria-live="polite"
+    />
+  )}
+</div>
+
+<script>
+  import '../scripts/property-filters'
+</script>
+
+<style>
+  .search-filters {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr); /* no crecer más que la pantalla */
+    gap: var(--space-3);
+    margin-bottom: var(--space-6);
+  }
+  .search {
+    position: relative;
+    display: flex;
+    gap: var(--space-2);
+    min-width: 0;
+  }
+  .search input {
+    flex: 1;
+    min-width: 0;
+    height: 48px;
+    padding: 0 14px 0 calc(var(--space-3) + 22px + var(--space-2));
+    font-size: 16px; /* evita el zoom de iOS */
+    border: 1px solid var(--color-border-input);
+    border-radius: var(--radius-md);
+    background: #fff;
+    color: var(--color-text);
+  }
+  .search input:focus-visible {
+    border-color: var(--color-navy-800);
+  }
+  .search :global(.search-icon) {
+    position: absolute;
+    top: 50%;
+    left: var(--space-3);
+    transform: translateY(-50%);
+    color: var(--color-text-muted);
+    pointer-events: none;
+  }
+  .search-button {
+    flex: none;
+    padding-inline: var(--space-5);
+  }
+  .chips-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 36px;
+    padding: 0 var(--space-3);
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-pill);
+    background: #fff;
+    color: var(--color-text-strong);
+    font-size: var(--fs-sm);
+    white-space: nowrap;
+    cursor: pointer;
+    transition:
+      background-color var(--dur-fast) var(--ease-out),
+      color var(--dur-fast) var(--ease-out);
+  }
+  .chip :global(.chip-x) {
+    display: none;
+  }
+  .chip:hover {
+    background: var(--color-navy-50);
+  }
+  .chip[aria-pressed='true'] {
+    background: var(--color-navy-800);
+    color: #fff;
+  }
+  .chip[aria-pressed='true'] :global(.chip-x) {
+    display: block;
+  }
+  .clear {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: var(--control-h-sm);
+    padding: 0 var(--space-2);
+    border: 0;
+    background: none;
+    color: var(--color-navy-800);
+    font: inherit;
+    font-weight: var(--fw-medium);
+    cursor: pointer;
+  }
+  .clear[hidden] {
+    display: none;
+  }
+  .clear:hover {
+    text-decoration: underline;
+  }
+  .count {
+    margin: 0;
+    font-size: var(--fs-sm);
+    color: var(--color-text-muted);
+  }
+  @media (max-width: 479px) {
+    .search-button {
+      padding-inline: var(--space-3);
+    }
+    .search-button :global(svg) {
+      display: none;
+    }
+  }
+</style>

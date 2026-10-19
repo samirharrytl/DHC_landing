@@ -1,0 +1,449 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import ForYouRow from '../components/ForYouRow.astro'
+import Icon from '../components/Icon.astro'
+import SavedDepa from '../components/SavedDepa.astro'
+---
+
+<BaseLayout
+  title="Mis depas"
+  description="Revisa y compara los departamentos que guardaste en DepaHost Capital."
+  noindex
+>
+  <section class="container cart-page" data-cart-page>
+    <header class="cart-heading">
+      <h1 class="display">Mis depas</h1>
+      <p>Revisa los departamentos que seleccionaste.</p>
+    </header>
+
+    <div class="cart-layout">
+      <section class="selected-section" aria-labelledby="selected-title">
+        <h2 id="selected-title" class="selected-title">
+          Seleccionados{' '}
+          <span class="selected-count" data-selected-count>
+            0
+          </span>
+        </h2>
+        <div class="saved-list" data-saved-list aria-busy="true" aria-live="polite"></div>
+        <div class="cart-empty" data-cart-empty hidden>
+          <Icon name="heart" size={28} />
+          <p>
+            Aún no guardaste departamentos. Toca <strong>Me interesa</strong> en los que te gusten.
+          </p>
+          <a class="btn btn--secondary btn--sm" href="/capital">
+            Explorar departamentos
+          </a>
+        </div>
+        <SavedDepa />
+      </section>
+
+      <aside class="summary-card" aria-labelledby="summary-title">
+        <h2 id="summary-title">
+          <span class="summary-check">
+            <Icon name="check" size={22} strokeWidth={2.4} />
+          </span>
+          Resumen de selección
+        </h2>
+        <div class="summary-total-count">
+          <strong data-summary-count>0</strong>
+          <span>seleccionados</span>
+        </div>
+        <ul class="summary-items" data-summary-items aria-label="Departamentos seleccionados"></ul>
+        <div class="investment-total">
+          <span>Inversión total</span>
+          <strong data-investment-total>S/ 0</strong>
+        </div>
+        <a
+          class="btn btn--primary start-button is-disabled"
+          data-contact-selection
+          href="/capital/empecemos"
+          aria-disabled="true"
+        >
+          Empecemos con estos
+          <Icon name="arrow-right" size={22} />
+        </a>
+        <span hidden data-summary-icon>
+          <Icon name="building" size={20} />
+        </span>
+      </aside>
+    </div>
+
+    <p class="saved-note">
+      <Icon name="shield" size={24} />
+      <span data-saved-note-anonymous>
+        Guardado en este dispositivo.{' '}
+        <button type="button" class="link-button" data-open-save-dialog>
+          Guárdalos con tu celular
+        </button>{' '}
+        y te escribimos con los que marcaste.
+      </span>
+      <span data-saved-note-profile hidden>
+        Guardado para <strong data-profile-name></strong>. La próxima vez te mostramos depas parecidos.
+      </span>
+    </p>
+  </section>
+
+  <ForYouRow title="Parecidos a los que guardaste" />
+</BaseLayout>
+
+<script>
+  import { getSavedStore } from '../lib/saved-store'
+  import { getProfileStore, PROFILE_EVENT } from '../lib/profile'
+  import { formatMoney } from '../lib/format'
+  import { loadCatalog, type CatalogItem } from '../scripts/catalog'
+
+  const page = document.querySelector<HTMLElement>('[data-cart-page]')
+  const template = document.querySelector<HTMLTemplateElement>('[data-saved-template]')
+  const factIcons = document.querySelector<HTMLElement>('[data-fact-icons]')
+
+  if (page && template && factIcons) {
+    const store = getSavedStore()
+    const list = page.querySelector<HTMLElement>('[data-saved-list]')!
+    const emptyMessage = page.querySelector<HTMLElement>('[data-cart-empty]')
+    const selectedCount = page.querySelector<HTMLElement>('[data-selected-count]')
+    const summaryCount = page.querySelector<HTMLElement>('[data-summary-count]')
+    const summaryItems = page.querySelector<HTMLUListElement>('[data-summary-items]')
+    const summaryIcon = page.querySelector<HTMLElement>('[data-summary-icon]')
+    const investmentTotal = page.querySelector<HTMLElement>('[data-investment-total]')
+    const contactButton = page.querySelector<HTMLAnchorElement>('[data-contact-selection]')
+    let catalog: CatalogItem[] = []
+
+    const icon = (name: string) =>
+      factIcons.querySelector(`[data-fact-icon="${name}"] svg`)?.cloneNode(true) ??
+      document.createTextNode('')
+
+    const slot = <T extends HTMLElement>(root: ParentNode, name: string) =>
+      root.querySelector<T>(`[data-slot="${name}"]`)!
+
+    /** Datos con ícono: dormitorios, baños y m² si existen; si no, rentabilidad y plazo. */
+    const facts = (item: CatalogItem) => {
+      const entries: [string, string][] = item.facts.length
+        ? item.facts.map((fact) => [
+            fact.includes('dorm') ? 'bed' : fact.includes('baño') ? 'bath' : 'area',
+            fact,
+          ])
+        : [
+            ['trend', item.yieldLabel],
+            ['calendar', item.paybackLabel],
+          ]
+      return entries.map(([name, text]) => {
+        const span = document.createElement('span')
+        span.append(icon(name), text)
+        return span
+      })
+    }
+
+    const renderItem = (item: CatalogItem) => {
+      const fragment = template.content.cloneNode(true) as DocumentFragment
+      const link = slot<HTMLAnchorElement>(fragment, 'link')
+      link.href = item.url
+      link.textContent = item.district
+      if (item.image) {
+        const img = slot<HTMLImageElement>(fragment, 'image')
+        img.src = item.image.src
+        img.srcset = item.image.srcset
+        img.sizes = '(max-width: 480px) 90vw, 260px'
+        img.alt = item.image.alt
+        img.hidden = false
+        slot(fragment, 'placeholder').hidden = true
+      }
+      slot(fragment, 'place').textContent = `${item.address}, ${item.district}`
+      slot(fragment, 'facts').replaceChildren(...facts(item))
+      const description = item.status === 'reserved' ? 'Reservado' : (item.description ?? item.badge ?? '')
+      slot(fragment, 'description').textContent = item.developer
+        ? [item.developer.name, description].filter(Boolean).join(' · ')
+        : description
+      slot(fragment, 'price-label').textContent = item.origin === 'developer' ? 'Desde' : 'Valor'
+      slot(fragment, 'price').textContent = item.price.label
+      const remove = slot<HTMLButtonElement>(fragment, 'remove')
+      remove.setAttribute('aria-label', `Quitar ${item.district} de la selección`)
+      remove.addEventListener('click', () => store.remove(item.id))
+      return fragment
+    }
+
+    /** Suma por moneda: "S/ 595,000" o "S/ 595,000 + US$ 80,000" */
+    const totalLabel = (items: CatalogItem[]) => {
+      const sums = new Map<'PEN' | 'USD', number>([['PEN', 0]])
+      for (const item of items)
+        sums.set(item.price.currency, (sums.get(item.price.currency) ?? 0) + item.price.amount)
+      return [...sums]
+        .filter(([currency, amount]) => amount > 0 || currency === 'PEN')
+        .map(([currency, amount]) => formatMoney(amount, currency))
+        .join(' + ')
+    }
+
+    const render = (ids: string[]) => {
+      const selected = ids
+        .map((id) => catalog.find((item) => item.id === id))
+        .filter((item) => item !== undefined)
+      list.replaceChildren(...selected.map(renderItem))
+      list.removeAttribute('aria-busy')
+
+      if (emptyMessage) emptyMessage.hidden = selected.length > 0
+      if (selectedCount) selectedCount.textContent = String(selected.length)
+      if (summaryCount) summaryCount.textContent = String(selected.length)
+      if (investmentTotal) investmentTotal.textContent = totalLabel(selected)
+
+      summaryItems?.replaceChildren(
+        ...selected.map((item) => {
+          const row = document.createElement('li')
+          const name = document.createElement('span')
+          const price = document.createElement('strong')
+          name.append(summaryIcon?.firstElementChild?.cloneNode(true) ?? '', item.district)
+          price.textContent = item.price.label
+          row.append(name, price)
+          return row
+        }),
+      )
+
+      if (!contactButton) return
+      if (selected.length === 0) contactButton.setAttribute('aria-disabled', 'true')
+      else contactButton.removeAttribute('aria-disabled')
+      contactButton.classList.toggle('is-disabled', selected.length === 0)
+    }
+
+    contactButton?.addEventListener('click', (event) => {
+      if (contactButton.hasAttribute('aria-disabled')) event.preventDefault()
+    })
+
+    // Nota de guardado: anónima o con el nombre que dejó en "Guarda tus depas"
+    const profile = getProfileStore()
+    const renderNote = () => {
+      const name = profile.get()?.firstName
+      page.querySelector<HTMLElement>('[data-saved-note-anonymous]')!.hidden = Boolean(name)
+      page.querySelector<HTMLElement>('[data-saved-note-profile]')!.hidden = !name
+      page.querySelector('[data-profile-name]')!.textContent = name ?? ''
+    }
+    window.addEventListener(PROFILE_EVENT, renderNote)
+    renderNote()
+
+    loadCatalog()
+      .then((items) => {
+        catalog = items
+        // Depas guardados que ya no existen (vendidos o retirados): se quitan de la lista
+        const known = new Set(items.map((item) => item.id))
+        store
+          .list()
+          .filter((id) => !known.has(id))
+          .forEach((id) => store.remove(id))
+        store.subscribe(render)
+        render(store.list())
+      })
+      .catch(() => {
+        list.removeAttribute('aria-busy')
+        list.textContent = 'No pudimos cargar tus depas guardados. Recarga la página.'
+      })
+  }
+</script>
+
+<style>
+  .cart-page {
+    padding-block: var(--space-6) var(--space-8);
+  }
+  .cart-heading {
+    margin-bottom: var(--space-6);
+    text-align: center;
+  }
+  .cart-heading h1 {
+    font-size: clamp(2.25rem, 1.6rem + 2vw, 3.25rem);
+    color: var(--color-navy-800);
+  }
+  .cart-heading p {
+    margin: var(--space-2) 0 0;
+    color: var(--color-text-muted);
+  }
+  .cart-layout {
+    display: grid;
+    gap: var(--space-6);
+    align-items: start;
+  }
+  .selected-title {
+    position: relative;
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
+    width: max-content;
+    margin: 0 0 var(--space-5);
+    padding-bottom: var(--space-2);
+    font-size: var(--fs-15);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-navy-800);
+  }
+  .selected-title::after {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--color-navy-800);
+    content: '';
+  }
+  .selected-count {
+    color: var(--color-text-muted);
+    font-weight: var(--fw-regular);
+  }
+  .saved-list {
+    display: grid;
+    gap: var(--space-3);
+  }
+  .saved-list[aria-busy='true'] {
+    min-height: 168px;
+  }
+  .cart-empty {
+    display: grid;
+    justify-items: start;
+    gap: var(--space-3);
+    padding: var(--space-6);
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius-lg);
+    background: #fff;
+    color: var(--color-navy-800);
+  }
+  .cart-empty[hidden] {
+    display: none;
+  }
+  .cart-empty p {
+    margin: 0;
+    color: var(--color-text-muted);
+  }
+  .summary-card {
+    padding: var(--space-5);
+    border: var(--border);
+    border-radius: var(--radius-lg);
+    background: #fff;
+    box-shadow: var(--shadow-sm);
+  }
+  .summary-card h2 {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-size: var(--fs-20);
+    letter-spacing: 0;
+    color: var(--color-navy-800);
+  }
+  .summary-check {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--color-navy-800);
+    color: #fff;
+  }
+  .summary-total-count {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+    padding-block: var(--space-4);
+    border-bottom: var(--border-subtle);
+  }
+  .summary-total-count strong {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 3.25rem;
+    line-height: 1;
+    color: var(--color-navy-800);
+  }
+  .summary-items {
+    display: grid;
+    gap: var(--space-3);
+    margin: 0;
+    padding: var(--space-4) 0;
+    border-bottom: var(--border-subtle);
+    list-style: none;
+  }
+  .summary-items:empty {
+    display: none;
+  }
+  .summary-items :global(li) {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+  .summary-items :global(li span) {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+  .summary-items :global(li svg) {
+    color: var(--color-navy-800);
+  }
+  .summary-items :global(strong) {
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .investment-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--space-3);
+    padding-block: var(--space-4);
+  }
+  .investment-total strong {
+    color: var(--color-navy-800);
+    font-size: var(--fs-20);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .start-button {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    min-height: 56px;
+    padding-inline: var(--space-5);
+    font-size: var(--fs-18);
+  }
+  .start-button.is-disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+  .saved-note {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    margin: var(--space-5) 0 0;
+    color: var(--color-text-muted);
+    font-size: var(--fs-sm);
+  }
+  .saved-note :global(svg) {
+    flex: none;
+    color: var(--color-navy-800);
+  }
+  .saved-note [hidden] {
+    display: none;
+  }
+  .link-button {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--color-navy-800);
+    font: inherit;
+    font-weight: var(--fw-semibold);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+  }
+
+  @media (min-width: 900px) {
+    .cart-page {
+      padding-top: var(--space-8);
+    }
+    .cart-heading {
+      margin-bottom: var(--space-8);
+    }
+    .cart-layout {
+      grid-template-columns: minmax(0, 1.65fr) minmax(320px, 1fr);
+      gap: var(--space-8);
+    }
+    .summary-card {
+      position: sticky;
+      top: calc(var(--header-h) + var(--space-4));
+      padding: var(--space-6);
+    }
+    .saved-note {
+      max-width: calc((100% - var(--space-8)) * 0.62);
+    }
+  }
+</style>

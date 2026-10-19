@@ -1,20 +1,372 @@
 ---
-import PlaceholderLayout from '../layouts/PlaceholderLayout.astro'
+// Propietarios: vender o poner en alquiler (largo plazo o Airbnb). Un solo formulario que
+// envía un lead a la API (owner-sell / owner-rent) y luego seguimos por WhatsApp.
+import BaseLayout from '../layouts/BaseLayout.astro'
+import AlliesStrip from '../components/AlliesStrip.astro'
+import Icon from '../components/Icon.astro'
+import Turnstile from '../components/Turnstile.astro'
+import WhatsAppIcon from '../components/WhatsAppIcon.astro'
+import { DISTRITOS_LIMA } from '../data/distritos'
+import { getDevelopers } from '../lib/properties'
+
+const steps = [
+  { title: 'Precio', text: 'Te sugerimos el valor con el que tu depa se mueve.' },
+  { title: 'Pauta', text: 'Lo publicamos en portales, medios y redes.' },
+  { title: 'Cierre', text: 'Te acompañamos hasta la firma o el primer huésped.' },
+]
+const developers = await getDevelopers()
 ---
-<PlaceholderLayout title="Propietarios">
-  <!-- Los ids permiten llegar directo con /propietarios#vender y /propietarios#alquiler -->
-  <section id="vender" class="block">
-    <h2>Vende tu depa</h2>
-    <p>Te ayudamos a vender tu propiedad con el enfoque correcto.</p>
+
+<BaseLayout
+  title="Propietarios"
+  description="Vende o alquila tu departamento en Lima. Te sugerimos el precio para venderlo en máximo 2 meses, o lo operamos en Airbnb."
+>
+  <section class="container owners-hero">
+    <div class="owners-copy">
+      <!-- Los ids permiten llegar directo con /propietarios#vender y /propietarios#alquiler -->
+      <span id="vender" class="anchor"></span>
+      <span id="alquiler" class="anchor"></span>
+      <h1 class="display">Vende o alquila tu departamento en Lima</h1>
+      <p class="lead">Te sugerimos el precio para venderlo en máximo 2 meses, o lo operamos en Airbnb.</p>
+      <div class="btn-group owner-ctas">
+        <button type="button" class="btn btn--primary" data-owner-intent="sell">
+          Quiero vender
+        </button>
+        <button type="button" class="btn btn--secondary" data-owner-intent="rent">
+          Poner en alquiler
+        </button>
+      </div>
+    </div>
+
+    <form class="form owner-form" data-owner-form novalidate aria-labelledby="owner-form-title">
+      <h2 id="owner-form-title" class="display">
+        Cuéntanos de tu depa
+      </h2>
+      <div class="field">
+        <label for="owner-name">Nombre</label>
+        <input
+          id="owner-name"
+          name="name"
+          autocomplete="name"
+          placeholder="Tu nombre completo"
+          required
+          minlength="2"
+        />
+        <p class="field-error" data-error-for="name" hidden></p>
+      </div>
+      <div class="field">
+        <label for="owner-phone">Celular</label>
+        <input
+          id="owner-phone"
+          name="phone"
+          type="tel"
+          inputmode="tel"
+          autocomplete="tel"
+          placeholder="9XX XXX XXX"
+          required
+          pattern="\+?[0-9 ()\-]{6,20}"
+        />
+        <p class="field-error" data-error-for="phone" hidden></p>
+      </div>
+      <div class="field">
+        <label for="owner-email">
+          Correo <span class="hint">opcional</span>
+        </label>
+        <input id="owner-email" name="email" type="email" autocomplete="email" placeholder="tu@correo.com" />
+        <p class="field-error" data-error-for="email" hidden></p>
+      </div>
+      <div class="field">
+        <label for="owner-district">Distrito</label>
+        <select id="owner-district" name="details.district" required>
+          <option value="" disabled selected>
+            Selecciona tu distrito
+          </option>
+          {DISTRITOS_LIMA.map((d) => (
+            <option value={d}>{d}</option>
+          ))}
+          <option value="Otro">Otro</option>
+        </select>
+      </div>
+      <div class="grid-2">
+        <div class="field">
+          <label for="owner-type">Tipo</label>
+          <select id="owner-type" name="details.propertyType" required>
+            <option value="" disabled selected>
+              Selecciona
+            </option>
+            <option value="Departamento">Departamento</option>
+            <option value="Dúplex o penthouse">Dúplex o penthouse</option>
+            <option value="Casa">Casa</option>
+            <option value="Otro">Otro</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="owner-intent">Qué quieres hacer</label>
+          <select id="owner-intent" name="details.intent" required data-intent-select>
+            <option value="" disabled selected>
+              Selecciona
+            </option>
+            <option value="sell">Vender</option>
+            <option value="rent">Alquilar (largo plazo)</option>
+            <option value="airbnb">Operarlo en Airbnb</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label for="owner-price">
+          <span data-price-label>Precio esperado</span> <span class="hint">opcional</span>
+        </label>
+        <div class="prefix">
+          <span aria-hidden="true">S/</span>
+          <input
+            id="owner-price"
+            name="details.expectedPrice"
+            type="text"
+            inputmode="numeric"
+            pattern="[0-9 ,.]*"
+            placeholder="Ej. 250,000"
+            data-number
+          />
+        </div>
+      </div>
+      <label class="check">
+        <input type="checkbox" name="consent" required />
+        <span>
+          Acepto la <a href="/privacidad">política de privacidad</a>.
+        </span>
+      </label>
+      <p class="field-error" data-error-for="consent" hidden></p>
+      <div class="hp" aria-hidden="true">
+        <label>
+          Sitio web <input type="text" name="website" tabindex="-1" autocomplete="off" />
+        </label>
+      </div>
+      <Turnstile />
+      <button type="submit" class="btn btn--primary btn--block submit">
+        Recibir propuesta
+        <WhatsAppIcon size={22} />
+      </button>
+      <p class="form-note">
+        <Icon name="info" size={16} /> Te escribimos por WhatsApp para concretar.
+      </p>
+      <p class="form-status" data-form-status role="status" aria-live="polite" hidden></p>
+    </form>
   </section>
 
-  <section id="alquiler" class="block">
-    <h2>Ponlo en alquiler</h2>
-    <p>Nos encargamos de alquilar tu depa para que rinda.</p>
+  <section class="container owner-steps" aria-label="Cómo trabajamos">
+    <ol>
+      {steps.map((step, index) => (
+        <li>
+          <span class="step-number" aria-hidden="true">
+            {index + 1}
+          </span>
+          <div>
+            <h3 class="display">{step.title}</h3>
+            <p>{step.text}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
   </section>
-</PlaceholderLayout>
+
+  <AlliesStrip developers={developers} />
+</BaseLayout>
+
+<script>
+  import { enhanceForm, getUtm, showFormStatus } from '../scripts/forms'
+  import { api, type LeadCreate } from '../lib/api/client'
+  import { waLink } from '../data/contacto'
+
+  const form = document.querySelector<HTMLFormElement>('[data-owner-form]')
+  const intent = form?.querySelector<HTMLSelectElement>('[data-intent-select]')
+  const priceLabel = form?.querySelector<HTMLElement>('[data-price-label]')
+
+  const INTENT_TEXT = { sell: 'vender', rent: 'poner en alquiler', airbnb: 'operar en Airbnb' } as const
+  type Intent = keyof typeof INTENT_TEXT
+
+  const updatePriceLabel = () => {
+    if (!priceLabel || !intent) return
+    const rent = intent.value === 'rent' || intent.value === 'airbnb'
+    priceLabel.textContent = rent ? 'Alquiler mensual esperado' : 'Precio esperado'
+  }
+
+  const choose = (value: Intent, focus = true) => {
+    if (!intent) return
+    intent.value = value
+    updatePriceLabel()
+    if (focus) form?.querySelector<HTMLInputElement>('input[name="name"]')?.focus()
+  }
+
+  intent?.addEventListener('change', updatePriceLabel)
+  document.querySelectorAll<HTMLButtonElement>('[data-owner-intent]').forEach((button) => {
+    button.addEventListener('click', () => choose(button.dataset.ownerIntent as Intent))
+  })
+  // /propietarios#vender o #alquiler preseleccionan la opción
+  if (location.hash === '#vender') choose('sell', false)
+  if (location.hash === '#alquiler') choose('rent', false)
+
+  if (form) {
+    const whatsappMessage = (fields: Record<string, unknown>) => {
+      const details = (fields.details ?? {}) as Record<string, string>
+      const action = INTENT_TEXT[details.intent as Intent] ?? 'vender'
+      return `Hola, soy ${fields.name ?? ''}. Quiero ${action} mi depa en ${details.district ?? 'Lima'}.`
+    }
+
+    enhanceForm(form, {
+      buildPayload: (fields) => {
+        const details = (fields.details ?? {}) as Record<string, string>
+        return {
+          ...fields,
+          source: details.intent === 'sell' ? 'owner-sell' : 'owner-rent',
+          locale: 'es',
+          utm: getUtm(),
+        } as LeadCreate
+      },
+      send: (body) => api.POST('/v1/leads', { body }),
+      whatsappMessage,
+      onSuccess: (_data, f) => {
+        const data = new FormData(f)
+        const message = whatsappMessage({
+          name: data.get('name'),
+          details: { district: data.get('details.district'), intent: data.get('details.intent') },
+        })
+        showFormStatus(
+          f,
+          'success',
+          '¡Listo! Te escribimos por WhatsApp para concretar.',
+          waLink(message),
+          'Adelantar por WhatsApp',
+        )
+        f.reset()
+      },
+    })
+  }
+</script>
 
 <style>
-  .block { margin-top: var(--space-12); }
-  .block p { color: var(--color-text-muted); }
+  .owners-hero {
+    display: grid;
+    gap: var(--space-8);
+    padding-block: var(--space-8) var(--space-10);
+  }
+  .anchor {
+    position: relative;
+    top: calc(-1 * var(--space-4));
+  }
+  .owners-copy h1 {
+    font-size: clamp(2.5rem, 1.5rem + 3.6vw, 4.5rem);
+    line-height: 1.02;
+    color: var(--color-navy-800);
+  }
+  .owners-copy .lead {
+    max-width: 32rem;
+    margin-top: var(--space-5);
+  }
+  .owner-ctas {
+    margin-top: var(--space-8);
+  }
+  .owner-form {
+    gap: var(--space-3);
+    padding: var(--space-6);
+    border: var(--border);
+    border-radius: var(--radius-lg);
+    background: #fff;
+    box-shadow: var(--shadow-md);
+  }
+  .owner-form h2 {
+    margin-bottom: var(--space-2);
+    font-size: var(--fs-h2);
+    color: var(--color-navy-800);
+  }
+  .grid-2 {
+    display: grid;
+    gap: var(--space-3);
+  }
+  .prefix {
+    position: relative;
+  }
+  .prefix span {
+    position: absolute;
+    top: 50%;
+    left: 14px;
+    transform: translateY(-50%);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-semibold);
+    color: var(--color-text-muted);
+  }
+  .prefix input {
+    padding-left: 40px !important;
+  }
+  .submit {
+    margin-top: var(--space-2);
+    min-height: 52px;
+    font-size: var(--fs-18);
+  }
+  .form-note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    margin: 0;
+    font-size: var(--fs-13);
+    color: var(--color-text-muted);
+  }
+
+  /* ---------- Pasos ---------- */
+  .owner-steps {
+    padding-block: var(--space-8);
+    border-top: var(--border-subtle);
+  }
+  .owner-steps ol {
+    display: grid;
+    gap: var(--space-6);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .owner-steps li {
+    display: grid;
+    grid-template-columns: 52px minmax(0, 1fr);
+    gap: var(--space-4);
+    align-items: start;
+  }
+  .step-number {
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    border-radius: var(--radius-pill);
+    background: var(--color-navy-800);
+    color: #fff;
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+  }
+  .owner-steps h3 {
+    font-size: 1.75rem;
+    color: var(--color-navy-800);
+  }
+  .owner-steps p {
+    margin: var(--space-1) 0 0;
+    color: var(--color-text-muted);
+  }
+
+  @media (min-width: 640px) {
+    .grid-2 {
+      grid-template-columns: 1fr 1fr;
+    }
+    .owner-steps ol {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  @media (min-width: 1024px) {
+    .owners-hero {
+      grid-template-columns: minmax(0, 1.15fr) minmax(400px, 0.85fr);
+      align-items: center;
+      gap: var(--space-12);
+      padding-block: var(--space-10) var(--space-12);
+    }
+    .owner-form {
+      padding: var(--space-8);
+    }
+  }
 </style>

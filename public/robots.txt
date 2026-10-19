@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /carrito
+Disallow: /mis-depas
+Disallow: /capital/empecemos
+Disallow: /data/
+
+Sitemap: https://depahostperu.com/sitemap-index.xml

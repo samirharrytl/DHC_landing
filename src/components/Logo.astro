@@ -1,12 +1,19 @@
 ---
 // Identidad de Depahost Capital. inverse adapta el texto a fondos oscuros.
+interface Props {
+  inverse?: boolean
+}
 const { inverse = false } = Astro.props
 ---
+
 <a href="/" class:list={['logo', { inverse }]} aria-label="Depahost Capital, Depahost Perú, ir al inicio">
   <svg class="logo-mark" viewBox="0 0 54 60" fill="none" aria-hidden="true">
     <path class="mark-base" d="M27 1.5 52 16v28L27 58.5 2 44V16L27 1.5Z" />
     <path class="mark-cutout" d="M8.5 19.5 27 8.8l18.5 10.7v21L27 51.2 8.5 40.5v-21Z" />
-    <path class="mark-base" d="m10.5 21 14-8.1v16.4l-14 8.1V21Zm18-7.2 15 8.7v17.2l-15 8.7V31.1l8.6-5-8.6-5v-7.3Z" />
+    <path
+      class="mark-base"
+      d="m10.5 21 14-8.1v16.4l-14 8.1V21Zm18-7.2 15 8.7v17.2l-15 8.7V31.1l8.6-5-8.6-5v-7.3Z"
+    />
   </svg>
   <span class="logo-copy">
     <span class="logo-name">Depahost Capital</span>
@@ -31,12 +38,23 @@ const { inverse = false } = Astro.props
     height: 54px;
     flex: none;
   }
-  .mark-base { fill: var(--mark-base); }
-  .mark-cutout { fill: var(--mark-cutout); }
-  .logo-copy { display: flex; flex-direction: column; gap: 4px; }
+  .mark-base {
+    fill: var(--mark-base);
+  }
+  .mark-cutout {
+    fill: var(--mark-cutout);
+  }
+  .logo-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
   .logo-name {
     color: var(--color-text-strong);
-    font: 400 23px/1 Georgia, 'Times New Roman', serif;
+    font:
+      400 23px/1 Georgia,
+      'Times New Roman',
+      serif;
     letter-spacing: -0.035em;
   }
   .logo-tagline {
@@ -50,12 +68,23 @@ const { inverse = false } = Astro.props
     --mark-cutout: var(--color-navy-900);
   }
   .logo.inverse .logo-name,
-  .logo.inverse .logo-tagline { color: #fff; }
+  .logo.inverse .logo-tagline {
+    color: #fff;
+  }
 
   @media (max-width: 420px) {
-    .logo { gap: 8px; }
-    .logo-mark { width: 42px; height: 48px; }
-    .logo-name { font-size: 20px; }
-    .logo-tagline { font-size: 8px; }
+    .logo {
+      gap: 8px;
+    }
+    .logo-mark {
+      width: 42px;
+      height: 48px;
+    }
+    .logo-name {
+      font-size: 20px;
+    }
+    .logo-tagline {
+      font-size: 8px;
+    }
   }
 </style>

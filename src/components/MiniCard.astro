@@ -1,0 +1,167 @@
+---
+// Tarjeta pequeña: "Depas similares" (con property, en el build) y
+// "Para ti, según lo que has visto" (sin property: queda como plantilla con data-slot que un
+// script completa en el navegador con /data/properties.json).
+import type { Property } from '../types/property'
+import { formatMoney, formatYears, formatYield } from '../lib/format'
+import HouseIcon from './HouseIcon.astro'
+import Icon from './Icon.astro'
+import PropertyImage from './PropertyImage.astro'
+
+interface Props {
+  property?: Property
+}
+const { property: p } = Astro.props
+const image = p?.images[0]
+const street = p?.address.replace(/ cuadra \d+$/i, '')
+---
+
+<article class="mini">
+  <div class="mini-media">
+    {p ? (
+      image ? (
+        <PropertyImage image={image} widths={[320, 480]} sizes="(max-width: 640px) 90vw, 280px" />
+      ) : (
+        <span class="mini-placeholder">
+          <HouseIcon />
+        </span>
+      )
+    ) : (
+      <>
+        <img
+          data-slot="image"
+          alt=""
+          loading="lazy"
+          decoding="async"
+          sizes="(max-width: 640px) 90vw, 280px"
+          hidden
+        />
+        <span class="mini-placeholder" data-slot="placeholder">
+          <HouseIcon />
+        </span>
+      </>
+    )}
+  </div>
+  <div class="mini-body">
+    <h3 class="mini-title">
+      <a href={p ? `/capital/${p.slug}` : '#'} data-slot="link">
+        {p ? `${p.district.name} · ${street}` : ''}
+      </a>
+    </h3>
+    <p class="mini-meta" data-slot="meta">
+      {p ? (p.developer ? `${p.district.name}, Lima · ${p.developer.name}` : `${p.district.name}, Lima`) : ''}
+    </p>
+    <ul class="mini-stats">
+      <li>
+        <Icon name="tag" size={15} />
+        <span data-slot="price">{p ? formatMoney(p.price.amount, p.price.currency) : ''}</span>
+      </li>
+      <li>
+        <Icon name="trend" size={15} />
+        <span data-slot="yield">{p ? formatYield(p.yield).replace(' anual', '') : ''}</span>
+      </li>
+      <li>
+        <Icon name="calendar" size={15} />
+        <span data-slot="payback">{p ? formatYears(p.paybackYears) : ''}</span>
+      </li>
+    </ul>
+  </div>
+</article>
+
+<style>
+  .mini {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: var(--border);
+    border-radius: var(--radius-lg);
+    background: #fff;
+    transition:
+      border-color var(--dur-fast) var(--ease-out),
+      box-shadow var(--dur-base) var(--ease-out);
+  }
+  .mini:hover {
+    border-color: var(--color-navy-800);
+  }
+  .mini:has(a:focus-visible) {
+    box-shadow: var(--focus-ring);
+  }
+  .mini-media {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: var(--color-navy-50);
+  }
+  .mini-media :global(picture),
+  .mini-media :global(img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .mini-media img[hidden],
+  .mini-placeholder[hidden] {
+    display: none;
+  }
+  .mini-placeholder {
+    display: grid;
+    place-items: center;
+    height: 100%;
+    color: var(--color-navy-800);
+  }
+  .mini-placeholder :global(svg) {
+    width: 32px;
+    height: 32px;
+    opacity: 0.4;
+  }
+  .mini-body {
+    display: grid;
+    gap: 2px;
+    padding: var(--space-3) var(--space-4) var(--space-4);
+  }
+  .mini-title {
+    font-size: var(--fs-15);
+    font-weight: var(--fw-semibold);
+    line-height: 1.3;
+  }
+  .mini-title a {
+    color: var(--color-text-strong);
+    text-decoration: none;
+  }
+  .mini-title a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+  .mini-title a:focus-visible {
+    box-shadow: none;
+  }
+  .mini-meta {
+    margin: 0;
+    font-size: var(--fs-13);
+    color: var(--color-text-muted);
+  }
+  .mini-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-3);
+    margin: var(--space-2) 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: var(--fs-13);
+    font-weight: var(--fw-medium);
+    color: var(--color-text);
+    font-variant-numeric: tabular-nums;
+  }
+  .mini-stats li {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+  }
+  .mini-stats :global(svg) {
+    color: var(--color-navy-800);
+  }
+</style>

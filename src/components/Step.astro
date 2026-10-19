@@ -1,39 +1,51 @@
 ---
 // Un paso del "Cómo funciona". Va dentro de un <ol> (la lista ya numera para lectores de pantalla)
+interface Props {
+  number: number
+  title: string
+  text?: string
+}
 const { number, title, text } = Astro.props
 ---
+
 <li class="step">
-  <span class="number" aria-hidden="true">{number}</span>
+  <span class="number" aria-hidden="true">
+    {number}
+  </span>
   <div>
     <h3>{title}</h3>
-    <p>{text}</p>
+    {text && <p>{text}</p>}
   </div>
 </li>
 
 <style>
   /* Móvil: pasos en vertical, círculo a la izquierda */
   .step {
-    --step-dot: 32px;   /* diámetro del círculo numerado */
-    --step-line: 2px;   /* grosor de la línea conectora */
+    --step-dot: 32px; /* diámetro del círculo numerado */
+    --step-line: 2px; /* grosor de la línea conectora */
     position: relative;
     display: grid;
     grid-template-columns: var(--step-dot) 1fr;
     gap: var(--space-4);
     padding-bottom: var(--space-6);
   }
-  .step:last-child { padding-bottom: 0; }
+  .step:last-child {
+    padding-bottom: 0;
+  }
 
   /* Línea que une los círculos (decorativa) */
   .step::before {
     content: '';
     position: absolute;
-    top: var(--step-dot);                                   /* arranca justo debajo del círculo */
+    top: var(--step-dot); /* arranca justo debajo del círculo */
     bottom: 0;
     left: calc(var(--step-dot) / 2 - var(--step-line) / 2); /* centrada bajo el círculo */
     width: var(--step-line);
     background: var(--color-border);
   }
-  .step:last-child::before { display: none; }
+  .step:last-child::before {
+    display: none;
+  }
 
   .number {
     position: relative; /* queda encima de la línea */
@@ -48,13 +60,20 @@ const { number, title, text } = Astro.props
     font-weight: var(--fw-bold);
   }
 
-  h3 { font-size: var(--fs-18); font-weight: var(--fw-semibold); }
-  p { margin: var(--space-1) 0 0; font-size: var(--fs-15); color: var(--color-text-muted); }
+  h3 {
+    font-size: var(--fs-18);
+    font-weight: var(--fw-semibold);
+  }
+  p {
+    margin: var(--space-1) 0 0;
+    font-size: var(--fs-15);
+    color: var(--color-text-muted);
+  }
 
   /* Desde 640px: pasos en horizontal, todo centrado */
   @media (min-width: 640px) {
     .step {
-      --step-dot: 40px;   /* círculo más grande en escritorio */
+      --step-dot: 40px; /* círculo más grande en escritorio */
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -69,10 +88,15 @@ const { number, title, text } = Astro.props
       width: 100%;
       height: var(--step-line);
     }
-    p { max-width: 18ch; margin-inline: auto; }
+    p {
+      max-width: 18ch;
+      margin-inline: auto;
+    }
   }
 
   @media (min-width: 1280px) {
-    .step h3 { white-space: nowrap; }
+    .step h3 {
+      white-space: nowrap;
+    }
   }
 </style>

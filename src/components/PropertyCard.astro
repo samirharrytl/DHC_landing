@@ -1,91 +1,82 @@
 ---
-// Tarjeta de depa reutilizable (Capital y home).
-// Props de siempre + opcionales: img (URL o imagen importada), imgAlt, href, priority
-import { Picture } from 'astro:assets'
-import { waLink } from '../data/contacto'
-import { depaId } from '../data/savedDepas'
+// Tarjeta de depa reutilizable (Capital y home). Toda la tarjeta lleva al detalle del depa.
+import type { Property } from '../types/property'
+import { formatPEN, formatYears, formatYield } from '../lib/format'
+import { buildSearchText } from '../lib/filters'
 import HouseIcon from './HouseIcon.astro'
+import PropertyImage from './PropertyImage.astro'
+import SaveButton from './SaveButton.astro'
 
-const {
-  district, address, badge, price, profitability, yearsPayment,
-  img, imgAlt, href, priority = true,
-} = Astro.props
+interface Props {
+  property: Property
+  /** Solo las primeras tarjetas visibles: carga la foto con prioridad (mejora el LCP) */
+  priority?: boolean
+}
 
-// Formato de soles: 310000 → "S/ 310,000"
-const fmtPen  = (n: number) =>
-  new Intl.NumberFormat('es-PE', { style: 'currency', currency: 'PEN', maximumFractionDigits: 0 }).format(n)
-
-// Si no nos pasan href, la tarjeta abre WhatsApp con un mensaje ya escrito
-const link = href ?? waLink(`Hola, me interesa el depa de ${district} (${address}).`)
-const isWhatsApp = link.includes('wa.me')
-
-// "Ver más detalle" aún no tiene página propia; mientras tanto abre WhatsApp con otro mensaje.
-// TODO: apuntar a la página de detalle del depa cuando exista.
-const detailLink = href ?? waLink(`Hola, quisiera ver más detalles del depa de ${district} (${address}).`)
-const isDetailWhatsApp = detailLink.includes('wa.me')
-const propertyId = depaId(district)
-
-// Texto y valores por los que se busca y filtra la tarjeta
-const searchText = `${district} ${address} ${price} S/ ${price} ${profitability}`.toLowerCase()
+const { property: p, priority = false } = Astro.props
+const href = `/capital/${p.slug}`
+const image = p.images[0]
 ---
+
 <article
   class="card"
-  data-search={searchText}
-  data-district={district}
-  data-price={price}
-  data-profitability={profitability}
+  data-property-card
+  data-search={buildSearchText(p)}
+  data-district={p.district.slug}
+  data-price={p.price.amount}
+  data-yield-min={p.yield.min}
 >
   <!-- Imagen 16:9. Mientras no hay foto, se muestra un bloque con una casita -->
   <div class="media">
-    {img ? (
-      <Picture
-        src={img}
-        alt={imgAlt ?? `Departamento en ${district}`}
+    {image ? (
+      <PropertyImage
+        image={image}
         widths={[480, 640, 960]}
         sizes="(max-width: 640px) 85vw, (max-width: 1024px) 50vw, 33vw"
-        formats={['avif', 'webp']}
-        fallbackFormat="jpeg"
-        loading={priority ? 'eager' : 'lazy'}
-        fetchpriority={priority ? 'high' : undefined}
-        decoding="async"
+        priority={priority}
       />
     ) : (
       <div class="placeholder" aria-hidden="true">
         <HouseIcon />
       </div>
     )}
-    {badge && <span class="tag">{badge}</span>}
+    <div class="tags">
+      <span class="tag">{p.origin === 'developer' ? 'De proyecto' : 'De propietario'}</span>
+      {p.status === 'reserved' ? (
+        <span class="tag tag--light">Reservado</span>
+      ) : (
+        p.badge && <span class="tag tag--light">{p.badge}</span>
+      )}
+    </div>
   </div>
 
   <div class="body">
-    <h3 class="title">
+    <h3 class="title display">
       <!-- Este link cubre toda la tarjeta (ver a::after en el CSS) -->
-      <a href={link} target={isWhatsApp ? '_blank' : undefined} rel={isWhatsApp ? 'noopener noreferrer' : undefined}>
-        {district}{isWhatsApp && <span class="sr-only"> (consultar por WhatsApp)</span>}
+      <a href={href} data-astro-prefetch>
+        {p.district.name}
       </a>
     </h3>
-    <p class="address">{address}</p>
+    <p class="address">{p.address}</p>
     <dl class="stats">
-      <div class="stat"><dt>valor</dt><dd>{fmtPen(price)}</dd></div>
-      <div class="stat"><dt>rentabilidad</dt><dd>{profitability}</dd></div>
-      <div class="stat"><dt>se paga en</dt><dd>{yearsPayment}</dd></div>
+      <div class="stat">
+        <dt>valor</dt>
+        <dd>{formatPEN(p.price.amount)}</dd>
+      </div>
+      <div class="stat">
+        <dt>rentabilidad</dt>
+        <dd>{formatYield(p.yield)}</dd>
+      </div>
+      <div class="stat">
+        <dt>se paga en</dt>
+        <dd>{formatYears(p.paybackYears)}</dd>
+      </div>
     </dl>
   </div>
 
   <div class="footer-actions">
-    <button
-      class="btn btn--secondary btn--sm"
-      type="button"
-      data-add-property
-      data-property-id={propertyId}
-      data-property-name={district}
-      aria-pressed="false"
-      aria-label={`Me interesa: agregar ${district} a Mis depas`}
-    >
-      Me interesa
-    </button>
-    <a class="btn btn--secondary btn--sm" href={detailLink}
-       target={isDetailWhatsApp ? '_blank' : undefined} rel={isDetailWhatsApp ? 'noopener noreferrer' : undefined}>
+    <SaveButton id={p.id} name={p.district.name} />
+    <a class="btn btn--secondary btn--sm" href={href}>
       Ver más detalle
     </a>
   </div>
@@ -101,14 +92,23 @@ const searchText = `${district} ${address} ${price} S/ ${price} ${profitability}
     border-radius: var(--radius-lg);
     overflow: hidden;
     container-type: inline-size; /* para achicar los números si la tarjeta es angosta */
-    transition: box-shadow var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out);
+    transition:
+      box-shadow var(--dur-base) var(--ease-out),
+      transform var(--dur-base) var(--ease-out);
   }
-  .card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+  .card:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+  }
   /* lo oculta el buscador cuando la tarjeta no coincide */
-  .card[hidden] { display: none; }
+  .card[hidden] {
+    display: none;
+  }
   /* El anillo de foco va en toda la tarjeta cuando el foco está en el título
      (los botones de abajo conservan su propio anillo) */
-  .card:has(.title a:focus-visible) { box-shadow: var(--focus-ring); }
+  .card:has(.title a:focus-visible) {
+    box-shadow: var(--focus-ring);
+  }
 
   /* ---------- Imagen 16:9 ---------- */
   .media {
@@ -122,13 +122,15 @@ const searchText = `${district} ${address} ${price} S/ ${price} ${profitability}
     width: 100%;
     height: 100%;
   }
-  .media img {
+  .media :global(img) {
     width: 100%;
     height: 100%;
     object-fit: cover;
     transition: transform var(--dur-slow) var(--ease-out);
   }
-  .card:hover .media img { transform: scale(1.03); }
+  .card:hover .media :global(img) {
+    transform: scale(1.03);
+  }
 
   .placeholder {
     display: grid;
@@ -138,12 +140,21 @@ const searchText = `${district} ${address} ${price} S/ ${price} ${profitability}
     color: var(--color-navy-800);
   }
   /* :global porque el svg viene del componente HouseIcon */
-  .placeholder :global(svg) { width: 48px; height: 48px; opacity: 0.35; }
+  .placeholder :global(svg) {
+    width: 48px;
+    height: 48px;
+    opacity: 0.35;
+  }
 
-  .tag {
+  .tags {
     position: absolute;
     top: var(--space-3);
     left: var(--space-3);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+  }
+  .tag {
     padding: var(--space-1) var(--space-2);
     border-radius: var(--radius-sm);
     background: var(--color-navy-800);
@@ -154,6 +165,10 @@ const searchText = `${district} ${address} ${price} S/ ${price} ${profitability}
     text-transform: uppercase;
     line-height: 1.4;
   }
+  .tag--light {
+    background: rgb(255 255 255 / 0.92);
+    color: var(--color-navy-800);
+  }
 
   /* ---------- Cuerpo ---------- */
   .body {
@@ -163,31 +178,63 @@ const searchText = `${district} ${address} ${price} S/ ${price} ${profitability}
     flex: 1;
     padding: var(--space-4);
   }
-  @media (min-width: 1024px) { .body { padding: var(--space-5); } }
+  @media (min-width: 1024px) {
+    .body {
+      padding: var(--space-5);
+    }
+  }
 
-  .title a { color: inherit; text-decoration: none; }
-  .title a::after { content: ''; position: absolute; inset: 0; } /* link que cubre la tarjeta */
-  .title a:focus-visible { box-shadow: none; }
+  .title {
+    font-size: 1.5rem;
+    line-height: 1.15;
+  }
+  .title a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .title a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  } /* link que cubre la tarjeta */
+  .title a:focus-visible {
+    box-shadow: none;
+  }
 
-  .address { margin: 0; font-size: var(--fs-sm); color: var(--color-text-muted); }
+  .address {
+    margin: 0;
+    font-size: var(--fs-sm);
+    color: var(--color-text-muted);
+  }
 
   .stats {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     margin: var(--space-4) 0 0;
   }
-  .stat { min-width: 0; }
-  .stat + .stat { border-left: var(--border-subtle); padding-left: var(--space-3); }
-  dt { font-size: var(--fs-13); color: var(--color-text-muted); }
+  .stat {
+    min-width: 0;
+  }
+  .stat + .stat {
+    border-left: var(--border-subtle);
+    padding-left: var(--space-3);
+  }
+  dt {
+    font-size: var(--fs-13);
+    color: var(--color-text-muted);
+  }
   dd {
     margin: var(--space-1) 0 0;
     font-size: var(--fs-stat);
     font-weight: var(--fw-semibold);
     color: var(--color-text-strong);
     font-variant-numeric: tabular-nums;
-
   }
-  @container (max-width: 300px) { dd { font-size: var(--fs-15); } }
+  @container (max-width: 300px) {
+    dd {
+      font-size: var(--fs-15);
+    }
+  }
 
   /* ---------- Botones de acción ---------- */
   .footer-actions {
@@ -199,12 +246,16 @@ const searchText = `${district} ${address} ${price} S/ ${price} ${profitability}
     padding: var(--space-3);
     border-top: var(--border-subtle);
   }
-  .footer-actions a,
-  .footer-actions button { flex: 1; min-width: 0; padding-inline: var(--space-3); }
-  .footer-actions button.is-added { background: var(--color-navy-50); color: var(--color-navy-800); }
+  .footer-actions > :global(*) {
+    flex: 1;
+    min-width: 0;
+    padding-inline: var(--space-3);
+  }
 
   @media (prefers-reduced-motion: reduce) {
     .card:hover,
-    .card:hover .media img { transform: none; }
+    .card:hover .media :global(img) {
+      transform: none;
+    }
   }
 </style>

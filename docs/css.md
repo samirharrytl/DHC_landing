@@ -22,10 +22,12 @@ hash único a los selectores (ej. `.card-abc123`). Así, un `.card` en `Property
 nunca se mezcla con un `.card` de otro archivo. Solo escapas a ese aislamiento con
 `:global(...)`, que se usa muy poco y a propósito.
 
-**¿Cómo se sirve?** En `astro.config.mjs` hay `build.inlineStylesheets: 'always'`, que
-mete TODO el CSS dentro del HTML de cada página. Ventaja: una petición HTTP menos.
-Desventaja: el navegador no puede cachear el CSS entre páginas. Para un sitio tan chico
-está bien; si el CSS crece mucho, conviene cambiar a `'auto'`.
+**¿Cómo se sirve?** En `astro.config.mjs` hay `build.inlineStylesheets: 'auto'`: el CSS
+pequeño va dentro del HTML (una petición menos) y el grande va en un archivo aparte que el
+navegador cachea entre páginas.
+
+**Formularios:** los estilos comunes (campos, errores, mensaje de envío, honeypot) están en
+`global.css` bajo la clase `.form`, para que todos los formularios se vean igual.
 
 Los tokens (`tokens.css`) y los globales (`global.css`) se importan **una sola vez** en
 `BaseLayout.astro` (todas las páginas lo heredan).

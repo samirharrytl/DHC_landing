@@ -1,0 +1,9 @@
+dist/
+.astro/
+node_modules/
+pnpm-lock.yaml
+src/lib/api/schema.d.ts
+openapi/
+docs/
+test-results/
+playwright-report/

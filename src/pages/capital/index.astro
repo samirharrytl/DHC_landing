@@ -1,0 +1,477 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import AlliesStrip from '../../components/AlliesStrip.astro'
+import Button from '../../components/Button.astro'
+import ForYouRow from '../../components/ForYouRow.astro'
+import PropertyCard from '../../components/PropertyCard.astro'
+import PropertyGrid from '../../components/PropertyGrid.astro'
+import SearchFilters from '../../components/SearchFilters.astro'
+import Step from '../../components/Step.astro'
+import Turnstile from '../../components/Turnstile.astro'
+import WhatsAppIcon from '../../components/WhatsAppIcon.astro'
+import {
+  getDevelopers,
+  getFastFilters,
+  getFinancingAssumptions,
+  getOwnerProperties,
+  getTopProperties,
+} from '../../lib/properties'
+import { buildDisclaimer, formatPEN, formatYield } from '../../lib/format'
+
+const steps = [
+  { number: 1, title: 'Comparas' },
+  { number: 2, title: 'Consultas' },
+  { number: 3, title: 'Te acompañamos' },
+  { number: 4, title: 'Cierras' },
+]
+
+// La portada muestra los depas de propietarios; los proyectos de inmobiliarias están en sus páginas
+const depas = await getOwnerProperties()
+const top = await getTopProperties(10)
+const fastFilters = await getFastFilters(depas)
+const developers = await getDevelopers()
+const disclaimer = buildDisclaimer(await getFinancingAssumptions())
+---
+
+<BaseLayout
+  title="Capital"
+  description="DepaHost Capital: los mejores departamentos para invertir en Lima, de propietarios y de inmobiliarias aliadas."
+>
+  <!-- ---------- Hero: "DepaHost Capital" es sub-marca, por eso solo va aquí ---------- -->
+  <section class="container hero" data-hero>
+    <div class="hero-text">
+      <h1 class="display">Los mejores departamentos para invertir en Lima.</h1>
+      <p class="hero-sub">Depas de propietarios, elegidos por ubicación, rentabilidad y plusvalía.</p>
+      <div class="btn-group ctas">
+        <Button href="#aliados">Ver todos los proyectos</Button>
+        <Button href="/capital/empecemos" variant="outline">
+          Empecemos
+        </Button>
+      </div>
+    </div>
+
+    <!-- Cómo funciona: pasos a la derecha del título -->
+    <div id="como-funciona" class="hero-steps">
+      <h2 class="sr-only">Cómo funciona</h2>
+      <ol class="stepper">
+        {steps.map((s) => (
+          <Step {...s} />
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ---------- Depas de propietarios: buscador, filtros y tarjetas ---------- -->
+  <section id="proyectos" class="container listing" data-filter-root aria-labelledby="depas-title">
+    <h2 id="depas-title" class="sr-only">
+      Depas de propietarios
+    </h2>
+    <SearchFilters filters={fastFilters} />
+
+    <PropertyGrid id="lista-depas" label="Depas de propietarios">
+      {depas.map((d, index) => (
+        <PropertyCard property={d} priority={index < 3} />
+      ))}
+    </PropertyGrid>
+    <p class="no-results" data-filter-empty role="status" hidden>
+      No encontramos departamentos con esos criterios.
+    </p>
+    <p class="disclaimer">{disclaimer}</p>
+  </section>
+
+  <!-- ---------- Para ti: se arma en el navegador con lo que la persona vio y guardó ---------- -->
+  <ForYouRow />
+
+  <!-- ---------- Inmobiliarias aliadas: cada una lleva a sus proyectos ---------- -->
+  <AlliesStrip developers={developers} title="Proyectos de aliados" />
+
+  <section class="container">
+    <!-- Toda la barra es un solo link -->
+    <a class="top10" href="#top-10">
+      <span>Los 10 depas para invertir ahora</span>
+      <span class="btn btn--secondary btn--sm top10-btn" aria-hidden="true">
+        <span class="long">Ver el top 10</span>
+        <span class="short">Ver</span> →
+      </span>
+    </a>
+  </section>
+
+  <!-- ---------- Top 10: ordenados por rentabilidad (propietarios y proyectos) ---------- -->
+  {top.length > 0 && (
+    <section id="top-10" class="container section" aria-labelledby="top-10-title">
+      <h2 id="top-10-title" class="ranking-title display">
+        {top.length === 10 ? 'Los 10 depas para invertir ahora' : 'Los depas para invertir ahora'}
+      </h2>
+      <p class="ranking-meta">Ordenados por rentabilidad anual estimada.</p>
+      <ol class="ranking">
+        {top.map((p) => (
+          <li>
+            <div>
+              <a href={`/capital/${p.slug}`}>{p.district.name}</a>
+              <p class="ranking-meta">
+                {p.address} · {formatPEN(p.price.amount)}
+                {p.developer && ` · ${p.developer.name}`}
+              </p>
+            </div>
+            <span class="ranking-yield">{formatYield(p.yield)}</span>
+          </li>
+        ))}
+      </ol>
+    </section>
+  )}
+
+  <!-- ---------- Formulario en inglés: guarda el lead en la API y ofrece seguir por WhatsApp ---------- -->
+  <section class="intl" lang="en" aria-labelledby="intl-title">
+    <div class="container intl-inner">
+      <div>
+        <h2 id="intl-title" class="intl-title">
+          Also in English for international investors
+        </h2>
+        <p class="intl-sub">We help you find high-yield rental apartments in Lima.</p>
+      </div>
+
+      <form class="intl-form form" method="post" data-intl-form novalidate>
+        <div class="field">
+          <label for="intl-name">Full name</label>
+          <input
+            id="intl-name"
+            name="name"
+            type="text"
+            autocomplete="name"
+            placeholder="e.g. Jane Smith"
+            required
+            minlength="2"
+            aria-describedby="intl-name-error"
+          />
+          <p class="field-error" id="intl-name-error" data-error-for="name" hidden></p>
+        </div>
+        <div class="field">
+          <label for="intl-email">Email</label>
+          <input
+            id="intl-email"
+            name="email"
+            type="email"
+            autocomplete="email"
+            inputmode="email"
+            placeholder="e.g. jane@email.com"
+            required
+            aria-describedby="intl-email-error"
+          />
+          <p class="field-error" id="intl-email-error" data-error-for="email" hidden></p>
+        </div>
+        <div class="field">
+          <label for="intl-amount">Initial amount (USD)</label>
+          <div class="prefix">
+            <span aria-hidden="true">USD</span>
+            <input
+              id="intl-amount"
+              name="amountUsd"
+              type="text"
+              inputmode="numeric"
+              pattern="[0-9 ,.]*"
+              placeholder="e.g. 50,000"
+              data-number
+              aria-describedby="intl-amount-error"
+            />
+          </div>
+          <p class="field-error" id="intl-amount-error" data-error-for="amountUsd" hidden></p>
+        </div>
+        <button type="submit" class="btn btn--whatsapp submit">
+          <WhatsAppIcon />
+          Talk to us on WhatsApp
+        </button>
+
+        <div class="full">
+          <label class="check">
+            <input type="checkbox" name="consent" required />
+            <span>
+              I agree to the <a href="/privacidad">privacy policy</a> (in Spanish).
+            </span>
+          </label>
+          <p class="field-error" data-error-for="consent" hidden></p>
+        </div>
+        <div class="hp" aria-hidden="true">
+          <label>
+            Website <input type="text" name="website" tabindex="-1" autocomplete="off" />
+          </label>
+        </div>
+        <div class="full">
+          <Turnstile />
+        </div>
+        <p class="form-status full" data-form-status role="status" aria-live="polite" hidden></p>
+      </form>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import { enhanceForm, getUtm, showFormStatus } from '../../scripts/forms'
+  import { api, type LeadCreate } from '../../lib/api/client'
+  import { waLink } from '../../data/contacto'
+
+  // ---------- Formulario en inglés ----------
+  const form = document.querySelector<HTMLFormElement>('[data-intl-form]')
+  if (form) {
+    const whatsappMessage = (fields: Record<string, unknown>) =>
+      `Hi, I'm ${fields.name ?? ''}. I'd like to invest in Lima` +
+      (fields.amountUsd ? ` with about USD ${Number(fields.amountUsd).toLocaleString('en-US')}.` : '.')
+
+    enhanceForm(form, {
+      buildPayload: (fields) =>
+        ({ ...fields, source: 'intl-form', locale: 'en', utm: getUtm() }) as LeadCreate,
+      send: (body) => api.POST('/v1/leads', { body }),
+      whatsappMessage,
+      onSuccess: (_data, f) => {
+        const message = whatsappMessage(Object.fromEntries(new FormData(f)))
+        showFormStatus(
+          f,
+          'success',
+          'Thanks! We got your details and will contact you soon.',
+          waLink(message),
+          'Message us on WhatsApp',
+        )
+        f.reset()
+      },
+      messages: {
+        sending: 'Sending…',
+        networkError: 'We could not send your details. Check your connection or message us on WhatsApp.',
+        tooMany: 'Too many attempts. Please wait a minute and try again.',
+        invalid: 'Please check the highlighted fields.',
+        noApi: 'For now we take these requests on WhatsApp.',
+        whatsappLink: 'Message us on WhatsApp',
+      },
+    })
+  }
+</script>
+
+<style>
+  /* ---------- Hero ---------- */
+  .hero {
+    padding-block: var(--space-8) var(--space-8);
+  }
+  .hero h1 {
+    font-size: clamp(2.25rem, 1.4rem + 3vw, 3.75rem);
+    line-height: 1.05;
+    color: var(--color-navy-800);
+  }
+  .hero-sub {
+    margin: var(--space-3) 0 0;
+    max-width: 34rem;
+    font-size: var(--fs-lead);
+    color: var(--color-text-muted);
+  }
+  .ctas {
+    margin-top: var(--space-6);
+  }
+  .listing {
+    padding-bottom: var(--space-4);
+  }
+  .no-results {
+    margin: var(--space-5) 0;
+    color: var(--color-text-muted);
+  }
+  .no-results[hidden] {
+    display: none;
+  }
+  @media (min-width: 1024px) {
+    .hero {
+      display: grid;
+      /* el título (izquierda) necesita más ancho para quedar en 2 líneas */
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 0;
+      align-items: center;
+      padding-block: var(--space-6) var(--space-4);
+    }
+    .hero-steps .stepper {
+      margin-top: 0;
+    }
+  }
+
+  /* ---------- Barra Top 10 ---------- */
+  .top10 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    min-height: 64px;
+    margin-top: var(--space-8);
+    padding: var(--space-3) var(--space-4);
+    border: var(--border-width-strong) solid var(--color-border-strong);
+    border-radius: var(--radius-md);
+    color: var(--color-text-strong);
+    font-weight: var(--fw-semibold);
+    text-decoration: none;
+    transition: background-color var(--dur-fast) var(--ease-out);
+  }
+  .top10:hover {
+    background: var(--color-navy-50);
+  }
+  .top10-btn {
+    flex: none;
+  }
+  .long {
+    display: none;
+  }
+
+  @media (min-width: 640px) {
+    .top10 {
+      padding: var(--space-3) var(--space-6);
+      font-size: var(--fs-18);
+    }
+    .long {
+      display: inline;
+    }
+    .short {
+      display: none;
+    }
+  }
+
+  /* ---------- Top 10 ---------- */
+  .ranking-title {
+    font-size: var(--fs-h3);
+    letter-spacing: 0;
+  }
+  .ranking {
+    display: grid;
+    gap: var(--space-2);
+    margin: var(--space-4) 0 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: rank;
+  }
+  .ranking li {
+    position: relative;
+    display: grid;
+    grid-template-columns: 2.5rem minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--space-3);
+    min-height: 64px;
+    padding: var(--space-2) var(--space-4);
+    border: var(--border);
+    border-radius: var(--radius-md);
+    counter-increment: rank;
+  }
+  .ranking li::before {
+    content: counter(rank);
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: var(--radius-pill);
+    background: var(--color-navy-800);
+    color: #fff;
+    font-weight: var(--fw-bold);
+  }
+  .ranking li:has(a:focus-visible) {
+    box-shadow: var(--focus-ring);
+  }
+  .ranking a {
+    color: var(--color-text-strong);
+    font-weight: var(--fw-semibold);
+    text-decoration: none;
+  }
+  .ranking a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+  .ranking a:focus-visible {
+    box-shadow: none;
+  }
+  .ranking li:hover {
+    background: var(--color-navy-50);
+  }
+  .ranking-meta {
+    margin: 0;
+    font-size: var(--fs-sm);
+    color: var(--color-text-muted);
+  }
+  .ranking-yield {
+    font-weight: var(--fw-semibold);
+    color: var(--color-navy-800);
+    white-space: nowrap;
+  }
+
+  /* ---------- Pasos ---------- */
+  /* Móvil: vertical (lo maneja Step). Desde 640px: 4 columnas */
+  .stepper {
+    margin: var(--space-8) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  @media (min-width: 640px) {
+    .stepper {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  /* ---------- Formulario en inglés ---------- */
+  .intl {
+    padding-block: var(--space-8);
+    background: var(--color-surface-alt);
+    border-top: var(--border-subtle);
+  }
+  .intl-inner {
+    display: grid;
+    gap: var(--space-6);
+  }
+  .intl-title {
+    font-size: var(--fs-18);
+    letter-spacing: 0;
+  }
+  .intl-sub {
+    margin: var(--space-1) 0 0;
+    font-size: var(--fs-sm);
+    color: var(--color-text-muted);
+  }
+
+  .intl-form .full {
+    grid-column: 1 / -1;
+  }
+
+  /* "USD" visual dentro del campo */
+  .prefix {
+    position: relative;
+  }
+  .prefix span {
+    position: absolute;
+    top: 50%;
+    left: 14px;
+    transform: translateY(-50%);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-semibold);
+    color: var(--color-text-muted);
+  }
+  .prefix input {
+    padding-left: 52px !important;
+  }
+
+  .submit {
+    width: 100%;
+  }
+
+  @media (min-width: 640px) {
+    .intl-form {
+      grid-template-columns: repeat(2, 1fr);
+      align-items: end;
+    }
+    .submit {
+      width: auto;
+    }
+  }
+  @media (min-width: 1024px) {
+    .intl {
+      padding-block: var(--space-6);
+    }
+    .intl-inner {
+      grid-template-columns: 1.4fr 4fr;
+      align-items: start;
+      gap: var(--space-3);
+    }
+    .intl-form {
+      grid-template-columns: 1fr 1fr 1fr auto;
+      gap: var(--space-3);
+    }
+  }
+</style>

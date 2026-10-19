@@ -1,4 +1,320 @@
 ---
-import PlaceholderLayout from '../layouts/PlaceholderLayout.astro'
+// Libro de Reclamaciones virtual (Código de Protección y Defensa del Consumidor, INDECOPI).
+// El envío lo registra la API (POST /v1/complaints), que asigna el código correlativo y manda
+// la constancia por correo al consumidor.
+import BaseLayout from '../layouts/BaseLayout.astro'
+import Turnstile from '../components/Turnstile.astro'
+import { COMPANY } from '../data/empresa'
+import { formatDate } from '../lib/format'
+
+const today = formatDate(new Date().toISOString())
 ---
-<PlaceholderLayout title="Libro de Reclamaciones" />
+
+<BaseLayout
+  title="Libro de Reclamaciones"
+  description="Libro de Reclamaciones virtual de Depa Host Perú. Registra tu reclamo o queja."
+>
+  <section class="container section complaints">
+    <h1>Libro de Reclamaciones</h1>
+    <p class="lead">Conforme a lo establecido en el Código de Protección y Defensa del Consumidor.</p>
+
+    <dl class="provider">
+      <div>
+        <dt>Razón social</dt>
+        <dd>{COMPANY.legalName}</dd>
+      </div>
+      <div>
+        <dt>RUC</dt>
+        <dd>{COMPANY.ruc}</dd>
+      </div>
+      <div>
+        <dt>Dirección</dt>
+        <dd>{COMPANY.address}</dd>
+      </div>
+      <div>
+        <dt>Fecha</dt>
+        <dd>{today}</dd>
+      </div>
+    </dl>
+
+    <form class="form complaint-form" data-complaint-form novalidate>
+      <fieldset>
+        <legend>1. Identificación del consumidor reclamante</legend>
+        <div class="grid-2">
+          <div class="field">
+            <label for="c-first">Nombres</label>
+            <input id="c-first" name="consumer.firstName" autocomplete="given-name" required minlength="2" />
+            <p class="field-error" data-error-for="consumer.firstName" hidden></p>
+          </div>
+          <div class="field">
+            <label for="c-last">Apellidos</label>
+            <input id="c-last" name="consumer.lastName" autocomplete="family-name" required minlength="2" />
+            <p class="field-error" data-error-for="consumer.lastName" hidden></p>
+          </div>
+          <div class="field">
+            <label for="c-doc-type">Tipo de documento</label>
+            <select id="c-doc-type" name="consumer.documentType" required>
+              <option value="DNI">DNI</option>
+              <option value="CE">Carné de extranjería</option>
+              <option value="PASAPORTE">Pasaporte</option>
+              <option value="RUC">RUC</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="c-doc">Número de documento</label>
+            <input
+              id="c-doc"
+              name="consumer.documentNumber"
+              required
+              pattern="[A-Za-z0-9\-]{6,20}"
+              inputmode="text"
+            />
+            <p class="field-error" data-error-for="consumer.documentNumber" hidden></p>
+          </div>
+          <div class="field span-2">
+            <label for="c-address">Domicilio</label>
+            <input
+              id="c-address"
+              name="consumer.address"
+              autocomplete="street-address"
+              required
+              minlength="5"
+            />
+            <p class="field-error" data-error-for="consumer.address" hidden></p>
+          </div>
+          <div class="field">
+            <label for="c-phone">Teléfono</label>
+            <input
+              id="c-phone"
+              name="consumer.phone"
+              type="tel"
+              autocomplete="tel"
+              required
+              pattern="\+?[0-9 ()\-]{6,20}"
+            />
+            <p class="field-error" data-error-for="consumer.phone" hidden></p>
+          </div>
+          <div class="field">
+            <label for="c-email">Correo electrónico</label>
+            <input id="c-email" name="consumer.email" type="email" autocomplete="email" required />
+            <p class="hint">Aquí te enviaremos la constancia y la respuesta.</p>
+            <p class="field-error" data-error-for="consumer.email" hidden></p>
+          </div>
+        </div>
+        <label class="check">
+          <input type="checkbox" name="consumer.isMinor" data-minor-toggle />
+          <span>Soy menor de edad</span>
+        </label>
+        <div class="field" data-guardian hidden>
+          <label for="c-guardian">Nombre del padre, madre o apoderado</label>
+          <input id="c-guardian" name="consumer.guardianName" disabled />
+          <p class="field-error" data-error-for="consumer.guardianName" hidden></p>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>2. Identificación del bien contratado</legend>
+        <div class="choices" role="radiogroup" aria-label="Tipo de bien">
+          <label class="check">
+            <input type="radio" name="item.type" value="servicio" checked /> Servicio
+          </label>
+          <label class="check">
+            <input type="radio" name="item.type" value="producto" /> Producto
+          </label>
+        </div>
+        <div class="grid-2">
+          <div class="field span-2">
+            <label for="i-desc">Descripción</label>
+            <input
+              id="i-desc"
+              name="item.description"
+              required
+              minlength="3"
+              placeholder="p. ej. Estadía en depa de Lince del 10 al 12 de octubre"
+            />
+            <p class="field-error" data-error-for="item.description" hidden></p>
+          </div>
+          <div class="field">
+            <label for="i-amount">
+              Monto reclamado (S/) <span class="hint">opcional</span>
+            </label>
+            <input id="i-amount" name="item.amount" type="number" min="0" step="0.01" inputmode="decimal" />
+            <p class="field-error" data-error-for="item.amount" hidden></p>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>3. Detalle de la reclamación y pedido del consumidor</legend>
+        <div class="choices" role="radiogroup" aria-label="Tipo">
+          <label class="check">
+            <input type="radio" name="kind" value="reclamo" checked /> Reclamo
+          </label>
+          <label class="check">
+            <input type="radio" name="kind" value="queja" /> Queja
+          </label>
+        </div>
+        <p class="hint">
+          <strong>Reclamo:</strong> disconformidad con el producto o servicio. <strong>Queja:</strong>{' '}
+          malestar con la atención recibida, no relacionado con el producto o servicio.
+        </p>
+        <div class="field">
+          <label for="d-detail">Detalle</label>
+          <textarea id="d-detail" name="detail" required minlength="10" maxlength="3000"></textarea>
+          <p class="field-error" data-error-for="detail" hidden></p>
+        </div>
+        <div class="field">
+          <label for="d-request">Pedido</label>
+          <textarea id="d-request" name="request" required minlength="5" maxlength="2000"></textarea>
+          <p class="field-error" data-error-for="request" hidden></p>
+        </div>
+      </fieldset>
+
+      <div>
+        <label class="check">
+          <input type="checkbox" name="consent" required />
+          <span>
+            Acepto que mis datos se usen para atender este reclamo, según la
+            <a href="/privacidad">política de privacidad</a>.
+          </span>
+        </label>
+        <p class="field-error" data-error-for="consent" hidden></p>
+      </div>
+
+      <div class="hp" aria-hidden="true">
+        <label>
+          Sitio web <input type="text" name="website" tabindex="-1" autocomplete="off" />
+        </label>
+      </div>
+      <Turnstile />
+      <button type="submit" class="btn btn--primary submit">
+        Enviar reclamo
+      </button>
+      <p class="form-status" data-form-status role="status" aria-live="polite" hidden></p>
+    </form>
+
+    <section class="receipt" data-receipt hidden tabindex="-1" aria-labelledby="receipt-title">
+      <h2 id="receipt-title">
+        Recibimos tu <span data-receipt-kind>reclamo</span>
+      </h2>
+      <p>
+        Código: <strong data-receipt-code></strong>
+      </p>
+      <p>
+        Te responderemos a más tardar el <strong data-receipt-deadline></strong>.
+      </p>
+      <p>Enviamos una copia de esta hoja a tu correo.</p>
+      <button type="button" class="btn btn--secondary btn--sm" data-print>
+        Imprimir constancia
+      </button>
+    </section>
+
+    <ul class="legal-notes">
+      <li>
+        La formulación del reclamo no impide acudir a otras vías de solución de controversias ni es requisito
+        previo para interponer una denuncia ante el INDECOPI.
+      </li>
+      <li>El proveedor deberá dar respuesta al reclamo en un plazo no mayor a quince (15) días hábiles.</li>
+    </ul>
+  </section>
+</BaseLayout>
+
+<script>
+  import { enhanceForm } from '../scripts/forms'
+  import { api, type ComplaintCreate } from '../lib/api/client'
+  import { formatDate } from '../lib/format'
+
+  const form = document.querySelector<HTMLFormElement>('[data-complaint-form]')
+  const receipt = document.querySelector<HTMLElement>('[data-receipt]')
+
+  // Menor de edad: pide el nombre del padre, madre o apoderado
+  const minor = form?.querySelector<HTMLInputElement>('[data-minor-toggle]')
+  const guardian = form?.querySelector<HTMLElement>('[data-guardian]')
+  minor?.addEventListener('change', () => {
+    if (!guardian) return
+    guardian.hidden = !minor.checked
+    const input = guardian.querySelector('input')!
+    input.disabled = !minor.checked
+    input.required = minor.checked
+  })
+
+  document.querySelector('[data-print]')?.addEventListener('click', () => window.print())
+
+  if (form && receipt) {
+    enhanceForm(form, {
+      buildPayload: (fields) => fields as ComplaintCreate,
+      send: (body) => api.POST('/v1/complaints', { body }),
+      whatsappMessage: () => 'Hola, quiero registrar un reclamo en el Libro de Reclamaciones.',
+      onSuccess: (data, f) => {
+        receipt.querySelector('[data-receipt-code]')!.textContent = data.code
+        receipt.querySelector('[data-receipt-deadline]')!.textContent = formatDate(data.responseDeadline)
+        receipt.querySelector('[data-receipt-kind]')!.textContent =
+          new FormData(f).get('kind') === 'queja' ? 'queja' : 'reclamo'
+        f.hidden = true
+        receipt.hidden = false
+        receipt.focus()
+      },
+    })
+  }
+</script>
+
+<style>
+  .complaints {
+    max-width: 860px;
+  }
+  .provider {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: var(--space-3);
+    margin: var(--space-6) 0;
+    padding: var(--space-4);
+    border: var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface-alt);
+  }
+  dt {
+    font-size: var(--fs-13);
+    color: var(--color-text-muted);
+  }
+  dd {
+    margin: var(--space-1) 0 0;
+    font-weight: var(--fw-semibold);
+  }
+  .complaint-form {
+    gap: var(--space-8);
+  }
+  .grid-2 {
+    display: grid;
+    gap: var(--space-4);
+  }
+  @media (min-width: 640px) {
+    .grid-2 {
+      grid-template-columns: 1fr 1fr;
+    }
+    .span-2 {
+      grid-column: span 2;
+    }
+  }
+  .field[hidden] {
+    display: none;
+  }
+  .submit {
+    justify-self: start;
+  }
+  .receipt {
+    margin-top: var(--space-6);
+    padding: var(--space-6);
+    border: var(--border);
+    border-radius: var(--radius-lg);
+    background: #e7f5ee;
+  }
+  .receipt[hidden] {
+    display: none;
+  }
+  .legal-notes {
+    margin: var(--space-8) 0 0;
+    padding-left: var(--space-5);
+    font-size: var(--fs-sm);
+    color: var(--color-text-muted);
+  }
+</style>

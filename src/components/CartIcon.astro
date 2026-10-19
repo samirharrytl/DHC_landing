@@ -1,7 +1,11 @@
 ---
 // Ícono de carpeta para la sección "Mis depas".
+interface Props {
+  size?: number
+}
 const { size = 30 } = Astro.props
 ---
+
 <svg
   width={size}
   height={size}

@@ -1,0 +1,234 @@
+---
+// Tarjeta de proyecto de una inmobiliaria aliada (páginas /capital/aliados/{slug}).
+// Precio "desde" grande, rentabilidad estimada en recuadro y descripción corta.
+import type { Property } from '../types/property'
+import { buildSearchText } from '../lib/filters'
+import { formatMoney, formatYield } from '../lib/format'
+import HouseIcon from './HouseIcon.astro'
+import Icon from './Icon.astro'
+import PropertyImage from './PropertyImage.astro'
+import SaveButton from './SaveButton.astro'
+
+interface Props {
+  property: Property
+  priority?: boolean
+}
+
+const { property: p, priority = false } = Astro.props
+const href = `/capital/${p.slug}`
+const image = p.images[0]
+const yieldLabel = formatYield(p.yield).replace(' anual', '')
+---
+
+<article
+  class="project"
+  data-property-card
+  data-search={buildSearchText(p)}
+  data-district={p.district.slug}
+  data-price={p.price.amount}
+  data-yield-min={p.yield.min}
+>
+  <div class="media">
+    {image ? (
+      <PropertyImage
+        image={image}
+        widths={[480, 640, 960]}
+        sizes="(max-width: 640px) 90vw, (max-width: 1024px) 50vw, 33vw"
+        priority={priority}
+      />
+    ) : (
+      <div class="placeholder" aria-hidden="true">
+        <HouseIcon />
+      </div>
+    )}
+    <span class="tag">{p.status === 'reserved' ? 'Reservado' : 'De proyecto'}</span>
+  </div>
+
+  <div class="body">
+    <h3 class="place">
+      <Icon name="pin" size={22} />
+      <a href={href} data-astro-prefetch>
+        <span class="district display">{p.district.name}</span>
+        <span class="city">{p.address}, Lima</span>
+      </a>
+    </h3>
+
+    <div class="numbers">
+      <div>
+        <p class="label">Precio desde</p>
+        <p class="price">{formatMoney(p.price.amount, p.price.currency)}</p>
+      </div>
+      <div class="yield">
+        <Icon name="trend" size={22} />
+        <div>
+          <p class="label">Rent. estimada</p>
+          <p class="yield-value">{yieldLabel}</p>
+        </div>
+      </div>
+    </div>
+
+    {p.description && <p class="description">{p.description}</p>}
+  </div>
+
+  <div class="actions">
+    <SaveButton id={p.id} name={p.district.name} variant="solid" />
+    <a class="btn btn--secondary btn--sm" href={href}>
+      Ver más detalle
+    </a>
+  </div>
+</article>
+
+<style>
+  .project {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: var(--border);
+    border-radius: var(--radius-lg);
+    background: #fff;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow var(--dur-base) var(--ease-out);
+  }
+  .project:hover {
+    box-shadow: var(--shadow-lg);
+  }
+  .project[hidden] {
+    display: none;
+  }
+  .project:has(.place a:focus-visible) {
+    box-shadow: var(--focus-ring);
+  }
+  .media {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: var(--color-border-subtle);
+  }
+  .media :global(picture),
+  .media :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .placeholder {
+    display: grid;
+    place-items: center;
+    height: 100%;
+    background: linear-gradient(135deg, var(--color-navy-50), var(--color-navy-100));
+    color: var(--color-navy-800);
+  }
+  .placeholder :global(svg) {
+    width: 48px;
+    height: 48px;
+    opacity: 0.35;
+  }
+  .tag {
+    position: absolute;
+    top: var(--space-3);
+    left: var(--space-3);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+    background: var(--color-navy-800);
+    color: #fff;
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-bold);
+    letter-spacing: var(--ls-caps);
+    text-transform: uppercase;
+  }
+  .body {
+    display: grid;
+    gap: var(--space-4);
+    flex: 1;
+    padding: var(--space-5);
+  }
+  .place {
+    display: flex;
+    gap: var(--space-2);
+    margin: 0;
+    color: var(--color-navy-800);
+  }
+  .place :global(svg) {
+    flex: none;
+    margin-top: 4px;
+  }
+  .place a {
+    display: grid;
+    color: inherit;
+    text-decoration: none;
+  }
+  .place a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+  .place a:focus-visible {
+    box-shadow: none;
+  }
+  .district {
+    font-size: 1.5rem;
+    line-height: 1.15;
+    color: var(--color-text-strong);
+  }
+  .city {
+    margin-top: 2px;
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-regular);
+    color: var(--color-text-muted);
+  }
+  .numbers {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+  .label {
+    margin: 0;
+    white-space: nowrap;
+    font-size: var(--fs-13);
+    color: var(--color-text-muted);
+  }
+  .price {
+    margin: 2px 0 0;
+    font-size: clamp(1.5rem, 1.2rem + 1vw, 1.875rem);
+    font-weight: var(--fw-bold);
+    line-height: 1.1;
+    color: var(--color-navy-800);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .yield {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    border: var(--border);
+    border-radius: var(--radius-md);
+    color: var(--color-navy-800);
+  }
+  .yield-value {
+    margin: 0;
+    font-size: var(--fs-18);
+    font-weight: var(--fw-semibold);
+    color: var(--color-text-strong);
+  }
+  .description {
+    margin: 0;
+    font-size: var(--fs-15);
+    color: var(--color-text);
+  }
+  .actions {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    gap: var(--space-2);
+    padding: 0 var(--space-5) var(--space-5);
+  }
+  .actions > :global(*) {
+    flex: 1;
+    min-width: 0;
+    padding-inline: var(--space-3);
+  }
+</style>

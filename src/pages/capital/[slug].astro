@@ -1,0 +1,474 @@
+---
+// Detalle de un depa. Una página estática por depa, generada en el build desde getProperties().
+import type { GetStaticPaths } from 'astro'
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import HouseIcon from '../../components/HouseIcon.astro'
+import Icon from '../../components/Icon.astro'
+import MiniCard from '../../components/MiniCard.astro'
+import PropertyImage from '../../components/PropertyImage.astro'
+import SaveButton from '../../components/SaveButton.astro'
+import {
+  getDevelopers,
+  getFinancingAssumptions,
+  getProperties,
+  getSimilarProperties,
+} from '../../lib/properties'
+import { buildDisclaimer, formatFacts, formatMoney, formatYears, formatYield } from '../../lib/format'
+import type { Property } from '../../types/property'
+
+export const getStaticPaths = (async () => {
+  const properties = await getProperties()
+  return properties.map((property) => ({ params: { slug: property.slug }, props: { property } }))
+}) satisfies GetStaticPaths
+
+interface Props {
+  property: Property
+}
+
+const { property: p } = Astro.props
+const [cover, ...gallery] = p.images
+const street = p.address.replace(/ cuadra \d+$/i, '')
+const title = `${p.district.name} · ${street}`
+const isProject = p.origin === 'developer'
+const price = formatMoney(p.price.amount, p.price.currency)
+const facts = formatFacts(p)
+const disclaimer = buildDisclaimer(await getFinancingAssumptions())
+const similar = await getSimilarProperties(p, 4)
+const developer = p.developer ? (await getDevelopers()).find((d) => d.id === p.developer!.id) : undefined
+
+const stats = [
+  {
+    icon: 'money' as const,
+    label: 'valor',
+    value: price,
+    note: isProject ? 'Precio desde' : 'Precio de compra',
+  },
+  {
+    icon: 'trend' as const,
+    label: 'rentabilidad',
+    value: formatYield(p.yield),
+    note: 'Estimada',
+    positive: true,
+  },
+  {
+    icon: 'calendar' as const,
+    label: 'se paga en',
+    value: formatYears(p.paybackYears),
+    note: 'Plazo de inversión',
+  },
+]
+
+// Datos estructurados para Google (schema.org)
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: `Departamento en ${p.district.name}, ${p.address}`,
+  description: p.description ?? `Departamento para invertir en ${p.district.name}, Lima.`,
+  offers: {
+    '@type': 'Offer',
+    price: p.price.amount,
+    priceCurrency: p.price.currency,
+    availability: p.status === 'published' ? 'https://schema.org/InStock' : 'https://schema.org/SoldOut',
+  },
+}
+---
+
+<BaseLayout
+  title={title}
+  description={`Depa en ${p.district.name} desde ${price}. Rentabilidad ${formatYield(p.yield)}.`}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  <article class="container detail" data-property-id={p.id}>
+    <nav class="breadcrumb" aria-label="Migas de pan">
+      <a href="/capital">Capital</a>
+      {p.developer && (
+        <>
+          <span aria-hidden="true">›</span>
+          <a href={`/capital/aliados/${p.developer.slug}`}>{p.developer.name}</a>
+        </>
+      )}
+      <span aria-hidden="true">›</span>
+      <span aria-current="page">{p.district.name}</span>
+    </nav>
+
+    <div class="detail-top">
+      <div class="detail-media">
+        {cover ? (
+          <PropertyImage
+            image={cover}
+            widths={[640, 960, 1280, 1600]}
+            sizes="(max-width: 1024px) 100vw, 55vw"
+            priority
+          />
+        ) : (
+          <div class="placeholder" aria-hidden="true">
+            <HouseIcon />
+          </div>
+        )}
+        {gallery.length > 0 && (
+          <ul class="gallery" aria-label="Más fotos">
+            {gallery.map((image) => (
+              <li>
+                <PropertyImage image={image} widths={[320, 480]} sizes="(max-width: 640px) 50vw, 20vw" />
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      <div class="detail-info">
+        <p class="eyebrow">
+          {p.status === 'reserved' ? 'Reservado · ' : p.status === 'sold' ? 'Vendido · ' : ''}
+          {isProject ? `De proyecto${p.developer ? ` · ${p.developer.name}` : ''}` : 'De propietario'}
+          {p.badge && p.status === 'published' && ` · ${p.badge}`}
+        </p>
+        <h1 class="display">{title}</h1>
+        <p class="address">
+          <Icon name="pin" size={18} />
+          {p.address}, {p.district.name}
+        </p>
+
+        <dl class="stats">
+          {stats.map((stat) => (
+            <div class="stat">
+              <span class="stat-icon">
+                <Icon name={stat.icon} size={22} />
+              </span>
+              <dt>{stat.label}</dt>
+              <dd>
+                <span class:list={['stat-value', { positive: stat.positive }]}>{stat.value}</span>
+                <span class="stat-note">{stat.note}</span>
+              </dd>
+            </div>
+          ))}
+        </dl>
+
+        {facts.length > 0 && (
+          <ul class="facts" aria-label="Características">
+            {facts.map((fact, index) => (
+              <li>
+                <Icon name={(['bed', 'bath', 'area'] as const)[index] ?? 'area'} size={18} />
+                {fact}
+              </li>
+            ))}
+          </ul>
+        )}
+
+        <p class="note">
+          <Icon name="info" size={16} />
+          Renta estimada. No constituye una garantía de rentabilidad futura.
+        </p>
+
+        <div class="detail-actions">
+          <SaveButton id={p.id} name={p.district.name} variant="solid" />
+          <a class="btn btn--secondary btn--sm" href={`/capital/empecemos?depa=${p.slug}`}>
+            <Icon name="mail" size={18} />
+            Contactar
+          </a>
+        </div>
+      </div>
+    </div>
+
+    {p.description && <p class="description">{p.description}</p>}
+
+    <!-- ---------- Aliado del proyecto ---------- -->
+    <section class="ally" aria-labelledby="ally-title">
+      <h2 id="ally-title" class="section-label">
+        {isProject ? 'Aliado del proyecto' : 'Te acompaña'}
+      </h2>
+      <div class="ally-card">
+        <span class="ally-icon">
+          <Icon name="building" size={26} />
+        </span>
+        <div>
+          <p class="ally-name">{developer?.name ?? 'DepaHost Capital'}</p>
+          <p class="ally-text">
+            {developer
+              ? (developer.description ?? 'Inmobiliaria aliada de DepaHost Capital.')
+              : 'Plataforma inmobiliaria con enfoque en inversión accesible y de confianza.'}
+          </p>
+        </div>
+        {developer && developer.projectCount > 1 && (
+          <a class="ally-link" href={`/capital/aliados/${developer.slug}`}>
+            Ver sus {developer.projectCount} proyectos <Icon name="arrow-right" size={16} />
+          </a>
+        )}
+      </div>
+    </section>
+
+    <!-- ---------- Depas similares ---------- -->
+    {similar.length > 0 && (
+      <section class="similar" aria-labelledby="similar-title">
+        <h2 id="similar-title" class="display">
+          Depas similares que te pueden interesar
+        </h2>
+        <div class="similar-list">
+          {similar.map((s) => (
+            <MiniCard property={s} />
+          ))}
+        </div>
+      </section>
+    )}
+
+    <p class="disclaimer">{disclaimer}</p>
+  </article>
+</BaseLayout>
+
+<script>
+  import { getHistoryStore } from '../../lib/saved-store'
+
+  // Guarda la visita para "Para ti, según lo que has visto"
+  const id = document.querySelector<HTMLElement>('[data-property-id]')?.dataset.propertyId
+  if (id) getHistoryStore().touch(id)
+</script>
+
+<style>
+  .detail {
+    padding-block: var(--space-6) var(--space-12);
+  }
+  .breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-bottom: var(--space-4);
+    font-size: var(--fs-sm);
+    color: var(--color-text-muted);
+  }
+  .breadcrumb a {
+    color: var(--color-navy-800);
+  }
+  .detail-top {
+    display: grid;
+    gap: var(--space-6);
+  }
+  .detail-media :global(picture) {
+    display: block;
+  }
+  .detail-media > :global(picture img) {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+  }
+  .placeholder {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(135deg, var(--color-navy-50), var(--color-navy-100));
+    color: var(--color-navy-800);
+  }
+  .placeholder :global(svg) {
+    width: 64px;
+    height: 64px;
+    opacity: 0.35;
+  }
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: var(--space-2);
+    margin: var(--space-2) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .gallery :global(img) {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+  }
+  h1 {
+    margin-top: var(--space-2);
+    padding-bottom: var(--space-3);
+    border-bottom: var(--border-subtle);
+    font-size: clamp(1.875rem, 1.4rem + 1.6vw, 2.625rem);
+    color: var(--color-navy-800);
+  }
+  .address {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    margin: var(--space-3) 0 0;
+    font-size: var(--fs-sm);
+    color: var(--color-text-muted);
+  }
+  .stats {
+    margin: var(--space-2) 0 0;
+  }
+  .stat {
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--space-3);
+    padding-block: var(--space-3);
+  }
+  .stat + .stat {
+    border-top: var(--border-subtle);
+  }
+  .stat-icon {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-pill);
+    background: var(--color-navy-800);
+    color: #fff;
+  }
+  dt {
+    color: var(--color-text-muted);
+  }
+  dd {
+    display: grid;
+    justify-items: end;
+    margin: 0;
+    text-align: right;
+  }
+  .stat-value {
+    font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.625rem);
+    font-weight: var(--fw-bold);
+    line-height: 1.2;
+    color: var(--color-text-strong);
+    font-variant-numeric: tabular-nums;
+  }
+  .stat-value.positive {
+    color: var(--color-success);
+  }
+  .stat-note {
+    font-size: var(--fs-13);
+    color: var(--color-text-muted);
+  }
+  .facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-5);
+    margin: var(--space-2) 0 0;
+    padding: var(--space-3) 0 0;
+    border-top: var(--border-subtle);
+    list-style: none;
+  }
+  .facts li {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+  .facts :global(svg) {
+    color: var(--color-navy-800);
+  }
+  .note {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin: var(--space-3) 0 0;
+    font-size: var(--fs-13);
+    color: var(--color-text-muted);
+  }
+  .detail-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-3);
+    margin-top: var(--space-5);
+  }
+  .detail-actions > :global(*) {
+    min-height: var(--control-h-md);
+  }
+  .description {
+    max-width: 70ch;
+    margin: var(--space-8) 0 0;
+    font-size: var(--fs-lead);
+    white-space: pre-line;
+  }
+
+  /* ---------- Aliado ---------- */
+  .ally {
+    display: grid;
+    gap: var(--space-4);
+    margin-top: var(--space-10);
+    padding-top: var(--space-6);
+    border-top: var(--border-subtle);
+  }
+  .section-label {
+    justify-self: start;
+    padding-bottom: var(--space-2);
+    border-bottom: 2px solid var(--color-navy-800);
+    font-size: var(--fs-18);
+    letter-spacing: 0;
+    color: var(--color-navy-800);
+  }
+  .ally-card {
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr);
+    align-items: center;
+    gap: var(--space-4);
+  }
+  .ally-icon {
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    border: var(--border);
+    border-radius: var(--radius-pill);
+    color: var(--color-navy-800);
+  }
+  .ally-name {
+    margin: 0;
+    font-weight: var(--fw-semibold);
+    color: var(--color-text-strong);
+  }
+  .ally-text {
+    margin: 2px 0 0;
+    font-size: var(--fs-sm);
+    color: var(--color-text-muted);
+  }
+  .ally-link {
+    grid-column: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    color: var(--color-navy-800);
+    font-weight: var(--fw-semibold);
+  }
+
+  /* ---------- Similares ---------- */
+  .similar {
+    margin-top: var(--space-10);
+  }
+  .similar h2 {
+    margin-bottom: var(--space-4);
+    font-size: var(--fs-h3);
+    letter-spacing: 0;
+    color: var(--color-navy-800);
+  }
+  .similar-list {
+    display: grid;
+    gap: var(--space-3);
+  }
+  .disclaimer {
+    margin-top: var(--space-8);
+  }
+
+  @media (min-width: 640px) {
+    .similar-list {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1024px) {
+    .detail-top {
+      grid-template-columns: minmax(0, 11fr) minmax(360px, 9fr);
+      align-items: start;
+      gap: var(--space-10);
+    }
+    .detail-info {
+      position: sticky;
+      top: calc(var(--header-h) + var(--space-4));
+    }
+    .ally-card {
+      grid-template-columns: 56px minmax(0, 1fr) auto;
+    }
+    .ally-link {
+      grid-column: auto;
+    }
+    .similar-list {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+</style>

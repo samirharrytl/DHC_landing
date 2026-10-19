@@ -1,9 +1,14 @@
 ---
 // Contenedor de tarjetas de depas.
 // Móvil: carrusel horizontal (se desliza con el dedo) · Tablet: 2 columnas · Escritorio: 3 columnas
-const { label = 'Departamentos destacados' } = Astro.props
+interface Props {
+  label?: string
+  id?: string
+}
+const { label = 'Departamentos destacados', id } = Astro.props
 ---
-<div class="property-grid" role="region" aria-label={label} tabindex="0">
+
+<div class="property-grid" id={id} role="region" aria-label={label} tabindex="0">
   <slot />
 </div>
 
@@ -24,7 +29,9 @@ const { label = 'Departamentos destacados' } = Astro.props
     padding-block: var(--space-1) var(--space-4); /* aire para la sombra y el foco */
   }
   /* :global porque las tarjetas vienen de otro componente (por el slot) */
-  .property-grid > :global(*) { scroll-snap-align: start; }
+  .property-grid > :global(*) {
+    scroll-snap-align: start;
+  }
 
   @media (min-width: 640px) {
     .property-grid {
@@ -37,6 +44,8 @@ const { label = 'Departamentos destacados' } = Astro.props
     }
   }
   @media (min-width: 1024px) {
-    .property-grid { grid-template-columns: repeat(3, 1fr); }
+    .property-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
   }
 </style>

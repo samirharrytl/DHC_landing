@@ -1,0 +1,47 @@
+[
+  {
+    "id": "7a1c0e10-0000-4a00-8000-000000000001",
+    "slug": "urbana",
+    "name": "Urbana",
+    "description": null,
+    "logoUrl": null,
+    "website": null,
+    "projectCount": 3
+  },
+  {
+    "id": "7a1c0e10-0000-4a00-8000-000000000002",
+    "slug": "lima-sur",
+    "name": "Lima Sur",
+    "description": null,
+    "logoUrl": null,
+    "website": null,
+    "projectCount": 0
+  },
+  {
+    "id": "7a1c0e10-0000-4a00-8000-000000000003",
+    "slug": "andes",
+    "name": "Andes",
+    "description": null,
+    "logoUrl": null,
+    "website": null,
+    "projectCount": 0
+  },
+  {
+    "id": "7a1c0e10-0000-4a00-8000-000000000004",
+    "slug": "miraflores-hotel",
+    "name": "Miraflores Hotel",
+    "description": null,
+    "logoUrl": null,
+    "website": null,
+    "projectCount": 0
+  },
+  {
+    "id": "7a1c0e10-0000-4a00-8000-000000000005",
+    "slug": "nova",
+    "name": "Nova",
+    "description": null,
+    "logoUrl": null,
+    "website": null,
+    "projectCount": 0
+  }
+]

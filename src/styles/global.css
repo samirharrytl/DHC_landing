@@ -6,12 +6,20 @@
    ========================================================= */
 
 /* ---------- Base ---------- */
-*, *::before, *::after { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+}
 
 /* Scroll suave solo si la persona no pidió reducir animaciones */
 @media (prefers-reduced-motion: no-preference) {
-  html { scroll-behavior: smooth; }
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 body {
@@ -23,34 +31,84 @@ body {
   background: var(--color-bg);
 }
 
-img { display: block; max-width: 100%; height: auto; }
-button, input, select, textarea { font: inherit; }
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
 
-h1, h2, h3 {
+h1,
+h2,
+h3 {
   margin: 0;
   color: var(--color-text-strong);
   line-height: var(--lh-heading);
   text-wrap: balance;
 }
-h1 { font-size: var(--fs-display); line-height: var(--lh-tight); letter-spacing: var(--ls-tight); font-weight: var(--fw-bold); }
-h2 { font-size: var(--fs-h2); letter-spacing: var(--ls-tight); font-weight: var(--fw-bold); }
-h3 { font-size: var(--fs-h3); font-weight: var(--fw-bold); }
+h1 {
+  font-size: var(--fs-display);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-tight);
+  font-weight: var(--fw-bold);
+}
+h2 {
+  font-size: var(--fs-h2);
+  letter-spacing: var(--ls-tight);
+  font-weight: var(--fw-bold);
+}
+h3 {
+  font-size: var(--fs-h3);
+  font-weight: var(--fw-bold);
+}
+
+/* Títulos editoriales en serif (Capital, Propietarios y sus páginas) */
+.display {
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  font-optical-sizing: auto;
+}
+
+/* Etiqueta pequeña en mayúsculas: "DE PROPIETARIO", "SELECCIONADOS" */
+.eyebrow {
+  margin: 0;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-navy-800);
+}
 
 /* Foco visible con teclado en todo lo interactivo */
-:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
 
 /* Que el header fijo no tape los títulos al saltar a un #ancla */
-[id] { scroll-margin-top: calc(var(--header-h) + var(--space-4)); }
+[id] {
+  scroll-margin-top: calc(var(--header-h) + var(--space-4));
+}
 
 /* Mientras el menú móvil está abierto, la página no se desplaza */
-html.menu-open { overflow: hidden; }
+html.menu-open {
+  overflow: hidden;
+}
 
 /* ---------- Layout ---------- */
 .container {
   width: min(100% - 2 * var(--gutter), var(--container-max));
   margin-inline: auto;
 }
-.section { padding-block: var(--section-y); }
+.section {
+  padding-block: var(--section-y);
+}
 
 /* Subtítulo grande (debajo de un h1 o h2) */
 .lead {
@@ -83,38 +141,84 @@ html.menu-open { overflow: hidden; }
   text-decoration: none;
   white-space: nowrap;
   cursor: pointer;
-  transition: background-color var(--dur-fast) var(--ease-out),
-              border-color var(--dur-fast) var(--ease-out),
-              color var(--dur-fast) var(--ease-out),
-              transform var(--dur-fast) var(--ease-out);
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
 }
-.btn svg { width: var(--icon-sm); height: var(--icon-sm); flex: none; }
-.btn:active { transform: translateY(1px); }
+.btn svg {
+  width: var(--icon-sm);
+  height: var(--icon-sm);
+  flex: none;
+}
+.btn:active {
+  transform: translateY(1px);
+}
 
 /* Tamaños */
-.btn--sm { --btn-h: var(--control-h-sm); padding: 0 var(--space-4); font-size: var(--fs-15); }
-.btn--block { width: 100%; }
+.btn--sm {
+  --btn-h: var(--control-h-sm);
+  padding: 0 var(--space-4);
+  font-size: var(--fs-15);
+}
+.btn--block {
+  width: 100%;
+}
 
 /* Navegar dentro del sitio: navy o con borde */
-.btn--primary { background: var(--color-navy-800); color: var(--color-text-inverse); }
-.btn--primary:hover { background: var(--color-navy-850); }
-.btn--primary:active { background: var(--color-navy-950); }
+.btn--primary {
+  background: var(--color-navy-800);
+  color: var(--color-text-inverse);
+}
+.btn--primary:hover {
+  background: var(--color-navy-850);
+}
+.btn--primary:active {
+  background: var(--color-navy-950);
+}
 
-.btn--secondary { background: transparent; color: var(--color-navy-800); border-color: var(--color-navy-800); }
-.btn--secondary:hover { background: var(--color-navy-50); }
-.btn--secondary:active { background: var(--color-navy-100); }
+.btn--secondary {
+  background: transparent;
+  color: var(--color-navy-800);
+  border-color: var(--color-navy-800);
+}
+.btn--secondary:hover {
+  background: var(--color-navy-50);
+}
+.btn--secondary:active {
+  background: var(--color-navy-100);
+}
 
 /* Abrir WhatsApp: SIEMPRE verde oscuro */
-.btn--whatsapp { background: var(--color-wa-700); color: var(--color-text-inverse); }
-.btn--whatsapp:hover { background: var(--color-wa-800); }
-.btn--whatsapp:active { background: var(--color-wa-900); }
+.btn--whatsapp {
+  background: var(--color-wa-700);
+  color: var(--color-text-inverse);
+}
+.btn--whatsapp:hover {
+  background: var(--color-wa-800);
+}
+.btn--whatsapp:active {
+  background: var(--color-wa-900);
+}
 
 /* Grupo de botones: apilados en móvil, en fila desde 640px */
-.btn-group { display: flex; flex-direction: column; gap: var(--space-3); }
-.btn-group > .btn { width: 100%; }
+.btn-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.btn-group > .btn {
+  width: 100%;
+}
 @media (min-width: 640px) {
-  .btn-group { flex-direction: row; flex-wrap: wrap; }
-  .btn-group > .btn { width: auto; }
+  .btn-group {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .btn-group > .btn {
+    width: auto;
+  }
 }
 
 /* ---------- Utilidades ---------- */
@@ -143,8 +247,140 @@ html.menu-open { overflow: hidden; }
   color: var(--color-navy-800);
   font-weight: var(--fw-semibold);
 }
-.skip-link:focus { top: var(--space-4); }
+.skip-link:focus {
+  top: var(--space-4);
+}
 
 @media (prefers-reduced-motion: reduce) {
-  .btn:active { transform: none; }
+  .btn:active {
+    transform: none;
+  }
+}
+
+/* ---------- Formularios (clase .form) ---------- */
+.form {
+  display: grid;
+  gap: var(--space-4);
+}
+.form fieldset {
+  display: grid;
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.form legend {
+  margin-bottom: var(--space-3);
+  padding: 0;
+  font-size: var(--fs-18);
+  font-weight: var(--fw-semibold);
+  color: var(--color-text-strong);
+}
+.form .field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+.form label {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  color: var(--color-text);
+}
+.form .hint {
+  margin: 0;
+  font-size: var(--fs-13);
+  color: var(--color-text-muted);
+}
+.form input:not([type='checkbox']):not([type='radio']),
+.form select,
+.form textarea {
+  width: 100%;
+  min-height: var(--control-h-md);
+  padding: 0 14px;
+  font-size: 16px; /* 16px evita que iOS haga zoom */
+  border: 1px solid var(--color-border-input);
+  border-radius: var(--radius-md);
+  background: #fff;
+  color: var(--color-text);
+}
+.form textarea {
+  min-height: 120px;
+  padding-block: var(--space-3);
+  resize: vertical;
+}
+.form input:focus-visible,
+.form select:focus-visible,
+.form textarea:focus-visible {
+  border-color: var(--color-navy-800);
+}
+.form [aria-invalid='true'] {
+  border-color: var(--color-error);
+}
+.form .check {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  font-weight: var(--fw-regular);
+}
+.form .check input {
+  width: 20px;
+  height: 20px;
+  margin: 2px 0 0;
+  flex: none;
+  accent-color: var(--color-navy-800);
+}
+.form .check a {
+  color: var(--color-navy-800);
+}
+.form .choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+.field-error {
+  margin: 0;
+  font-size: var(--fs-13);
+  color: var(--color-error);
+}
+.field-error[hidden] {
+  display: none;
+}
+
+/* Mensaje de resultado del envío */
+.form-status {
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: var(--fs-sm);
+  background: var(--color-navy-50);
+  color: var(--color-text);
+}
+.form-status[hidden] {
+  display: none;
+}
+.form-status[data-kind='error'] {
+  background: #fdecea;
+  color: var(--color-error);
+}
+.form-status[data-kind='success'] {
+  background: #e7f5ee;
+  color: var(--color-success);
+}
+.form-status a {
+  color: inherit;
+  font-weight: var(--fw-semibold);
+}
+
+/* Campo trampa para bots (honeypot): fuera de la vista y del teclado */
+.hp {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+button[aria-busy='true'] {
+  cursor: progress;
+  opacity: 0.7;
 }
