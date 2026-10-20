@@ -89,12 +89,15 @@ flowchart LR
 
     subgraph CDN["«node» Hosting estático + CDN"]
         S["«artifact» dist/"]
-        CI1["«process» Build Astro<br/>Node 22"]
+        CI1["«process» Build Astro<br/>Node 24"]
     end
 
-    subgraph Cloud["«node» Railway o Fly.io"]
-        C["«container» depahost-api<br/>Docker · Node 22 · puerto 3000"]
-        D[("«database» PostgreSQL 16+")]
+    subgraph Cloud["«node» Hosting del API (Fly.io, Railway…)"]
+        C["«container» depahost-api<br/>Docker · Node 24 · puerto 3000"]
+    end
+
+    subgraph SB["«node» Supabase · São Paulo"]
+        D[("«database» PostgreSQL<br/>RLS en todas las tablas")]
     end
 
     subgraph Ext["«node» Servicios externos"]
@@ -111,7 +114,7 @@ flowchart LR
 
     B -- "HTTPS depahostperu.com" --> S
     B -- "HTTPS api.depahostperu.com" --> C
-    C -- "TCP 5432" --> D
+    C -- "TLS verificado · Session pooler 5432" --> D
     C --> E1 & E2 & E3 & E4
     G1 -- "push a main" --> CI1
     C -- "deploy hook" --> CI1
@@ -120,9 +123,11 @@ flowchart LR
     G2 -- "imagen Docker" --> C
 ```
 
-Los proveedores de hosting son la recomendación del plan, todavía no están contratados. El
-código no depende de ninguno en particular: el frontend es una carpeta `dist/` y el API es una
-imagen Docker.
+La base de producción será Supabase, usado solo como PostgreSQL gestionado (ver
+[06 · Desarrollo y operación, sección 8](06-desarrollo-y-operacion.md#base-de-datos-en-supabase)).
+Los hostings del sitio y del API todavía no están contratados. El código no depende de ninguno en
+particular: el frontend es una carpeta `dist/`, el API es una imagen Docker y la base es cualquier
+PostgreSQL al que llegue `DATABASE_URL`.
 
 ## 4. Lo que pasa en el build y lo que pasa en el navegador
 
@@ -189,7 +194,7 @@ flowchart TB
 |---|---|---|
 | Framework | Fastify 5 | Servidor HTTP |
 | Validación | Zod 4 + `fastify-type-provider-zod` | Valida entradas y salidas, genera OpenAPI |
-| Base de datos | PostgreSQL; PGlite en desarrollo y pruebas | Datos persistentes |
+| Base de datos | PostgreSQL: local en desarrollo y preproducción, Supabase en producción; PGlite en pruebas | Datos persistentes |
 | ORM | Drizzle ORM + drizzle-kit | Consultas tipadas y migraciones SQL |
 | Documentación | `@fastify/swagger` + `@fastify/swagger-ui` | `/openapi.json` y `/docs` |
 | Seguridad | `@fastify/helmet`, `@fastify/cors`, `@fastify/rate-limit` | Cabeceras, orígenes y límites |
@@ -211,11 +216,13 @@ flowchart TB
 
 ## 6. Entornos
 
-| Entorno | Frontend | API | Base de datos |
+| Entorno | Sitio y panel | API | Base de datos |
 |---|---|---|---|
-| Desarrollo sin API | `pnpm dev` con JSON locales | — | — |
-| Desarrollo con mock | `PUBLIC_API_URL=http://127.0.0.1:4010` | `pnpm api:mock` (Prism) | — |
-| Desarrollo completo | `API_URL` y `PUBLIC_API_URL` al API local | `pnpm dev` en `:3000` | PGlite en `.data/` |
-| Pruebas | Playwright con API simulada | Vitest | PGlite en memoria |
-| Panel en local | `PUBLIC_PANEL_URL=http://localhost:5173` | `pnpm dev` del panel + API en `:3000` | PGlite en `.data/` |
-| Producción | Hosting estático; panel en Vercel (`app.depahostperu.com`) | Docker en Railway o Fly.io | PostgreSQL gestionado |
+| Desarrollo | `pnpm dev`: sitio en `:4321` con JSON locales, panel en `:5173` | `pnpm dev` en `:3000` | Postgres local, base `depahost_dev` |
+| Desarrollo sin base | `PUBLIC_API_URL=http://127.0.0.1:4010` | `pnpm api:mock` (Prism) | — |
+| Preproducción | `pnpm preprod`: builds de producción en `:4321` y `:4173`; el sitio lee el API | `pnpm preprod`: compilado, `NODE_ENV=production` | Postgres local, base `depahost_preprod` |
+| Pruebas | Playwright con API simulada (sitio) o real (panel) | Vitest | PGlite en memoria o en `.e2e-db/` |
+| Producción | Hosting estático; panel en Vercel (`app.depahostperu.com`) | Docker en el hosting del API | Supabase, con SSL verificado |
+
+El detalle de cada entorno, sus archivos `.env` y cómo levantarlo está en
+[06 · Desarrollo y operación](06-desarrollo-y-operacion.md#2-entornos).

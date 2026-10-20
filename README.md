@@ -18,26 +18,33 @@ con diagramas UML) está en [docs/plataforma](docs/plataforma/README.md).
 - Fuente Inter autoalojada con la API de fuentes de Astro
 - Datos con Astro Content Layer: JSON local o la API, según `API_URL`
 - Cliente HTTP tipado (`openapi-fetch`) generado desde el contrato de la API
-- Node 22 + pnpm · Vitest · Playwright · Prettier · GitHub Actions
+- Node 24 + pnpm · Vitest · Playwright · Prettier · GitHub Actions
 
 ## Comandos
 
-| Comando         | Qué hace                                                           |
-| --------------- | ------------------------------------------------------------------ |
-| `pnpm install`  | Instala las dependencias                                           |
-| `pnpm dev`      | Servidor de desarrollo en `http://localhost:4321`                  |
-| `pnpm build`    | Construye el sitio final en `dist/`                                |
-| `pnpm preview`  | Sirve `dist/` para revisarlo antes de publicar                     |
-| `pnpm check`    | Revisa tipos de TypeScript y de los `.astro`                       |
-| `pnpm test`     | Pruebas unitarias (Vitest)                                         |
-| `pnpm test:e2e` | Pruebas en navegador (Playwright, escritorio y móvil)              |
-| `pnpm format`   | Formatea el código con Prettier                                    |
-| `pnpm api:sync` | Copia el contrato de la API y regenera los tipos del cliente       |
-| `pnpm api:mock` | API falsa en `http://127.0.0.1:4010` a partir del contrato (Prism) |
+| Comando         | Qué hace                                                              |
+| --------------- | --------------------------------------------------------------------- |
+| `pnpm install`  | Instala las dependencias                                              |
+| `pnpm dev`      | Servidor de desarrollo en `http://localhost:4321`                     |
+| `pnpm build`    | Construye el sitio final en `dist/`                                   |
+| `pnpm preview`  | Sirve `dist/` para revisarlo antes de publicar                        |
+| `pnpm preprod`  | Build con `.env.preprod` (lee el API de preproducción) y vista previa |
+| `pnpm check`    | Revisa tipos de TypeScript y de los `.astro`                          |
+| `pnpm test`     | Pruebas unitarias (Vitest)                                            |
+| `pnpm test:e2e` | Pruebas en navegador (Playwright, escritorio y móvil)                 |
+| `pnpm format`   | Formatea el código con Prettier                                       |
+| `pnpm api:sync` | Copia el contrato de la API y regenera los tipos del cliente          |
+| `pnpm api:mock` | API falsa en `http://127.0.0.1:4010` a partir del contrato (Prism)    |
 
 ## Configuración
 
-Copia `.env.example` a `.env`. Variables principales:
+Cada entorno tiene su archivo de ejemplo: `.env.example` → `.env` (desarrollo),
+`.env.preprod.example` → `.env.preprod` (preproducción local, con `pnpm preprod`) y
+`.env.production.example` (lo que va en el panel del hosting). En desarrollo, el sitio lee los depas
+de `src/content/*.json` y envía formularios y cuentas al API local (`http://localhost:3000`).
+Ver los entornos en [docs/plataforma/06](docs/plataforma/06-desarrollo-y-operacion.md#2-entornos).
+
+Variables principales:
 
 | Variable                    | Para qué                                                                                  |
 | --------------------------- | ----------------------------------------------------------------------------------------- |
@@ -48,6 +55,7 @@ Copia `.env.example` a `.env`. Variables principales:
 | `PUBLIC_CLARITY_ID`         | Analítica; solo se carga si la persona acepta cookies                                     |
 | `PUBLIC_MEDIA_HOST`         | Dominio de las fotos de la API, para optimizarlas                                         |
 | `PUBLIC_SENTRY_DSN`         | Errores del navegador (opcional)                                                          |
+| `PUBLIC_PANEL_URL`          | Panel de cuentas. Vacío = no se muestra "Ingresar"                                        |
 
 En producción, `API_URL` y `PUBLIC_API_URL` apuntan a la misma API. Si la API no responde
 durante el build, el build falla a propósito para no publicar datos viejos.

@@ -5,7 +5,7 @@ conectan, qué datos maneja y qué pasa, paso a paso, en cada flujo. Los diagram
 escritos con [Mermaid](https://mermaid.js.org/). GitHub y VS Code (con la extensión
 "Markdown Preview Mermaid Support") los muestran como imágenes.
 
-> Estado descrito: 19 de octubre de 2026. Si cambias el código, actualiza el capítulo que
+> Estado descrito: 20 de octubre de 2026. Si cambias el código, actualiza el capítulo que
 > corresponda en el mismo cambio.
 
 ## Cómo leer esta documentación
@@ -17,7 +17,7 @@ escritos con [Mermaid](https://mermaid.js.org/). GitHub y VS Code (con la extens
 | Conocer los endpoints, la seguridad y los servicios del API | [03 · API](03-api.md) |
 | Ver las tablas, los esquemas y lo que se guarda en el navegador | [04 · Datos](04-datos.md) |
 | Seguir cada flujo detalle a detalle | [05 · Flujos](05-flujos.md) |
-| Levantar el proyecto, probarlo y publicarlo | [06 · Desarrollo y operación](06-desarrollo-y-operacion.md) |
+| Conocer los entornos (desarrollo, preproducción y producción), levantarlos, probar y publicar | [06 · Desarrollo y operación](06-desarrollo-y-operacion.md) |
 | Saber por qué se decidió cada cosa y qué falta | [07 · Decisiones y pendientes](07-decisiones-y-pendientes.md) |
 | Entender las cuentas, los roles y el panel en Vue | [08 · Panel y cuentas](08-panel-y-cuentas.md) |
 
@@ -88,6 +88,9 @@ sesión también en el sitio, y sus depas guardados se sincronizan entre los dos
 | **Sesión** | Cookie `dh_session` que el API entrega al ingresar; la comparten sitio, panel y API. |
 | **Solicitud de propietario** | Depa que un propietario envía desde el panel; el equipo la revisa y la publica. |
 | **Honeypot** | Campo oculto que solo llenan los bots. Si viene lleno, el envío se descarta en silencio. |
+| **Preproducción** | Copia de producción que corre en tu máquina: builds de producción contra su propia base (`depahost_preprod`). Sirve para probar antes de publicar. |
+| **Postgres local** | Servidor PostgreSQL del proyecto en `depahost-api/.data/postgres`, que se enciende con `pnpm db:up`. Tiene las bases de desarrollo y preproducción. |
+| **Supabase** | Servicio donde vivirá la base de producción. Se usa solo como PostgreSQL gestionado. |
 
 ## Mapa de páginas
 

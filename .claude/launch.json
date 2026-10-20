@@ -4,7 +4,7 @@
     {
       "name": "astro-dev",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["astro", "dev", "--port", "4321", "--host", "127.0.0.1", "--ignore-lock"],
+      "runtimeArgs": ["astro", "dev", "--port", "4321", "--host", "localhost", "--ignore-lock"],
       "port": 4321
     },
     {

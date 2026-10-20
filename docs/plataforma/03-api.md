@@ -21,10 +21,13 @@ depahost-api/
 │   ├── modules/<módulo>/   schema.ts · repository.ts · service.ts · routes.ts
 │   │                       (properties, developers, leads, complaints, financing, districts,
 │   │                        uploads, accounts, owner-requests, admin, health)
-│   └── scripts/            export de OpenAPI, migrate, seed
-├── drizzle/                migraciones SQL versionadas (0000_init, 0001_developers)
+│   └── scripts/            export de OpenAPI, migrate, seed, create-user
+├── drizzle/                migraciones SQL versionadas (0000_init … 0003_rls)
+├── scripts/pg-local.mjs    Postgres local de desarrollo y preproducción (pnpm db:up)
+├── certs/                  certificado de Supabase para verificar el SSL de la base
 ├── test/                   pruebas con fastify.inject() y PGlite en memoria
 ├── openapi.json            contrato generado (lo copia el frontend con pnpm api:sync)
+├── .env*.example           configuración de desarrollo, preproducción y producción
 └── Dockerfile
 ```
 
@@ -316,17 +319,22 @@ Reglas comunes:
 | Cambios con cookie solo desde orígenes de `CORS_ORIGINS` (CSRF) | `plugins/auth.ts` |
 | Login y recuperación no revelan si un correo tiene cuenta | `modules/accounts/service.ts` |
 | Producción no arranca sin `ADMIN_API_KEY`, `TURNSTILE_SECRET` y PostgreSQL real | `config.ts` |
+| Producción no arranca con una base remota sin `sslmode`: node-postgres se conectaría sin cifrar | `config.ts` |
+| RLS activado y sin políticas en todas las tablas: la Data API de Supabase no puede leerlas. El API, dueño de las tablas, no se ve afectado | `db/schema.ts`, `drizzle/0003_rls.sql` |
 | Logs sin `authorization` ni `cookie`; Sentry sin datos personales | `app.ts`, `instrument.ts` |
 | Fotos por URL prefirmada: el API no procesa archivos | `lib/storage.ts` |
 
 ## 7. Configuración
 
+Cada entorno tiene su archivo de ejemplo: `.env.example` (desarrollo), `.env.preprod.example`
+(preproducción local) y `.env.production.example` (lo que va en el hosting, con Supabase).
+
 | Variable | Obligatoria en producción | Para qué |
 |---|---|---|
-| `NODE_ENV` | — | `development`, `test` o `production` |
+| `NODE_ENV` | — | `development`, `test` o `production` (también en preproducción) |
 | `HOST`, `PORT` | — | Por defecto `0.0.0.0:3000` |
 | `LOG_LEVEL` | — | `info` por defecto |
-| `DATABASE_URL` | Sí (PostgreSQL) | `postgres://…`, `pglite://memory` o `pglite://./carpeta` |
+| `DATABASE_URL` | Sí (PostgreSQL) | `postgres://…`, `pglite://memory` o `pglite://./carpeta`. Si no es local, con `sslmode`: en Supabase, `sslmode=verify-full&sslrootcert=certs/supabase-ca.crt` |
 | `CORS_ORIGINS` | Sí, en la práctica | Orígenes del sitio, separados por coma |
 | `ADMIN_API_KEY` | Sí | Clave de `/v1/admin/*` para scripts (mínimo 32 caracteres) |
 | `COOKIE_DOMAIN` | Sí, para compartir la sesión | `.depahostperu.com`; vacío en local |
@@ -336,7 +344,7 @@ Reglas comunes:
 | `RESEND_API_KEY`, `MAIL_FROM`, `NOTIFY_EMAIL` | Recomendadas | Correos de constancia y avisos |
 | `DEPLOY_HOOK_URL` | Recomendada | Reconstruir el sitio al cambiar depas |
 | `CRM_WEBHOOK_URL` | Opcional | Enviar cada lead al CRM |
-| `SENTRY_DSN` | Opcional | Errores |
+| `SENTRY_DSN`, `SENTRY_ENVIRONMENT` | Opcional | Errores; el entorno separa preproducción (`preprod`) de producción |
 | `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET`, `R2_PUBLIC_URL` | Para subir fotos | Cloudflare R2 |
 | `COMPANY_NAME`, `COMPANY_RUC`, `COMPANY_ADDRESS` | Sí, legalmente | Datos del proveedor en la constancia del reclamo |
 
@@ -355,9 +363,13 @@ Reglas comunes:
 | `pnpm dev` | API con recarga automática (`tsx watch`) |
 | `pnpm build` / `pnpm start` | Compila a `dist/` y lo ejecuta con Sentry |
 | `pnpm test` / `pnpm typecheck` | Pruebas y tipos |
+| `pnpm db:up` / `pnpm db:down` / `pnpm db:status` | Inicia (y la primera vez crea), detiene o revisa el Postgres local de `.data/postgres` |
+| `pnpm db:psql [base]` | Consola SQL del Postgres local |
 | `pnpm db:generate` | Crea una migración SQL desde `schema.ts` |
 | `pnpm db:migrate` | Aplica migraciones |
 | `pnpm db:seed` | Carga los datos de ejemplo (idempotente) |
-| `pnpm db:studio` | Panel web para ver y editar tablas |
+| `pnpm db:studio` | Panel web para ver y editar tablas (usa `DATABASE_URL` de `.env`) |
 | `pnpm openapi:export` / `pnpm openapi:check` | Genera o verifica el contrato |
 | `pnpm user:create --email … --name … --role admin` | Crea una cuenta desde la terminal (la única forma de crear el primer admin) |
+| `pnpm preprod` | Compila y arranca con `.env.preprod` (preproducción local) |
+| `pnpm preprod:seed` / `pnpm preprod:user …` | Datos de ejemplo y cuentas en la base de preproducción |

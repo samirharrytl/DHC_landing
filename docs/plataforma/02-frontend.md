@@ -242,7 +242,9 @@ local (`../assets/…`), que Astro optimiza.
 
 ## 9. Variables de entorno
 
-Se declaran en `astro.config.mjs` (`env.schema`) y se completan en `.env` o en el panel del hosting.
+Se declaran en `astro.config.mjs` (`env.schema`) y se completan en `.env` (desarrollo),
+`.env.preprod` (preproducción, con `--mode preprod`) o en el panel del hosting (producción). Los
+valores de cada entorno están en `.env.example`, `.env.preprod.example` y `.env.production.example`.
 
 | Variable | Contexto | Uso |
 |---|---|---|

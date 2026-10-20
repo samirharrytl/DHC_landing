@@ -198,6 +198,12 @@ Además hay una **secuencia** `complaint_seq` que da el correlativo de los recla
 | `drizzle/0000_init.sql` | Tablas base, enums y secuencia |
 | `drizzle/0001_developers.sql` | Tabla `developers`, `properties.origin`, `properties.developer_id` y el valor `saved-list` en `lead_source` |
 | `drizzle/0002_accounts.sql` | Tablas `users`, `sessions`, `password_resets`, `saved_properties` y `owner_requests`; `leads.user_id` y `leads.status` |
+| `drizzle/0003_rls.sql` | RLS activado, sin políticas, en las 12 tablas |
+
+**Por qué RLS:** en Supabase, la Data API publica el esquema `public` a cualquiera con la clave
+pública del proyecto. Con RLS activado y sin políticas, esa vía no devuelve nada. El API se conecta
+como dueño de las tablas, y a los dueños no se les aplica RLS. Cada tabla nueva lleva `.enableRLS()`
+en `schema.ts`; `test/database.test.ts` falla si alguna lo olvida.
 
 ## 2. Ciclo de vida de un depa (UML de estados)
 

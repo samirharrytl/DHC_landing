@@ -5,7 +5,13 @@ import { existsSync, readFileSync } from 'node:fs'
 import { parseEnv } from 'node:util'
 
 // Dominio de las fotos de la API: variable de entorno del hosting o, en local, el archivo .env
-const dotenv = existsSync('.env') ? parseEnv(readFileSync('.env', 'utf8')) : {}
+// (y .env.preprod con `astro build --mode preprod`, como hace Astro con el resto de variables)
+const readEnv = (/** @type {string} */ file) => (existsSync(file) ? parseEnv(readFileSync(file, 'utf8')) : {})
+const modeFlag = process.argv.indexOf('--mode')
+const dotenv = {
+  ...readEnv('.env'),
+  ...(modeFlag > -1 ? readEnv(`.env.${process.argv[modeFlag + 1]}`) : {}),
+}
 const PUBLIC_MEDIA_HOST = process.env.PUBLIC_MEDIA_HOST || dotenv.PUBLIC_MEDIA_HOST
 
 // https://astro.build/config

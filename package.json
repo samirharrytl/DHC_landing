@@ -9,6 +9,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "build:preprod": "astro build --mode preprod",
+    "preprod": "astro build --mode preprod && astro preview",
     "astro": "astro",
     "check": "astro check",
     "format": "prettier --write .",

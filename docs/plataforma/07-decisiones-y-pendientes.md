@@ -12,7 +12,7 @@ cambiar una, conviene releer el porqué.
 | 3 | Fastify + TypeScript | Go (chi, Echo) | Mismo lenguaje que el frontend; equipo chico | Migrar a Go es posible: el contrato y las capas lo permiten |
 | 4 | Drizzle | Prisma | SQL explícito, sin paso de generación, consultas portables a `sqlc` | Las consultas se escriben más cerca del SQL |
 | 5 | OpenAPI generado desde el código, con chequeo en CI | `openapi.yaml` escrito a mano | Una sola fuente de verdad, sin duplicar esquemas | El API manda; el frontend sigue con `api:sync` |
-| 6 | PostgreSQL; PGlite en desarrollo y pruebas | Docker obligatorio para desarrollar | Pruebas sin instalar nada y sin red | PGlite no es idéntico a Postgres: la CI corre las migraciones en Postgres real |
+| 6 | PostgreSQL en todos los entornos; PGlite solo en pruebas | Docker obligatorio para desarrollar | Pruebas sin instalar nada y sin red; desarrollo contra un Postgres real | PGlite no es idéntico a Postgres: la CI corre las migraciones en Postgres real |
 | 7 | Mis depas, historial y perfil en `localStorage` | Cuentas de usuario desde el inicio | Funciona sin login y sin servidor | No se sincroniza entre dispositivos |
 | 8 | Catálogo estático `/data/properties.json` para los scripts | Pedir al API los depas guardados en cada visita | Fotos ya optimizadas y sin depender del API en vivo | Crece con el catálogo; con miles de depas convendría paginar o pedir al API |
 | 9 | Validación nativa del navegador + errores del API | Zod en el navegador | Menos JavaScript en cada página | Las reglas finas viven solo en el API |
@@ -26,6 +26,9 @@ cambiar una, conviene releer el porqué.
 | 17 | Panel como app Vue aparte (`app.depahostperu.com`) | Páginas del panel dentro de Astro | Interacción de aplicación, sin tocar el sitio estático | Un tercer repo y un tercer despliegue |
 | 18 | Identidad visual copiada del sitio con `sync:brand` | Paquete compartido de diseño | Sin monorepo ni publicación de paquetes | Hay que sincronizar al cambiar el diseño del sitio |
 | 19 | Rol único por cuenta (comprador, propietario o admin) | Varios roles a la vez | Menú y permisos simples | Quien compra y vende cambia de rol en su perfil |
+| 20 | Supabase en producción, usado solo como PostgreSQL | Supabase como backend (Auth, Data API, Storage) | El backend sigue desacoplado y migrable a Go; Supabase solo aporta la base gestionada | Data API desactivada, RLS sin políticas en todas las tablas y SSL verificado con el certificado de Supabase |
+| 21 | Postgres local propio del proyecto (`pnpm db:up`) | Docker Compose, o el PostgreSQL del sistema | Sin `sudo` ni Docker; cada repo trae su base y se borra con una carpeta | Hay que encenderlo tras reiniciar la máquina. Usa la versión de PostgreSQL instalada (hoy 18); la CI prueba las migraciones en la 17 |
+| 22 | Preproducción en la máquina local por ahora | Preproducción en la nube desde ya | Todavía no hay hosting; prueba los builds de producción sin costo | Solo la ve quien la levanta. Pasarla a la nube pide otro proyecto de Supabase y un nombre de cookie propio |
 
 ## Problemas conocidos
 
@@ -38,6 +41,8 @@ cambiar una, conviene releer el porqué.
 | "Para ti" aparece un instante después de cargar | `ForYouRow.astro` | Mueve un poco lo de abajo en Capital | Reservar altura o mostrarla tras el top 10 |
 | Los depas vendidos no tienen página | `getProperties()` excluye `sold` | Un link viejo a un depa vendido da 404 | Generar su página con la etiqueta "Vendido" |
 | El plazo de reclamos no descuenta feriados | `lib/business-days.ts` | Plazo más corto que el legal | Agregar el calendario de feriados nacionales |
+| En el resumen de administración, "Reclamos por responder" queda unos píxeles más arriba que las otras tarjetas de su fila | Panel, vista de resumen | Visual | Alinear las tarjetas de esa fila |
+| `/docs` (Swagger) también responde en producción | `app.ts` | Muestra la lista de rutas; el contrato ya es público | Decidir si se oculta en producción |
 
 ## Deuda técnica menor
 
@@ -77,9 +82,14 @@ cambiar una, conviene releer el porqué.
 
 ### Infraestructura
 
-- [ ] Contratar el hosting del sitio y del API, y el PostgreSQL gestionado.
+- [x] Postgres local para desarrollo y preproducción (`pnpm db:up`).
+- [x] Configuración por entorno (`.env`, `.env.preprod`, `.env.production.example`) en los tres repos.
+- [ ] Crear el proyecto de Supabase en São Paulo, desactivar su Data API y guardar
+  `certs/supabase-ca.crt` en el API.
+- [ ] Contratar el hosting del sitio y del API (el API cerca de São Paulo).
 - [ ] Crear las cuentas de Cloudflare (Turnstile y R2) y Resend.
 - [ ] Subir los tres repos a GitHub para que corra la CI.
 - [ ] Publicar el panel en Vercel con el dominio `app.depahostperu.com`.
 - [ ] Crear el primer administrador con `pnpm user:create`.
 - [ ] Configurar el deploy hook y `NOTIFY_EMAIL`.
+- [ ] Si preproducción pasa a la nube: nombre de cookie configurable y un segundo proyecto de Supabase.
