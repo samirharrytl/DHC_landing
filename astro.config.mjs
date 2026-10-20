@@ -48,6 +48,8 @@ export default defineConfig({
       PUBLIC_TURNSTILE_SITE_KEY: envField.string({ context: 'client', access: 'public', optional: true }),
       PUBLIC_SENTRY_DSN: envField.string({ context: 'client', access: 'public', optional: true }),
       PUBLIC_MEDIA_HOST: envField.string({ context: 'client', access: 'public', optional: true }),
+      // Panel de cuentas (repo depahost-panel). Vacío = no se muestra "Ingresar"
+      PUBLIC_PANEL_URL: envField.string({ context: 'client', access: 'public', optional: true }),
     },
   },
 

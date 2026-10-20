@@ -20,6 +20,8 @@ export interface IdListStore {
   toggle(id: string): string[]
   /** Mueve el ID al final (el más reciente), agregándolo si no estaba. */
   touch(id: string): string[]
+  /** Reemplaza la lista completa (sincronización con la cuenta). */
+  set(ids: string[]): string[]
   clear(): void
   /** Llama a fn cada vez que cambia la lista (también desde otra pestaña). Devuelve cómo desuscribirse. */
   subscribe(fn: (ids: string[]) => void): () => void
@@ -73,6 +75,7 @@ export function createIdListStore(
     remove: (id) => write(read().filter((saved) => saved !== id)),
     toggle: (id) => (store.has(id) ? store.remove(id) : store.add(id)),
     touch: (id) => write([...read().filter((saved) => saved !== id), id]),
+    set: (ids) => write(ids),
     clear: () => {
       write([])
     },

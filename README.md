@@ -6,6 +6,11 @@ y **DepaHost Capital** (comprar departamentos en Lima para que rindan).
 Este repo es solo el **frontend estático**. El backend es una API aparte (repo `depahost-api`,
 Fastify + PostgreSQL). Se comunican por HTTP con un contrato OpenAPI.
 
+## Documentación
+
+La documentación completa de la plataforma (arquitectura, frontend, API, datos y cada flujo
+con diagramas UML) está en [docs/plataforma](docs/plataforma/README.md).
+
 ## Stack
 
 - [Astro](https://astro.build) 7, sitio 100 % estático

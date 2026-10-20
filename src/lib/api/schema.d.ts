@@ -444,6 +444,757 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/auth/register": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Crear cuenta de comprador o propietario (inicia sesión) */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["RegisterCreateInput"];
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["User"];
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ApiError"];
+                    };
+                };
+                /** @description Default Response */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ApiError"];
+                    };
+                };
+                /** @description Default Response */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ApiError"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/auth/login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Iniciar sesión (deja la cookie de sesión) */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["LoginCreateInput"];
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["User"];
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ApiError"];
+                    };
+                };
+                /** @description Default Response */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ApiError"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/auth/logout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Cerrar sesión */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/auth/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Persona con sesión iniciada */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["User"];
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ApiError"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/auth/forgot-password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Enviar enlace para restablecer la contraseña (responde igual exista o no el correo) */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["ForgotPasswordCreateInput"];
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                202: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @enum {boolean} */
+                            ok: true;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ApiError"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/auth/reset-password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Crear contraseña nueva con el enlace del correo (cierra todas las sesiones) */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["ResetPasswordCreateInput"];
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ApiError"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Editar nombre, teléfono o rol */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["ProfilePatchInput"];
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["User"];
+                    };
+                };
+                /** @description Default Response */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ApiError"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/v1/me/password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Cambiar contraseña (cierra las demás sesiones) */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["PasswordChangeCreateInput"];
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ApiError"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/me/saved": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Mis depas guardados */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["SavedList"];
+                    };
+                };
+            };
+        };
+        /** Reemplazar Mis depas (el sitio une lo del navegador con lo de la cuenta) */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["SavedListInput"];
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["SavedList"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/me/leads": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Mis consultas enviadas con la sesión iniciada */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["MyLead"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/me/owner-requests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Mis depas enviados para vender o alquilar */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["OwnerRequest"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /** Enviar un depa para que el equipo lo revise */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["OwnerRequestCreateInput"];
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["OwnerRequest"];
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ApiError"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/me/owner-requests/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["OwnerRequest"];
+                    };
+                };
+                /** @description Default Response */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ApiError"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Default Response */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ApiError"];
+                    };
+                };
+                /** @description Default Response */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ApiError"];
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        /** Editar mientras no esté en revisión ni publicada */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["OwnerRequestPatchInput"];
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["OwnerRequest"];
+                    };
+                };
+                /** @description Default Response */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ApiError"];
+                    };
+                };
+                /** @description Default Response */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ApiError"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/v1/me/uploads": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** URL prefirmada para subir una foto de mi depa */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        filename: string;
+                        /** @enum {string} */
+                        contentType: "image/jpeg" | "image/png" | "image/webp" | "image/avif";
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            key: string;
+                            /** Format: uri */
+                            uploadUrl: string;
+                            /** Format: uri */
+                            publicUrl: string;
+                            expiresIn: number;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                503: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ApiError"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/admin/properties": {
         parameters: {
             query?: never;
@@ -849,6 +1600,10 @@ export interface paths {
         get: {
             parameters: {
                 query?: {
+                    /** @description intl-form: formulario en inglés · owner-*: propietarios · cart: "Empecemos con estos" de Mis depas · saved-list: "Guarda tus depas" */
+                    source?: "intl-form" | "owner-sell" | "owner-rent" | "cart" | "contact" | "saved-list";
+                    /** @description new: sin contactar · contacted: en conversación · closed: cerrado */
+                    status?: "new" | "contacted" | "closed";
                     page?: number;
                     pageSize?: number;
                 };
@@ -875,6 +1630,57 @@ export interface paths {
         options?: never;
         head?: never;
         patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/leads/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Cambiar el estado del lead en el embudo */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["LeadStatusPatchInput"];
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AdminLead"];
+                    };
+                };
+                /** @description Default Response */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ApiError"];
+                    };
+                };
+            };
+        };
         trace?: never;
     };
     "/v1/admin/complaints": {
@@ -1020,6 +1826,274 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/admin/owner-requests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: {
+                    /** @description submitted: enviada · in_review: en revisión · approved: publicada · rejected: rechazada */
+                    status?: "submitted" | "in_review" | "approved" | "rejected";
+                    page?: number;
+                    pageSize?: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AdminOwnerRequestPage"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/owner-requests/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AdminOwnerRequest"];
+                    };
+                };
+                /** @description Default Response */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ApiError"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Revisar: cambiar estado, dejar un comentario o vincular el depa publicado (avisa al propietario) */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["AdminOwnerRequestPatchInput"];
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AdminOwnerRequest"];
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ApiError"];
+                    };
+                };
+                /** @description Default Response */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ApiError"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/v1/admin/stats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Indicadores del panel de inicio */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AdminStats"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/users": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: {
+                    /** @description buyer: comprador · seller: propietario · admin: equipo */
+                    role?: "buyer" | "seller" | "admin";
+                    /** @description Busca en nombre y correo */
+                    q?: string;
+                    page?: number;
+                    pageSize?: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AdminUserPage"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/users/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Cambiar el rol de una cuenta */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["UserRolePatchInput"];
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AdminUser"];
+                    };
+                };
+                /** @description Default Response */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ApiError"];
+                    };
+                };
+                /** @description Default Response */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ApiError"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -1033,6 +2107,122 @@ export interface components {
                 path: string;
                 message: string;
             }[];
+        };
+        UserInput: {
+            /** Format: uuid */
+            id: string;
+            /** Format: email */
+            email: string;
+            name: string;
+            phone: string | null;
+            /**
+             * @description buyer: comprador · seller: propietario · admin: equipo
+             * @enum {string}
+             */
+            role: "buyer" | "seller" | "admin";
+            /** Format: date-time */
+            createdAt: string;
+        };
+        RegisterCreateInput: {
+            name: string;
+            email: string;
+            password: string;
+            phone?: string;
+            /**
+             * @description Los administradores solo los crea otro administrador
+             * @enum {string}
+             */
+            role: "buyer" | "seller";
+            /** @constant */
+            consent: true;
+            turnstileToken?: string;
+        };
+        LoginCreateInput: {
+            email: string;
+            password: string;
+        };
+        ForgotPasswordCreateInput: {
+            email: string;
+        };
+        ResetPasswordCreateInput: {
+            token: string;
+            password: string;
+        };
+        ProfilePatchInput: {
+            name?: string;
+            phone?: string | null;
+            /**
+             * @description Cambiar entre comprador y propietario
+             * @enum {string}
+             */
+            role?: "buyer" | "seller";
+        };
+        PasswordChangeCreateInput: {
+            currentPassword: string;
+            newPassword: string;
+        };
+        SavedListInput: {
+            propertyIds: string[];
+        };
+        MyLeadInput: {
+            /** Format: uuid */
+            id: string;
+            source: string;
+            /** @enum {string} */
+            status: "new" | "contacted" | "closed";
+            propertyIds: string[];
+            /** Format: date-time */
+            createdAt: string;
+        };
+        AdminUserInput: {
+            /** Format: uuid */
+            id: string;
+            /** Format: email */
+            email: string;
+            name: string;
+            phone: string | null;
+            /**
+             * @description buyer: comprador · seller: propietario · admin: equipo
+             * @enum {string}
+             */
+            role: "buyer" | "seller" | "admin";
+            /** Format: date-time */
+            createdAt: string;
+            lastLoginAt: string | null;
+        };
+        AdminUserPageInput: {
+            data: components["schemas"]["AdminUserInput"][];
+            page: number;
+            pageSize: number;
+            total: number;
+        };
+        AdminStatsInput: {
+            leads: {
+                last7Days: number;
+                new: number;
+                total: number;
+            };
+            complaints: {
+                pending: number;
+                /** @description Pendientes que vencen en 3 días hábiles o menos */
+                dueSoon: number;
+                overdue: number;
+            };
+            properties: {
+                published: number;
+                reserved: number;
+                sold: number;
+                draft: number;
+            };
+            ownerRequests: {
+                submitted: number;
+                inReview: number;
+            };
+            users: {
+                buyers: number;
+                sellers: number;
+                admins: number;
+            };
         };
         ComplaintCreateInput: {
             consumer: {
@@ -1428,6 +2618,13 @@ export interface components {
              * @enum {string}
              */
             source: "intl-form" | "owner-sell" | "owner-rent" | "cart" | "contact" | "saved-list";
+            /**
+             * @description new: sin contactar · contacted: en conversación · closed: cerrado
+             * @enum {string}
+             */
+            status: "new" | "contacted" | "closed";
+            /** @description Cuenta que lo envió, si tenía sesión */
+            userId: string | null;
             name: string | null;
             email: string | null;
             phone: string | null;
@@ -1457,6 +2654,163 @@ export interface components {
             pageSize: number;
             total: number;
         };
+        OwnerRequestInput: {
+            /** Format: uuid */
+            id: string;
+            district: string;
+            address: string;
+            propertyType: string;
+            /**
+             * @description Vender, alquilar a largo plazo u operar en Airbnb
+             * @enum {string}
+             */
+            intent: "sell" | "rent" | "airbnb";
+            expectedPrice: number | null;
+            areaM2: number | null;
+            bedrooms: number | null;
+            bathrooms: number | null;
+            description: string | null;
+            photos: {
+                /** Format: uri */
+                url: string;
+                alt: string;
+            }[];
+            /**
+             * @description submitted: enviada · in_review: en revisión · approved: publicada · rejected: rechazada
+             * @enum {string}
+             */
+            status: "submitted" | "in_review" | "approved" | "rejected";
+            /** @description Comentario del equipo para el propietario */
+            adminNote: string | null;
+            /** @description Depa publicado a partir de esta solicitud */
+            property: {
+                /** Format: uuid */
+                id: string;
+                slug: string;
+                /** @enum {string} */
+                status: "draft" | "published" | "reserved" | "sold";
+            } | null;
+            /** @description Interés en el depa publicado: veces guardado y consultas */
+            stats: {
+                saves: number;
+                leads: number;
+            } | null;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        AdminOwnerRequestInput: {
+            /** Format: uuid */
+            id: string;
+            district: string;
+            address: string;
+            propertyType: string;
+            /**
+             * @description Vender, alquilar a largo plazo u operar en Airbnb
+             * @enum {string}
+             */
+            intent: "sell" | "rent" | "airbnb";
+            expectedPrice: number | null;
+            areaM2: number | null;
+            bedrooms: number | null;
+            bathrooms: number | null;
+            description: string | null;
+            photos: {
+                /** Format: uri */
+                url: string;
+                alt: string;
+            }[];
+            /**
+             * @description submitted: enviada · in_review: en revisión · approved: publicada · rejected: rechazada
+             * @enum {string}
+             */
+            status: "submitted" | "in_review" | "approved" | "rejected";
+            /** @description Comentario del equipo para el propietario */
+            adminNote: string | null;
+            /** @description Depa publicado a partir de esta solicitud */
+            property: {
+                /** Format: uuid */
+                id: string;
+                slug: string;
+                /** @enum {string} */
+                status: "draft" | "published" | "reserved" | "sold";
+            } | null;
+            /** @description Interés en el depa publicado: veces guardado y consultas */
+            stats: {
+                saves: number;
+                leads: number;
+            } | null;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+            owner: {
+                /** Format: uuid */
+                id: string;
+                name: string;
+                email: string;
+                phone: string | null;
+            };
+        };
+        OwnerRequestCreateInput: {
+            district: string;
+            address: string;
+            propertyType: string;
+            /**
+             * @description Vender, alquilar a largo plazo u operar en Airbnb
+             * @enum {string}
+             */
+            intent: "sell" | "rent" | "airbnb";
+            expectedPrice?: number | null;
+            areaM2?: number | null;
+            bedrooms?: number | null;
+            bathrooms?: number | null;
+            description?: string | null;
+            /** @default [] */
+            photos: {
+                /** Format: uri */
+                url: string;
+                alt: string;
+            }[];
+        };
+        OwnerRequestPatchInput: {
+            district?: string;
+            address?: string;
+            propertyType?: string;
+            /**
+             * @description Vender, alquilar a largo plazo u operar en Airbnb
+             * @enum {string}
+             */
+            intent?: "sell" | "rent" | "airbnb";
+            expectedPrice?: number | null;
+            areaM2?: number | null;
+            bedrooms?: number | null;
+            bathrooms?: number | null;
+            description?: string | null;
+            /** @default [] */
+            photos: {
+                /** Format: uri */
+                url: string;
+                alt: string;
+            }[];
+        };
+        AdminOwnerRequestPatchInput: {
+            /**
+             * @description submitted: enviada · in_review: en revisión · approved: publicada · rejected: rechazada
+             * @enum {string}
+             */
+            status?: "submitted" | "in_review" | "approved" | "rejected";
+            adminNote?: string | null;
+            /** @description Depa creado a partir de la solicitud */
+            propertyId?: string | null;
+        };
+        AdminOwnerRequestPageInput: {
+            data: components["schemas"]["AdminOwnerRequestInput"][];
+            page: number;
+            pageSize: number;
+            total: number;
+        };
         UploadTargetInput: {
             key: string;
             /**
@@ -1474,6 +2828,20 @@ export interface components {
         DistrictCreateInput: {
             name: string;
         };
+        LeadStatusPatchInput: {
+            /**
+             * @description new: sin contactar · contacted: en conversación · closed: cerrado
+             * @enum {string}
+             */
+            status: "new" | "contacted" | "closed";
+        };
+        UserRolePatchInput: {
+            /**
+             * @description buyer: comprador · seller: propietario · admin: equipo
+             * @enum {string}
+             */
+            role: "buyer" | "seller" | "admin";
+        };
         ApiError: {
             statusCode: number;
             error: string;
@@ -1483,6 +2851,125 @@ export interface components {
                 path: string;
                 message: string;
             }[];
+        };
+        User: {
+            /** Format: uuid */
+            id: string;
+            /** Format: email */
+            email: string;
+            name: string;
+            phone: string | null;
+            /**
+             * @description buyer: comprador · seller: propietario · admin: equipo
+             * @enum {string}
+             */
+            role: "buyer" | "seller" | "admin";
+            /** Format: date-time */
+            createdAt: string;
+        };
+        RegisterCreate: {
+            name: string;
+            /** Format: email */
+            email: string;
+            password: string;
+            phone?: string;
+            /**
+             * @description Los administradores solo los crea otro administrador
+             * @enum {string}
+             */
+            role: "buyer" | "seller";
+            /** @constant */
+            consent: true;
+            turnstileToken?: string;
+        };
+        LoginCreate: {
+            /** Format: email */
+            email: string;
+            password: string;
+        };
+        ForgotPasswordCreate: {
+            /** Format: email */
+            email: string;
+        };
+        ResetPasswordCreate: {
+            token: string;
+            password: string;
+        };
+        ProfilePatch: {
+            name?: string;
+            phone?: string | null;
+            /**
+             * @description Cambiar entre comprador y propietario
+             * @enum {string}
+             */
+            role?: "buyer" | "seller";
+        };
+        PasswordChangeCreate: {
+            currentPassword: string;
+            newPassword: string;
+        };
+        SavedList: {
+            propertyIds: string[];
+        };
+        MyLead: {
+            /** Format: uuid */
+            id: string;
+            source: string;
+            /** @enum {string} */
+            status: "new" | "contacted" | "closed";
+            propertyIds: string[];
+            /** Format: date-time */
+            createdAt: string;
+        };
+        AdminUser: {
+            /** Format: uuid */
+            id: string;
+            /** Format: email */
+            email: string;
+            name: string;
+            phone: string | null;
+            /**
+             * @description buyer: comprador · seller: propietario · admin: equipo
+             * @enum {string}
+             */
+            role: "buyer" | "seller" | "admin";
+            /** Format: date-time */
+            createdAt: string;
+            lastLoginAt: string | null;
+        };
+        AdminUserPage: {
+            data: components["schemas"]["AdminUser"][];
+            page: number;
+            pageSize: number;
+            total: number;
+        };
+        AdminStats: {
+            leads: {
+                last7Days: number;
+                new: number;
+                total: number;
+            };
+            complaints: {
+                pending: number;
+                /** @description Pendientes que vencen en 3 días hábiles o menos */
+                dueSoon: number;
+                overdue: number;
+            };
+            properties: {
+                published: number;
+                reserved: number;
+                sold: number;
+                draft: number;
+            };
+            ownerRequests: {
+                submitted: number;
+                inReview: number;
+            };
+            users: {
+                buyers: number;
+                sellers: number;
+                admins: number;
+            };
         };
         ComplaintCreate: {
             consumer: {
@@ -1878,6 +3365,13 @@ export interface components {
              * @enum {string}
              */
             source: "intl-form" | "owner-sell" | "owner-rent" | "cart" | "contact" | "saved-list";
+            /**
+             * @description new: sin contactar · contacted: en conversación · closed: cerrado
+             * @enum {string}
+             */
+            status: "new" | "contacted" | "closed";
+            /** @description Cuenta que lo envió, si tenía sesión */
+            userId: string | null;
             name: string | null;
             email: string | null;
             phone: string | null;
@@ -1907,6 +3401,163 @@ export interface components {
             pageSize: number;
             total: number;
         };
+        OwnerRequest: {
+            /** Format: uuid */
+            id: string;
+            district: string;
+            address: string;
+            propertyType: string;
+            /**
+             * @description Vender, alquilar a largo plazo u operar en Airbnb
+             * @enum {string}
+             */
+            intent: "sell" | "rent" | "airbnb";
+            expectedPrice: number | null;
+            areaM2: number | null;
+            bedrooms: number | null;
+            bathrooms: number | null;
+            description: string | null;
+            photos: {
+                /** Format: uri */
+                url: string;
+                alt: string;
+            }[];
+            /**
+             * @description submitted: enviada · in_review: en revisión · approved: publicada · rejected: rechazada
+             * @enum {string}
+             */
+            status: "submitted" | "in_review" | "approved" | "rejected";
+            /** @description Comentario del equipo para el propietario */
+            adminNote: string | null;
+            /** @description Depa publicado a partir de esta solicitud */
+            property: {
+                /** Format: uuid */
+                id: string;
+                slug: string;
+                /** @enum {string} */
+                status: "draft" | "published" | "reserved" | "sold";
+            } | null;
+            /** @description Interés en el depa publicado: veces guardado y consultas */
+            stats: {
+                saves: number;
+                leads: number;
+            } | null;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        AdminOwnerRequest: {
+            /** Format: uuid */
+            id: string;
+            district: string;
+            address: string;
+            propertyType: string;
+            /**
+             * @description Vender, alquilar a largo plazo u operar en Airbnb
+             * @enum {string}
+             */
+            intent: "sell" | "rent" | "airbnb";
+            expectedPrice: number | null;
+            areaM2: number | null;
+            bedrooms: number | null;
+            bathrooms: number | null;
+            description: string | null;
+            photos: {
+                /** Format: uri */
+                url: string;
+                alt: string;
+            }[];
+            /**
+             * @description submitted: enviada · in_review: en revisión · approved: publicada · rejected: rechazada
+             * @enum {string}
+             */
+            status: "submitted" | "in_review" | "approved" | "rejected";
+            /** @description Comentario del equipo para el propietario */
+            adminNote: string | null;
+            /** @description Depa publicado a partir de esta solicitud */
+            property: {
+                /** Format: uuid */
+                id: string;
+                slug: string;
+                /** @enum {string} */
+                status: "draft" | "published" | "reserved" | "sold";
+            } | null;
+            /** @description Interés en el depa publicado: veces guardado y consultas */
+            stats: {
+                saves: number;
+                leads: number;
+            } | null;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+            owner: {
+                /** Format: uuid */
+                id: string;
+                name: string;
+                email: string;
+                phone: string | null;
+            };
+        };
+        OwnerRequestCreate: {
+            district: string;
+            address: string;
+            propertyType: string;
+            /**
+             * @description Vender, alquilar a largo plazo u operar en Airbnb
+             * @enum {string}
+             */
+            intent: "sell" | "rent" | "airbnb";
+            expectedPrice?: number | null;
+            areaM2?: number | null;
+            bedrooms?: number | null;
+            bathrooms?: number | null;
+            description?: string | null;
+            /** @default [] */
+            photos: {
+                /** Format: uri */
+                url: string;
+                alt: string;
+            }[];
+        };
+        OwnerRequestPatch: {
+            district?: string;
+            address?: string;
+            propertyType?: string;
+            /**
+             * @description Vender, alquilar a largo plazo u operar en Airbnb
+             * @enum {string}
+             */
+            intent?: "sell" | "rent" | "airbnb";
+            expectedPrice?: number | null;
+            areaM2?: number | null;
+            bedrooms?: number | null;
+            bathrooms?: number | null;
+            description?: string | null;
+            /** @default [] */
+            photos: {
+                /** Format: uri */
+                url: string;
+                alt: string;
+            }[];
+        };
+        AdminOwnerRequestPatch: {
+            /**
+             * @description submitted: enviada · in_review: en revisión · approved: publicada · rejected: rechazada
+             * @enum {string}
+             */
+            status?: "submitted" | "in_review" | "approved" | "rejected";
+            adminNote?: string | null;
+            /** @description Depa creado a partir de la solicitud */
+            propertyId?: string | null;
+        };
+        AdminOwnerRequestPage: {
+            data: components["schemas"]["AdminOwnerRequest"][];
+            page: number;
+            pageSize: number;
+            total: number;
+        };
         UploadTarget: {
             key: string;
             /**
@@ -1923,6 +3574,20 @@ export interface components {
         };
         DistrictCreate: {
             name: string;
+        };
+        LeadStatusPatch: {
+            /**
+             * @description new: sin contactar · contacted: en conversación · closed: cerrado
+             * @enum {string}
+             */
+            status: "new" | "contacted" | "closed";
+        };
+        UserRolePatch: {
+            /**
+             * @description buyer: comprador · seller: propietario · admin: equipo
+             * @enum {string}
+             */
+            role: "buyer" | "seller" | "admin";
         };
     };
     responses: never;
