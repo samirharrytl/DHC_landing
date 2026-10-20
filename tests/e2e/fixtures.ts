@@ -17,7 +17,11 @@ export async function mockApi(page: Page, path: string, status: number, body: un
   await page.route(`${API}${path}`, async (route: Route) => {
     if (route.request().method() === 'OPTIONS') return route.fulfill({ status: 204, headers: cors(route) })
     received.push(route.request().postDataJSON())
-    return route.fulfill({ status, headers: { ...cors(route), 'content-type': 'application/json' }, json: body })
+    return route.fulfill({
+      status,
+      headers: { ...cors(route), 'content-type': 'application/json' },
+      json: body,
+    })
   })
   return received
 }
