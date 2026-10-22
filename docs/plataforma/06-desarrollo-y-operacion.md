@@ -39,7 +39,7 @@ flowchart LR
         PRE -- "base depahost_preprod" --> PG
     end
     subgraph Nube["«node» Internet"]
-        PROD["Producción<br/>sitio en hosting estático<br/>panel en Vercel · API en Node"]
+        PROD["Producción<br/>sitio en hosting estático<br/>sitio y panel en Cloudflare Pages · API en Railway"]
         SB[("«database» Supabase<br/>solo como PostgreSQL")]
         PROD -- "SSL verificado" --> SB
     end
@@ -50,9 +50,9 @@ flowchart LR
 | Para qué | Programar, con recarga automática | Probar tal cual lo que se va a publicar | El sitio real |
 | Dónde corre | Tu máquina | Tu máquina | Internet |
 | Base de datos | Postgres local, base `depahost_dev` | Postgres local, base `depahost_preprod` | Supabase |
-| API | `pnpm dev` en `:3000` | Compilado, `NODE_ENV=production`, en `:3000` | App de Node, `api.depahostperu.com` |
-| Sitio | `astro dev` en `:4321`, con los JSON locales | Build que lee el catálogo del API, en `:4321` | Hosting estático, `depahostperu.com` |
-| Panel | `vite` en `:5173` | Build servido en `:4173` | Vercel, `app.depahostperu.com` |
+| API | `pnpm dev` en `:3000` | Compilado, `NODE_ENV=production`, en `:3000` | Railway, `api.depahostperu.com` |
+| Sitio | `astro dev` en `:4321`, con los JSON locales | Build que lee el catálogo del API, en `:4321` | Cloudflare Pages, `depahostperu.com` |
+| Panel | `vite` en `:5173` | Build servido en `:4173` | Cloudflare Pages, `app.depahostperu.com` |
 | Cookie de sesión | Sin `Secure` | `Secure` | `Secure`, dominio `.depahostperu.com` |
 | Turnstile | Apagado | Claves de prueba (siempre pasan) | Claves reales |
 | Correos, fotos (R2) y deploy hook | Apagados: los correos quedan en el log | Apagados | Activos |
@@ -421,14 +421,87 @@ Umbrales de Lighthouse (`lighthouserc.json`): accesibilidad 95 y SEO 90 hacen fa
 
 ## 8. Publicar en producción
 
+### Hostings
+
+| App | Hosting | Región | Dominio |
+|---|---|---|---|
+| Sitio | Cloudflare Pages | Red global de Cloudflare | `depahostperu.com` y `www.depahostperu.com` |
+| Panel | Cloudflare Pages | Red global de Cloudflare | `app.depahostperu.com` |
+| API | Railway | US East (Virginia) | `api.depahostperu.com` |
+| Base | Supabase | `us-east-1` (Virginia), la misma que el API | — |
+
+El API y la base van en la misma región porque cada pedido hace varias consultas. Ninguno de los
+hostings usa Docker: Cloudflare construye los frontends y Railway construye y arranca el API desde
+el monorepo.
+
+#### Sitio y panel en Cloudflare Pages
+
+Dos proyectos de Pages conectados al mismo repo de GitHub (Workers & Pages → Create → Pages →
+Connect to Git). Los dos se construyen desde la raíz del monorepo: ahí están `pnpm-lock.yaml` y el
+`.nvmrc` con Node 24.
+
+| Ajuste | Sitio | Panel |
+|---|---|---|
+| Nombre del proyecto | `depahostcapital` | `depahost-panel` |
+| Rama de producción | `main` | `main` |
+| Framework preset | None | None |
+| Root directory | vacío (raíz del repo) | vacío (raíz del repo) |
+| Build command | `pnpm --filter depahostcapital build` | `pnpm --filter depahost-panel build` |
+| Build output directory | `apps/depahostcapital/dist` | `apps/depahost-panel/dist` |
+| Build watch paths, include | `apps/depahostcapital/*`, `pnpm-lock.yaml`, `pnpm-workspace.yaml` | `apps/depahost-panel/*`, `pnpm-lock.yaml`, `pnpm-workspace.yaml` |
+| Variables | `PNPM_VERSION=11.24.0` y las de `apps/depahostcapital/.env.production.example` | `PNPM_VERSION=11.24.0` y las de `apps/depahost-panel/.env.production.example` |
+
+- **`PNPM_VERSION` es obligatoria.** Sin ella, Pages usa pnpm 10, que no lee `allowBuilds` de
+  `pnpm-workspace.yaml`.
+- **Cabeceras:** cada app trae `public/_headers` (seguridad y caché larga para los archivos con
+  hash). Astro y Vite lo copian a `dist/`.
+- **Rutas del panel:** el panel no tiene `404.html`, así que Pages responde `index.html` a cualquier
+  ruta y Vue Router la resuelve. No hace falta `_redirects`.
+- **`www`:** agregar los dos dominios al proyecto del sitio y crear una regla en Rules → Redirect
+  Rules que mande `www.depahostperu.com/*` a `https://depahostperu.com/${1}` con 301.
+- **Deploy hook:** en el proyecto del sitio, Settings → Builds → Deploy hooks → rama `main`. Esa URL
+  va en `DEPLOY_HOOK_URL` del API, que la llama con POST cuando cambian los depas.
+- **Vistas previas:** cada pull request genera una URL `*.pages.dev`. El `_headers` del sitio les
+  pone `X-Robots-Tag: noindex` para que Google no las indexe.
+
+#### API en Railway
+
+Un proyecto de Railway con un solo servicio (New Project → Deploy from GitHub repo). Railway detecta
+el monorepo y propone un servicio por app: se deja solo `depahost-api`, porque el sitio y el panel
+van en Cloudflare.
+
+| Ajuste (Settings del servicio) | Valor |
+|---|---|
+| Root directory | vacío (raíz del repo) |
+| Build command | `pnpm --filter depahost-api build` |
+| Start command | `pnpm --filter depahost-api start` |
+| Watch paths | `/apps/depahost-api/**`, `/pnpm-lock.yaml`, `/pnpm-workspace.yaml` |
+| Healthcheck path | `/health` |
+| Región | US East (Virginia) |
+| Variables | `RAILPACK_NODE_VERSION=24` y las de `apps/depahost-api/.env.production.example` |
+
+- **`RAILPACK_NODE_VERSION=24` es obligatoria.** Railway toma la versión de `engines`
+  (`>=22.12.0`) antes que la del `.nvmrc`, así que sin ella podría elegir otra versión.
+- **Instalación:** Railway corre `pnpm install` en la raíz con el pnpm de `packageManager`. Luego
+  construye y arranca solo el API.
+- **`PORT`:** no se define. Railway pone la suya y el API la lee.
+- **Migraciones:** se aplican solas al arrancar. Si fallan, el arranque falla, el chequeo de
+  `/health` no pasa y Railway mantiene la versión anterior.
+- **Dominio:** Settings → Networking → Custom Domain → `api.depahostperu.com`. Railway indica un
+  registro CNAME: se crea en el DNS de Cloudflare como "DNS only" (nube gris), para que Railway
+  emita el certificado.
+- La configuración queda en el panel de Railway, no en un archivo del repo: Railway dejará de leer
+  `railway.json` y su reemplazo, `.railway/railway.ts`, se aplica con su CLI. Con un solo servicio
+  no compensa todavía.
+
 ### Base de datos en Supabase
 
 Supabase se usa solo como PostgreSQL gestionado: el API se conecta con `DATABASE_URL` y nada más. No
 se usan Supabase Auth, Storage ni su Data API (ver [07 · Decisiones](07-decisiones-y-pendientes.md),
 decisión 20).
 
-1. **Proyecto:** crearlo en la región **South America (São Paulo)**, la más cercana a Lima. El API
-   conviene en la misma región; Fly.io, por ejemplo, tiene `gru` en São Paulo. Para producción,
+1. **Proyecto:** crearlo en la región **East US (North Virginia)**, `us-east-1`, la misma del API
+   en Railway. Railway no tiene región en Sudamérica, y el API y la base deben estar juntos. Para producción,
    el plan Pro: el gratuito se pausa tras una semana sin actividad y sus respaldos son limitados.
 2. **Data API:** desactivarla en la configuración del proyecto (Project Settings → Data API). Si
    quedara activa, igual no expone nada: todas las tablas tienen RLS activado y sin políticas
@@ -449,7 +522,7 @@ despliegue son 20: hay que tenerlo en cuenta frente al límite de conexiones del
 
 ```mermaid
 flowchart LR
-    API["«container» depahost-api"]
+    API["«executionEnvironment» depahost-api<br/>Railway · Virginia"]
     POOL["Supavisor<br/>Session pooler :5432"]
     DB[("«database» Postgres de Supabase<br/>RLS en todas las tablas")]
     REST["Data API (PostgREST)<br/>desactivada"]
@@ -463,26 +536,23 @@ flowchart LR
 Los valores de cada variable están en los `.env.production.example` de las tres apps.
 
 1. **Base de datos:** Supabase, como en la sección anterior.
-2. **API:** crear una app de Node 24 desde el monorepo: instalar con `pnpm install --frozen-lockfile`
-   en la raíz, construir con `pnpm --filter depahost-api build`, arrancar con
-   `pnpm --filter depahost-api start` y chequeo de salud en `/health`. Usa las variables de
-   `.env.production.example` y lee `certs/` desde `apps/depahost-api`. Al arrancar aplica las
-   migraciones.
-3. **Dominio del API:** apuntar `api.depahostperu.com` a la app.
+2. **API:** el servicio de Railway, como en [API en Railway](#api-en-railway), con las variables
+   de `apps/depahost-api/.env.production.example`. Lee `certs/` desde `apps/depahost-api` y al
+   arrancar aplica las migraciones.
+3. **Dominio del API:** `api.depahostperu.com` en Railway y su CNAME en el DNS de Cloudflare.
 4. **Datos:** cargar inmobiliarias, distritos, depas, fotos y supuestos desde el panel o con las
    rutas de admin (o `pnpm db:seed` solo para una demo).
-5. **Frontend:** crear el sitio en el hosting desde el monorepo, con carpeta raíz
-   `apps/depahostcapital`, comando `pnpm build`,
-   carpeta de salida `dist` y las variables de `.env.production.example`.
-6. **Deploy hook:** crearlo en el hosting y ponerlo en `DEPLOY_HOOK_URL` del API.
+5. **Sitio:** el proyecto de Cloudflare Pages, como en
+   [Sitio y panel en Cloudflare Pages](#sitio-y-panel-en-cloudflare-pages), con los dominios
+   `depahostperu.com` y `www.depahostperu.com`.
+6. **Deploy hook:** crearlo en el proyecto del sitio en Pages y ponerlo en `DEPLOY_HOOK_URL` del API.
 7. **CORS:** `CORS_ORIGINS` con el sitio y el panel:
    `https://depahostperu.com,https://www.depahostperu.com,https://app.depahostperu.com`.
 8. **Turnstile:** registrar el dominio y poner la clave pública en el sitio y el panel, y la secreta
    en el API.
 9. **Resend:** verificar el dominio con sus registros DNS y poner la clave en el API.
-10. **Panel:** importar el monorepo en Vercel con Root Directory `apps/depahost-panel` (ya trae
-    `vercel.json`), definir las variables de
-    su `.env.production.example` y asignar `app.depahostperu.com`.
+10. **Panel:** el segundo proyecto de Cloudflare Pages, con las variables de
+    `apps/depahost-panel/.env.production.example` y el dominio `app.depahostperu.com`.
 11. **Cuentas:** en el API, `COOKIE_DOMAIN=.depahostperu.com` y `PANEL_URL=https://app.depahostperu.com`.
     En el sitio, `PUBLIC_PANEL_URL=https://app.depahostperu.com`.
 12. **Primer administrador:** desde tu máquina, contra la base de producción:
@@ -492,8 +562,8 @@ Los valores de cada variable están en los `.env.production.example` de las tres
 
 | Cambio | Qué hacer | Se publica |
 |---|---|---|
-| Código del sitio | Merge a `main` | El hosting reconstruye solo |
-| Código del API | Merge a `main` | El hosting construye y arranca la nueva versión |
+| Código del sitio o del panel | Merge a `main` | Cloudflare Pages reconstruye solo el proyecto que cambió |
+| Código del API | Merge a `main` | Railway construye y arranca la nueva versión |
 | Un depa, foto, inmobiliaria o supuesto | Panel o rutas de admin | El deploy hook reconstruye el sitio en unos 30 s + el tiempo del build |
 | El contrato del API | API primero, luego `pnpm api:sync` en el sitio y en el panel | En ese orden |
 

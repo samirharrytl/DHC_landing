@@ -43,7 +43,8 @@ flowchart LR
 
 ```text
 depahost-panel/
-├── index.html, vite.config.ts, vercel.json
+├── index.html, vite.config.ts
+├── public/_headers         cabeceras de Cloudflare Pages
 ├── scripts/sync.mjs        sync:brand (identidad del sitio) y sync:api (contrato)
 ├── src/
 │   ├── main.ts, App.vue     arranque; App elige el layout según la ruta

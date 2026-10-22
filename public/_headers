@@ -1,0 +1,14 @@
+# Cabeceras de Cloudflare Pages (se copia tal cual a dist/).
+
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+
+# Archivos con hash en el nombre (JS, CSS, fuentes e imágenes optimizadas): cambian de nombre en cada build
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Las URLs *.pages.dev no se indexan: el sitio se encuentra solo en depahostperu.com
+https://:project.pages.dev/*
+  X-Robots-Tag: noindex

@@ -87,16 +87,16 @@ flowchart LR
         B["«executionEnvironment»<br/>Navegador"]
     end
 
-    subgraph CDN["«node» Hosting estático + CDN"]
+    subgraph CDN["«node» Cloudflare Pages + CDN"]
         S["«artifact» dist/"]
         CI1["«process» Build Astro<br/>Node 24"]
     end
 
-    subgraph Cloud["«node» Hosting del API (Fly.io, Railway…)"]
+    subgraph Cloud["«node» Railway · US East (Virginia)"]
         C["«executionEnvironment» depahost-api<br/>Node 24 · puerto 3000"]
     end
 
-    subgraph SB["«node» Supabase · São Paulo"]
+    subgraph SB["«node» Supabase · us-east-1 (Virginia)"]
         D[("«database» PostgreSQL<br/>RLS en todas las tablas")]
     end
 
@@ -124,8 +124,9 @@ flowchart LR
 
 La base de producción será Supabase, usado solo como PostgreSQL gestionado (ver
 [06 · Desarrollo y operación, sección 8](06-desarrollo-y-operacion.md#base-de-datos-en-supabase)).
-Los hostings del sitio y del API todavía no están contratados. El código no depende de ninguno en
-particular: el frontend es una carpeta `dist/`, el API es una app de Node y la base es cualquier
+El sitio y el panel van en Cloudflare Pages, y el API en Railway (ver
+[06 · Desarrollo y operación, sección 8](06-desarrollo-y-operacion.md#hostings)). El código no
+depende de ninguno en particular: el frontend es una carpeta `dist/`, el API es una app de Node y la base es cualquier
 PostgreSQL al que llegue `DATABASE_URL`.
 
 ## 4. Lo que pasa en el build y lo que pasa en el navegador
@@ -221,7 +222,7 @@ flowchart TB
 | Desarrollo sin base | `PUBLIC_API_URL=http://127.0.0.1:4010` | `pnpm api:mock` (Prism) | — |
 | Preproducción | `pnpm preprod`: builds de producción en `:4321` y `:4173`; el sitio lee el API | `pnpm preprod`: compilado, `NODE_ENV=production` | Postgres local, base `depahost_preprod` |
 | Pruebas | Playwright con API simulada (sitio) o real (panel) | Vitest | PGlite en memoria o en `.e2e-db/` |
-| Producción | Hosting estático; panel en Vercel (`app.depahostperu.com`) | App de Node en el hosting del API | Supabase, con SSL verificado |
+| Producción | Cloudflare Pages: sitio y panel (`app.depahostperu.com`) | Railway, US East (Virginia) | Supabase, con SSL verificado |
 
 El detalle de cada entorno, sus archivos `.env` y cómo levantarlo está en
 [06 · Desarrollo y operación](06-desarrollo-y-operacion.md#2-entornos).
