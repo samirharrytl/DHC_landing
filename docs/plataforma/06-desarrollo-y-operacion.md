@@ -2,7 +2,7 @@
 
 ## 1. Requisitos
 
-- Node 24 y pnpm 11. La CI, la imagen Docker del API y el `.nvmrc` de la raíz del monorepo usan
+- Node 24 y pnpm 11. La CI, el hosting del API y el `.nvmrc` de la raíz del monorepo usan
   Node 24 (`nvm install 24`, y luego `nvm use` en la raíz). Node 22.12 también funciona (`engines`
   en `package.json`), pero lo que se valida es la 24. El `package.json` de la raíz fija pnpm con
   `packageManager`.
@@ -39,7 +39,7 @@ flowchart LR
         PRE -- "base depahost_preprod" --> PG
     end
     subgraph Nube["«node» Internet"]
-        PROD["Producción<br/>sitio en hosting estático<br/>panel en Vercel · API en Docker"]
+        PROD["Producción<br/>sitio en hosting estático<br/>panel en Vercel · API en Node"]
         SB[("«database» Supabase<br/>solo como PostgreSQL")]
         PROD -- "SSL verificado" --> SB
     end
@@ -50,7 +50,7 @@ flowchart LR
 | Para qué | Programar, con recarga automática | Probar tal cual lo que se va a publicar | El sitio real |
 | Dónde corre | Tu máquina | Tu máquina | Internet |
 | Base de datos | Postgres local, base `depahost_dev` | Postgres local, base `depahost_preprod` | Supabase |
-| API | `pnpm dev` en `:3000` | Compilado, `NODE_ENV=production`, en `:3000` | Docker, `api.depahostperu.com` |
+| API | `pnpm dev` en `:3000` | Compilado, `NODE_ENV=production`, en `:3000` | App de Node, `api.depahostperu.com` |
 | Sitio | `astro dev` en `:4321`, con los JSON locales | Build que lee el catálogo del API, en `:4321` | Hosting estático, `depahostperu.com` |
 | Panel | `vite` en `:5173` | Build servido en `:4173` | Vercel, `app.depahostperu.com` |
 | Cookie de sesión | Sin `Secure` | `Secure` | `Secure`, dominio `.depahostperu.com` |
@@ -400,8 +400,7 @@ flowchart TB
     F1 -- "artefacto dist" --> F3
 ```
 
-**API** (`.github/workflows/api.yml`). La imagen se construye desde la raíz del monorepo
-(`docker build -f apps/depahost-api/Dockerfile .`):
+**API** (`.github/workflows/api.yml`):
 
 ```mermaid
 flowchart TB
@@ -409,7 +408,7 @@ flowchart TB
     B1["install · format:check<br/>typecheck · test"]
     B2["openapi:check<br/>el contrato coincide con el código"]
     B3["db:migrate<br/>contra PostgreSQL 17 real"]
-    B4["build · docker build"]
+    B4["build"]
     B0 --> B1 --> B2 --> B3 --> B4
 ```
 
@@ -464,9 +463,11 @@ flowchart LR
 Los valores de cada variable están en los `.env.production.example` de las tres apps.
 
 1. **Base de datos:** Supabase, como en la sección anterior.
-2. **API:** crear la app desde el monorepo con `apps/depahost-api/Dockerfile` (copia `certs/`) y
-   la raíz del repo como contexto de build, con
-   las variables de `.env.production.example`. Al arrancar aplica las migraciones.
+2. **API:** crear una app de Node 24 desde el monorepo: instalar con `pnpm install --frozen-lockfile`
+   en la raíz, construir con `pnpm --filter depahost-api build`, arrancar con
+   `pnpm --filter depahost-api start` y chequeo de salud en `/health`. Usa las variables de
+   `.env.production.example` y lee `certs/` desde `apps/depahost-api`. Al arrancar aplica las
+   migraciones.
 3. **Dominio del API:** apuntar `api.depahostperu.com` a la app.
 4. **Datos:** cargar inmobiliarias, distritos, depas, fotos y supuestos desde el panel o con las
    rutas de admin (o `pnpm db:seed` solo para una demo).
@@ -492,7 +493,7 @@ Los valores de cada variable están en los `.env.production.example` de las tres
 | Cambio | Qué hacer | Se publica |
 |---|---|---|
 | Código del sitio | Merge a `main` | El hosting reconstruye solo |
-| Código del API | Merge a `main` | El proveedor despliega la nueva imagen |
+| Código del API | Merge a `main` | El hosting construye y arranca la nueva versión |
 | Un depa, foto, inmobiliaria o supuesto | Panel o rutas de admin | El deploy hook reconstruye el sitio en unos 30 s + el tiempo del build |
 | El contrato del API | API primero, luego `pnpm api:sync` en el sitio y en el panel | En ese orden |
 
@@ -512,7 +513,7 @@ Antes de publicar un cambio grande, conviene probarlo en preproducción.
 
 | Qué | Dónde |
 |---|---|
-| ¿El API responde y la base también? | `GET /health` (también lo usa el `HEALTHCHECK` del Dockerfile) |
+| ¿El API responde y la base también? | `GET /health` (también sirve como chequeo de salud del hosting) |
 | Errores del API | Logs del proveedor (JSON de Pino) y Sentry si hay `SENTRY_DSN`; `SENTRY_ENVIRONMENT` separa preproducción de producción |
 | Errores del navegador | Sentry si hay `PUBLIC_SENTRY_DSN`; el entorno es el modo del build (`production` o `preprod`) |
 | Uso del sitio | Microsoft Clarity, solo de quienes aceptan cookies y solo en producción |

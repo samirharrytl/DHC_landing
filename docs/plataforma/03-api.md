@@ -27,8 +27,7 @@ depahost-api/
 ├── certs/                  certificado de Supabase para verificar el SSL de la base
 ├── test/                   pruebas con fastify.inject() y PGlite en memoria
 ├── openapi.json            contrato generado (lo copia el frontend con pnpm api:sync)
-├── .env*.example           configuración de desarrollo, preproducción y producción
-└── Dockerfile
+└── .env*.example           configuración de desarrollo, preproducción y producción
 ```
 
 ## 2. Capas (UML de clases)

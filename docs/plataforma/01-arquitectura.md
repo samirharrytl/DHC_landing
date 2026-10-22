@@ -93,7 +93,7 @@ flowchart LR
     end
 
     subgraph Cloud["«node» Hosting del API (Fly.io, Railway…)"]
-        C["«container» depahost-api<br/>Docker · Node 24 · puerto 3000"]
+        C["«executionEnvironment» depahost-api<br/>Node 24 · puerto 3000"]
     end
 
     subgraph SB["«node» Supabase · São Paulo"]
@@ -108,8 +108,7 @@ flowchart LR
     end
 
     subgraph GH["«node» GitHub"]
-        G1["Repo depahostcapital<br/>+ GitHub Actions"]
-        G2["Repo depahost-api<br/>+ GitHub Actions"]
+        G1["Monorepo DepaHost<br/>+ GitHub Actions"]
     end
 
     B -- "HTTPS depahostperu.com" --> S
@@ -120,13 +119,13 @@ flowchart LR
     C -- "deploy hook" --> CI1
     CI1 -- "HTTPS al API" --> C
     CI1 --> S
-    G2 -- "imagen Docker" --> C
+    G1 -- "push a main" --> C
 ```
 
 La base de producción será Supabase, usado solo como PostgreSQL gestionado (ver
 [06 · Desarrollo y operación, sección 8](06-desarrollo-y-operacion.md#base-de-datos-en-supabase)).
 Los hostings del sitio y del API todavía no están contratados. El código no depende de ninguno en
-particular: el frontend es una carpeta `dist/`, el API es una imagen Docker y la base es cualquier
+particular: el frontend es una carpeta `dist/`, el API es una app de Node y la base es cualquier
 PostgreSQL al que llegue `DATABASE_URL`.
 
 ## 4. Lo que pasa en el build y lo que pasa en el navegador
@@ -222,7 +221,7 @@ flowchart TB
 | Desarrollo sin base | `PUBLIC_API_URL=http://127.0.0.1:4010` | `pnpm api:mock` (Prism) | — |
 | Preproducción | `pnpm preprod`: builds de producción en `:4321` y `:4173`; el sitio lee el API | `pnpm preprod`: compilado, `NODE_ENV=production` | Postgres local, base `depahost_preprod` |
 | Pruebas | Playwright con API simulada (sitio) o real (panel) | Vitest | PGlite en memoria o en `.e2e-db/` |
-| Producción | Hosting estático; panel en Vercel (`app.depahostperu.com`) | Docker en el hosting del API | Supabase, con SSL verificado |
+| Producción | Hosting estático; panel en Vercel (`app.depahostperu.com`) | App de Node en el hosting del API | Supabase, con SSL verificado |
 
 El detalle de cada entorno, sus archivos `.env` y cómo levantarlo está en
 [06 · Desarrollo y operación](06-desarrollo-y-operacion.md#2-entornos).
