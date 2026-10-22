@@ -2,20 +2,26 @@
 
 ## 1. Requisitos
 
-- Node 24 y pnpm 11. La CI, la imagen Docker del API y el `.nvmrc` de cada repo usan Node 24
-  (`nvm install 24`, y luego `nvm use` dentro de cada repo). Node 22.12 también funciona
-  (`engines` en `package.json`), pero lo que se valida es la 24. Los tres repos fijan pnpm con
+- Node 24 y pnpm 11. La CI, la imagen Docker del API y el `.nvmrc` de la raíz del monorepo usan
+  Node 24 (`nvm install 24`, y luego `nvm use` en la raíz). Node 22.12 también funciona (`engines`
+  en `package.json`), pero lo que se valida es la 24. El `package.json` de la raíz fija pnpm con
   `packageManager`.
 - PostgreSQL 16 o superior instalado en la máquina (en Ubuntu: `sudo apt install postgresql`). No
   hace falta tenerlo encendido como servicio ni usar `sudo` después: el API levanta su propio
   servidor con esos programas (ver [Postgres local](#postgres-local)).
-- Los tres repos lado a lado, para que `pnpm api:sync` y las pruebas del panel encuentren el API:
+- Un solo repo (monorepo con workspaces de pnpm). Las tres apps están lado a lado en `apps/`, y así
+  `pnpm api:sync` y las pruebas del panel encuentran el API:
 
 ```text
 DepaHost/
-├── depahostcapital/   sitio
-├── depahost-api/      API
-└── depahost-panel/    panel
+├── package.json         scripts de todo el monorepo
+├── pnpm-workspace.yaml
+├── pnpm-lock.yaml       un solo lockfile para las tres apps
+├── .github/workflows/   web.yml · api.yml · panel.yml
+└── apps/
+    ├── depahostcapital/   sitio
+    ├── depahost-api/      API
+    └── depahost-panel/    panel
 ```
 
 ## 2. Entornos
@@ -56,7 +62,7 @@ Desarrollo y preproducción usan los mismos puertos: se corre uno o el otro, no 
 
 ### Archivos de configuración
 
-Los tres repos tienen los mismos tres ejemplos:
+Las tres apps tienen los mismos tres ejemplos:
 
 | Archivo | Entorno | En git |
 |---|---|---|
@@ -108,7 +114,7 @@ pnpm install
 
 ### Cada día
 
-| Repo | Comando | Abre |
+| App | Comando | Abre |
 |---|---|---|
 | `depahost-api` | `pnpm db:up` (solo después de reiniciar la máquina) y `pnpm dev` | `http://localhost:3000`, documentación en `/docs` |
 | `depahostcapital` | `pnpm dev` | `http://localhost:4321` |
@@ -185,7 +191,7 @@ propia base, `depahost_preprod`, así que lo que pruebes ahí no ensucia la de d
 
 ### Primera vez
 
-En los tres repos, copia el ejemplo:
+En las tres apps, copia el ejemplo:
 
 ```bash
 cp .env.preprod.example .env.preprod
@@ -228,7 +234,7 @@ sequenceDiagram
     Panel-->>Dev: vista previa en :4173
 ```
 
-| Repo | Comando | Abre |
+| App | Comando | Abre |
 |---|---|---|
 | `depahost-api` | `pnpm preprod` | `http://localhost:3000` |
 | `depahostcapital` | `pnpm preprod` | `http://localhost:4321` |
@@ -295,7 +301,7 @@ con los valores de `.env.preprod` en los paneles de cada hosting:
 | `pnpm build` / `pnpm preview` | Build de producción y vista previa en `:4173` |
 | `pnpm build:preprod` / `pnpm preprod` | Build con `.env.preprod` y vista previa en `:4173` |
 | `pnpm typecheck`, `pnpm test`, `pnpm test:e2e` | Tipos, pruebas unitarias y de punta a punta |
-| `pnpm sync:brand` / `pnpm sync:api` | Copia la identidad visual o el contrato desde los repos hermanos |
+| `pnpm sync:brand` / `pnpm sync:api` | Copia la identidad visual o el contrato desde las apps hermanas |
 
 ### API
 
@@ -375,12 +381,13 @@ nueva y un admin de prueba, y construyen el panel apuntando a ese API. No usan e
 
 ## 7. Integración continua (GitHub Actions)
 
-Corre en cada push a `main` y en cada pull request. Todos los jobs usan Node 24, y también las
+Hay un workflow por app en `.github/workflows/` de la raíz. Cada uno corre en los push a `main` y
+en los pull request que tocan su carpeta en `apps/`, el lockfile o el propio workflow. Todos los jobs usan Node 24, y también las
 acciones corren sobre Node 24: `actions/checkout@v7`, `actions/setup-node@v7`,
 `pnpm/action-setup@v6`, `actions/upload-artifact@v7` y `actions/download-artifact@v8`. Con las
 versiones `@v4`, GitHub avisa que se ejecutan en Node 20, que ya está obsoleto.
 
-**Frontend** (`depahostcapital/.github/workflows/ci.yml`):
+**Frontend** (`.github/workflows/web.yml`):
 
 ```mermaid
 flowchart TB
@@ -393,7 +400,8 @@ flowchart TB
     F1 -- "artefacto dist" --> F3
 ```
 
-**API** (`depahost-api/.github/workflows/ci.yml`):
+**API** (`.github/workflows/api.yml`). La imagen se construye desde la raíz del monorepo
+(`docker build -f apps/depahost-api/Dockerfile .`):
 
 ```mermaid
 flowchart TB
@@ -405,10 +413,9 @@ flowchart TB
     B0 --> B1 --> B2 --> B3 --> B4
 ```
 
-**Panel** (`depahost-panel/.github/workflows/ci.yml`): formato, tipos, pruebas y build; y un job
-de punta a punta que descarga también el repo del API, `<dueño>/depahostcapital-api` (o el que diga
-la variable `API_REPOSITORY`). Como ese repo es privado, el job necesita el secreto
-`API_REPO_TOKEN`: un token de GitHub con permiso de lectura de contenidos sobre el repo del API.
+**Panel** (`.github/workflows/panel.yml`): formato, tipos, pruebas y build; y un job de punta a
+punta que levanta el API desde `apps/depahost-api`, en el mismo checkout. También corre cuando
+cambia el API.
 
 Umbrales de Lighthouse (`lighthouserc.json`): accesibilidad 95 y SEO 90 hacen fallar; rendimiento
 90 y buenas prácticas 90 solo advierten. Se miden `/` y `/capital`.
@@ -454,15 +461,17 @@ flowchart LR
 
 ### Primera vez
 
-Los valores de cada variable están en los `.env.production.example` de los tres repos.
+Los valores de cada variable están en los `.env.production.example` de las tres apps.
 
 1. **Base de datos:** Supabase, como en la sección anterior.
-2. **API:** crear la app desde el repo `depahost-api` (usa el `Dockerfile`, que copia `certs/`) con
+2. **API:** crear la app desde el monorepo con `apps/depahost-api/Dockerfile` (copia `certs/`) y
+   la raíz del repo como contexto de build, con
    las variables de `.env.production.example`. Al arrancar aplica las migraciones.
 3. **Dominio del API:** apuntar `api.depahostperu.com` a la app.
 4. **Datos:** cargar inmobiliarias, distritos, depas, fotos y supuestos desde el panel o con las
    rutas de admin (o `pnpm db:seed` solo para una demo).
-5. **Frontend:** crear el sitio en el hosting desde `depahostcapital`, con comando `pnpm build`,
+5. **Frontend:** crear el sitio en el hosting desde el monorepo, con carpeta raíz
+   `apps/depahostcapital`, comando `pnpm build`,
    carpeta de salida `dist` y las variables de `.env.production.example`.
 6. **Deploy hook:** crearlo en el hosting y ponerlo en `DEPLOY_HOOK_URL` del API.
 7. **CORS:** `CORS_ORIGINS` con el sitio y el panel:
@@ -470,7 +479,8 @@ Los valores de cada variable están en los `.env.production.example` de los tres
 8. **Turnstile:** registrar el dominio y poner la clave pública en el sitio y el panel, y la secreta
    en el API.
 9. **Resend:** verificar el dominio con sus registros DNS y poner la clave en el API.
-10. **Panel:** importar `depahost-panel` en Vercel (ya trae `vercel.json`), definir las variables de
+10. **Panel:** importar el monorepo en Vercel con Root Directory `apps/depahost-panel` (ya trae
+    `vercel.json`), definir las variables de
     su `.env.production.example` y asignar `app.depahostperu.com`.
 11. **Cuentas:** en el API, `COOKIE_DOMAIN=.depahostperu.com` y `PANEL_URL=https://app.depahostperu.com`.
     En el sitio, `PUBLIC_PANEL_URL=https://app.depahostperu.com`.

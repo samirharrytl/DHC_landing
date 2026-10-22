@@ -1,6 +1,6 @@
 # 03 · API (`depahost-api`)
 
-El API vive en la carpeta hermana `../depahost-api`. Sirve datos al build del sitio, recibe los
+El API vive en la carpeta hermana `../depahost-api` (`apps/depahost-api` del monorepo). Sirve datos al build del sitio, recibe los
 formularios y guarda el Libro de Reclamaciones. Su documentación interactiva está en `/docs`
 y su contrato en `/openapi.json`.
 

@@ -3,7 +3,7 @@
 Sitio de **Depa Host Perú** (depahostperu.com): reservar estadías, vender o alquilar tu depa,
 y **DepaHost Capital** (comprar departamentos en Lima para que rindan).
 
-Este repo es solo el **frontend estático**. El backend es una API aparte (repo `depahost-api`,
+Esta app es solo el **frontend estático**. El backend es otra app del monorepo (`apps/depahost-api`,
 Fastify + PostgreSQL). Se comunican por HTTP con un contrato OpenAPI.
 
 ## Documentación
