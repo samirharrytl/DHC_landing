@@ -162,6 +162,9 @@ export function enhanceForm<P extends Json, T>(form: HTMLFormElement, options: E
     try {
       const { data, error, response } = await options.send(options.buildPayload(fields))
       if (data !== undefined && response?.ok) {
+        // Quita el "Enviando…": cada formulario muestra su propio resultado
+        const status = form.querySelector<HTMLElement>('[data-form-status]')
+        if (status) status.hidden = true
         options.onSuccess(data, form)
         return
       }

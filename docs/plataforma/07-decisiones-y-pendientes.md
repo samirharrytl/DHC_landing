@@ -42,6 +42,12 @@ cambiar una, conviene releer el porqué.
 | Los depas vendidos no tienen página | `getProperties()` excluye `sold` | Un link viejo a un depa vendido da 404 | Generar su página con la etiqueta "Vendido" |
 | El plazo de reclamos no descuenta feriados | `lib/business-days.ts` | Plazo más corto que el legal | Agregar el calendario de feriados nacionales |
 | En el resumen de administración, "Reclamos por responder" queda unos píxeles más arriba que las otras tarjetas de su fila | Panel, vista de resumen | Visual | Alinear las tarjetas de esa fila |
+| Los depas reservados se marcan como agotados (`SoldOut`) en los datos estructurados | Ficha del depa (`capital/[slug].astro`) | Google puede mostrarlos como agotados aunque sigan a la venta | Usar otro estado para "reservado" o no marcar disponibilidad |
+| "Editar mi depa" con una solicitud ajena o inexistente se queda en "Cargando…" | Panel, `RequestFormView.vue` | La persona no recibe ningún mensaje | Mostrar el mismo aviso que el detalle |
+| "Sin fotos. Puedes agregarlas al editar." aparece cuando la solicitud ya no se puede editar | Panel, detalle de la solicitud | Invita a algo que no se puede hacer ("En revisión", "Publicada") | Mostrar ese texto solo si la solicitud es editable |
+| El contador "Consultas" del propietario suma cada toque repetido en "Escribir por WhatsApp" | API, indicadores del propietario | Infla el interés que ve el propietario | Contar personas o consultas distintas |
+| "Te acompañamos" sin depas elegidos mezcla el título en singular con el aviso de selección vacía | `capital/empecemos.astro` | Visual y confuso | Ocultar la tarjeta del depa cuando no hay selección |
+| La inversión total con solo depas en dólares se escribe distinto en el sitio ("S/ 0 + US$ …") y en el panel ("US$ …") | `/mis-depas` del sitio | Inconsistencia visual | Omitir los soles cuando son cero |
 | `/docs` (Swagger) también responde en producción | `app.ts` | Muestra la lista de rutas; el contrato ya es público | Decidir si se oculta en producción |
 
 ## Deuda técnica menor

@@ -65,6 +65,7 @@ test('Libro de Reclamaciones: registra y muestra el código', async ({ page }) =
 
   await expect(page.getByText('LR-2026-000001')).toBeVisible()
   await expect(page.getByText('9 de noviembre de 2026')).toBeVisible()
+  await expect(page.getByText('Enviando…')).toBeHidden()
   expect(received[0]).toMatchObject({
     consumer: { firstName: 'Ana', documentType: 'DNI', isMinor: false },
     item: { type: 'servicio', description: 'Estadía de 3 noches' },

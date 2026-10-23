@@ -5,7 +5,7 @@ conectan, qué datos maneja y qué pasa, paso a paso, en cada flujo. Los diagram
 escritos con [Mermaid](https://mermaid.js.org/). GitHub y VS Code (con la extensión
 "Markdown Preview Mermaid Support") los muestran como imágenes.
 
-> Estado descrito: 20 de octubre de 2026. Si cambias el código, actualiza el capítulo que
+> Estado descrito: 21 de octubre de 2026. Si cambias el código, actualiza el capítulo que
 > corresponda en el mismo cambio.
 
 ## Cómo leer esta documentación
@@ -20,6 +20,7 @@ escritos con [Mermaid](https://mermaid.js.org/). GitHub y VS Code (con la extens
 | Conocer los entornos (desarrollo, preproducción y producción), levantarlos, probar y publicar | [06 · Desarrollo y operación](06-desarrollo-y-operacion.md) |
 | Saber por qué se decidió cada cosa y qué falta | [07 · Decisiones y pendientes](07-decisiones-y-pendientes.md) |
 | Entender las cuentas, los roles y el panel en Vue | [08 · Panel y cuentas](08-panel-y-cuentas.md) |
+| Saber cómo usa la plataforma una persona común, pantalla por pantalla, con capturas, reglas, mensajes y escenarios de aceptación | [09 · Manual funcional del usuario](09-manual-funcional.md) |
 
 ## La plataforma en una página
 
