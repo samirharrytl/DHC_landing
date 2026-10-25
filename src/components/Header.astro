@@ -9,16 +9,23 @@ import Icon from './Icon.astro'
 import { waLink } from '../data/contacto'
 import { PUBLIC_PANEL_URL } from 'astro:env/client'
 
+// Menú principal: comprar (Capital y Mis depas) y vender (Propietarios).
+// `section`: páginas en las que el link queda marcado, aunque no sea la página exacta
 const links = [
-  { href: '/', label: 'Inicio' },
-  { href: '/estadias', label: 'Estadías' },
-  { href: '/propietarios', label: 'Propietarios' },
-  { href: '/capital', label: 'Capital' },
-  { href: '/nosotros', label: 'Nosotros' },
+  { href: '/', label: 'Inicio', section: [] },
+  { href: '/capital', label: 'Compra', section: ['/capital', '/mis-depas'] },
+  { href: '/propietarios', label: 'Vende', section: ['/propietarios'] },
 ]
 
 // Quitamos la "/" final para comparar: "/capital/" → "/capital"
 const path = Astro.url.pathname.replace(/\/$/, '') || '/'
+/** "page" en la página del link; "true" en el resto de su sección (/capital/depas → Compra) */
+const current = (link: (typeof links)[number]) =>
+  path === link.href
+    ? 'page'
+    : link.section.some((s) => path === s || path.startsWith(`${s}/`))
+      ? 'true'
+      : undefined
 const panelUrl = PUBLIC_PANEL_URL?.replace(/\/$/, '')
 const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
 ---
@@ -32,7 +39,7 @@ const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
       <ul>
         {links.map((link) => (
           <li>
-            <a href={link.href} aria-current={path === link.href ? 'page' : undefined} data-astro-prefetch>
+            <a href={link.href} aria-current={current(link)} data-astro-prefetch>
               {link.label}
             </a>
           </li>
@@ -131,7 +138,7 @@ const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
       <ul class="drawer-links">
         {links.map((link) => (
           <li>
-            <a href={link.href} aria-current={path === link.href ? 'page' : undefined} data-astro-prefetch>
+            <a href={link.href} aria-current={current(link)} data-astro-prefetch>
               {link.label}
             </a>
           </li>
@@ -355,17 +362,17 @@ const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
   }
 
   /* Página actual: más gruesa y subrayada */
-  .drawer-links a[aria-current='page'] {
+  .drawer-links a[aria-current] {
     color: var(--color-navy-800);
     font-weight: var(--fw-semibold);
     text-decoration: underline;
     text-decoration-thickness: 2px;
     text-underline-offset: 8px;
   }
-  .nav a[aria-current='page'] {
+  .nav a[aria-current] {
     color: var(--color-text-muted);
   }
-  .nav a[aria-current='page']::after {
+  .nav a[aria-current]::after {
     position: absolute;
     right: 0;
     bottom: 2px;

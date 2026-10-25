@@ -127,7 +127,7 @@ Para cada página: de dónde salen sus datos en el build y qué scripts corren e
 |---|---|---|---|
 | `/` | `pages/index.astro` | Ninguno (texto fijo y foto del hero) | Dropdown "Soy propietario" |
 | `/capital` | `pages/capital/index.astro` | `getOwnerProperties`, `getFastFilters`, `getDevelopers`, supuestos | Filtros, Me interesa, Para ti |
-| `/capital/depas` | `pages/capital/depas.astro` | `getProperties` (todos), `getDevelopers`, supuestos | Búsqueda con facetas, orden y conteos (`lib/catalog-search.ts`); los filtros quedan en la URL |
+| `/capital/depas` | `pages/capital/depas.astro` | `getProperties` (todos), `getDevelopers`, supuestos | Búsqueda con facetas, orden y conteos (`lib/catalog-search.ts`); los filtros quedan en la URL. "Cerca de": ubicación del navegador (no va a la URL) o un lugar de `data/lugares.ts` (`?cerca=larcomar&km=2`), orden "Más cercanos" y distancia en cada tarjeta (`lib/geo.ts`) |
 | `/capital/{slug}` | `pages/capital/[slug].astro` | Una página por depa de `getProperties`; `getSimilarProperties(p, 4)`; inmobiliaria | Galería (`PropertyGallery`), Me interesa; guarda la visita en el historial. "Contactar" lleva a `/mis-depas?agregar={id}` |
 | `/capital/aliados/{slug}` | `pages/capital/aliados/[slug].astro` | Inmobiliarias con proyectos; `getDeveloperProjects` | Filtros con botón Buscar y contador |
 | `/mis-depas` | `pages/mis-depas.astro` | Ninguno | Pinta los guardados, resumen y total; agrega `?agregar={id}`; "Empecemos con estos" abre WhatsApp y registra el lead `cart`; Para ti |
@@ -147,7 +147,7 @@ Páginas sin indexar (`<meta name="robots" content="noindex">` y fuera del sitem
 
 ```mermaid
 flowchart TB
-    A["Hero<br/>título serif · subtítulo · Ver todos los proyectos → /capital/depas · Empecemos → /mis-depas"]
+    A["Hero<br/>título serif en 2 líneas · subtítulo · Ver todos los proyectos → /capital/depas"]
     B["Cómo funciona<br/>Comparas · Consultas · Te acompañamos · Cierras"]
     C["Buscador + chips<br/>SearchFilters"]
     D["Grilla de depas de propietarios<br/>PropertyCard × N · #lista-depas · al final, tarjeta Ver todos los proyectos"]
@@ -169,7 +169,7 @@ flowchart TB
 
 | Componente | Props | Qué hace |
 |---|---|---|
-| `Header` | — | Logo, menú, saludo "Hola, {nombre}", acceso a Mis depas con contador, WhatsApp, menú móvil (`<dialog>`) y botón flotante de WhatsApp |
+| `Header` | — | Logo, menú (Inicio, Compra → `/capital`, Vende → `/propietarios`; Compra queda marcado en `/capital/*` y `/mis-depas`), saludo "Hola, {nombre}", acceso a Mis depas con contador, WhatsApp, menú móvil (`<dialog>`) y botón flotante de WhatsApp |
 | `Footer` | — | Banda de WhatsApp, links legales, RUC y "Preferencias de cookies" |
 | `Logo` | `inverse?` | Marca de Depahost Capital (variante clara para fondos oscuros) |
 | `Button` | `href`, `variant?`, `size?`, `block?` | Link con estilo de botón. Si apunta a `wa.me`, siempre sale verde y abre en otra pestaña |

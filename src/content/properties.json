@@ -10,6 +10,10 @@
     "origin": "owner",
     "developer": null,
     "address": "Av. Arequipa cuadra 12",
+    "location": {
+      "lat": -12.08062,
+      "lng": -77.03513
+    },
     "badge": "Súper precio",
     "description": null,
     "price": {
@@ -63,6 +67,10 @@
     "origin": "owner",
     "developer": null,
     "address": "Av. Angamos Este cuadra 20",
+    "location": {
+      "lat": -12.11256,
+      "lng": -77.01127
+    },
     "badge": "Súper oportunidad",
     "description": null,
     "price": {
@@ -110,6 +118,10 @@
     "origin": "owner",
     "developer": null,
     "address": "Av. del Ejército cuadra 6",
+    "location": {
+      "lat": -12.09753,
+      "lng": -77.07057
+    },
     "badge": "Últimos en venta",
     "description": null,
     "price": {
@@ -161,6 +173,10 @@
       "name": "Urbana"
     },
     "address": "Av. La Marina cuadra 25",
+    "location": {
+      "lat": -12.07291,
+      "lng": -77.10318
+    },
     "badge": null,
     "description": "Departamentos de 1, 2 y 3 dormitorios. Acabados modernos y zonas comunes completas.",
     "price": {
@@ -212,6 +228,10 @@
       "name": "Urbana"
     },
     "address": "Calle Schell cuadra 3",
+    "location": {
+      "lat": -12.12343,
+      "lng": -77.02629
+    },
     "badge": null,
     "description": "Vive en el corazón de Miraflores. Diseño, confort y excelente ubicación.",
     "price": {
@@ -263,6 +283,10 @@
       "name": "Urbana"
     },
     "address": "Av. Tomás Marsano cuadra 8",
+    "location": {
+      "lat": -12.12632,
+      "lng": -77.00275
+    },
     "badge": null,
     "description": "Departamentos de 1 y 2 dormitorios. Excelente conexión y amenidades.",
     "price": {
@@ -310,6 +334,10 @@
     "origin": "owner",
     "developer": null,
     "address": "Av. Salaverry cuadra 18",
+    "location": {
+      "lat": -12.079,
+      "lng": -77.0445
+    },
     "badge": "Súper precio",
     "description": "Depa de 2 dormitorios frente al Campo de Marte, a pasos de la Av. Salaverry. Alquila rápido a familias y ejecutivos.",
     "price": {
@@ -357,6 +385,10 @@
     "origin": "owner",
     "developer": null,
     "address": "Av. Bolívar cuadra 9",
+    "location": {
+      "lat": -12.07142,
+      "lng": -77.07294
+    },
     "badge": null,
     "description": "Zona tranquila y residencial, cerca de universidades y del Parque de la Cruz. Ideal para alquiler tradicional.",
     "price": {
@@ -404,6 +436,10 @@
     "origin": "owner",
     "developer": null,
     "address": "Av. San Luis cuadra 25",
+    "location": {
+      "lat": -12.08858,
+      "lng": -76.99631
+    },
     "badge": "Últimos en venta",
     "description": "Depa familiar de 3 dormitorios con cochera, a dos cuadras del Pentagonito y de la ciclovía.",
     "price": {
@@ -451,6 +487,10 @@
     "origin": "owner",
     "developer": null,
     "address": "Av. Grau cuadra 3",
+    "location": {
+      "lat": -12.13662,
+      "lng": -77.02262
+    },
     "badge": "Súper oportunidad",
     "description": "Loft a pasos del Puente de los Suspiros. Con alta demanda de alquiler temporal para turistas.",
     "price": {
@@ -498,6 +538,10 @@
     "origin": "owner",
     "developer": null,
     "address": "Calle Berlín cuadra 2",
+    "location": {
+      "lat": -12.12018,
+      "lng": -77.03425
+    },
     "badge": "Súper precio",
     "description": "Depa de 1 dormitorio a una cuadra del Parque Kennedy. Funciona muy bien en Airbnb todo el año.",
     "price": {
@@ -551,6 +595,10 @@
     "origin": "owner",
     "developer": null,
     "address": "Av. Caminos del Inca cuadra 15",
+    "location": {
+      "lat": -12.14395,
+      "lng": -76.9852
+    },
     "badge": null,
     "description": "Amplio, con terraza y vista a parque. Cerca de colegios y del Jockey Plaza.",
     "price": {
@@ -598,6 +646,10 @@
     "origin": "owner",
     "developer": null,
     "address": "Calle Los Laureles cuadra 4",
+    "location": {
+      "lat": -12.09321,
+      "lng": -77.04629
+    },
     "badge": null,
     "description": "En el corazón financiero, a pasos del Olivar. Buscado por ejecutivos en alquiler corporativo.",
     "price": {
@@ -645,6 +697,10 @@
     "origin": "owner",
     "developer": null,
     "address": "Av. Canadá cuadra 5",
+    "location": {
+      "lat": -12.08252,
+      "lng": -77.01566
+    },
     "badge": "Súper precio",
     "description": "Urbanización Santa Catalina, cerca de la Vía Expresa y del Estadio Nacional.",
     "price": {
@@ -692,6 +748,10 @@
     "origin": "owner",
     "developer": null,
     "address": "Av. Petit Thouars cuadra 27",
+    "location": {
+      "lat": -12.08286,
+      "lng": -77.03355
+    },
     "badge": null,
     "description": "Depa compacto y bien ubicado entre San Isidro y Lince, con estación del Metropolitano a 3 cuadras.",
     "price": {
@@ -743,6 +803,10 @@
       "name": "Urbana"
     },
     "address": "Av. Brasil cuadra 22",
+    "location": {
+      "lat": -12.08553,
+      "lng": -77.06227
+    },
     "badge": "Preventa",
     "description": "Proyecto de 18 pisos con gimnasio, coworking y terraza en la azotea. Departamentos de 1, 2 y 3 dormitorios.",
     "price": {
@@ -794,6 +858,10 @@
       "name": "Urbana"
     },
     "address": "Av. La Mar cuadra 12",
+    "location": {
+      "lat": -12.07584,
+      "lng": -77.0752
+    },
     "badge": "Estreno",
     "description": "Edificio recién entregado, con lobby amplio y zona de parrillas. Departamentos de 1 y 2 dormitorios.",
     "price": {
@@ -845,6 +913,10 @@
       "name": "Urbana"
     },
     "address": "Av. Arenales cuadra 21",
+    "location": {
+      "lat": -12.08038,
+      "lng": -77.03624
+    },
     "badge": "Entrega inmediata",
     "description": "Flats de 1 y 2 dormitorios listos para alquilar, a pasos del Parque Mariscal Castilla.",
     "price": {
@@ -896,6 +968,10 @@
       "name": "Lima Sur"
     },
     "address": "Av. Huaylas cuadra 3",
+    "location": {
+      "lat": -12.17,
+      "lng": -77.0205
+    },
     "badge": "Preventa",
     "description": "A minutos de las playas de Chorrillos. Piscina, sala de niños y áreas verdes.",
     "price": {
@@ -947,6 +1023,10 @@
       "name": "Lima Sur"
     },
     "address": "Av. Benavides cuadra 45",
+    "location": {
+      "lat": -12.13094,
+      "lng": -76.9785
+    },
     "badge": null,
     "description": "Proyecto con dos torres y club house, cerca del Óvalo Higuereta.",
     "price": {
@@ -998,6 +1078,10 @@
       "name": "Lima Sur"
     },
     "address": "Av. Los Héroes cuadra 7",
+    "location": {
+      "lat": -12.15668,
+      "lng": -76.9656
+    },
     "badge": "Súper precio",
     "description": "Junto a la estación del Metro y a centros comerciales. Departamentos de 2 y 3 dormitorios.",
     "price": {
@@ -1049,6 +1133,10 @@
       "name": "Lima Sur"
     },
     "address": "Av. Pedro de Osma cuadra 2",
+    "location": {
+      "lat": -12.15195,
+      "lng": -77.02249
+    },
     "badge": "Últimos en venta",
     "description": "Edificio boutique con vista al mar, en la avenida más tradicional de Barranco.",
     "price": {
@@ -1100,6 +1188,10 @@
       "name": "Lima Sur"
     },
     "address": "Av. Defensores del Morro cuadra 10",
+    "location": {
+      "lat": -12.1767,
+      "lng": -77.01674
+    },
     "badge": null,
     "description": "Departamentos de 2 dormitorios con balcón, cerca de la Escuela Militar.",
     "price": {
@@ -1151,6 +1243,10 @@
       "name": "Andes"
     },
     "address": "Av. Universitaria cuadra 15",
+    "location": {
+      "lat": -12.08121,
+      "lng": -77.08226
+    },
     "badge": "Preventa",
     "description": "Cerca de la PUCP y de Plaza San Miguel. Alta demanda de alquiler de estudiantes y docentes.",
     "price": {
@@ -1202,6 +1298,10 @@
       "name": "Andes"
     },
     "address": "Av. Carlos Izaguirre cuadra 4",
+    "location": {
+      "lat": -11.99071,
+      "lng": -77.06989
+    },
     "badge": "Súper precio",
     "description": "Departamentos de 3 dormitorios a precio de entrada, junto a Mega Plaza.",
     "price": {
@@ -1253,6 +1353,10 @@
       "name": "Andes"
     },
     "address": "Av. Tomás Valle cuadra 8",
+    "location": {
+      "lat": -12.01162,
+      "lng": -77.08947
+    },
     "badge": null,
     "description": "A pasos de la Panamericana Norte, con acceso rápido al aeropuerto.",
     "price": {
@@ -1304,6 +1408,10 @@
       "name": "Andes"
     },
     "address": "Av. Arica cuadra 6",
+    "location": {
+      "lat": -12.05993,
+      "lng": -77.04247
+    },
     "badge": "Estreno",
     "description": "Edificio nuevo cerca del Centro de Lima y de la Av. Brasil.",
     "price": {
@@ -1355,6 +1463,10 @@
       "name": "Andes"
     },
     "address": "Jr. Washington cuadra 12",
+    "location": {
+      "lat": -12.05407,
+      "lng": -77.03946
+    },
     "badge": null,
     "description": "Flats en el Centro de Lima, cerca del Parque de la Exposición. Buenos para alquiler temporal.",
     "price": {
@@ -1406,6 +1518,10 @@
       "name": "Miraflores Hotel"
     },
     "address": "Av. José Larco cuadra 8",
+    "location": {
+      "lat": -12.12925,
+      "lng": -77.02971
+    },
     "badge": "Últimos en venta",
     "description": "Departamentos amoblados con operación hotelera incluida, a dos cuadras del malecón.",
     "price": {
@@ -1457,6 +1573,10 @@
       "name": "Miraflores Hotel"
     },
     "address": "Calle Alcanfores cuadra 4",
+    "location": {
+      "lat": -12.12762,
+      "lng": -77.0281
+    },
     "badge": "Preventa",
     "description": "Estudios y flats pensados para Airbnb, con recepción 24 horas y lavandería.",
     "price": {
@@ -1514,6 +1634,10 @@
       "name": "Miraflores Hotel"
     },
     "address": "Av. Camino Real cuadra 3",
+    "location": {
+      "lat": -12.10549,
+      "lng": -77.03907
+    },
     "badge": null,
     "description": "Residencias de lujo frente al Golf de San Isidro, con concierge y spa.",
     "price": {
@@ -1565,6 +1689,10 @@
       "name": "Miraflores Hotel"
     },
     "address": "Jr. Unión cuadra 1",
+    "location": {
+      "lat": -12.14723,
+      "lng": -77.02096
+    },
     "badge": "Estreno",
     "description": "Lofts junto a la Plaza de Barranco, a pasos de bares, galerías y la bajada a la playa.",
     "price": {
@@ -1616,6 +1744,10 @@
       "name": "Nova"
     },
     "address": "Av. Aviación cuadra 30",
+    "location": {
+      "lat": -12.08572,
+      "lng": -77.00378
+    },
     "badge": "Preventa",
     "description": "Frente a la estación La Cultura de la Línea 1. Departamentos de 2 y 3 dormitorios.",
     "price": {
@@ -1667,6 +1799,10 @@
       "name": "Nova"
     },
     "address": "Av. República de Panamá cuadra 46",
+    "location": {
+      "lat": -12.1031,
+      "lng": -77.01876
+    },
     "badge": null,
     "description": "Límite con Miraflores, cerca del Mercado de Surquillo y de la Vía Expresa.",
     "price": {
@@ -1718,6 +1854,10 @@
       "name": "Nova"
     },
     "address": "Av. La Molina cuadra 9",
+    "location": {
+      "lat": -12.07532,
+      "lng": -76.93748
+    },
     "badge": null,
     "description": "Condominio con áreas verdes y piscina, ideal para familias.",
     "price": {
@@ -1769,6 +1909,10 @@
       "name": "Nova"
     },
     "address": "Av. Brasil cuadra 38",
+    "location": {
+      "lat": -12.09352,
+      "lng": -77.06913
+    },
     "badge": "Entrega inmediata",
     "description": "Departamentos listos para habitar, a 10 minutos del malecón de Magdalena.",
     "price": {

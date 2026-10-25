@@ -2,6 +2,7 @@
 // tienda en línea. Funciones puras: las usa el navegador y se prueban con Vitest
 // (tests/unit/catalog-search.test.ts). Los filtros viven en la URL para poder compartir la búsqueda.
 import { normalizeText } from './format'
+import { MY_LOCATION } from './geo'
 
 /** Lo que necesita la búsqueda de cada depa. En el navegador se arma con los data-* de la tarjeta. */
 export interface SearchableDepa {
@@ -17,9 +18,11 @@ export interface SearchableDepa {
   searchText: string
   /** Posición en el orden "Destacados" (destacados primero, luego los más nuevos) */
   order: number
+  /** Distancia en km al punto elegido en "Cerca de" (sin punto o sin ubicación: undefined) */
+  distanceKm?: number
 }
 
-export type SortKey = 'destacados' | 'precio-asc' | 'precio-desc' | 'rentabilidad' | 'plazo'
+export type SortKey = 'destacados' | 'precio-asc' | 'precio-desc' | 'rentabilidad' | 'plazo' | 'cercania'
 
 export const SORT_OPTIONS: { value: SortKey; label: string }[] = [
   { value: 'destacados', label: 'Destacados' },
@@ -27,7 +30,11 @@ export const SORT_OPTIONS: { value: SortKey; label: string }[] = [
   { value: 'precio-desc', label: 'Precio: mayor a menor' },
   { value: 'rentabilidad', label: 'Mayor rentabilidad' },
   { value: 'plazo', label: 'Se paga antes' },
+  { value: 'cercania', label: 'Más cercanos' },
 ]
+
+/** "Cerca de": hasta cuántos km del punto elegido */
+export const DISTANCE_STEPS = [2, 5, 10]
 
 export interface DepaQuery {
   q: string
@@ -40,11 +47,15 @@ export interface DepaQuery {
   maxPayback?: number
   /** Solo disponibles: deja fuera los reservados */
   available: boolean
+  /** "Cerca de": slug de un lugar o distrito (src/data/lugares.ts) o "mi-ubicacion" */
+  near?: string
+  maxKm?: number
   sort: SortKey
 }
 
 /** Grupos de filtros. Para contar las opciones de un grupo se ignora ese mismo grupo. */
-export type FacetGroup = 'origin' | 'district' | 'developer' | 'price' | 'yield' | 'payback' | 'available'
+export type FacetGroup =
+  'origin' | 'district' | 'developer' | 'price' | 'yield' | 'payback' | 'available' | 'distance'
 
 export const emptyQuery = (): DepaQuery => ({
   q: '',
@@ -71,6 +82,13 @@ export function matchesQuery(d: SearchableDepa, query: DepaQuery, ignore?: Facet
   if (ignore !== 'yield' && query.minYield != null && d.yieldMin < query.minYield) return false
   if (ignore !== 'payback' && query.maxPayback != null && d.paybackYears > query.maxPayback) return false
   if (ignore !== 'available' && query.available && d.status !== 'published') return false
+  if (
+    ignore !== 'distance' &&
+    query.near &&
+    query.maxKm != null &&
+    !(d.distanceKm != null && d.distanceKm <= query.maxKm)
+  )
+    return false
   return true
 }
 
@@ -82,6 +100,8 @@ export function sortDepas<T extends SearchableDepa>(list: T[], sort: SortKey): T
     'precio-desc': (a, b) => b.price - a.price,
     rentabilidad: (a, b) => b.yieldMax - a.yieldMax || b.yieldMin - a.yieldMin,
     plazo: (a, b) => a.paybackYears - b.paybackYears,
+    // Los que no tienen ubicación van al final
+    cercania: (a, b) => (a.distanceKm ?? Infinity) - (b.distanceKm ?? Infinity) || 0,
   }
   return [...list].sort((a, b) => by[sort](a, b) || a.order - b.order)
 }
@@ -107,6 +127,8 @@ export function queryFromParams(params: URLSearchParams): DepaQuery {
     minYield: num(params.get('rentabilidad')),
     maxPayback: num(params.get('plazo')),
     available: params.get('disponibles') === '1',
+    near: params.get('cerca') || undefined,
+    maxKm: num(params.get('km')),
     sort: SORT_OPTIONS.some((o) => o.value === sort) ? sort! : 'destacados',
   }
 }
@@ -122,6 +144,11 @@ export function queryToParams(query: DepaQuery): URLSearchParams {
   if (query.minYield != null) params.set('rentabilidad', String(query.minYield))
   if (query.maxPayback != null) params.set('plazo', String(query.maxPayback))
   if (query.available) params.set('disponibles', '1')
+  // La ubicación del navegador no va a la URL: es un dato de la persona y no se comparte con el link
+  if (query.near && query.near !== MY_LOCATION) {
+    params.set('cerca', query.near)
+    if (query.maxKm != null) params.set('km', String(query.maxKm))
+  }
   if (query.sort !== 'destacados') params.set('orden', query.sort)
   return params
 }

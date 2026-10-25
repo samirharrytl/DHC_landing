@@ -3,12 +3,14 @@
 // Todos los depas (de propietarios y de proyectos) salen del build; los filtros de la barra lateral,
 // el buscador y el orden se aplican en el navegador (lógica en src/lib/catalog-search.ts) y quedan
 // en la URL (?distrito=lince&orden=precio-asc), así la búsqueda se puede compartir.
+// "Cerca de" ordena por distancia a la ubicación de la persona o a un lugar de la lista (src/lib/geo.ts).
 import BaseLayout from '../../layouts/BaseLayout.astro'
 import Icon from '../../components/Icon.astro'
 import PropertyCard from '../../components/PropertyCard.astro'
 import { getDevelopers, getFinancingAssumptions, getProperties } from '../../lib/properties'
 import { buildDisclaimer, formatPEN } from '../../lib/format'
-import { paybackSteps, priceRanges, SORT_OPTIONS, yieldSteps } from '../../lib/catalog-search'
+import { DISTANCE_STEPS, paybackSteps, priceRanges, SORT_OPTIONS, yieldSteps } from '../../lib/catalog-search'
+import { DISTRITOS, LUGARES } from '../../data/lugares'
 
 const depas = await getProperties()
 const developers = (await getDevelopers()).filter((d) => d.projectCount > 0)
@@ -33,7 +35,7 @@ const origins = [
 
 <BaseLayout
   title="Todos los depas"
-  description="Todos los departamentos para invertir en Lima de DepaHost Capital: filtra por distrito, precio, rentabilidad y plazo."
+  description="Todos los departamentos para invertir en Lima de DepaHost Capital: filtra por distrito, precio, rentabilidad, plazo y cercanía."
 >
   <div class="container results-page" data-depa-search>
     <nav class="breadcrumb" aria-label="Migas de pan">
@@ -86,6 +88,9 @@ const origins = [
       </div>
     </div>
 
+    <!-- Avisos de "Cerca de": buscando la ubicación, permiso denegado… -->
+    <div class="near-status" role="status" data-near-status></div>
+
     <div class="chips" data-active-chips hidden>
       <ul data-chip-list aria-label="Filtros activos"></ul>
       <button type="button" class="clear-all" data-clear-all>
@@ -106,6 +111,44 @@ const origins = [
         </div>
 
         <div class="filters-body">
+          <fieldset class="group near">
+            <legend>Cerca de</legend>
+            <button type="button" class="btn btn--secondary btn--sm near-locate" data-near-locate>
+              <Icon name="locate" size={18} />
+              <span data-near-locate-label>Usar mi ubicación</span>
+            </button>
+            <label class="near-field">
+              <span>O elige un lugar</span>
+              <select data-near-select>
+                <option value="">Elige un distrito o lugar</option>
+                {LUGARES.map((group) => (
+                  <optgroup label={group.group}>
+                    {group.places.map((place) => (
+                      <option value={place.slug}>{place.name}</option>
+                    ))}
+                  </optgroup>
+                ))}
+                <optgroup label="Distritos">
+                  {DISTRITOS.map((district) => (
+                    <option value={district.slug}>{district.name}</option>
+                  ))}
+                </optgroup>
+              </select>
+            </label>
+            <div class="near-radius" data-near-radius hidden>
+              {DISTANCE_STEPS.map((km) => (
+                <label class="facet">
+                  <input type="radio" name="km" value={km} data-facet="distance" />
+                  <span data-label>Hasta {km} km</span>
+                  <span class="facet-count" data-facet-count />
+                </label>
+              ))}
+              <button type="button" class="clear-group" data-clear-group="distance" hidden>
+                Borrar distancia
+              </button>
+            </div>
+          </fieldset>
+
           <fieldset class="group">
             <legend>Tipo</legend>
             {origins.map((o) => (
@@ -261,6 +304,15 @@ const origins = [
     type SortKey,
   } from '../../lib/catalog-search'
   import { formatPEN } from '../../lib/format'
+  import {
+    districtCenter,
+    distanceKm,
+    formatDistance,
+    isNearLima,
+    MY_LOCATION,
+    placeBySlug,
+    type Point,
+  } from '../../lib/geo'
 
   const root = document.querySelector<HTMLElement>('[data-depa-search]')
   if (root) {
@@ -278,8 +330,18 @@ const origins = [
     const priceMin = $<HTMLInputElement>('[data-price-min]')
     const priceMax = $<HTMLInputElement>('[data-price-max]')
     const facets = [...root.querySelectorAll<HTMLInputElement>('[data-facet]')]
+    const nearSelect = $<HTMLSelectElement>('[data-near-select]')
+    const nearRadius = $<HTMLElement>('[data-near-radius]')
+    const nearStatus = $<HTMLElement>('[data-near-status]')
+    const locateButton = $<HTMLButtonElement>('[data-near-locate]')
+    const locateLabel = $<HTMLElement>('[data-near-locate-label]')
 
-    type Item = SearchableDepa & { card: HTMLElement }
+    type Item = SearchableDepa & {
+      card: HTMLElement
+      position?: Point & { exact: boolean }
+      distance: HTMLElement
+      distanceText: HTMLElement
+    }
     const items: Item[] = [...grid.querySelectorAll<HTMLElement>('[data-property-card]')].map(
       (card, order) => ({
         card,
@@ -294,10 +356,41 @@ const origins = [
         paybackYears: Number(card.dataset.payback),
         status: (card.dataset.status ?? 'published') as SearchableDepa['status'],
         searchText: card.dataset.search ?? '',
+        position:
+          card.dataset.lat && card.dataset.lng
+            ? { lat: Number(card.dataset.lat), lng: Number(card.dataset.lng), exact: 'exact' in card.dataset }
+            : undefined,
+        distance: card.querySelector<HTMLElement>('[data-distance]')!,
+        distanceText: card.querySelector<HTMLElement>('[data-distance-text]')!,
       }),
     )
 
+    // ---------- "Cerca de" ----------
+    /** Ubicación del navegador: solo en memoria, no va a la URL ni se guarda */
+    let myPosition: Point | undefined
+
+    /** El punto de "Cerca de", con su nombre para el chip ("Cerca de Larcomar (Miraflores)") y la tarjeta ("de Larcomar") */
+    const originOf = (near: string | undefined) => {
+      if (!near) return undefined
+      if (near === MY_LOCATION) return myPosition && { ...myPosition, name: 'tu ubicación', from: 'de ti' }
+      const place = placeBySlug(near)
+      if (!place) return undefined
+      return districtCenter(near)
+        ? { ...place, from: `del centro de ${place.name}` }
+        : { ...place, from: `de ${place.name.replace(/\s*\(.*\)$/, '')}` }
+    }
+
+    /** Sin un punto válido en "Cerca de" se quitan la distancia y el orden por cercanía */
+    const normalizeNear = () => {
+      if (!originOf(query.near)) query.near = undefined
+      if (!query.near) {
+        query.maxKm = undefined
+        if (query.sort === 'cercania') query.sort = 'destacados'
+      }
+    }
+
     let query: DepaQuery = queryFromParams(new URLSearchParams(location.search))
+    normalizeNear()
 
     const listKey = { origin: 'origins', district: 'districts', developer: 'developers' } as const
     const n = (value: string | undefined) => (value === undefined || value === '' ? undefined : Number(value))
@@ -323,6 +416,8 @@ const origins = [
           return d.paybackYears <= Number(v)
         case 'available':
           return d.status === 'published'
+        case 'distance':
+          return d.distanceKm != null && d.distanceKm <= Number(v)
       }
     }
 
@@ -335,6 +430,7 @@ const origins = [
         return query.minPrice === n(input.dataset.min) && query.maxPrice === n(input.dataset.max)
       if (group === 'yield') return query.minYield === Number(input.value)
       if (group === 'payback') return query.maxPayback === Number(input.value)
+      if (group === 'distance') return query.maxKm === Number(input.value)
       return query.available
     }
 
@@ -353,6 +449,7 @@ const origins = [
       yield: () => (query.minYield = undefined),
       payback: () => (query.maxPayback = undefined),
       available: () => (query.available = false),
+      distance: () => (query.maxKm = undefined),
     }
 
     const chip = (label: string, onRemove: () => void) => {
@@ -375,6 +472,15 @@ const origins = [
     }
 
     const render = () => {
+      // Distancia de cada depa al punto de "Cerca de"
+      const origin = originOf(query.near)
+      for (const item of items) {
+        item.distanceKm = origin && item.position ? distanceKm(origin, item.position) : undefined
+        item.distance.hidden = item.distanceKm === undefined
+        if (origin && item.position && item.distanceKm !== undefined)
+          item.distanceText.textContent = `${formatDistance(item.distanceKm, item.position.exact)} ${origin.from}`
+      }
+
       // Resultados: los que coinciden, en el orden elegido; el resto queda oculto al final
       const visible = sortDepas(
         items.filter((d) => matchesQuery(d, query)),
@@ -407,21 +513,24 @@ const origins = [
         !facets.some((input) => input.dataset.facet === 'price' && input.checked)
       priceMin.value = customPrice && query.minPrice !== undefined ? String(query.minPrice) : ''
       priceMax.value = customPrice && query.maxPrice !== undefined ? String(query.maxPrice) : ''
+      const groupIsSet: Partial<Record<FacetGroup, boolean>> = {
+        price: query.minPrice !== undefined || query.maxPrice !== undefined,
+        yield: query.minYield !== undefined,
+        payback: query.maxPayback !== undefined,
+        distance: query.maxKm !== undefined,
+      }
       root.querySelectorAll<HTMLElement>('[data-clear-group]').forEach((button) => {
-        const group = button.dataset.clearGroup
-        button.hidden =
-          group === 'price'
-            ? query.minPrice === undefined && query.maxPrice === undefined
-            : group === 'yield'
-              ? query.minYield === undefined
-              : query.maxPayback === undefined
+        button.hidden = !groupIsSet[button.dataset.clearGroup as FacetGroup]
       })
+      nearSelect.value = query.near ?? ''
+      nearRadius.hidden = !origin
       if (document.activeElement !== searchInput) searchInput.value = query.q
       sortSelect.value = query.sort
 
       // Chips de filtros activos
       const active: HTMLLIElement[] = []
       if (query.q.trim()) active.push(chip(`"${query.q.trim()}"`, () => (query.q = '')))
+      if (origin) active.push(chip(`Cerca de ${origin.name}`, clearNear))
       for (const input of facets) {
         if (!input.checked) continue
         const group = input.dataset.facet as FacetGroup
@@ -458,6 +567,7 @@ const origins = [
         query.maxPrice = n(input.dataset.max)
       } else if (group === 'yield') query.minYield = Number(input.value)
       else if (group === 'payback') query.maxPayback = Number(input.value)
+      else if (group === 'distance') query.maxKm = Number(input.value)
       else query.available = input.checked
     }
     for (const input of facets) {
@@ -499,14 +609,104 @@ const origins = [
     root.querySelectorAll('[data-clear-all]').forEach((button) => {
       button.addEventListener('click', () => {
         query = { ...queryFromParams(new URLSearchParams()), sort: query.sort }
+        normalizeNear()
         apply()
       })
     })
 
     sortSelect.addEventListener('change', () => {
-      query.sort = sortSelect.value as SortKey
+      const sort = sortSelect.value as SortKey
+      // "Más cercanos" sin un punto elegido: primero se pide la ubicación
+      if (sort === 'cercania' && !originOf(query.near)) {
+        sortSelect.value = query.sort
+        void locate()
+        return
+      }
+      query.sort = sort
       apply()
     })
+
+    // ---------- "Cerca de": ubicación del navegador o un lugar de la lista ----------
+    /** Aviso bajo la barra de resultados. Con `pickPlace` suma el botón para elegir un lugar. */
+    const showStatus = (message: string, pickPlace = false) => {
+      const text = document.createElement('p')
+      text.textContent = message
+      nearStatus.replaceChildren(text)
+      if (!pickPlace) return
+      const button = document.createElement('button')
+      button.type = 'button'
+      button.className = 'near-status-action'
+      button.textContent = 'Elegir un lugar'
+      button.addEventListener('click', () => {
+        if (!desktop.matches) open()
+        nearSelect.focus()
+      })
+      nearStatus.append(button)
+    }
+    const clearStatus = () => nearStatus.replaceChildren()
+
+    const chooseNear = (near: string) => {
+      query.near = near
+      query.sort = 'cercania'
+      clearStatus()
+      apply()
+    }
+    function clearNear() {
+      query.near = undefined
+      normalizeNear()
+    }
+
+    nearSelect.addEventListener('change', () => {
+      if (nearSelect.value) chooseNear(nearSelect.value)
+      else {
+        clearNear()
+        apply()
+      }
+    })
+
+    const setLocating = (locating: boolean) => {
+      locateButton.disabled = locating
+      locateLabel.textContent = locating ? 'Buscando tu ubicación…' : 'Usar mi ubicación'
+    }
+    const locate = () =>
+      new Promise<boolean>((resolve) => {
+        if (!('geolocation' in navigator)) {
+          showStatus('Tu navegador no comparte la ubicación. Elige un lugar de la lista.', true)
+          return resolve(false)
+        }
+        setLocating(true)
+        showStatus('Buscando tu ubicación…')
+        navigator.geolocation.getCurrentPosition(
+          ({ coords }) => {
+            setLocating(false)
+            const point = { lat: coords.latitude, lng: coords.longitude }
+            if (!isNearLima(point)) {
+              showStatus(
+                'Parece que no estás en Lima. Elige un lugar de la lista para ver los depas más cercanos.',
+                true,
+              )
+              return resolve(false)
+            }
+            myPosition = point
+            if (!nearSelect.querySelector(`option[value="${MY_LOCATION}"]`))
+              nearSelect.options[0]!.after(new Option('Mi ubicación', MY_LOCATION))
+            chooseNear(MY_LOCATION)
+            resolve(true)
+          },
+          (error) => {
+            setLocating(false)
+            showStatus(
+              error.code === error.PERMISSION_DENIED
+                ? 'No tenemos permiso para usar tu ubicación. Elige un lugar de la lista.'
+                : 'No pudimos encontrar tu ubicación. Elige un lugar de la lista.',
+              true,
+            )
+            resolve(false)
+          },
+          { timeout: 10_000, maximumAge: 300_000 },
+        )
+      })
+    locateButton.addEventListener('click', () => void locate())
 
     // El buscador filtra mientras se escribe; "Buscar" solo cierra el teclado en el celular
     let typing = 0
@@ -881,6 +1081,69 @@ const origins = [
   .clear-group {
     justify-self: start;
     padding-inline: 0;
+  }
+
+  /* ---------- "Cerca de" ---------- */
+  .near {
+    gap: var(--space-2);
+  }
+  .near-locate {
+    width: 100%;
+    gap: var(--space-2);
+  }
+  .near-field {
+    display: grid;
+    gap: var(--space-1);
+    font-size: var(--fs-sm);
+    color: var(--color-text-muted);
+  }
+  .near-field select {
+    width: 100%;
+    min-height: var(--control-h-sm);
+    padding: 0 var(--space-2);
+    border: 1px solid var(--color-border-input);
+    border-radius: var(--radius-md);
+    background: #fff;
+    color: var(--color-text);
+    font-size: 16px; /* evita el zoom de iOS */
+  }
+  .near-radius {
+    display: grid;
+    gap: 2px;
+    margin-top: var(--space-1);
+  }
+  .near-radius[hidden] {
+    display: none;
+  }
+  .near-status {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-1) var(--space-3);
+    margin-top: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-md);
+    background: var(--color-gold-100);
+    color: var(--color-text-strong);
+    font-size: var(--fs-sm);
+  }
+  .near-status:empty {
+    display: none;
+  }
+  .near-status :global(p) {
+    margin: 0;
+  }
+  .near-status :global(.near-status-action) {
+    min-height: 36px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--color-navy-800);
+    font: inherit;
+    font-weight: var(--fw-semibold);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
   }
   .filters-foot {
     padding-top: var(--space-4);

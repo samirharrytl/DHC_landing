@@ -37,6 +37,19 @@ test.describe('Capital', () => {
     await expect(
       page.locator('#lista-depas').getByRole('link', { name: /Ver todos los proyectos/ }),
     ).toHaveAttribute('href', '/capital/depas')
+    // El inicio de Capital solo lleva "Ver todos los proyectos"
+    await expect(page.locator('[data-hero] .ctas').getByRole('link')).toHaveText(['Ver todos los proyectos'])
+  })
+
+  test('el menú tiene Inicio, Compra y Vende; Compra queda marcado en toda la compra', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 })
+    await page.goto('/capital')
+    const nav = page.getByRole('navigation', { name: 'Principal', exact: true })
+    await expect(nav.getByRole('link')).toHaveText(['Inicio', 'Compra', 'Vende'])
+    await expect(nav.getByRole('link', { name: 'Compra' })).toHaveAttribute('aria-current', 'page')
+    await page.goto('/capital/depas')
+    await expect(nav.getByRole('link', { name: 'Compra' })).toHaveAttribute('aria-current', 'true')
+    await expect(nav.getByRole('link', { name: 'Vende' })).toHaveAttribute('href', '/propietarios')
   })
 
   test('"Para ti" aparece después de ver un depa', async ({ page }) => {
@@ -130,6 +143,57 @@ test.describe('Todos los depas', () => {
 
     await page.getByRole('button', { name: 'Limpiar todo' }).click()
     await expect(cards).toHaveCount(36)
+  })
+
+  test('"Cerca de" ordena por distancia a un lugar y filtra por km', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 })
+    await page.goto('/capital/depas')
+    const cards = page.locator('[data-results] [data-property-card]:visible')
+    await page.getByLabel('O elige un lugar').selectOption('larcomar')
+    await expect(page.getByLabel('Ordenar por')).toHaveValue('cercania')
+    await expect(cards.first()).toContainText('Av. José Larco cuadra 8')
+    await expect(cards.first()).toContainText('a 350 m de Larcomar')
+    await expect(page).toHaveURL(/cerca=larcomar.*orden=cercania/)
+
+    await page.getByRole('radio', { name: /^Hasta 2 km/ }).check()
+    await expect(cards).toHaveCount(6)
+    await expect(page).toHaveURL(/cerca=larcomar&km=2/)
+
+    // Se puede compartir: al recargar sigue igual
+    await page.reload()
+    await expect(cards).toHaveCount(6)
+    await expect(cards.first()).toContainText('a 350 m de Larcomar')
+
+    await page.getByRole('button', { name: 'Quitar filtro: Cerca de Larcomar (Miraflores)' }).click()
+    await expect(cards).toHaveCount(36)
+    await expect(page.getByLabel('Ordenar por')).toHaveValue('destacados')
+    await expect(cards.first().locator('[data-distance]')).toBeHidden()
+    expect(page.url()).not.toMatch(/cerca=|km=|orden=/)
+  })
+
+  test('"Más cercanos" usa la ubicación del navegador sin ponerla en la URL', async ({ page, context }) => {
+    await context.grantPermissions(['geolocation'])
+    await context.setGeolocation({ latitude: -12.0853, longitude: -77.037 }) // Lince
+    await page.goto('/capital/depas')
+    await page.getByLabel('Ordenar por').selectOption('cercania')
+    const cards = page.locator('[data-results] [data-property-card]:visible')
+    await expect(cards.first()).toContainText('Av. Petit Thouars cuadra 27')
+    await expect(cards.first()).toContainText('a 450 m de ti')
+    await expect(page.getByLabel('Ordenar por')).toHaveValue('cercania')
+    expect(page.url()).not.toMatch(/cerca=|-12\.0/)
+  })
+
+  test('sin permiso de ubicación, avisa y lleva a elegir un lugar', async ({ page }) => {
+    await page.addInitScript(() => {
+      navigator.geolocation.getCurrentPosition = (_ok, fail) =>
+        fail?.({ code: 1, PERMISSION_DENIED: 1, POSITION_UNAVAILABLE: 2, TIMEOUT: 3, message: '' })
+    })
+    await page.goto('/capital/depas')
+    await page.getByLabel('Ordenar por').selectOption('cercania')
+    await expect(page.getByText('No tenemos permiso para usar tu ubicación.')).toBeVisible()
+    await expect(page.getByLabel('Ordenar por')).toHaveValue('destacados')
+    await page.getByRole('button', { name: 'Elegir un lugar' }).click()
+    await expect(page.getByLabel('O elige un lugar')).toBeFocused()
   })
 
   test('en móvil los filtros se abren en un panel', async ({ page }) => {

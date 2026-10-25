@@ -39,13 +39,14 @@ const disclaimer = buildDisclaimer(await getFinancingAssumptions())
   <!-- ---------- Hero: "DepaHost Capital" es sub-marca, por eso solo va aquí ---------- -->
   <section class="container hero" data-hero>
     <div class="hero-text">
-      <h1 class="display">Los mejores departamentos para invertir en Lima.</h1>
+      <!-- Siempre en 2 líneas (ver .hero h1) -->
+      <h1 class="display">
+        <span>Los mejores departamentos</span>
+        <span>para invertir en Lima.</span>
+      </h1>
       <p class="hero-sub">Depas de propietarios, elegidos por ubicación, rentabilidad y plusvalía.</p>
       <div class="btn-group ctas">
         <Button href="/capital/depas">Ver todos los proyectos</Button>
-        <Button href="/mis-depas" variant="outline">
-          Empecemos
-        </Button>
       </div>
     </div>
 
@@ -103,10 +104,20 @@ const disclaimer = buildDisclaimer(await getFinancingAssumptions())
   .hero {
     padding-block: var(--space-8) var(--space-8);
   }
+  .hero-text {
+    /* el tamaño del título se calcula sobre el ancho de esta columna */
+    container-type: inline-size;
+  }
   .hero h1 {
-    font-size: clamp(2.25rem, 1.4rem + 3vw, 3.75rem);
+    /* 2 líneas en cualquier pantalla: la más larga ("Los mejores departamentos") mide ~11.7em,
+       así que el tamaño sale del ancho disponible (8.3cqi deja un margen), con tope de 60px */
+    font-size: min(3.75rem, 8.3cqi);
     line-height: 1.05;
     color: var(--color-navy-800);
+  }
+  .hero h1 span {
+    display: block;
+    white-space: nowrap;
   }
   .hero-sub {
     margin: var(--space-3) 0 0;

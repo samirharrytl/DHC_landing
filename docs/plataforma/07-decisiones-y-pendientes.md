@@ -84,6 +84,8 @@ cambiar una, conviene releer el porqué.
 - [ ] **Versión en inglés** del sitio (hoy solo el formulario de Capital está en inglés).
 - [ ] **Reservas de estadías** integrando un PMS (Hostaway, Guesty o Lodgify).
 - [ ] **Logos de inmobiliarias** en `logoUrl` y en la franja de aliados.
+- [ ] **Ubicación exacta de cada depa** (`location: { lat, lng }`) en el API y el panel. Hoy solo la
+  traen los depas de ejemplo; los del API usan el centro de su distrito para "Cerca de".
 
 ### Infraestructura
 

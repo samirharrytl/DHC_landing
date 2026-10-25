@@ -92,6 +92,38 @@ describe('sortDepas', () => {
     expect(slugs(sortDepas(all, 'rentabilidad'))).toEqual(['surquillo', 'lince', 'miraflores'])
     expect(slugs(sortDepas(all, 'plazo'))).toEqual(['surquillo', 'lince', 'miraflores'])
   })
+  it('"Más cercanos" ordena por distancia y deja al final los que no tienen ubicación', () => {
+    const list = [
+      { ...lince, distanceKm: 3 },
+      { ...surquillo, distanceKm: undefined },
+      { ...miraflores, distanceKm: 0.4 },
+    ]
+    expect(slugs(sortDepas(list, 'cercania'))).toEqual(['miraflores', 'lince', 'surquillo'])
+  })
+})
+
+describe('Cerca de', () => {
+  const near = [
+    { ...lince, distanceKm: 1.5 },
+    { ...surquillo, distanceKm: 4 },
+    { ...miraflores, distanceKm: undefined },
+  ]
+  it('"Hasta X km" deja solo los que están a esa distancia o menos', () => {
+    const query = { ...emptyQuery(), near: 'larcomar', maxKm: 2 }
+    expect(near.filter((d) => matchesQuery(d, query)).map((d) => d.districtSlug)).toEqual(['lince'])
+    expect(near.filter((d) => matchesQuery(d, query, 'distance'))).toHaveLength(3)
+  })
+  it('sin un punto elegido, la distancia no filtra', () => {
+    const query = { ...emptyQuery(), maxKm: 2 }
+    expect(near.filter((d) => matchesQuery(d, query))).toHaveLength(3)
+  })
+  it('un lugar va a la URL; la ubicación del navegador, no', () => {
+    const place = { ...emptyQuery(), near: 'larcomar', maxKm: 5, sort: 'cercania' as const }
+    expect(queryToParams(place).toString()).toBe('cerca=larcomar&km=5&orden=cercania')
+    expect(queryFromParams(queryToParams(place))).toMatchObject(place)
+    const mine = { ...place, near: 'mi-ubicacion' }
+    expect(queryToParams(mine).toString()).toBe('orden=cercania')
+  })
 })
 
 describe('URL', () => {

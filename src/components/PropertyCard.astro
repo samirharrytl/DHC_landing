@@ -3,7 +3,9 @@
 import type { Property } from '../types/property'
 import { formatPEN, formatYears, formatYield } from '../lib/format'
 import { buildSearchText } from '../lib/filters'
+import { depaPosition } from '../lib/geo'
 import HouseIcon from './HouseIcon.astro'
+import Icon from './Icon.astro'
 import PropertyImage from './PropertyImage.astro'
 import SaveButton from './SaveButton.astro'
 
@@ -16,6 +18,8 @@ interface Props {
 const { property: p, priority = false } = Astro.props
 const href = `/capital/${p.slug}`
 const image = p.images[0]
+// Para "Cerca de" en Todos los depas: la ubicación exacta o el centro del distrito
+const position = depaPosition(p)
 ---
 
 <article
@@ -31,6 +35,9 @@ const image = p.images[0]
   data-payback={p.paybackYears}
   data-status={p.status}
   data-id={p.id}
+  data-lat={position?.lat}
+  data-lng={position?.lng}
+  data-exact={position?.exact ? '' : undefined}
 >
   <!-- Imagen 16:9. Mientras no hay foto, se muestra un bloque con una casita -->
   <div class="media">
@@ -64,6 +71,11 @@ const image = p.images[0]
       </a>
     </h3>
     <p class="address">{p.address}</p>
+    <!-- "a 1.2 km de Larcomar": lo llena la búsqueda de Todos los depas cuando se elige "Cerca de" -->
+    <p class="distance" data-distance hidden>
+      <Icon name="pin" size={16} />
+      <span data-distance-text></span>
+    </p>
     <dl class="stats">
       <div class="stat">
         <dt>valor</dt>
@@ -215,6 +227,21 @@ const image = p.images[0]
     margin: 0;
     font-size: var(--fs-sm);
     color: var(--color-text-muted);
+  }
+  .distance {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    margin: 0;
+    color: var(--color-navy-800);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-semibold);
+  }
+  .distance[hidden] {
+    display: none;
+  }
+  .distance :global(svg) {
+    flex: none;
   }
 
   .stats {

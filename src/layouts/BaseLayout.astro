@@ -58,9 +58,10 @@ const ogImage = new URL('/og-default.png', Astro.site)
     <meta property="og:image:alt" content="Depa Host Perú: el depa en Lima, con la decisión correcta." />
     <meta name="twitter:card" content="summary_large_image" />
 
-    <!-- Fuente Inter autoalojada (configurada en astro.config.mjs). preload = se descarga antes -->
+    <!-- Fuentes autoalojadas (configuradas en astro.config.mjs). preload = se descargan antes:
+         Newsreader es la de los títulos principales, lo primero que se ve -->
     <Font cssVariable="--font-inter" preload />
-    <Font cssVariable="--font-newsreader" />
+    <Font cssVariable="--font-newsreader" preload />
   </head>
   <body>
     <!-- Marca invisible arriba de todo: cuando sale de pantalla, el header muestra su sombra -->

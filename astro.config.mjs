@@ -86,12 +86,13 @@ export default defineConfig({
       subsets: ['latin'],
       fallbacks: ['sans-serif'],
     },
-    // Serif editorial para los títulos de Capital y Propietarios (combina con la serif del logo)
+    // Serif editorial para los títulos de Capital y Propietarios (combina con la serif del logo).
+    // Solo el peso 500 (el de .display): la versión variable pesa ~130 KB, esta ~25 KB.
     {
       provider: fontProviders.fontsource(),
       name: 'Newsreader',
       cssVariable: '--font-newsreader',
-      weights: ['400 600'],
+      weights: [500],
       styles: ['normal'],
       subsets: ['latin'],
       fallbacks: ['Georgia', 'serif'],
