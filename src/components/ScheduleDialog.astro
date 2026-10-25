@@ -64,6 +64,13 @@ const modes = ['Videollamada', 'Llamada', 'Presencial']
           <input id="schedule-email" name="email" type="email" autocomplete="email" placeholder="tu@correo.com" />
           <p class="field-error" data-error-for="email" hidden></p>
         </div>
+        <div class="field">
+          <label for="comment-email">
+            Comentario <span class="hint">opcional</span>
+          </label>
+          <input id="comment-email" name="comment" type="text" autocomplete="comment" placeholder="Algun detalle adicional" />
+          <p class="field-error" data-error-for="email" hidden></p>
+        </div>
 
         <div class="when">
           <div class="field">
@@ -219,6 +226,7 @@ const modes = ['Videollamada', 'Llamada', 'Presencial']
           ...fields,
           source: 'cart',
           locale: 'es',
+          consent: fields.consent === true,
           propertyIds: saved.list(),
           details: { contacto: 'Programar una sesión', ...(fields.details as Record<string, string>) },
           utm: getUtm(),
@@ -347,6 +355,9 @@ const modes = ['Videollamada', 'Llamada', 'Presencial']
     font-size: var(--fs-sm);
     font-weight: var(--fw-medium);
     color: var(--color-text);
+  }
+  .choices {
+    gap: 0 var(--space-4); /* si "Presencial" baja de línea, sin hueco extra (cada opción ya mide 44px) */
   }
   .choices .check {
     align-items: center;

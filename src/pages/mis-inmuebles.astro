@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro'
 import ForYouRow from '../components/ForYouRow.astro'
 import Icon from '../components/Icon.astro'
 import SavedDepa from '../components/SavedDepa.astro'
+import ScheduleDialog from '../components/ScheduleDialog.astro'
 import WhatsAppIcon from '../components/WhatsAppIcon.astro'
 ---
 
@@ -54,8 +55,8 @@ import WhatsAppIcon from '../components/WhatsAppIcon.astro'
           <span>Inversión total</span>
           <strong data-investment-total>S/ 0</strong>
         </div>
-        <!-- WhatsApp con la lista armada: es el "finalizar compra" de Mis inmuebles.
-             "Conversemos ahora" pide hablar ya; "Programar una sesión", coordinar un horario. -->
+        <!-- El "finalizar compra" de Mis inmuebles. "Conversemos ahora" abre WhatsApp con la lista armada;
+             "Programar una sesión" abre un formulario con día y horario (ScheduleDialog). -->
         <a
           class="btn btn--whatsapp start-button is-disabled"
           data-contact-selection="now"
@@ -68,20 +69,18 @@ import WhatsAppIcon from '../components/WhatsAppIcon.astro'
           Conversemos ahora
           <Icon name="arrow-right" size={22} />
         </a>
-        <a
+        <button
+          type="button"
           class="btn btn--secondary schedule-button is-disabled"
-          data-contact-selection="schedule"
-          href="#"
-          target="_blank"
-          rel="noopener noreferrer"
+          data-open-schedule-dialog
           aria-disabled="true"
         >
           <Icon name="calendar" size={20} />
           Programar una sesión
-        </a>
+        </button>
         <p class="start-note">
-          Conversa ahora o elige un horario por WhatsApp. Coordinamos las visitas y te acompañamos hasta la
-          firma.
+          Conversa ahora por WhatsApp o elige el día y el horario de una sesión. Coordinamos las visitas y te
+          acompañamos hasta la firma.
         </p>
         <span hidden data-summary-icon>
           <Icon name="building" size={20} />
@@ -105,6 +104,7 @@ import WhatsAppIcon from '../components/WhatsAppIcon.astro'
   </section>
 
   <ForYouRow title="Parecidos a los que guardaste" />
+  <ScheduleDialog />
 </BaseLayout>
 
 <script>
@@ -139,27 +139,20 @@ import WhatsAppIcon from '../components/WhatsAppIcon.astro'
     const summaryIcon = page.querySelector<HTMLElement>('[data-summary-icon]')
     const investmentTotal = page.querySelector<HTMLElement>('[data-investment-total]')
     const contactButtons = page.querySelectorAll<HTMLAnchorElement>('[data-contact-selection]')
+    const scheduleButton = page.querySelector<HTMLButtonElement>('[data-open-schedule-dialog]')
     let catalog: CatalogItem[] = []
     let selected: CatalogItem[] = []
 
-    // Lo que cada botón pide en WhatsApp y cómo se ve en el lead (details.contacto)
-    const contactOptions: Record<string, { intro: string; outro?: string; label: string }> = {
+    // Lo que cada botón pide en WhatsApp y cómo se ve en el lead (details.contacto).
+    // "Programar una sesión" registra su propio lead desde el formulario (ScheduleDialog).
+    const contactOptions: Record<string, { intro: string; label: string }> = {
       now: { intro: 'Hola, quiero conversar sobre', label: 'Conversemos ahora' },
-      schedule: {
-        intro: 'Hola, quiero programar una sesión para conversar sobre',
-        outro: '¿Qué horarios tienen disponibles?',
-        label: 'Programar una sesión',
-      },
     }
 
     const whatsappMessage = (option: string) => {
-      const { intro, outro } = contactOptions[option]!
+      const { intro } = contactOptions[option]!
       const lines = selected.map((item) => `- ${item.district} (${item.address}): ${item.price.label}`)
-      return [
-        `${intro} ${selected.length === 1 ? 'este inmueble' : 'estos inmuebles'}:`,
-        ...lines,
-        ...(outro ? ['', outro] : []),
-      ].join('\n')
+      return [`${intro} ${selected.length === 1 ? 'este inmueble' : 'estos inmuebles'}:`, ...lines].join('\n')
     }
 
     const icon = (name: string) =>
@@ -248,16 +241,20 @@ import WhatsAppIcon from '../components/WhatsAppIcon.astro'
         }),
       )
 
-      contactButtons.forEach((button) => {
+      // Sin inmuebles seleccionados no se puede escribir ni programar
+      for (const button of [...contactButtons, scheduleButton]) {
+        if (!button) continue
         if (selected.length === 0) button.setAttribute('aria-disabled', 'true')
         else button.removeAttribute('aria-disabled')
         button.classList.toggle('is-disabled', selected.length === 0)
+      }
+      contactButtons.forEach((button) => {
         button.href = selected.length ? waLink(whatsappMessage(button.dataset.contactSelection!)) : '#'
       })
     }
 
     // Registra el interés (sin datos personales) para que el equipo sepa qué inmuebles pidió
-    // y si quiere hablar ahora o programar una sesión. WhatsApp se abre igual aunque la API falle.
+    // y que quiere hablar ahora. WhatsApp se abre igual aunque la API falle.
     contactButtons.forEach((button) =>
       button.addEventListener('click', (event) => {
         if (button.hasAttribute('aria-disabled')) {
@@ -466,8 +463,14 @@ import WhatsAppIcon from '../components/WhatsAppIcon.astro'
     justify-content: space-between;
     width: 100%;
     min-height: 56px;
-    padding-inline: var(--space-5);
-    font-size: var(--fs-18);
+    padding-inline: var(--space-4); /* en 320px el texto no entra con 18px */
+    font-size: var(--fs-body);
+  }
+  @media (min-width: 360px) {
+    .start-button {
+      padding-inline: var(--space-5);
+      font-size: var(--fs-18);
+    }
   }
   .schedule-button {
     width: 100%;

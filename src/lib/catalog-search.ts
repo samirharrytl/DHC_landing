@@ -158,6 +158,44 @@ export function hasFilters(query: DepaQuery): boolean {
   return queryToParams({ ...query, sort: 'destacados' }).size > 0
 }
 
+// ---------- Páginas ----------
+
+/** Inmuebles por página: 12 llena las filas de 1, 2 y 3 columnas */
+export const PAGE_SIZE = 12
+
+export interface PageSlice {
+  page: number
+  pages: number
+  /** Tramo de la lista que va en la página: list.slice(start, end) */
+  start: number
+  end: number
+}
+
+/** La página pedida dentro de las que hay (?pagina=9 con 3 páginas → la 3) y qué tramo de la lista muestra */
+export function paginate(total: number, page: number, size = PAGE_SIZE): PageSlice {
+  const pages = Math.max(1, Math.ceil(total / size))
+  const current = Math.min(Math.max(1, Math.floor(page) || 1), pages)
+  const start = (current - 1) * size
+  return { page: current, pages, start, end: Math.min(start + size, total) }
+}
+
+/** Números de la paginación: la primera, la última y las vecinas de la actual. null es "…". */
+export function pageNumbers(page: number, pages: number): (number | null)[] {
+  const shown = [...new Set([1, page - 1, page, page + 1, pages])]
+    .filter((p) => p >= 1 && p <= pages)
+    .sort((a, b) => a - b)
+  const result: (number | null)[] = []
+  let previous = 0
+  for (const p of shown) {
+    // Si solo falta un número, va el número: "1 2 3 4" en vez de "1 … 3 4"
+    if (p - previous === 2) result.push(previous + 1)
+    else if (p - previous > 2) result.push(null)
+    result.push(p)
+    previous = p
+  }
+  return result
+}
+
 // ---------- Opciones de las facetas (en el build) ----------
 
 export interface RangeOption {

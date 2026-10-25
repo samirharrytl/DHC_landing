@@ -58,19 +58,35 @@ test('Me interesa → Guarda tus inmuebles → Mis inmuebles → WhatsApp', asyn
     details: { contacto: 'Conversemos ahora' },
   })
 
-  // "Programar una sesión" pide un horario por WhatsApp con la misma lista
-  const schedule = page.getByRole('link', { name: /Programar una sesión/ })
-  await expect(schedule).toHaveAttribute(
-    'href',
-    new RegExp(
-      `wa\\.me/51900000000.*${encodeURIComponent('programar una sesión')}.*${encodeURIComponent(first)}`,
-    ),
-  )
-  const schedulePopup = page.waitForEvent('popup')
-  await schedule.click()
-  await (await schedulePopup).close()
-  await expect.poll(() => leads.length).toBe(3)
-  expect(leads[2]).toMatchObject({ source: 'cart', details: { contacto: 'Programar una sesión' } })
+  // "Programar una sesión" abre un formulario con día, horario y modalidad; el lead llega al panel
+  await page.getByRole('button', { name: /Programar una sesión/ }).click()
+  const schedule = page.getByRole('dialog', { name: 'Programar una sesión' })
+  await expect(schedule).toContainText(`2 inmuebles seleccionados: ${first} y ${second}`)
+  await schedule.getByLabel('Nombre').fill('ana lucía')
+  await schedule.getByLabel('Celular').fill('987654321')
+  const day = await schedule.getByLabel('Día').getAttribute('min')
+  await schedule.getByLabel('Día').fill(day!)
+  await schedule.getByLabel('Horario').selectOption('Tarde (15:00 a 18:00)')
+  await schedule.getByRole('radio', { name: 'Llamada', exact: true }).check()
+  await schedule.getByRole('checkbox').check()
+  await schedule.getByRole('button', { name: 'Programar sesión' }).click()
+  await expect(schedule.getByRole('heading', { name: 'Listo, Ana' })).toBeVisible()
+  await expect(schedule).toContainText('tarde (15:00 a 18:00)')
+  expect(leads[2]).toMatchObject({
+    source: 'cart',
+    name: 'ana lucía',
+    phone: '987654321',
+    consent: true,
+    propertyIds: [expect.any(String), expect.any(String)],
+    details: {
+      contacto: 'Programar una sesión',
+      fecha: day,
+      horario: 'Tarde (15:00 a 18:00)',
+      modalidad: 'Llamada',
+    },
+  })
+  await schedule.getByRole('button', { name: 'Entendido' }).click()
+  await expect(schedule).toBeHidden()
 
   await page.goto('/mis-inmuebles')
   await page.getByRole('button', { name: `Quitar ${first} de la selección` }).click()

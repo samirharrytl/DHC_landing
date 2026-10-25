@@ -5,6 +5,7 @@
 // en la URL (?distrito=lince&orden=precio-asc), así la búsqueda se puede compartir.
 // "Cerca de" ordena por distancia a la ubicación de la persona o a un lugar de la lista (src/lib/geo.ts).
 // "Mapa" muestra los mismos resultados como pines (src/scripts/depas-map.ts, se carga al elegirlo).
+// La lista va en páginas de 12 (?pagina=2): cada página queda en el historial, así "Atrás" vuelve a la anterior.
 import BaseLayout from '../../layouts/BaseLayout.astro'
 import Icon from '../../components/Icon.astro'
 import PropertyCard from '../../components/PropertyCard.astro'
@@ -282,7 +283,7 @@ const origins = [
       <div class="filters-backdrop" data-filters-backdrop hidden></div>
 
       <section class="results" aria-labelledby="results-title">
-        <h2 id="results-title" class="sr-only">
+        <h2 id="results-title" class="sr-only" tabindex="-1" data-results-title>
           Resultados
         </h2>
         <div class="results-map" data-results-map hidden>
@@ -291,11 +292,26 @@ const origins = [
             Cargando mapa…
           </p>
         </div>
-        <div class="results-grid" data-results>
+        <div class="results-grid" data-results data-paging-pending>
           {depas.map((d, index) => (
             <PropertyCard property={d} priority={index < 3} />
           ))}
         </div>
+        <!-- Páginas de 12: los números y los links los arma el script según los resultados -->
+        <nav class="pagination" aria-label="Páginas de resultados" data-pagination hidden>
+          <p class="pagination-info" data-pagination-info></p>
+          <div class="pagination-pages">
+            <a class="pagination-step" rel="prev" data-page-step="-1">
+              <Icon name="arrow-left" size={18} />
+              <span class="pagination-step-label">Anterior</span>
+            </a>
+            <ul class="pagination-list" data-page-list></ul>
+            <a class="pagination-step" rel="next" data-page-step="1">
+              <span class="pagination-step-label">Siguiente</span>
+              <Icon name="arrow-right" size={18} />
+            </a>
+          </div>
+        </nav>
         <div class="empty" data-results-empty hidden>
           <Icon name="search" size={28} />
           <p>No encontramos inmuebles con esos filtros.</p>
@@ -312,11 +328,14 @@ const origins = [
 <script>
   import {
     matchesQuery,
+    pageNumbers,
+    paginate,
     queryFromParams,
     queryToParams,
     sortDepas,
     type DepaQuery,
     type FacetGroup,
+    type PageSlice,
     type SearchableDepa,
     type SortKey,
   } from '../../lib/catalog-search'
@@ -357,6 +376,12 @@ const origins = [
     const mapCanvas = $<HTMLElement>('[data-map-canvas]')
     const mapMessage = $<HTMLElement>('[data-map-message]')
     const viewButtons = [...root.querySelectorAll<HTMLButtonElement>('[data-view]')]
+    const resultsBar = $<HTMLElement>('.results-bar')
+    const resultsTitle = $<HTMLElement>('[data-results-title]')
+    const pagination = $<HTMLElement>('[data-pagination]')
+    const paginationInfo = $<HTMLElement>('[data-pagination-info]')
+    const pageList = $<HTMLUListElement>('[data-page-list]')
+    const pageSteps = [...root.querySelectorAll<HTMLAnchorElement>('[data-page-step]')]
 
     type Item = SearchableDepa & {
       card: HTMLElement
@@ -424,6 +449,8 @@ const origins = [
     // ---------- Vista: lista o mapa ----------
     let view: 'lista' | 'mapa' =
       new URLSearchParams(location.search).get('vista') === 'mapa' ? 'mapa' : 'lista'
+    /** Página de la lista (desde 1). Si pasa de las que hay, render la lleva a la última. */
+    let page = Number(new URLSearchParams(location.search).get('pagina')) || 1
     let visibleItems: Item[] = []
     let depasMap: DepasMap | undefined
     let mapLoading: Promise<void> | undefined
@@ -491,6 +518,16 @@ const origins = [
         render()
         if (view === 'mapa') void showMap()
       })
+    }
+
+    /** La búsqueda actual en una página: para la barra de direcciones y los links de la paginación.
+     *  En el mapa no hay páginas: van todos los pines. */
+    const urlFor = (target: number) => {
+      const params = queryToParams(query)
+      if (view === 'mapa') params.set('vista', 'mapa')
+      else if (target > 1) params.set('pagina', String(target))
+      const search = params.toString()
+      return search ? `${location.pathname}?${search}` : location.pathname
     }
 
     const listKey = { origin: 'origins', district: 'districts', developer: 'developers' } as const
@@ -572,6 +609,47 @@ const origins = [
       return li
     }
 
+    /** "Mostrando 13–24 de 36 inmuebles", los números y Anterior / Siguiente */
+    const renderPagination = (slice: PageSlice, total: number) => {
+      const paged = view === 'lista' && slice.pages > 1
+      pagination.hidden = !paged
+      resultsTitle.textContent = paged ? `Resultados, página ${slice.page} de ${slice.pages}` : 'Resultados'
+      if (!paged) return
+      paginationInfo.textContent = `Mostrando ${slice.start + 1}–${slice.end} de ${total} inmuebles`
+      pageList.replaceChildren(
+        ...pageNumbers(slice.page, slice.pages).map((target) => {
+          const li = document.createElement('li')
+          if (target === null) {
+            li.className = 'pagination-gap'
+            li.textContent = '…'
+            li.setAttribute('aria-hidden', 'true')
+            return li
+          }
+          const link = document.createElement('a')
+          link.href = urlFor(target)
+          link.dataset.page = String(target)
+          link.textContent = String(target)
+          link.setAttribute('aria-label', `Página ${target}`)
+          if (target === slice.page) link.setAttribute('aria-current', 'page')
+          li.append(link)
+          return li
+        }),
+      )
+      // En la primera no hay "Anterior" ni en la última "Siguiente": quedan grises, sin link
+      for (const step of pageSteps) {
+        const target = slice.page + Number(step.dataset.pageStep)
+        if (target >= 1 && target <= slice.pages) {
+          step.href = urlFor(target)
+          step.dataset.page = String(target)
+          step.removeAttribute('aria-disabled')
+        } else {
+          step.removeAttribute('href')
+          delete step.dataset.page
+          step.setAttribute('aria-disabled', 'true')
+        }
+      }
+    }
+
     const render = () => {
       // Distancia de cada inmueble al punto de "Cerca de"
       const origin = originOf(query.near)
@@ -582,18 +660,24 @@ const origins = [
           item.distanceText.textContent = `${formatDistance(item.distanceKm, item.position.exact)} ${origin.from}`
       }
 
-      // Resultados: los que coinciden, en el orden elegido; el resto queda oculto al final
+      // Resultados: los que coinciden, en el orden elegido; el resto queda oculto al final.
+      // A la vista, solo los de la página actual.
       const visible = sortDepas(
         items.filter((d) => matchesQuery(d, query)),
         query.sort,
       )
       visibleItems = visible
+      const slice = paginate(visible.length, page)
+      page = slice.page
+      const onPage = new Set(visible.slice(slice.start, slice.end))
+      for (const item of items) item.card.hidden = !onPage.has(item)
       const shown = new Set(visible)
-      for (const item of items) item.card.hidden = !shown.has(item)
       grid.append(
         ...visible.map((item) => item.card),
         ...items.filter((i) => !shown.has(i)).map((i) => i.card),
       )
+      delete grid.dataset.pagingPending
+      renderPagination(slice, visible.length)
 
       const total = visible.length
       count.textContent = `${total} ${total === 1 ? 'resultado' : 'resultados'}${query.q.trim() ? ` para "${query.q.trim()}"` : ''}`
@@ -652,13 +736,14 @@ const origins = [
 
       syncMap()
 
-      // La URL guarda la búsqueda y la vista (para compartirla o volver con "Atrás")
-      const params = queryToParams(query)
-      if (view === 'mapa') params.set('vista', 'mapa')
-      const search = params.toString()
-      history.replaceState(null, '', search ? `${location.pathname}?${search}` : location.pathname)
+      // La URL guarda la búsqueda, la vista y la página (para compartirla o volver con "Atrás")
+      history.replaceState(null, '', urlFor(page))
     }
-    const apply = render
+    /** Cambió la búsqueda (filtros, buscador u orden): vuelve a la primera página */
+    const apply = () => {
+      page = 1
+      render()
+    }
 
     // ---------- Eventos ----------
     /** Pasa el estado de una opción (marcada o no) a la búsqueda. */
@@ -828,6 +913,50 @@ const origins = [
       query.q = searchInput.value
       searchInput.blur()
       apply()
+    })
+
+    // ---------- Páginas ----------
+    /** Sube al inicio de los resultados, sin que los tape el header (ni la barra fija de móvil y tablet) */
+    const scrollToResults = () => {
+      const header = document.querySelector<HTMLElement>('[data-header]')?.offsetHeight ?? 0
+      const stickyBar = getComputedStyle(resultsBar).position === 'sticky'
+      const target = stickyBar ? grid : resultsBar
+      const covered = header + (stickyBar ? resultsBar.offsetHeight : 0)
+      window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - covered - 16 })
+    }
+    /** Cada página es una entrada del historial: "Atrás" vuelve a la anterior */
+    const goToPage = (target: number) => {
+      if (target === page) return
+      page = target
+      history.pushState(null, '', urlFor(page))
+      render()
+      // El foco pasa a "Resultados, página 2 de 3": el lector de pantalla empieza por la página nueva
+      resultsTitle.focus({ preventScroll: true })
+      scrollToResults()
+    }
+    pagination.addEventListener('click', (event) => {
+      const link = (event.target as Element).closest<HTMLAnchorElement>('a[data-page]')
+      // Ctrl/Cmd + clic abre la página en otra pestaña, como cualquier link
+      if (!link || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)
+        return
+      event.preventDefault()
+      goToPage(Number(link.dataset.page))
+    })
+    // "Atrás" y "Adelante": la búsqueda, la vista y la página salen de la URL de esa entrada
+    window.addEventListener('popstate', () => {
+      const params = new URLSearchParams(location.search)
+      const previous = query
+      query = queryFromParams(params)
+      // "Mi ubicación" no va a la URL (solo queda orden=cercania): si ya la teníamos, sigue
+      if (!query.near && query.sort === 'cercania' && myPosition) {
+        query.near = MY_LOCATION
+        if (previous.near === MY_LOCATION) query.maxKm = previous.maxKm
+      }
+      normalizeNear()
+      page = Number(params.get('pagina')) || 1
+      setView(params.get('vista') === 'mapa' ? 'mapa' : 'lista')
+      render()
+      if (view === 'mapa') void showMap()
     })
 
     // ---------- Panel de filtros en móvil ----------
@@ -1111,6 +1240,99 @@ const origins = [
   }
   .results-grid[hidden] {
     display: none;
+  }
+  /* Antes de que corra el script: solo la primera página, sin salto al cargar (13 = PAGE_SIZE + 1) */
+  .results-grid[data-paging-pending] :global(article[data-property-card]:nth-of-type(n + 13)) {
+    display: none;
+  }
+
+  /* ---------- Paginación ---------- */
+  .pagination {
+    display: grid;
+    justify-items: center;
+    gap: var(--space-3);
+    margin-top: var(--space-8);
+  }
+  .pagination[hidden] {
+    display: none;
+  }
+  .pagination-info {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: var(--fs-sm);
+  }
+  .pagination-pages,
+  .pagination-list {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+  }
+  .pagination-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .pagination-step,
+  .pagination-list :global(a) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    min-width: var(--control-h-sm);
+    min-height: var(--control-h-sm);
+    padding: 0 var(--space-2);
+    border: 1px solid var(--color-border-input);
+    border-radius: var(--radius-pill);
+    background: #fff;
+    color: var(--color-navy-800);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-semibold);
+    font-variant-numeric: tabular-nums;
+    text-decoration: none;
+  }
+  .pagination-step {
+    padding-inline: var(--space-4);
+  }
+  @media (hover: hover) {
+    .pagination-step[href]:hover,
+    .pagination-list :global(a:hover) {
+      border-color: var(--color-navy-800);
+      background: var(--color-navy-50);
+    }
+  }
+  .pagination-list :global(a[aria-current='page']) {
+    border-color: var(--color-navy-800);
+    background: var(--color-navy-800);
+    color: #fff;
+  }
+  .pagination-step[aria-disabled='true'] {
+    border-color: var(--color-border-subtle);
+    color: var(--color-disabled-text);
+    cursor: default;
+  }
+  .pagination-list :global(.pagination-gap) {
+    min-width: var(--space-6);
+    color: var(--color-text-muted);
+    text-align: center;
+  }
+  /* Celular: los números arriba y "Anterior" / "Siguiente" abajo, mitad y mitad, a mano del pulgar */
+  @media (max-width: 639px) {
+    .pagination-pages {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-3) var(--space-2);
+      width: 100%;
+    }
+    .pagination-list {
+      grid-column: 1 / -1;
+      justify-content: center;
+    }
+    .pagination-step[rel='prev'] {
+      grid-area: 2 / 1;
+    }
+    .pagination-step[rel='next'] {
+      grid-area: 2 / 2;
+    }
   }
 
   /* ---------- Mapa ---------- */

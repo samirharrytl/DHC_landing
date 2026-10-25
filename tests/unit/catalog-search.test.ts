@@ -3,6 +3,8 @@ import {
   emptyQuery,
   hasFilters,
   matchesQuery,
+  pageNumbers,
+  paginate,
   paybackSteps,
   priceRanges,
   queryFromParams,
@@ -169,5 +171,27 @@ describe('opciones de las facetas', () => {
   it('escalones de rentabilidad y plazo que separan a los inmuebles', () => {
     expect(yieldSteps([8, 9, 7, 5.8, 6.2, 5.6])).toEqual([6, 7, 8, 9])
     expect(paybackSteps([11, 10, 12, 17, 16, 18])).toEqual([10, 12, 14, 16])
+  })
+})
+
+describe('páginas', () => {
+  it('reparte la lista en páginas de 12', () => {
+    expect(paginate(36, 1)).toEqual({ page: 1, pages: 3, start: 0, end: 12 })
+    expect(paginate(30, 3)).toEqual({ page: 3, pages: 3, start: 24, end: 30 })
+    expect(paginate(5, 1)).toEqual({ page: 1, pages: 1, start: 0, end: 5 })
+  })
+  it('una página que no existe se lleva a la más cercana', () => {
+    expect(paginate(36, 9).page).toBe(3)
+    expect(paginate(36, 0).page).toBe(1)
+    expect(paginate(36, NaN).page).toBe(1)
+    expect(paginate(0, 2)).toEqual({ page: 1, pages: 1, start: 0, end: 0 })
+  })
+  it('números con "…" para saltar al inicio o al final', () => {
+    expect(pageNumbers(1, 3)).toEqual([1, 2, 3])
+    expect(pageNumbers(1, 10)).toEqual([1, 2, null, 10])
+    expect(pageNumbers(3, 10)).toEqual([1, 2, 3, 4, null, 10])
+    expect(pageNumbers(5, 10)).toEqual([1, null, 4, 5, 6, null, 10])
+    expect(pageNumbers(10, 10)).toEqual([1, null, 9, 10])
+    expect(pageNumbers(1, 1)).toEqual([1])
   })
 })

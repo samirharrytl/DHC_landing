@@ -124,11 +124,13 @@ test.describe('Todos los inmuebles', () => {
     await page.getByRole('link', { name: 'Ver todos los proyectos' }).first().click()
     await expect(page).toHaveURL(/\/capital\/inmuebles\/?$/)
     const cards = page.locator('[data-results] [data-property-card]:visible')
-    await expect(cards).toHaveCount(36)
-    await expect(page.locator('[data-results-count]')).toHaveText('36 resultados')
+    const count = page.locator('[data-results-count]')
+    await expect(count).toHaveText('36 resultados')
+    await expect(cards).toHaveCount(12) // la primera página
 
     await page.getByRole('checkbox', { name: /^De proyecto/ }).check()
-    await expect(cards).toHaveCount(24)
+    await expect(count).toHaveText('24 resultados')
+    await expect(cards).toHaveCount(12)
     await page.getByRole('checkbox', { name: /^Urbana/ }).check()
     await expect(cards).toHaveCount(6)
     await page.getByRole('checkbox', { name: /^Miraflores \(/ }).check()
@@ -148,7 +150,8 @@ test.describe('Todos los inmuebles', () => {
     await expect(page.getByRole('checkbox', { name: /^Urbana/ })).toBeChecked()
 
     await page.getByRole('button', { name: 'Limpiar todo' }).click()
-    await expect(cards).toHaveCount(36)
+    await expect(count).toHaveText('36 resultados')
+    await expect(cards).toHaveCount(12)
   })
 
   test('"Cerca de" ordena por distancia a un lugar y filtra por km', async ({ page }) => {
@@ -171,7 +174,7 @@ test.describe('Todos los inmuebles', () => {
     await expect(cards.first()).toContainText('a 350 m de Larcomar')
 
     await page.getByRole('button', { name: 'Quitar filtro: Cerca de Larcomar (Miraflores)' }).click()
-    await expect(cards).toHaveCount(36)
+    await expect(page.locator('[data-results-count]')).toHaveText('36 resultados')
     await expect(page.getByLabel('Ordenar por')).toHaveValue('destacados')
     await expect(cards.first().locator('[data-distance]')).toBeHidden()
     expect(page.url()).not.toMatch(/cerca=|km=|orden=/)
@@ -234,9 +237,50 @@ test.describe('Todos los inmuebles', () => {
     await page.getByRole('button', { name: 'Quitar filtro: Miraflores' }).click()
     await expect(pins).toHaveCount(36)
 
+    // El mapa lleva todos los pines; la lista, de 12 en 12
     await page.getByRole('button', { name: 'Lista', exact: true }).click()
-    await expect(cards).toHaveCount(36)
+    await expect(cards).toHaveCount(12)
     expect(page.url()).not.toContain('vista=')
+  })
+
+  test('la lista va en páginas de 12 y "Atrás" vuelve a la anterior', async ({ page }) => {
+    await page.goto('/capital/inmuebles')
+    const cards = page.locator('[data-results] [data-property-card]:visible')
+    const pages = page.getByRole('navigation', { name: 'Páginas de resultados' })
+    await expect(cards).toHaveCount(12)
+    await expect(pages).toContainText('Mostrando 1–12 de 36 inmuebles')
+    await expect(pages.getByRole('link', { name: 'Página 1' })).toHaveAttribute('aria-current', 'page')
+    await expect(pages.locator('[rel="prev"]')).toHaveAttribute('aria-disabled', 'true')
+    const first = await cards.first().getAttribute('data-id')
+
+    await pages.getByRole('link', { name: 'Siguiente' }).click()
+    await expect(page).toHaveURL(/pagina=2/)
+    await expect(pages).toContainText('Mostrando 13–24 de 36 inmuebles')
+    await expect(cards).toHaveCount(12)
+    await expect(cards.first()).not.toHaveAttribute('data-id', first!)
+    // El lector de pantalla sigue en la página nueva
+    await expect(page.getByRole('heading', { name: 'Resultados, página 2 de 3' })).toBeFocused()
+
+    await pages.getByRole('link', { name: 'Página 3' }).click()
+    await expect(pages).toContainText('Mostrando 25–36 de 36 inmuebles')
+    await expect(pages.locator('[rel="next"]')).toHaveAttribute('aria-disabled', 'true')
+
+    // "Atrás" vuelve a la página anterior y al recargar sigue en ella
+    await page.goBack()
+    await expect(page).toHaveURL(/pagina=2/)
+    await expect(pages).toContainText('Mostrando 13–24')
+    await page.reload()
+    await expect(pages).toContainText('Mostrando 13–24')
+
+    // Cambiar la búsqueda vuelve a la primera página
+    await page.getByLabel('Ordenar por').selectOption('precio-asc')
+    await expect(pages).toContainText('Mostrando 1–12')
+    await expect(page).toHaveURL(/orden=precio-asc$/)
+
+    // Una página que no existe muestra la última
+    await page.goto('/capital/inmuebles?pagina=9')
+    await expect(pages).toContainText('Mostrando 25–36')
+    await expect(page).toHaveURL(/pagina=3/)
   })
 
   test('en móvil los filtros se abren en un panel', async ({ page }) => {
