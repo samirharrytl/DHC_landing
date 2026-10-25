@@ -1,0 +1,395 @@
+---
+// "Te acompañamos": el paso antes de WhatsApp. Muestra los depas elegidos (los de Mis depas,
+// o uno solo si se llega con ?depa={slug} desde "Contactar"), explica cómo acompañamos y abre
+// WhatsApp con el mensaje armado. Se pinta en el navegador con /data/properties.json.
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import HouseIcon from '../../components/HouseIcon.astro'
+import Icon from '../../components/Icon.astro'
+import WhatsAppIcon from '../../components/WhatsAppIcon.astro'
+
+const steps = [
+  {
+    icon: 'users' as const,
+    title: 'Entramos juntos',
+    text: 'Conocemos lo que buscas, tu presupuesto y tus preferencias para alinearnos a tu inversión.',
+  },
+  {
+    icon: 'calendar' as const,
+    title: 'Coordinamos la visita',
+    text: 'Agendamos y organizamos la visita a los departamentos que te interesan.',
+  },
+  {
+    icon: 'handshake' as const,
+    title: 'Cierras la compra',
+    text: 'Cuando elijas tu depa, cierras directamente con la inmobiliaria o el propietario. Te acompañamos hasta la firma.',
+  },
+]
+---
+
+<BaseLayout
+  title="Te acompañamos"
+  description="Así te acompañamos para comprar tu departamento para invertir en Lima."
+  noindex
+>
+  <section class="container start" data-start-page>
+    <header class="start-head">
+      <h1 class="display">Te acompañamos al proyecto</h1>
+      <p class="lead" data-start-lead>
+        Estamos de tu lado para que encuentres el departamento ideal en Lima.
+      </p>
+    </header>
+
+    <div class="start-layout">
+      <section class="selection-card" aria-labelledby="selection-title">
+        <h2 id="selection-title" class="eyebrow">
+          <Icon name="building" size={18} />
+          <span data-selection-title>Departamento seleccionado</span>
+        </h2>
+        <div class="selection-list" data-selection-list aria-live="polite"></div>
+        <div class="selection-empty" data-selection-empty hidden>
+          <p>
+            Todavía no elegiste un depa. Marca <strong>Me interesa</strong> en los que te gusten o escríbenos
+            y te ayudamos a elegir.
+          </p>
+          <a class="btn btn--secondary btn--sm" href="/capital">
+            Ver depas
+          </a>
+        </div>
+        <a class="btn btn--secondary btn--sm change" href="/mis-depas">
+          <Icon name="pencil" size={18} />
+          Cambiar selección
+        </a>
+      </section>
+
+      <section class="how" aria-labelledby="how-title">
+        <h2 id="how-title" class="display">
+          Así es como te acompañamos
+        </h2>
+        <ol class="how-steps">
+          {steps.map((step) => (
+            <li>
+              <span class="how-icon">
+                <Icon name={step.icon} size={26} />
+              </span>
+              <div>
+                <h3>{step.title}</h3>
+                <p>{step.text}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+        <a
+          class="btn btn--whatsapp wa-cta"
+          href="#"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-start-whatsapp
+        >
+          <WhatsAppIcon size={24} />
+          Escribir por WhatsApp
+          <Icon name="arrow-right" size={22} />
+        </a>
+      </section>
+    </div>
+  </section>
+
+  <template data-selection-template>
+    <article class="pick">
+      <div class="pick-media">
+        <img data-slot="image" alt="" decoding="async" hidden />
+        <span class="pick-placeholder" data-slot="placeholder">
+          <HouseIcon />
+        </span>
+      </div>
+      <h3 class="pick-title">
+        <Icon name="pin" size={20} /> <a data-slot="link"></a>
+      </h3>
+      <p class="pick-text" data-slot="text"></p>
+      <p class="pick-numbers">
+        <strong data-slot="price"></strong> · <span data-slot="yield"></span>
+      </p>
+    </article>
+  </template>
+</BaseLayout>
+
+<script>
+  import { getSavedStore } from '../../lib/saved-store'
+  import { api, apiConfigured } from '../../lib/api/client'
+  import { waLink } from '../../data/contacto'
+  import { getUtm } from '../../scripts/forms'
+  import { loadCatalog, type CatalogItem } from '../../scripts/catalog'
+
+  const page = document.querySelector<HTMLElement>('[data-start-page]')
+  const template = document.querySelector<HTMLTemplateElement>('[data-selection-template]')
+
+  if (page && template) {
+    const list = page.querySelector<HTMLElement>('[data-selection-list]')!
+    const empty = page.querySelector<HTMLElement>('[data-selection-empty]')!
+    const title = page.querySelector<HTMLElement>('[data-selection-title]')!
+    const lead = page.querySelector<HTMLElement>('[data-start-lead]')!
+    const whatsapp = page.querySelector<HTMLAnchorElement>('[data-start-whatsapp]')!
+    const fromQuery = new URLSearchParams(location.search).get('depa')
+    let selected: CatalogItem[] = []
+
+    const card = (item: CatalogItem) => {
+      const fragment = template.content.cloneNode(true) as DocumentFragment
+      const slot = <T extends HTMLElement>(name: string) =>
+        fragment.querySelector<T>(`[data-slot="${name}"]`)!
+      const link = slot<HTMLAnchorElement>('link')
+      link.href = item.url
+      link.textContent = item.district
+      slot('text').textContent = item.developer
+        ? `${item.address}. Proyecto de ${item.developer.name}.`
+        : `${item.address}. Depa de propietario.`
+      slot('price').textContent = item.price.label
+      slot('yield').textContent = item.yieldLabel
+      if (item.image) {
+        const img = slot<HTMLImageElement>('image')
+        img.src = item.image.src
+        img.srcset = item.image.srcset
+        img.sizes = '(max-width: 1024px) 90vw, 480px'
+        img.alt = item.image.alt
+        img.hidden = false
+        slot('placeholder').hidden = true
+      }
+      return fragment
+    }
+
+    const message = () => {
+      if (selected.length === 0)
+        return 'Hola, quiero invertir en un depa en Lima y me gustaría que me acompañen.'
+      const lines = selected.map((item) => `- ${item.district} (${item.address}): ${item.price.label}`)
+      return `Hola, quiero que me acompañen con ${selected.length === 1 ? 'este depa' : 'estos depas'}:\n${lines.join('\n')}`
+    }
+
+    loadCatalog()
+      .then((catalog) => {
+        const byQuery = fromQuery ? catalog.find((item) => item.slug === fromQuery) : undefined
+        const ids = byQuery ? [byQuery.id] : getSavedStore().list()
+        selected = ids
+          .map((id) => catalog.find((item) => item.id === id))
+          .filter((item) => item !== undefined)
+        list.replaceChildren(...selected.map(card))
+        list.classList.toggle('is-compact', selected.length > 1)
+        empty.hidden = selected.length > 0
+        title.textContent =
+          selected.length > 1 ? `${selected.length} departamentos seleccionados` : 'Departamento seleccionado'
+        if (selected.length === 1) {
+          lead.textContent = `Estamos de tu lado para que encuentres el departamento ideal en ${selected[0]!.district}.`
+        }
+        whatsapp.href = waLink(message())
+      })
+      .catch(() => {
+        whatsapp.href = waLink(message())
+      })
+
+    // Registra el interés (sin datos personales) para que el equipo sepa qué depas pidió.
+    // WhatsApp se abre igual aunque la API falle.
+    whatsapp.addEventListener('click', () => {
+      if (!apiConfigured || selected.length === 0) return
+      api
+        .POST('/v1/leads', {
+          body: {
+            source: 'cart',
+            propertyIds: selected.map((item) => item.id),
+            locale: 'es',
+            consent: false,
+            utm: getUtm(),
+          },
+        })
+        .catch(() => {})
+    })
+  }
+</script>
+
+<style>
+  .start {
+    padding-block: var(--space-8) var(--space-12);
+  }
+  .start-head {
+    margin-bottom: var(--space-8);
+  }
+  .start-head h1 {
+    font-size: clamp(2.25rem, 1.5rem + 2.6vw, 3.5rem);
+    line-height: 1.05;
+    color: var(--color-navy-800);
+  }
+  .start-layout {
+    display: grid;
+    gap: var(--space-8);
+    align-items: start;
+  }
+  .selection-card {
+    display: grid;
+    gap: var(--space-4);
+    padding: var(--space-5);
+    border: var(--border);
+    border-radius: var(--radius-lg);
+    background: #fff;
+  }
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    letter-spacing: 0.16em;
+  }
+  .selection-list {
+    display: grid;
+    gap: var(--space-5);
+  }
+  .selection-empty[hidden] {
+    display: none;
+  }
+  .selection-empty {
+    display: grid;
+    justify-items: start;
+    gap: var(--space-3);
+  }
+  .selection-empty p {
+    margin: 0;
+    color: var(--color-text-muted);
+  }
+  .change {
+    justify-self: start;
+  }
+  .pick {
+    display: grid;
+    gap: var(--space-2);
+  }
+  .pick + .pick {
+    padding-top: var(--space-5);
+    border-top: var(--border-subtle);
+  }
+  /* Varios depas: foto chica a la izquierda para que la lista no se haga eterna */
+  .selection-list.is-compact :global(.pick) {
+    grid-template-columns: 112px minmax(0, 1fr);
+    column-gap: var(--space-4);
+    align-items: center;
+  }
+  .selection-list.is-compact :global(.pick-media) {
+    grid-row: span 3;
+    aspect-ratio: 4 / 3;
+  }
+  .selection-list.is-compact :global(.pick-title) {
+    margin-top: 0;
+  }
+  .pick-media {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: var(--radius-md);
+    background: var(--color-navy-50);
+  }
+  .pick-media img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .pick-media img[hidden],
+  .pick-placeholder[hidden] {
+    display: none;
+  }
+  .pick-placeholder {
+    display: grid;
+    place-items: center;
+    height: 100%;
+    color: var(--color-navy-800);
+  }
+  .pick-placeholder :global(svg) {
+    width: 48px;
+    height: 48px;
+    opacity: 0.4;
+  }
+  .pick-title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-2);
+    font-size: var(--fs-20);
+    color: var(--color-navy-800);
+  }
+  .pick-title a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .pick-title a:hover {
+    text-decoration: underline;
+  }
+  .pick-text {
+    margin: 0;
+    color: var(--color-text-muted);
+  }
+  .pick-numbers {
+    margin: 0;
+    font-size: var(--fs-sm);
+  }
+  .pick-numbers strong {
+    color: var(--color-navy-800);
+  }
+  .how h2 {
+    position: relative;
+    padding-top: var(--space-4);
+    font-size: var(--fs-h2);
+    color: var(--color-navy-800);
+  }
+  .how h2::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 48px;
+    height: 2px;
+    background: var(--color-navy-800);
+    content: '';
+  }
+  .how-steps {
+    margin: var(--space-4) 0 var(--space-6);
+    padding: 0;
+    list-style: none;
+  }
+  .how-steps li {
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr);
+    gap: var(--space-4);
+    padding-block: var(--space-4);
+  }
+  .how-steps li + li {
+    border-top: var(--border-subtle);
+  }
+  .how-icon {
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    border: var(--border);
+    border-radius: var(--radius-pill);
+    color: var(--color-navy-800);
+  }
+  .how-steps h3 {
+    font-size: var(--fs-18);
+    color: var(--color-text-strong);
+  }
+  .how-steps p {
+    margin: var(--space-1) 0 0;
+    color: var(--color-text-muted);
+  }
+  .wa-cta {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    min-height: 60px;
+    padding-inline: var(--space-5);
+    font-size: var(--fs-18);
+  }
+  .wa-cta :global(svg:first-child) {
+    width: 24px;
+    height: 24px;
+  }
+  @media (min-width: 1024px) {
+    .start-layout {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: var(--space-12);
+    }
+  }
+</style>
