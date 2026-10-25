@@ -5,18 +5,16 @@ import { formatPEN, normalizeText } from './format'
 export interface PropertyFilters {
   district?: string // slug del distrito
   maxPrice?: number // en soles
-  minYield?: number // rentabilidad mínima anual, en %
 }
 
 /** Lo mínimo que necesita el filtro. En el navegador se arma con los data-* de cada tarjeta. */
 export interface FilterableProperty {
   districtSlug: string
   price: number
-  yieldMin: number
   searchText: string
 }
 
-export type FastFilterKind = 'district' | 'maxPrice' | 'minYield'
+export type FastFilterKind = 'district' | 'maxPrice'
 export interface FastFilter {
   label: string
   kind: FastFilterKind
@@ -50,7 +48,6 @@ export function toFilterable(p: PropertyLike): FilterableProperty {
   return {
     districtSlug: p.district.slug,
     price: p.price.amount,
-    yieldMin: p.yield.min,
     searchText: buildSearchText(p),
   }
 }
@@ -60,7 +57,6 @@ export function matchesFilters(p: FilterableProperty, query: string, filters: Pr
   if (q && !p.searchText.includes(q)) return false
   if (filters.district && p.districtSlug !== filters.district) return false
   if (filters.maxPrice != null && p.price > filters.maxPrice) return false
-  if (filters.minYield != null && p.yieldMin < filters.minYield) return false
   return true
 }
 
@@ -70,7 +66,6 @@ export function parseFilters(active: Iterable<[string, string]>): PropertyFilter
   for (const [kind, value] of active) {
     if (kind === 'district') filters.district = value
     if (kind === 'maxPrice' && Number.isFinite(Number(value))) filters.maxPrice = Number(value)
-    if (kind === 'minYield' && Number.isFinite(Number(value))) filters.minYield = Number(value)
   }
   return filters
 }
@@ -90,8 +85,7 @@ const closestTo = (target: number, candidates: number[]) =>
  * Pocos filtros rápidos y relevantes, derivados de los datos (no escritos a mano):
  * - los distritos con más depas (a igualdad, los de mejor rentabilidad)
  * - un tope de precio redondeado a S/ 50,000, cerca de la mediana, que deja fuera al menos un depa
- * - una rentabilidad mínima, cerca de la mediana, que deja fuera al menos un depa
- * El resto de filtros está en "Todos los depas" (/capital/depas).
+ * La rentabilidad no va como filtro rápido: está con el resto de filtros en "Todos los depas" (/capital/depas).
  */
 export function buildFastFilters(properties: PropertyLike[], max = { districts: 4 }): FastFilter[] {
   if (properties.length === 0) return []
@@ -124,16 +118,5 @@ export function buildFastFilters(properties: PropertyLike[], max = { districts: 
       ? []
       : [{ label: `Hasta ${formatPEN(ceiling)}`, kind: 'maxPrice' as const, value: String(ceiling) }]
 
-  const yieldMins = properties.map((p) => p.yield.min)
-  const lowestYield = Math.min(...yieldMins)
-  const minYield = closestTo(
-    median(yieldMins),
-    [...new Set(yieldMins)].filter((y) => y > lowestYield),
-  )
-  const yieldFilters =
-    minYield === undefined
-      ? []
-      : [{ label: `Desde ${minYield}% anual`, kind: 'minYield' as const, value: String(minYield) }]
-
-  return [...districtFilters, ...priceFilters, ...yieldFilters]
+  return [...districtFilters, ...priceFilters]
 }

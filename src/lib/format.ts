@@ -14,6 +14,12 @@ export function formatMoney(amount: number, currency: 'PEN' | 'USD' = 'PEN'): st
 
 export const formatPEN = (amount: number) => formatMoney(amount, 'PEN')
 
+/** Precio corto para los pines del mapa: 310000 → "S/ 310k" · 1250000 → "S/ 1.3M" */
+export function formatPENShort(amount: number): string {
+  if (amount >= 1_000_000) return `S/ ${(Math.round(amount / 100_000) / 10).toString()}M`
+  return `S/ ${Math.round(amount / 1000)}k`
+}
+
 /** { min: 8, max: 10 } → "8–10% anual" · { min: 8, max: 8 } → "8% anual" */
 export function formatYield({ min, max }: { min: number; max: number }): string {
   return min === max ? `${min}% anual` : `${min}–${max}% anual`

@@ -1,7 +1,7 @@
 // Buscador y filtros rápidos de depas, para cualquier bloque con data-filter-root:
 //   [data-filter-search]   input de búsqueda (o un form de búsqueda que lo contenga)
 //   [data-favorite-filter] chips con data-filter-kind y data-filter-value
-//   [data-property-card]   tarjetas con data-search, data-district, data-price, data-yield-min
+//   [data-property-card]   tarjetas con data-search, data-district y data-price
 //   [data-filter-empty]    mensaje sin resultados
 //   [data-results-count]   "3 proyectos encontrados" (data-singular / data-plural)
 //   [data-clear-filters]   "Limpiar filtros" (se muestra solo si hay algo activo)
@@ -22,7 +22,6 @@ document.querySelectorAll<HTMLElement>('[data-filter-root]').forEach((root) => {
       {
         districtSlug: card.dataset.district ?? '',
         price: Number(card.dataset.price),
-        yieldMin: Number(card.dataset.yieldMin),
         searchText: card.dataset.search ?? '',
       },
     ]),

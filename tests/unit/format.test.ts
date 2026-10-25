@@ -3,6 +3,7 @@ import {
   buildDisclaimer,
   formatMoney,
   formatPEN,
+  formatPENShort,
   formatYears,
   formatYield,
   normalizeText,
@@ -13,6 +14,9 @@ describe('format', () => {
   it('formatea soles y dólares sin decimales', () => {
     // Intl separa el símbolo con un espacio no separable (U+00A0)
     expect(formatPEN(310000).replace(/\s/g, ' ')).toBe('S/ 310,000')
+    expect(formatPENShort(310000)).toBe('S/ 310k')
+    expect(formatPENShort(1_250_000)).toBe('S/ 1.3M')
+    expect(formatPENShort(2_000_000)).toBe('S/ 2M')
     expect(formatMoney(50000, 'USD')).toMatch(/50,000/)
   })
 

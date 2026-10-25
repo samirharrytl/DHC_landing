@@ -23,12 +23,11 @@ describe('matchesFilters', () => {
     expect(matchesFilters(p, 'miraflores', {})).toBe(false)
   })
 
-  it('combina distrito, precio máximo y rentabilidad mínima', () => {
+  it('combina distrito y precio máximo', () => {
     const p = toFilterable(lince)
-    expect(matchesFilters(p, '', { district: 'lince', maxPrice: 310000, minYield: 8 })).toBe(true)
+    expect(matchesFilters(p, '', { district: 'lince', maxPrice: 310000 })).toBe(true)
     expect(matchesFilters(p, '', { district: 'surquillo' })).toBe(false)
     expect(matchesFilters(p, '', { maxPrice: 300000 })).toBe(false)
-    expect(matchesFilters(p, '', { minYield: 9 })).toBe(false)
   })
 
   it('convierte los filtros activos de la UI', () => {
@@ -39,12 +38,12 @@ describe('matchesFilters', () => {
         ['minYield', '8'],
         ['otro', 'x'],
       ]),
-    ).toEqual({ district: 'lince', maxPrice: 300000, minYield: 8 })
+    ).toEqual({ district: 'lince', maxPrice: 300000 })
   })
 })
 
 describe('buildFastFilters', () => {
-  it('arma pocos chips: distritos con más depas y un tope útil de precio y de rentabilidad', () => {
+  it('arma pocos chips: distritos con más depas y un tope útil de precio, sin rentabilidad', () => {
     const filters = buildFastFilters([lince, surquillo, magdalena])
     // A igual cantidad de depas, primero los de mejor rentabilidad
     expect(filters.filter((f) => f.kind === 'district').map((f) => f.label)).toEqual([
@@ -54,8 +53,8 @@ describe('buildFastFilters', () => {
     ])
     // 350,000 incluiría a todos: no se ofrece
     expect(filters.filter((f) => f.kind === 'maxPrice').map((f) => f.value)).toEqual(['300000'])
-    // 7% es el mínimo: no se ofrece; 8% es el más cercano a la mediana
-    expect(filters.filter((f) => f.kind === 'minYield').map((f) => f.value)).toEqual(['8'])
+    // La rentabilidad no es filtro rápido
+    expect(filters.map((f) => f.kind)).not.toContain('minYield')
   })
 
   it('muestra solo los distritos con más depas', () => {

@@ -25,7 +25,7 @@ interface Props {
 
 const { developer } = Astro.props
 const projects = await getDeveloperProjects(developer.id)
-const filters = (await getFastFilters(projects)).filter((f) => f.kind !== 'minYield' || projects.length > 3)
+const filters = await getFastFilters(projects)
 const disclaimer = buildDisclaimer(await getFinancingAssumptions())
 ---
 
