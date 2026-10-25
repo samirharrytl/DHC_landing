@@ -1,0 +1,15 @@
+// Publicación del sitio en Cloudflare Workers (solo archivos estáticos, sin código de servidor).
+// Cloudflare construye con `pnpm --filter depahostcapital build` y luego publica con
+// `npx wrangler deploy --config apps/depahostcapital/wrangler.jsonc` (ambos desde la raíz del monorepo).
+// Las rutas de este archivo son relativas a esta carpeta.
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  // Debe coincidir con el nombre del Worker en el panel de Cloudflare
+  "name": "depahost-monorepo",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./dist",
+    // Rutas que no existen: responde dist/404.html con estado 404
+    "not_found_handling": "404-page",
+  },
+}
