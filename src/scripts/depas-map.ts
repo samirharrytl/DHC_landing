@@ -1,6 +1,6 @@
-// Vista de mapa de "Todos los depas" (/capital/depas). Se carga solo cuando la persona elige "Mapa"
+// Vista de mapa de "Todos los inmuebles" (/capital/inmuebles). Se carga solo cuando la persona elige "Mapa"
 // (import dinámico), así Leaflet no pesa en la carga normal de la página.
-// Cada depa es un pin con su precio; de lejos, un punto. Al tocarlo se abre una mini tarjeta.
+// Cada inmueble es un pin con su precio; de lejos, un punto. Al tocarlo se abre una mini tarjeta.
 import L from 'leaflet'
 // ?url: el CSS de Leaflet se pide al abrir el mapa (con un import normal, Astro lo pondría en el <head>)
 import leafletCss from 'leaflet/dist/leaflet.css?url'
@@ -63,7 +63,7 @@ function popupFor(depa: MapDepa): HTMLElement {
 }
 
 /**
- * Los depas sin ubicación exacta comparten el punto de su distrito: se reparten en un círculo
+ * Los inmuebles sin ubicación exacta comparten el punto de su distrito: se reparten en un círculo
  * pequeño (~250 m) para que todos se puedan tocar.
  */
 function spread(depas: MapDepa[]): (MapDepa & { at: L.LatLngTuple })[] {
@@ -117,7 +117,7 @@ export async function createDepasMap(container: HTMLElement) {
   let lastKey = ''
 
   return {
-    /** Pinta los depas visibles y el punto de "Cerca de". Reencuadra solo si cambió qué se muestra. */
+    /** Pinta los inmuebles visibles y el punto de "Cerca de". Reencuadra solo si cambió qué se muestra. */
     update(depas: MapDepa[], origin?: MapOrigin) {
       pins.clearLayers()
       originLayer.clearLayers()

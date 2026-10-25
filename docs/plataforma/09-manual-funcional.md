@@ -10,12 +10,12 @@ Este manual explica cómo usa la plataforma de Depa Host Perú una persona comú
 
 **Qué cubre.**
 
-- El sitio público **depahostperu.com**: inicio, Capital, fichas de depas, inmobiliarias aliadas, "Mis depas", "Te acompañamos al proyecto", formularios y páginas legales.
-- El panel de cuentas **app.depahostperu.com**, tal como lo usan el comprador o inversionista (rol buyer) y el propietario (rol seller). Incluye crear cuenta, ingresar, "Mis depas", "Mis consultas", "Perfil", "Mis propiedades" y "Publicar un depa".
+- El sitio público **depahostperu.com**: inicio, Capital, fichas de inmuebles, inmobiliarias aliadas, "Mis inmuebles", "Te acompañamos al proyecto", formularios y páginas legales.
+- El panel de cuentas **app.depahostperu.com**, tal como lo usan el comprador o inversionista (rol buyer) y el propietario (rol seller). Incluye crear cuenta, ingresar, "Mis inmuebles", "Mis consultas", "Perfil", "Mis propiedades" y "Publicar un inmueble".
 
 **Qué no cubre.**
 
-- El panel de administración: depas, solicitudes, leads, reclamos, inmobiliarias, usuarios y configuración. El manual solo menciona al equipo para contar qué pasa del otro lado, por ejemplo "el equipo revisa la solicitud" o "el equipo lo ve como lead nuevo".
+- El panel de administración: inmuebles, solicitudes, leads, reclamos, inmobiliarias, usuarios y configuración. El manual solo menciona al equipo para contar qué pasa del otro lado, por ejemplo "el equipo revisa la solicitud" o "el equipo lo ve como lead nuevo".
 - Cómo funciona la plataforma por dentro. Eso está en los capítulos técnicos 01 a 08 de esta misma carpeta.
 
 **Cómo está organizado.**
@@ -23,10 +23,10 @@ Este manual explica cómo usa la plataforma de Depa Host Perú una persona comú
 | Parte | Qué explica |
 |---|---|
 | [Quién usa la plataforma](#quién-usa-la-plataforma) | Los tres perfiles y qué puede hacer cada uno |
-| [El recorrido completo](#el-recorrido-completo) | El camino típico, de la primera visita a WhatsApp o a publicar un depa |
+| [El recorrido completo](#el-recorrido-completo) | El camino típico, de la primera visita a WhatsApp o a publicar un inmueble |
 | [Mapa de pantallas](#mapa-de-pantallas) | Todas las direcciones del sitio y del panel, con la sección que las explica |
-| [1](#1-navegar-el-sitio) a [5](#5-formularios-propietarios-inversionistas-del-extranjero-y-libro-de-reclamaciones) | El sitio: navegar, buscar depas, ver fichas, guardar depas, pedir acompañamiento y formularios |
-| [6](#6-crear-una-cuenta-ingresar-y-manejar-la-sesión) a [8](#8-el-panel-del-propietario-publicar-un-depa) | El panel: cuenta y sesión, panel del comprador y panel del propietario |
+| [1](#1-navegar-el-sitio) a [5](#5-formularios-propietarios-inversionistas-del-extranjero-y-libro-de-reclamaciones) | El sitio: navegar, buscar inmuebles, ver fichas, guardar inmuebles, pedir acompañamiento y formularios |
+| [6](#6-crear-una-cuenta-ingresar-y-manejar-la-sesión) a [8](#8-el-panel-del-propietario-publicar-un-inmueble) | El panel: cuenta y sesión, panel del comprador y panel del propietario |
 | [9](#9-preguntas-frecuentes) | Preguntas frecuentes |
 
 Cada pantalla o función sigue, cuando aplica, el mismo orden: **Para qué sirve**, **Cómo se llega**, **Qué se ve**, **Qué puede hacer** (pasos numerados), **Reglas y validaciones**, **Qué pasa después** y **Casos especiales**.
@@ -39,7 +39,7 @@ Cada pantalla o función sigue, cuando aplica, el mismo orden: **Para qué sirve
 - Lo que es de relleno o está pendiente se marca como tal. Por ejemplo: el número de WhatsApp 51XXXXXXXXX, los textos legales en borrador, las páginas en construcción y los datos de la empresa "[pendiente]".
 - "Teléfono", "tablet" y "escritorio" se refieren al ancho de pantalla. Cada sección indica los cortes exactos (640 px, 1024 px, etc.).
 
-**Sobre las capturas.** Las capturas se tomaron en el entorno local de desarrollo, con los **datos de ejemplo**: depas en Lince, Surquillo y Magdalena, la inmobiliaria "Urbana" y nombres de personas inventados. En producción los depas, precios, nombres e inmobiliarias serán otros.
+**Sobre las capturas.** Las capturas se tomaron en el entorno local de desarrollo, con los **datos de ejemplo**: inmuebles en Lince, Surquillo y Magdalena, la inmobiliaria "Urbana" y nombres de personas inventados. En producción los inmuebles, precios, nombres e inmobiliarias serán otros.
 
 **Referencia técnica:** [README.md](README.md), [01-arquitectura.md](01-arquitectura.md), [06-desarrollo-y-operacion.md](06-desarrollo-y-operacion.md)
 
@@ -51,31 +51,31 @@ La plataforma tiene tres perfiles de usuario común. Todos ven el mismo sitio. L
 
 Cualquier persona que entra a depahostperu.com. No necesita registrarse para:
 
-- buscar y filtrar depas;
+- buscar y filtrar inmuebles;
 - abrir las fichas;
-- guardar depas con "Me interesa";
+- guardar inmuebles con "Me interesa";
 - pedir acompañamiento por WhatsApp;
 - enviar los formularios.
 
-Lo que guarda vive **solo en su navegador**: "Mis depas", el historial de fichas vistas y el nombre que deja en "Guarda tus depas". El equipo recibe sus datos solo cuando envía un formulario, llena "Guarda tus depas" o toca "Escribir por WhatsApp" en "Te acompañamos al proyecto".
+Lo que guarda vive **solo en su navegador**: "Mis inmuebles", el historial de fichas vistas y el nombre que deja en "Guarda tus inmuebles". El equipo recibe sus datos solo cuando envía un formulario, llena "Guarda tus inmuebles" o toca "Escribir por WhatsApp" en "Te acompañamos al proyecto".
 
 ### Comprador o inversionista con cuenta (rol buyer)
 
 Es la persona que creó su cuenta eligiendo "Quiero invertir". Además de todo lo que puede hacer el visitante:
 
-- "Mis depas" se guarda también en su cuenta y lo ve en cualquier dispositivo donde ingrese;
+- "Mis inmuebles" se guarda también en su cuenta y lo ve en cualquier dispositivo donde ingrese;
 - ve en "Mis consultas" lo que envió con la sesión iniciada, y en qué estado está;
 - el sitio lo saluda con el nombre de su cuenta.
 
-Al ingresar llega a "Mis depas" del panel.
+Al ingresar llega a "Mis inmuebles" del panel.
 
 ### Propietario con cuenta (rol seller)
 
-Es la persona que creó su cuenta eligiendo "Tengo un depa", o que cambió a "Vender o alquilar mi depa" en "Perfil". Tiene todo lo del comprador y, además:
+Es la persona que creó su cuenta eligiendo "Tengo un inmueble", o que cambió a "Vender o alquilar mi inmueble" en "Perfil". Tiene todo lo del comprador y, además:
 
-- puede publicar su depa con "Publicar un depa";
+- puede publicar su inmueble con "Publicar un inmueble";
 - sigue la revisión de cada solicitud ("Enviada", "En revisión", "Publicada" o "No aprobada");
-- ve cuánto interés genera su depa una vez publicado.
+- ve cuánto interés genera su inmueble una vez publicado.
 
 Al ingresar llega a "Mis propiedades".
 
@@ -86,21 +86,21 @@ Cada cuenta tiene un solo rol a la vez. La persona lo puede cambiar en "Perfil".
 | Función | Visitante | Comprador | Propietario | Notas |
 |---|---|---|---|---|
 | Navegar el sitio y escribir por WhatsApp | ✓ | ✓ | ✓ | El número de WhatsApp hoy es de relleno (51XXXXXXXXX) |
-| Buscar, filtrar y ver fichas de depas | ✓ | ✓ | ✓ | Todos ven lo mismo |
+| Buscar, filtrar y ver fichas de inmuebles | ✓ | ✓ | ✓ | Todos ven lo mismo |
 | Ver los proyectos de una inmobiliaria aliada | ✓ | ✓ | ✓ | — |
-| Guardar depas con "Me interesa" | ✓ | ✓ | ✓ | Sin cuenta, solo en ese navegador y hasta 20 |
-| "Mis depas" en la cuenta, en todos los dispositivos | — | ✓ | ✓ | Hasta 50. Exige que el sitio esté conectado al API |
-| Dejar nombre y celular en "Guarda tus depas" | ✓ | ✓ | ✓ | Con sesión, la solicitud queda ligada a la cuenta |
+| Guardar inmuebles con "Me interesa" | ✓ | ✓ | ✓ | Sin cuenta, solo en ese navegador y hasta 20 |
+| "Mis inmuebles" en la cuenta, en todos los dispositivos | — | ✓ | ✓ | Hasta 50. Exige que el sitio esté conectado al API |
+| Dejar nombre y celular en "Guarda tus inmuebles" | ✓ | ✓ | ✓ | Con sesión, la solicitud queda ligada a la cuenta |
 | Pedir acompañamiento ("Te acompañamos al proyecto") | ✓ | ✓ | ✓ | Se registra al tocar "Escribir por WhatsApp" |
 | Formulario de Propietarios ("Recibir propuesta") | ✓ | ✓ | ✓ | Deja un contacto. No crea una solicitud en "Mis propiedades" |
 | Formulario en inglés para inversionistas | ✓ | ✓ | ✓ | — |
 | Libro de Reclamaciones | ✓ | ✓ | ✓ | Nunca se une a una cuenta |
 | Reservar una estadía | — | — | — | "Estadías" está en construcción |
-| Saludo "Hola, {nombre}" en el sitio | ✓ | ✓ | ✓ | Sin cuenta, solo si dejó su nombre en "Guarda tus depas". No se ve en pantallas de menos de 640 px |
+| Saludo "Hola, {nombre}" en el sitio | ✓ | ✓ | ✓ | Sin cuenta, solo si dejó su nombre en "Guarda tus inmuebles". No se ve en pantallas de menos de 640 px |
 | "Mis consultas" en el panel | — | ✓ | ✓ | Solo lo enviado con la sesión iniciada |
 | "Perfil": datos, rol y contraseña | — | ✓ | ✓ | El correo no se puede cambiar |
-| "Publicar un depa" y "Mis propiedades" | — | — | ✓ | El comprador debe cambiar su rol en "Perfil" |
-| Ver "Veces guardado" y "Consultas" de su depa | — | — | ✓ | Solo cifras, sin datos de personas |
+| "Publicar un inmueble" y "Mis propiedades" | — | — | ✓ | El comprador debe cambiar su rol en "Perfil" |
+| Ver "Veces guardado" y "Consultas" de su inmueble | — | — | ✓ | Solo cifras, sin datos de personas |
 
 **Referencia técnica:** [nav.ts](../../../depahost-panel/src/router/nav.ts), [access.ts](../../../depahost-panel/src/router/access.ts), [Header.astro](../../src/components/Header.astro), [account.ts](../../src/lib/account.ts), [saved-store.ts](../../src/lib/saved-store.ts) · Capítulo: [08-panel-y-cuentas.md](08-panel-y-cuentas.md)
 
@@ -109,34 +109,34 @@ Cada cuenta tiene un solo rol a la vez. La persona lo puede cambiar en "Perfil".
 ```mermaid
 flowchart TD
     llega["Llegas a depahostperu.com"] --> inicio["Inicio<br/>eliges un servicio"]
-    inicio -->|"Comprar para rentabilizar"| capital["Capital<br/>buscas y filtras depas"]
+    inicio -->|"Comprar para rentabilizar"| capital["Capital<br/>buscas y filtras inmuebles"]
     inicio -->|"Soy propietario"| prop["Propietarios<br/>formulario Recibir propuesta"]
     inicio -->|"Reservar estadía"| estadias["Estadías<br/>en construcción"]
-    capital --> ficha["Ficha del depa"]
-    capital -->|"Me interesa"| guardar["Mis depas<br/>en tu navegador"]
+    capital --> ficha["Ficha del inmueble"]
+    capital -->|"Me interesa"| guardar["Mis inmuebles<br/>en tu navegador"]
     ficha -->|"Me interesa"| guardar
-    guardar -.->|"al llegar a 2 o más"| aviso["Aviso Guarda tus depas<br/>nombre y celular"]
+    guardar -.->|"al llegar a 2 o más"| aviso["Aviso Guarda tus inmuebles<br/>nombre y celular"]
     guardar -->|"Empecemos con estos"| acomp["Te acompañamos al proyecto"]
     ficha -->|"Contactar"| acomp
     acomp -->|"Escribir por WhatsApp"| wa["WhatsApp con<br/>mensaje ya escrito"]
     prop -->|"Adelantar por WhatsApp"| wa
     llega -->|"Ingresar"| tiene{"¿Tienes cuenta?"}
-    tiene -->|"No"| registro["Crea tu cuenta<br/>Quiero invertir o Tengo un depa"]
+    tiene -->|"No"| registro["Crea tu cuenta<br/>Quiero invertir o Tengo un inmueble"]
     tiene -->|"Sí"| login["Ingresa a tu cuenta"]
     registro --> rol{"¿Qué tipo de cuenta?"}
     login --> rol
-    rol -->|"Comprador"| pcomp["Panel: Mis depas<br/>y Mis consultas"]
-    rol -->|"Propietario"| pprop["Panel: Mis propiedades<br/>y Publicar un depa"]
+    rol -->|"Comprador"| pcomp["Panel: Mis inmuebles<br/>y Mis consultas"]
+    rol -->|"Propietario"| pprop["Panel: Mis propiedades<br/>y Publicar un inmueble"]
     pcomp -->|"Empecemos con estos"| acomp
-    pprop --> revision["El equipo revisa<br/>y publica el depa"]
+    pprop --> revision["El equipo revisa<br/>y publica el inmueble"]
     revision -->|"cuando el sitio se regenera"| capital
 ```
 
-La mayoría de las personas llega al inicio y elige un servicio. Quien busca invertir entra a Capital. Ahí busca y filtra depas, abre las fichas y marca con "Me interesa" los que le gustan. Esos depas forman su lista "Mis depas", que se guarda en el navegador sin pedir cuenta. Cuando la lista llega a 2 o más depas, puede abrirse el aviso "Guarda tus depas", que pide nombre y celular para que el equipo le haga seguimiento.
+La mayoría de las personas llega al inicio y elige un servicio. Quien busca invertir entra a Capital. Ahí busca y filtra inmuebles, abre las fichas y marca con "Me interesa" los que le gustan. Esos inmuebles forman su lista "Mis inmuebles", que se guarda en el navegador sin pedir cuenta. Cuando la lista llega a 2 o más inmuebles, puede abrirse el aviso "Guarda tus inmuebles", que pide nombre y celular para que el equipo le haga seguimiento.
 
-Cuando está lista, la persona toca "Empecemos con estos" en "Mis depas", o "Contactar" en una ficha, y llega a "Te acompañamos al proyecto". Allí toca "Escribir por WhatsApp" y se abre la conversación con un mensaje ya escrito que lista sus depas. El propietario hace un camino más corto: llena el formulario de Propietarios y sigue la conversación por WhatsApp. "Estadías" todavía no permite reservar.
+Cuando está lista, la persona toca "Empecemos con estos" en "Mis inmuebles", o "Contactar" en una ficha, y llega a "Te acompañamos al proyecto". Allí toca "Escribir por WhatsApp" y se abre la conversación con un mensaje ya escrito que lista sus inmuebles. El propietario hace un camino más corto: llena el formulario de Propietarios y sigue la conversación por WhatsApp. "Estadías" todavía no permite reservar.
 
-En cualquier momento, la persona puede tocar "Ingresar" y crear una cuenta gratuita. Como comprador, su lista "Mis depas" se une a la de la cuenta y ve sus consultas en el panel. Como propietario, puede publicar su depa desde el panel con fotos y datos completos. El equipo revisa cada solicitud antes de publicarla. El depa aparece en Capital recién cuando el sitio se vuelve a generar.
+En cualquier momento, la persona puede tocar "Ingresar" y crear una cuenta gratuita. Como comprador, su lista "Mis inmuebles" se une a la de la cuenta y ve sus consultas en el panel. Como propietario, puede publicar su inmueble desde el panel con fotos y datos completos. El equipo revisa cada solicitud antes de publicarla. El inmueble aparece en Capital recién cuando el sitio se vuelve a generar.
 
 **Referencia técnica:** [05-flujos.md](05-flujos.md), [08-panel-y-cuentas.md](08-panel-y-cuentas.md)
 
@@ -149,12 +149,12 @@ En cualquier momento, la persona puede tocar "Ingresar" y crear una cuenta gratu
 | `/` | Inicio con los tres servicios | Todos | [1.2](#12-página-de-inicio) |
 | `/estadias` | Estadías, en construcción | Todos | [1.10](#110-páginas-en-construcción-estadías-y-nosotros) |
 | `/nosotros` | Nosotros, en construcción | Todos | [1.10](#110-páginas-en-construcción-estadías-y-nosotros) |
-| `/capital` | Portada de Capital: buscador, filtros, depas de propietarios, aliados, ranking y formulario en inglés | Todos | [2](#2-buscar-depas-en-depahost-capital) y [5.3](#53-inversionistas-del-extranjero-formulario-en-inglés-capital) |
-| `/capital/{slug}` | Ficha de un depa o de un proyecto | Todos | [3.1](#31-la-ficha-de-un-depa) |
+| `/capital` | Portada de Capital: buscador, filtros, inmuebles de propietarios, aliados, ranking y formulario en inglés | Todos | [2](#2-buscar-inmuebles-en-depahost-capital) y [5.3](#53-inversionistas-del-extranjero-formulario-en-inglés-capital) |
+| `/capital/{slug}` | Ficha de un inmueble o de un proyecto | Todos | [3.1](#31-la-ficha-de-un-inmueble) |
 | `/capital/aliados/{slug}` | Proyectos de una inmobiliaria aliada | Todos | [3.8](#38-página-de-una-inmobiliaria-aliada) |
 | `/capital/empecemos` | "Te acompañamos al proyecto", el paso previo a WhatsApp | Todos | [4.7](#47-página-te-acompañamos) |
-| `/mis-depas` | Lista de depas guardados con "Me interesa" | Todos | [4.5](#45-página-mis-depas) |
-| `/carrito` | Dirección antigua: lleva sola a `/mis-depas` | Todos | [4.6](#46-dirección-antigua-carrito) |
+| `/mis-inmuebles` | Lista de inmuebles guardados con "Me interesa" | Todos | [4.5](#45-página-mis-inmuebles) |
+| `/carrito` | Dirección antigua: lleva sola a `/mis-inmuebles` | Todos | [4.6](#46-dirección-antigua-carrito) |
 | `/propietarios` | Formulario para vender o alquilar ("Recibir propuesta") | Visitante y propietario | [5.2](#52-propietarios-vender-o-poner-en-alquiler-propietarios) |
 | `/libro-de-reclamaciones` | Libro de Reclamaciones virtual | Todos | [5.4](#54-libro-de-reclamaciones-libro-de-reclamaciones) |
 | `/privacidad` | Política de privacidad, en borrador | Todos | [1.11](#111-política-de-privacidad-y-términos) |
@@ -171,12 +171,12 @@ En cualquier momento, la persona puede tocar "Ingresar" y crear una cuenta gratu
 | `/recuperar` | "Recupera tu contraseña" | Comprador y propietario sin sesión | [6.6](#66-olvidé-mi-contraseña) |
 | `/restablecer` | "Crea una contraseña nueva", desde el enlace del correo | Comprador y propietario | [6.6](#66-olvidé-mi-contraseña) |
 | `/perfil` | Datos de contacto, rol y contraseña | Comprador y propietario | [6.7](#67-perfil) |
-| `/mis-depas` | "Mis depas" de la cuenta. Es el inicio del comprador | Comprador y propietario | [7.2](#72-mis-depas-en-el-panel) |
+| `/mis-inmuebles` | "Mis inmuebles" de la cuenta. Es el inicio del comprador | Comprador y propietario | [7.2](#72-mis-inmuebles-en-el-panel) |
 | `/mis-consultas` | Consultas enviadas con la sesión iniciada y su estado | Comprador y propietario | [7.3](#73-mis-consultas) |
 | `/mis-propiedades` | Solicitudes del propietario. Es su inicio | Propietario | [8.2](#82-al-ingresar-mis-propiedades) |
-| `/mis-propiedades/nueva` | "Publicar un depa" | Propietario | [8.3](#83-publicar-un-depa-crear-la-solicitud) |
+| `/mis-propiedades/nueva` | "Publicar un inmueble" | Propietario | [8.3](#83-publicar-un-inmueble-crear-la-solicitud) |
 | `/mis-propiedades/{id}` | Detalle de una solicitud | Propietario | [8.5](#85-el-detalle-de-una-solicitud) |
-| `/mis-propiedades/{id}/editar` | "Editar mi depa" | Propietario | [8.8](#88-editar-o-eliminar-una-solicitud) |
+| `/mis-propiedades/{id}/editar` | "Editar mi inmueble" | Propietario | [8.8](#88-editar-o-eliminar-una-solicitud) |
 | `/admin` y sus secciones | Panel del equipo. Si lo abre un comprador o un propietario, el panel lo lleva a su inicio | Solo administradores | [7.4](#74-lo-que-el-comprador-no-puede-abrir) |
 | Cualquier otra dirección | "No encontramos esta página" con el botón "Ir a mi cuenta" | Todos | [6.2](#62-cómo-se-llega-al-panel) |
 
@@ -195,13 +195,13 @@ Esta sección explica las partes comunes de depahostperu.com: la página de inic
 | Propietarios | `/propietarios` | Lista. Tiene su propia sección |
 | Capital | `/capital` | Lista. Tiene su propia sección |
 | Nosotros | `/nosotros` | En construcción |
-| Mis depas | `/mis-depas` | Lista. No sale en el menú, se entra por el ícono "Mis depas" |
+| Mis inmuebles | `/mis-inmuebles` | Lista. No sale en el menú, se entra por el ícono "Mis inmuebles" |
 | Política de privacidad | `/privacidad` | Borrador |
 | Términos y condiciones | `/terminos` | Borrador |
 | Libro de Reclamaciones | `/libro-de-reclamaciones` | Lista. Tiene su propia sección |
 | Página no encontrada | Cualquier dirección que no existe | Lista |
 
-Los enlaces viejos a `/carrito` llevan solos a `/mis-depas`.
+Los enlaces viejos a `/carrito` llevan solos a `/mis-inmuebles`.
 
 En la pestaña del navegador cada página se titula "Nombre de la página | Depa Host Perú". Por ejemplo: "Inicio | Depa Host Perú".
 
@@ -217,7 +217,7 @@ En la pestaña del navegador cada página se titula "Nombre de la página | Depa
 
 **Qué se ve.**
 - Una foto de una sala con vista al mar.
-- El título "El depa en Lima, con la decisión correcta."
+- El título "El inmueble en Lima, con la decisión correcta."
 - La frase "Reserva. Vende. Ponlo en alquiler. O cómpralo para que rinda."
 - Tres botones: "Reservar estadía", "Soy propietario" (con una flecha hacia abajo) y "Comprar para rentabilizar".
 - Tres tarjetas de servicios. Cada una tiene un dibujo, un título, un texto corto y "Ver más →".
@@ -226,7 +226,7 @@ En la pestaña del navegador cada página se titula "Nombre de la página | Depa
 |---|---|---|
 | "Reservar estadía" | "Encuentra y reserva tu estadía ideal en Lima." | `/estadias` (en construcción) |
 | "Propietarios: vende o ponlo en alquiler" | "Te ayudamos a vender tu propiedad o ponerla en alquiler con el enfoque correcto." | `/propietarios` |
-| "Capital: compra para que rinda" | "Invierte en departamentos en Lima para rentabilizar, hasta 3 opciones a tu medida." | `/capital` |
+| "Capital: compra para que rinda" | "Invierte en inmuebles en Lima para rentabilizar, hasta 3 opciones a tu medida." | `/capital` |
 
 **Qué puede hacer.**
 1. Toca "Reservar estadía" para ir a Estadías.
@@ -247,16 +247,16 @@ En la pestaña del navegador cada página se titula "Nombre de la página | Depa
 
 ### 1.3 Encabezado
 
-**Para qué sirve.** Te deja moverte entre páginas, entrar a tu cuenta, ver tus depas guardados y escribir por WhatsApp.
+**Para qué sirve.** Te deja moverte entre páginas, entrar a tu cuenta, ver tus inmuebles guardados y escribir por WhatsApp.
 
 **Cómo se llega.** Aparece arriba en todas las páginas. Queda fijo cuando bajas, y al bajar un poco se le ve una sombra.
 
 **Qué se ve, de izquierda a derecha.**
 - **Logo** "Depahost Capital" / "DEPAHOST PERÚ". Lleva al inicio.
-- **Menú:** "Inicio" | "Estadías" | "Propietarios" | "Capital" | "Nosotros". La página en la que estás aparece subrayada. Solo se marca en esas páginas principales: dentro del detalle de un depa, por ejemplo, no se subraya "Capital".
+- **Menú:** "Inicio" | "Estadías" | "Propietarios" | "Capital" | "Nosotros". La página en la que estás aparece subrayada. Solo se marca en esas páginas principales: dentro del detalle de un inmueble, por ejemplo, no se subraya "Capital".
 - **Saludo "Hola, …"**, con un círculo que muestra la inicial. Solo aparece si el sitio conoce tu nombre (ver diagrama).
 - **"Ingresar"**, con un candado. Lleva a la pantalla de ingreso del panel (app.depahostperu.com/ingresar).
-- **"Mis depas"**, con un ícono de carpeta. Muestra un número cuando tienes depas guardados.
+- **"Mis inmuebles"**, con un ícono de carpeta. Muestra un número cuando tienes inmuebles guardados.
 - **"Contactar"**, un botón azul oscuro con el ícono verde de WhatsApp.
 - **Botón de menú** (tres rayas). Solo aparece en pantallas de menos de 1024 px.
 
@@ -264,10 +264,10 @@ En la pestaña del navegador cada página se titula "Nombre de la página | Depa
 flowchart TD
     abre["Abres una página del sitio"] --> sesion{"¿Iniciaste sesión<br/>en el panel?"}
     sesion -->|"Sí"| cuenta["Ves Hola y el nombre de tu cuenta<br/>Se ocultan los accesos para ingresar"]
-    cuenta --> panel["El saludo te lleva al panel<br/>Comprador: Mis depas<br/>Propietario: Mis propiedades"]
-    sesion -->|"No"| perfil{"¿Dejaste tu nombre en<br/>Guarda tus depas?"}
+    cuenta --> panel["El saludo te lleva al panel<br/>Comprador: Mis inmuebles<br/>Propietario: Mis propiedades"]
+    sesion -->|"No"| perfil{"¿Dejaste tu nombre en<br/>Guarda tus inmuebles?"}
     perfil -->|"Sí"| nombre["Ves Hola y tu nombre<br/>Sigue visible Ingresar"]
-    nombre --> misdepas["El saludo te lleva a<br/>Mis depas del sitio"]
+    nombre --> misdepas["El saludo te lleva a<br/>Mis inmuebles del sitio"]
     perfil -->|"No"| sinsaludo["No hay saludo<br/>Solo se ve Ingresar"]
 ```
 
@@ -275,10 +275,10 @@ flowchart TD
 1. Toca un enlace del menú para ir a esa página. En computadora, la página se empieza a cargar apenas pasas el mouse por encima, así que abre más rápido.
 2. Toca "Ingresar" para ir al panel de cuentas. Allí puedes ingresar o crear una cuenta (se explica en la sección de cuentas).
 3. Toca el saludo "Hola, …":
-   - Si iniciaste sesión, te lleva al panel, a la página de inicio de tu rol. Si eres comprador o inversionista, a "Mis depas" del panel. Si eres propietario, a "Mis propiedades".
-   - Excepción: si el sitio no tiene configurada la dirección del panel, el saludo muestra el nombre de tu cuenta, pero te lleva a "Mis depas" del sitio (`/mis-depas`), no al panel.
-   - Si no iniciaste sesión pero dejaste tu nombre en "Guarda tus depas", te lleva a "Mis depas" del sitio (`/mis-depas`).
-4. Toca "Mis depas" para ver los depas que marcaste con "Me interesa".
+   - Si iniciaste sesión, te lleva al panel, a la página de inicio de tu rol. Si eres comprador o inversionista, a "Mis inmuebles" del panel. Si eres propietario, a "Mis propiedades".
+   - Excepción: si el sitio no tiene configurada la dirección del panel, el saludo muestra el nombre de tu cuenta, pero te lleva a "Mis inmuebles" del sitio (`/mis-inmuebles`), no al panel.
+   - Si no iniciaste sesión pero dejaste tu nombre en "Guarda tus inmuebles", te lleva a "Mis inmuebles" del sitio (`/mis-inmuebles`).
+4. Toca "Mis inmuebles" para ver los inmuebles que marcaste con "Me interesa".
 5. Toca "Contactar" para abrir WhatsApp con un mensaje ya escrito (ver 1.8).
 6. Si usas teclado, presiona Tab al entrar a una página. Aparece "Saltar al contenido", que te lleva directo al contenido sin pasar por el menú.
 
@@ -286,20 +286,20 @@ flowchart TD
 
 | Elemento | Regla | Si no se cumple |
 |---|---|---|
-| Saludo con la cuenta | Hay sesión iniciada en el panel y el sitio está conectado al API | No aparece el saludo con la cuenta. Puede verse el nombre de "Guarda tus depas" o nada |
-| A dónde lleva el saludo con la cuenta | Lleva al panel solo si el sitio tiene configurada la dirección del panel | Muestra el nombre de la cuenta, pero lleva a `/mis-depas` del sitio |
+| Saludo con la cuenta | Hay sesión iniciada en el panel y el sitio está conectado al API | No aparece el saludo con la cuenta. Puede verse el nombre de "Guarda tus inmuebles" o nada |
+| A dónde lleva el saludo con la cuenta | Lleva al panel solo si el sitio tiene configurada la dirección del panel | Muestra el nombre de la cuenta, pero lleva a `/mis-inmuebles` del sitio |
 | Nombre del saludo | Solo el primer nombre, con la primera letra en mayúscula (máximo 40 caracteres). Si hay sesión, manda el nombre de la cuenta | — |
 | "Ingresar" / "Ingresar a mi cuenta" | Se muestran solo si el sitio tiene configurada la dirección del panel y no hay sesión | Si no hay dirección del panel, no aparecen nunca |
-| Contador de "Mis depas" | Muestra cuántos depas guardaste. Con 0 no se ve ningún número | — |
-| Límite de "Mis depas" | Hasta 20 depas en el navegador | Si guardas uno más, se quita el más antiguo sin aviso |
+| Contador de "Mis inmuebles" | Muestra cuántos inmuebles guardaste. Con 0 no se ve ningún número | — |
+| Límite de "Mis inmuebles" | Hasta 20 inmuebles en el navegador | Si guardas uno más, se quita el más antiguo sin aviso |
 
 **Qué pasa después.**
-- "Mis depas" se guarda en el navegador de la persona. El contador cambia al instante, también si tienes el sitio abierto en otra pestaña.
-- Con sesión iniciada, el sitio junta los depas guardados en el navegador con los de tu cuenta. Desde ahí, cada cambio se guarda también en la cuenta. Así no pierdes lo que guardaste antes de ingresar.
-- Ojo con el límite. Al juntar, la cuenta guarda la lista unida completa, siempre que no pase de 50. Si pasa de 50, la cuenta no cambia en ese momento. Los depas que ya no existen o que volvieron a borrador no se guardan en la cuenta. El navegador, en cambio, se queda solo con 20: si la lista unida pasa de 20, deja fuera primero los que ya estaban en la cuenta. Con tu siguiente cambio en "Mis depas" del sitio, la cuenta se actualiza con esos 20 y los demás se quitan de la cuenta, sin aviso.
+- "Mis inmuebles" se guarda en el navegador de la persona. El contador cambia al instante, también si tienes el sitio abierto en otra pestaña.
+- Con sesión iniciada, el sitio junta los inmuebles guardados en el navegador con los de tu cuenta. Desde ahí, cada cambio se guarda también en la cuenta. Así no pierdes lo que guardaste antes de ingresar.
+- Ojo con el límite. Al juntar, la cuenta guarda la lista unida completa, siempre que no pase de 50. Si pasa de 50, la cuenta no cambia en ese momento. Los inmuebles que ya no existen o que volvieron a borrador no se guardan en la cuenta. El navegador, en cambio, se queda solo con 20: si la lista unida pasa de 20, deja fuera primero los que ya estaban en la cuenta. Con tu siguiente cambio en "Mis inmuebles" del sitio, la cuenta se actualiza con esos 20 y los demás se quitan de la cuenta, sin aviso.
 
 **Casos especiales.**
-- El saludo con la cuenta aparece un instante después de que carga la página. Mientras tanto puede verse el nombre de "Guarda tus depas" o nada.
+- El saludo con la cuenta aparece un instante después de que carga la página. Mientras tanto puede verse el nombre de "Guarda tus inmuebles" o nada.
 - Si la sesión venció o la cerraste, el saludo con la cuenta desaparece y vuelve "Ingresar". La sesión dura 30 días desde que ingresas (valor por defecto). Pasado ese plazo el navegador la borra y hay que volver a ingresar, aunque hayas seguido usando el sitio. Cambiar la contraseña también reinicia ese plazo.
 - **En teléfono (menos de 640 px) el saludo no se ve en ningún lado**, ni en la barra ni en el menú. Ya está anotado como pendiente.
 
@@ -335,7 +335,7 @@ flowchart TD
 | Menú de páginas | Dentro del botón de tres rayas | Dentro del botón de tres rayas | En la barra | En la barra |
 | Saludo "Hola, …" | No se ve | Círculo con la inicial y texto | Solo el círculo con la inicial | Círculo con la inicial y texto |
 | Acceso a la cuenta | Solo en el menú: "Ingresar a mi cuenta" | Candado e "Ingresar", y también en el menú | Solo el candado | Candado e "Ingresar" |
-| "Mis depas" | Sí | Sí | Sí | Sí |
+| "Mis inmuebles" | Sí | Sí | Sí | Sí |
 | WhatsApp | Botón flotante verde, y "WhatsApp" en el menú | "Contactar", y "WhatsApp" en el menú | "Contactar" | "Contactar" |
 | Selector "ES \| EN" | En el menú | En el menú | No se ve | No se ve |
 | Botón de tres rayas | Sí | Sí | No | No |
@@ -356,14 +356,14 @@ flowchart TD
 **Qué se ve.**
 - **Franja azul oscuro:**
   - El logo en blanco, que lleva al inicio.
-  - El título "Cuéntanos qué quieres hacer con el depa." y el texto "Reserva, vende, alquila o invierte: te respondemos por WhatsApp."
+  - El título "Cuéntanos qué quieres hacer con el inmueble." y el texto "Reserva, vende, alquila o invierte: te respondemos por WhatsApp."
   - El botón verde "Escribir por WhatsApp".
 - **Fila legal:**
   - Los enlaces "Nosotros", "Política de privacidad", "Términos" y "Libro de Reclamaciones".
   - La línea "© [año] Depa Host Perú · RUC [pendiente] · depahostperu.com ·" y, al final, "Preferencias de cookies".
 
 **Qué puede hacer.**
-1. Toca "Escribir por WhatsApp" para abrir WhatsApp con el mensaje "Hola, les cuento qué quiero hacer con mi depa."
+1. Toca "Escribir por WhatsApp" para abrir WhatsApp con el mensaje "Hola, les cuento qué quiero hacer con mi inmueble."
 2. Toca un enlace legal para ir a esa página.
 3. Toca "Preferencias de cookies" para volver a ver el aviso de cookies y cambiar tu elección (ver 1.7).
 
@@ -461,16 +461,16 @@ Ojo con dos casos:
 | Encabezado (desde 640 px) | "Contactar" | "Hola, les escribo desde la web de Depa Host Perú." |
 | Menú de tres rayas | "WhatsApp" | "Hola, les escribo desde la web de Depa Host Perú." |
 | Botón flotante (teléfono) | Círculo verde | "Hola, les escribo desde la web de Depa Host Perú." |
-| Pie de página | "Escribir por WhatsApp" | "Hola, les cuento qué quiero hacer con mi depa." |
-| Formulario de Propietarios | "Adelantar por WhatsApp" (al enviar) o "Escribir por WhatsApp" (si no se pudo enviar) | "Hola, soy [nombre]. Quiero [vender / poner en alquiler / operar en Airbnb] mi depa en [distrito]." |
-| Te acompañamos (`/capital/empecemos`) | "Escribir por WhatsApp" | Con depas elegidos: "Hola, quiero que me acompañen con este depa:" o "…con estos depas:", y la lista "- Distrito (dirección): precio". Sin depas: "Hola, quiero invertir en un depa en Lima y me gustaría que me acompañen." |
-| "Guarda tus depas" (si no se pudo enviar) | "Escribir por WhatsApp" | "Hola, quiero que me ayuden con los depas que guardé en DepaHost Capital." |
+| Pie de página | "Escribir por WhatsApp" | "Hola, les cuento qué quiero hacer con mi inmueble." |
+| Formulario de Propietarios | "Adelantar por WhatsApp" (al enviar) o "Escribir por WhatsApp" (si no se pudo enviar) | "Hola, soy [nombre]. Quiero [vender / poner en alquiler / operar en Airbnb] mi inmueble en [distrito]." |
+| Te acompañamos (`/capital/empecemos`) | "Escribir por WhatsApp" | Con inmuebles elegidos: "Hola, quiero que me acompañen con este inmueble:" o "…con estos inmuebles:", y la lista "- Distrito (dirección): precio". Sin inmuebles: "Hola, quiero invertir en un inmueble en Lima y me gustaría que me acompañen." |
+| "Guarda tus inmuebles" (si no se pudo enviar) | "Escribir por WhatsApp" | "Hola, quiero que me ayuden con los inmuebles que guardé en DepaHost Capital." |
 | Libro de Reclamaciones (si no se pudo enviar) | "Escribir por WhatsApp" | "Hola, quiero registrar un reclamo en el Libro de Reclamaciones." |
 | Formulario en inglés de Capital | "Message us on WhatsApp" | "Hi, I'm [name]. I'd like to invest in Lima with about USD [monto]." Si no se escribió el monto: "Hi, I'm [name]. I'd like to invest in Lima." |
 
 **Qué pasa después.**
 - Los botones generales (encabezado, menú, botón flotante y pie de página) no guardan nada en el sistema: solo abren WhatsApp.
-- En "Te acompañamos", el sitio registra qué depas elegiste, sin datos personales, antes de abrir WhatsApp. Si ese registro falla, WhatsApp se abre igual.
+- En "Te acompañamos", el sitio registra qué inmuebles elegiste, sin datos personales, antes de abrir WhatsApp. Si ese registro falla, WhatsApp se abre igual.
 - Cuando un formulario no se puede enviar, muestra un mensaje y un enlace "Escribir por WhatsApp" con los datos que ya escribiste:
   - Si el sitio no está conectado al API: "Por ahora recibimos estas consultas por WhatsApp."
   - Si falla la conexión: "No pudimos enviar tus datos. Revisa tu conexión o escríbenos por WhatsApp."
@@ -488,15 +488,15 @@ Ojo con dos casos:
 
 **Cómo se llega.** Aparece al abrir cualquier dirección del sitio que no existe. En la pestaña dice "Página no encontrada | Depa Host Perú".
 
-**Qué se ve.** Un "404" grande, el título "No encontramos esta página" y el texto "Puede que el depa ya no esté disponible o que el link tenga un error." Debajo van dos botones. El encabezado y el pie de página son los de siempre.
+**Qué se ve.** Un "404" grande, el título "No encontramos esta página" y el texto "Puede que el inmueble ya no esté disponible o que el link tenga un error." Debajo van dos botones. El encabezado y el pie de página son los de siempre.
 
 **Qué puede hacer.**
-1. Toca "Ver depas para invertir" para ir a Capital.
+1. Toca "Ver inmuebles para invertir" para ir a Capital.
 2. Toca "Ir al inicio" para volver a la home.
 
 **Casos especiales.**
-- Un enlace a un depa vendido lleva a esta página, porque los depas vendidos no tienen página. Los depas reservados sí la tienen.
-- Un depa recién publicado puede tardar un poco en tener su página, porque el sitio se vuelve a generar después de cada cambio.
+- Un enlace a un inmueble vendido lleva a esta página, porque los inmuebles vendidos no tienen página. Los inmuebles reservados sí la tienen.
+- Un inmueble recién publicado puede tardar un poco en tener su página, porque el sitio se vuelve a generar después de cada cambio.
 - Esta página no aparece en Google.
 
 ### 1.10 Páginas en construcción: Estadías y Nosotros
@@ -523,8 +523,8 @@ Ojo con dos casos:
 
 | Página | Qué dice, en resumen |
 |---|---|
-| Política de privacidad | Quién es responsable de los datos. Qué datos se recogen: formularios, Libro de Reclamaciones, Mis depas (solo en el navegador) y analítica (solo si se acepta). Para qué se usan y con qué proveedores se comparten. Cuánto tiempo se guardan. Cómo pedir acceso, rectificación, cancelación u oposición escribiendo a admin@depahostperu.com con copia del documento de identidad. Cómo cambiar la elección de cookies |
-| Términos y condiciones | La información del sitio es referencial y no es una oferta. Las rentabilidades y cuotas son estimaciones, no garantías. Precios y disponibilidad pueden cambiar. Un depa reservado o vendido puede seguir apareciendo un tiempo. Uso permitido, propiedad intelectual y responsabilidad. Los reclamos van por el Libro de Reclamaciones. Rige la ley peruana, con jueces de Lima |
+| Política de privacidad | Quién es responsable de los datos. Qué datos se recogen: formularios, Libro de Reclamaciones, Mis inmuebles (solo en el navegador) y analítica (solo si se acepta). Para qué se usan y con qué proveedores se comparten. Cuánto tiempo se guardan. Cómo pedir acceso, rectificación, cancelación u oposición escribiendo a admin@depahostperu.com con copia del documento de identidad. Cómo cambiar la elección de cookies |
+| Términos y condiciones | La información del sitio es referencial y no es una oferta. Las rentabilidades y cuotas son estimaciones, no garantías. Precios y disponibilidad pueden cambiar. Un inmueble reservado o vendido puede seguir apareciendo un tiempo. Uso permitido, propiedad intelectual y responsabilidad. Los reclamos van por el Libro de Reclamaciones. Rige la ley peruana, con jueces de Lima |
 
 **Casos especiales.**
 - **Ambos textos son borradores.** Debe revisarlos un abogado antes de publicarse.
@@ -536,8 +536,8 @@ Ojo con dos casos:
 | Ajuste del sitio | Si está vacío o de relleno | Estado hoy |
 |---|---|---|
 | Número de WhatsApp (`PUBLIC_WHATSAPP_NUMBER`) | Se usa "51XXXXXXXXX" y los botones no llevan a un chat real | Relleno en local y preproducción. Falta el número real en producción |
-| Dirección del panel (`PUBLIC_PANEL_URL`) | No aparecen "Ingresar" ni "Ingresar a mi cuenta". Si hay sesión y el sitio está conectado al API, el saludo muestra el nombre de la cuenta, pero lleva a `/mis-depas` del sitio en vez de al panel | app.depahostperu.com en producción |
-| Conexión con el API (`PUBLIC_API_URL`) | El sitio no reconoce la sesión: no hay saludo con la cuenta ni "Mis depas" en la cuenta. Los formularios ofrecen WhatsApp | api.depahostperu.com en producción |
+| Dirección del panel (`PUBLIC_PANEL_URL`) | No aparecen "Ingresar" ni "Ingresar a mi cuenta". Si hay sesión y el sitio está conectado al API, el saludo muestra el nombre de la cuenta, pero lleva a `/mis-inmuebles` del sitio en vez de al panel | app.depahostperu.com en producción |
+| Conexión con el API (`PUBLIC_API_URL`) | El sitio no reconoce la sesión: no hay saludo con la cuenta ni "Mis inmuebles" en la cuenta. Los formularios ofrecen WhatsApp | api.depahostperu.com en producción |
 | Microsoft Clarity (`PUBLIC_CLARITY_ID`) | "Aceptar" se guarda, pero no se activa ninguna analítica | Vacío en local y preproducción. Configurado en producción |
 | Registro de errores (`PUBLIC_SENTRY_DSN`) | No se registran errores del navegador | Vacío en todos los entornos |
 | Datos de la empresa | Se ven textos entre corchetes, como "[pendiente]", en el pie de página y en las páginas legales | Pendientes |
@@ -549,7 +549,7 @@ Ojo con dos casos:
 - Scripts y datos: [consent.ts](../../src/scripts/consent.ts), [forms.ts](../../src/scripts/forms.ts), [contacto.ts](../../src/data/contacto.ts), [empresa.ts](../../src/data/empresa.ts), [profile.ts](../../src/lib/profile.ts), [account.ts](../../src/lib/account.ts), [saved-store.ts](../../src/lib/saved-store.ts), [astro.config.mjs](../../astro.config.mjs)
 - Capítulos técnicos: [02-frontend.md](02-frontend.md), [05-flujos.md](05-flujos.md) (flujos 11, 14 y 15), [07-decisiones-y-pendientes.md](07-decisiones-y-pendientes.md), [08-panel-y-cuentas.md](08-panel-y-cuentas.md)
 
-## 2. Buscar depas en DepaHost Capital
+## 2. Buscar inmuebles en DepaHost Capital
 
 ### 2.1 La portada de Capital
 
@@ -557,12 +557,12 @@ Ojo con dos casos:
 
 *Portada de Capital.*
 
-**Para qué sirve.** En la portada de Capital la persona encuentra depas para invertir en Lima. Puede buscarlos, filtrarlos, compararlos y marcar los que le gustan. No necesita cuenta. Todo lo de esta sección funciona igual para un visitante, un comprador (buyer) y un propietario (seller).
+**Para qué sirve.** En la portada de Capital la persona encuentra inmuebles para invertir en Lima. Puede buscarlos, filtrarlos, compararlos y marcar los que le gustan. No necesita cuenta. Todo lo de esta sección funciona igual para un visitante, un comprador (buyer) y un propietario (seller).
 
 **Cómo se llega.**
 - Entra a `depahostperu.com/capital`.
 - O toca "Capital" en el menú del encabezado.
-- Desde el detalle de un depa, toca "Capital" en la ruta de navegación de arriba.
+- Desde el detalle de un inmueble, toca "Capital" en la ruta de navegación de arriba.
 - En la pestaña del navegador se lee "Capital | Depa Host Perú".
 
 **Qué se ve (de arriba hacia abajo).**
@@ -571,29 +571,29 @@ Ojo con dos casos:
 |---|---|
 | Título y pasos | El título, los botones "Ver todos los proyectos" y "Empecemos", y los 4 pasos de "Cómo funciona" |
 | Buscador y filtros | La caja de búsqueda, los chips de filtros rápidos y "Limpiar filtros" |
-| Tarjetas de depas | Solo depas **de propietarios**. Los proyectos de inmobiliarias no salen aquí, están en la página de cada inmobiliaria |
+| Tarjetas de inmuebles | Solo inmuebles **de propietarios**. Los proyectos de inmobiliarias no salen aquí, están en la página de cada inmobiliaria |
 | Nota de cuota estimada | Un texto legal debajo de las tarjetas |
 | "Para ti, según lo que has visto" | Hasta 4 recomendaciones. Solo aparece si este navegador tiene historial |
 | "Proyectos de aliados" | La franja de inmobiliarias aliadas |
-| Barra del Top 10 | "Los 10 depas para invertir ahora" |
-| Ranking | Los depas con mayor rentabilidad, de propietarios y de proyectos |
+| Barra del Top 10 | "Los 10 inmuebles para invertir ahora" |
+| Ranking | Los inmuebles con mayor rentabilidad, de propietarios y de proyectos |
 | Formulario en inglés | Para inversionistas extranjeros (ver la sección 5) |
 
-**De dónde salen los depas.**
-- En la portada salen los depas de propietarios que el equipo publicó, en estado publicado o reservado.
-- Un depa vendido deja de aparecer en todo el sitio.
+**De dónde salen los inmuebles.**
+- En la portada salen los inmuebles de propietarios que el equipo publicó, en estado publicado o reservado.
+- Un inmueble vendido deja de aparecer en todo el sitio.
 - Van primero los destacados y después los más recientes.
-- El sitio es estático: las tarjetas se arman cuando se genera el sitio, no cuando la persona entra. Si el equipo publica o cambia un depa, el cambio se ve cuando el sitio se vuelve a generar. El API pide esa regeneración solo si está configurado el aviso de despliegue. Si no lo está, alguien tiene que regenerar el sitio a mano.
+- El sitio es estático: las tarjetas se arman cuando se genera el sitio, no cuando la persona entra. Si el equipo publica o cambia un inmueble, el cambio se ve cuando el sitio se vuelve a generar. El API pide esa regeneración solo si está configurado el aviso de despliegue. Si no lo está, alguien tiene que regenerar el sitio a mano.
 - El API espera 30 segundos y junta en una sola regeneración los cambios hechos seguidos. Los cambios en un borrador que sigue siendo borrador no la disparan. Por eso el cambio tarda al menos 30 segundos más lo que demore en generarse el sitio.
 - Si el API falla mientras se genera el sitio, no se publica una versión nueva y queda la anterior.
 - **Sin API configurada** (desarrollo o demo), el sitio muestra **datos de ejemplo**:
-  - 3 depas de propietarios: Lince, Surquillo y Magdalena.
+  - 3 inmuebles de propietarios: Lince, Surquillo y Magdalena.
   - 3 proyectos de la inmobiliaria "Urbana".
   - 5 inmobiliarias de ejemplo.
 
 **Móvil frente a escritorio.**
 
-| Ancho de pantalla | Tarjetas de depas | Pasos |
+| Ancho de pantalla | Tarjetas de inmuebles | Pasos |
 |---|---|---|
 | Celular (menos de 640 px) | Carrusel horizontal. Desliza con el dedo; cada tarjeta ocupa casi todo el ancho | En vertical, uno debajo de otro |
 | Tablet (640 px a 1023 px) | 2 columnas | En horizontal, 4 columnas |
@@ -602,8 +602,8 @@ Ojo con dos casos:
 ### 2.2 Título, pasos y botones principales
 
 **Qué se ve.**
-- Título: "Los mejores departamentos para invertir en Lima."
-- Subtítulo: "Depas de propietarios, elegidos por ubicación, rentabilidad y plusvalía."
+- Título: "Los mejores inmuebles para invertir en Lima."
+- Subtítulo: "Inmuebles de propietarios, elegidos por ubicación, rentabilidad y plusvalía."
 - Pasos numerados: "Comparas", "Consultas", "Te acompañamos" y "Cierras". Solo muestran el título de cada paso, sin descripción, y no se pueden tocar. Son informativos.
 
 **Qué puede hacer.**
@@ -611,14 +611,14 @@ Ojo con dos casos:
 | Botón | A dónde lleva |
 |---|---|
 | "Ver todos los proyectos" | Baja en la misma página hasta la franja "Proyectos de aliados". **No abre una lista con todos los proyectos.** Desde la franja se entra a la página de cada inmobiliaria |
-| "Empecemos" | Abre la página "Te acompañamos al proyecto" (`/capital/empecemos`). Muestra los depas guardados en "Mis depas" y el botón "Escribir por WhatsApp". Si no hay ninguno guardado, aparece el aviso "Todavía no elegiste un depa. Marca **Me interesa** en los que te gusten o escríbenos y te ayudamos a elegir." |
+| "Empecemos" | Abre la página "Te acompañamos al proyecto" (`/capital/empecemos`). Muestra los inmuebles guardados en "Mis inmuebles" y el botón "Escribir por WhatsApp". Si no hay ninguno guardado, aparece el aviso "Todavía no elegiste un inmueble. Marca **Me interesa** en los que te gusten o escríbenos y te ayudamos a elegir." |
 
 **Casos especiales.**
 - Si no hay ninguna inmobiliaria registrada, la franja de aliados no aparece y "Ver todos los proyectos" no hace nada.
 
 ### 2.3 Buscador
 
-**Para qué sirve.** Sirve para encontrar rápido un depa por su distrito, su dirección o su precio.
+**Para qué sirve.** Sirve para encontrar rápido un inmueble por su distrito, su dirección o su precio.
 
 **Qué se ve.** Una caja con una lupa y el texto guía "Busca por distrito, dirección o precio". En la portada no hay botón "Buscar" ni contador de resultados. Las páginas de cada inmobiliaria sí los tienen.
 
@@ -629,12 +629,12 @@ Ojo con dos casos:
 
 **Cómo compara el texto.**
 - No importan las tildes ni las mayúsculas: "ejercito" encuentra "Av. del Ejército".
-- No importan los espacios ni los signos: "310000", "310,000", "310 000" y "S/ 310" encuentran el depa de S/ 310,000.
+- No importan los espacios ni los signos: "310000", "310,000", "310 000" y "S/ 310" encuentran el inmueble de S/ 310,000.
 - Encuentra partes de palabras: "surq" encuentra Surquillo.
 - Busca en el distrito, la dirección, la etiqueta de la tarjeta (por ejemplo "super precio" encuentra "Súper precio") y el precio.
 - **No busca** por rentabilidad ni por años de recupero. Para eso usa los chips.
 - Un número corto puede coincidir con la cuadra o con parte del precio. Por ejemplo, "20" encuentra "Av. Angamos Este cuadra 20".
-- Solo busca entre las tarjetas de esta página, es decir, entre los depas de propietarios. Para buscar proyectos de inmobiliarias, entra a la página de la inmobiliaria desde "Proyectos de aliados".
+- Solo busca entre las tarjetas de esta página, es decir, entre los inmuebles de propietarios. Para buscar proyectos de inmobiliarias, entra a la página de la inmobiliaria desde "Proyectos de aliados".
 
 ### 2.4 Filtros rápidos (chips)
 
@@ -642,33 +642,30 @@ Ojo con dos casos:
 
 *Filtro rápido "Lince" activo.*
 
-**Para qué sirven.** Con un toque dejan ver solo un distrito, un tope de precio o una rentabilidad mínima.
+**Para qué sirven.** Con un toque dejan ver solo un distrito o un tope de precio. La rentabilidad se filtra en "Todos los inmuebles".
 
-**De dónde salen.** Nadie los escribe a mano. Se calculan solos cada vez que se genera el sitio, a partir de los depas de la portada:
+**De dónde salen.** Nadie los escribe a mano. Se calculan solos cada vez que se genera el sitio, a partir de los inmuebles de la portada:
 
 | Tipo de chip | Cómo se arma | Ejemplo con los datos de ejemplo |
 |---|---|---|
-| Distrito | Un chip por cada distrito con depas, en orden alfabético | "Lince", "Magdalena", "Surquillo" |
-| Precio máximo | Los 2 topes más altos, redondeados hacia arriba a múltiplos de S/ 50,000, que dejan fuera al menos un depa | "Hasta S/ 300,000" (no sale "Hasta S/ 350,000" porque incluiría a todos) |
-| Rentabilidad mínima | Los 2 valores de rentabilidad mínima más bajos, sin contar el más bajo de todos (ese incluiría a todos) | "Desde 8% anual", "Desde 9% anual" |
+| Distrito | Los 4 distritos con más inmuebles | "Lince", "Miraflores", "Surquillo", "Barranco" |
+| Precio máximo | Un tope cerca del precio del medio, redondeado hacia arriba a múltiplos de S/ 50,000, que deja fuera al menos un inmueble | "Hasta S/ 350,000" |
 
-Si solo hay un depa, aparece solo el chip de su distrito, sin chips de precio ni de rentabilidad. Si no hay ningún depa, no aparece ningún chip.
+Si solo hay un inmueble, aparece solo el chip de su distrito, sin chip de precio. Si no hay ningún inmueble, no aparece ningún chip.
 
 **Qué puede hacer.**
 1. Toca un chip para activarlo. Se pinta de azul oscuro y muestra una "x".
 2. Toca otro chip **de otro tipo** para sumar condiciones.
-3. Toca otro chip **del mismo tipo** para cambiar el anterior. Solo puede haber un distrito, un tope de precio y una rentabilidad a la vez.
+3. Toca otro chip **del mismo tipo** para cambiar el anterior. Solo puede haber un distrito y un tope de precio a la vez.
 4. Toca de nuevo un chip activo para quitarlo.
 
 **Cómo se combinan.**
 
 | Combinación | Resultado | Ejemplo con los datos de ejemplo |
 |---|---|---|
-| Chips de tipos distintos | Se tienen que cumplir todos | "Surquillo" + "Desde 9% anual": queda Surquillo |
+| Chips de tipos distintos | Se tienen que cumplir todos | "Lince" + "Hasta S/ 350,000": quedan los de Lince que cuestan hasta S/ 350,000 |
 | Dos chips del mismo tipo | El nuevo reemplaza al anterior | Con "Lince" activo, tocar "Magdalena" deja solo Magdalena |
 | Buscador + chips | Se tienen que cumplir el texto y todos los chips | "Lince" + "Hasta S/ 300,000": no queda ninguno |
-
-**Ojo con la rentabilidad.** El chip compara la rentabilidad **mínima** del depa. Un depa de "7–9% anual" no aparece con "Desde 8% anual", aunque su máximo sea 9%.
 
 ```mermaid
 flowchart TD
@@ -678,9 +675,7 @@ flowchart TD
     distrito -->|"No"| oculta
     distrito -->|"Sí o sin chip"| precio{"¿Cuesta igual o menos<br/>que el tope elegido?"}
     precio -->|"No"| oculta
-    precio -->|"Sí o sin chip"| renta{"¿Su rentabilidad mínima llega<br/>a la elegida?"}
-    renta -->|"No"| oculta
-    renta -->|"Sí o sin chip"| muestra["La tarjeta se muestra"]
+    precio -->|"Sí o sin chip"| muestra["La tarjeta se muestra"]
     oculta --> todas{"¿Quedó alguna tarjeta<br/>visible?"}
     muestra --> todas
     todas -->|"No"| vacio["Aparece el aviso<br/>de sin resultados"]
@@ -694,34 +689,34 @@ flowchart TD
 - Al tocarlo, apaga todos los chips, borra el texto y vuelven a verse todas las tarjetas.
 - El cursor queda en el buscador. En el celular puede abrirse el teclado.
 
-**Resultados vacíos.** Si ninguna tarjeta cumple, aparece el texto "No encontramos departamentos con esos criterios." Para salir de ahí, toca "Limpiar filtros" o cambia la búsqueda.
+**Resultados vacíos.** Si ninguna tarjeta cumple, aparece el texto "No encontramos inmuebles con esos criterios." Para salir de ahí, toca "Limpiar filtros" o cambia la búsqueda.
 
 **Reglas y validaciones.**
 
 | Campo | Regla | Mensaje si falla |
 |---|---|---|
-| Buscador | Busca en distrito, dirección, etiqueta y precio. Ignora tildes, mayúsculas, espacios y signos | "No encontramos departamentos con esos criterios." |
-| Chip de distrito | Solo depas de ese distrito. Un distrito a la vez | "No encontramos departamentos con esos criterios." |
-| Chip "Hasta S/ …" | Precio igual o menor al tope | "No encontramos departamentos con esos criterios." |
-| Chip "Desde …% anual" | La rentabilidad mínima del depa es igual o mayor | "No encontramos departamentos con esos criterios." |
+| Buscador | Busca en distrito, dirección, etiqueta y precio. Ignora tildes, mayúsculas, espacios y signos | "No encontramos inmuebles con esos criterios." |
+| Chip de distrito | Solo inmuebles de ese distrito. Un distrito a la vez | "No encontramos inmuebles con esos criterios." |
+| Chip "Hasta S/ …" | Precio igual o menor al tope | "No encontramos inmuebles con esos criterios." |
+| Chip "Desde …% anual" | La rentabilidad mínima del inmueble es igual o mayor | "No encontramos inmuebles con esos criterios." |
 
 **Qué pasa después.**
 - No se guarda nada.
 - Los filtros no cambian la dirección (URL), así que no se pueden compartir.
-- Al recargar la página vuelven a verse todos los depas.
+- Al recargar la página vuelven a verse todos los inmuebles.
 
 **Casos especiales.**
-- Si no hay ningún depa de propietario publicado, la página muestra "No encontramos departamentos con esos criterios." apenas carga.
+- Si no hay ningún inmueble de propietario publicado, la página muestra "No encontramos inmuebles con esos criterios." apenas carga.
 - Si el navegador no ejecuta JavaScript, se ven todas las tarjetas, pero el buscador, los chips y "Me interesa" no funcionan.
 
-### 2.6 Tarjetas de depa
+### 2.6 Tarjetas de inmueble
 
 **Qué se ve en cada tarjeta.**
 
 | Parte | Qué muestra |
 |---|---|
-| Foto | La primera foto del depa. Si no tiene foto, se ve un bloque azul con una casita |
-| Etiquetas sobre la foto | "De propietario" (en la portada siempre es esta). Al lado va "Reservado" si el depa está reservado. Si no, va la etiqueta comercial que le puso el equipo, por ejemplo "Súper precio", "Súper oportunidad" o "Últimos en venta" en los datos de ejemplo |
+| Foto | La primera foto del inmueble. Si no tiene foto, se ve un bloque azul con una casita |
+| Etiquetas sobre la foto | "De propietario" (en la portada siempre es esta). Al lado va "Reservado" si el inmueble está reservado. Si no, va la etiqueta comercial que le puso el equipo, por ejemplo "Súper precio", "Súper oportunidad" o "Últimos en venta" en los datos de ejemplo |
 | Título | El distrito, por ejemplo "Lince" |
 | Dirección | Por ejemplo "Av. Arequipa cuadra 12" |
 | "valor" | El precio, por ejemplo "S/ 310,000" |
@@ -730,9 +725,9 @@ flowchart TD
 | Botones | "Me interesa" y "Ver más detalle" |
 
 **Qué puede hacer.**
-1. Toca cualquier parte de la tarjeta, o el botón "Ver más detalle", para abrir el detalle del depa (`/capital/{nombre-del-depa}`).
-2. Toca "Me interesa" para guardarlo en "Mis depas" (ver 2.7).
-3. Para contactar, abre el detalle y toca "Contactar". **La tarjeta no tiene botón de contacto.** "Contactar" lleva a "Te acompañamos al proyecto" con ese depa ya elegido.
+1. Toca cualquier parte de la tarjeta, o el botón "Ver más detalle", para abrir el detalle del inmueble (`/capital/{nombre-del-depa}`).
+2. Toca "Me interesa" para guardarlo en "Mis inmuebles" (ver 2.7).
+3. Para contactar, abre el detalle y toca "Contactar". **La tarjeta no tiene botón de contacto.** "Contactar" lleva a "Te acompañamos al proyecto" con ese inmueble ya elegido.
 
 **Nota de cuota estimada.** Debajo de las tarjetas va este texto:
 > "*Cuota estimada con tasa pizarra a [plazo] años y [X] % de inicial, al [fecha]. Renta estimada según el mercado del distrito. No es una rentabilidad garantizada."
@@ -743,17 +738,17 @@ flowchart TD
 - El texto habla de "cuota", pero hoy las tarjetas no muestran ninguna cuota.
 
 **Casos especiales.**
-- La tarjeta, el buscador y el Top 10 muestran el precio siempre con "S/", aunque el depa esté cargado en dólares. Las tarjetas chicas de "Para ti, según lo que has visto" y el detalle sí muestran la moneda correcta.
-- Los chips de precio y el orden del Top 10 usan el monto tal como está cargado, sin convertir dólares a soles. Por ejemplo, un depa de USD 90,000 pasa el chip "Hasta S/ 300,000".
-- Los depas reservados siguen en la lista con la etiqueta "Reservado".
+- La tarjeta, el buscador y el Top 10 muestran el precio siempre con "S/", aunque el inmueble esté cargado en dólares. Las tarjetas chicas de "Para ti, según lo que has visto" y el detalle sí muestran la moneda correcta.
+- Los chips de precio y el orden del Top 10 usan el monto tal como está cargado, sin convertir dólares a soles. Por ejemplo, un inmueble de USD 90,000 pasa el chip "Hasta S/ 300,000".
+- Los inmuebles reservados siguen en la lista con la etiqueta "Reservado".
 
 ### 2.7 Botón "Me interesa"
 
-![Tarjeta guardada: el botón cambia a "Guardado" y el contador de "Mis depas" muestra 1](img/manual/05-me-interesa.webp)
+![Tarjeta guardada: el botón cambia a "Guardado" y el contador de "Mis inmuebles" muestra 1](img/manual/05-me-interesa.webp)
 
-*Tarjeta guardada: el botón cambia a "Guardado" y el contador de "Mis depas" muestra 1.*
+*Tarjeta guardada: el botón cambia a "Guardado" y el contador de "Mis inmuebles" muestra 1.*
 
-**Para qué sirve.** Guarda el depa en "Mis depas" para compararlo o consultarlo después. No hace falta tener cuenta.
+**Para qué sirve.** Guarda el inmueble en "Mis inmuebles" para compararlo o consultarlo después. No hace falta tener cuenta.
 
 **Qué puede hacer.**
 1. Toca "Me interesa" en la tarjeta.
@@ -761,17 +756,17 @@ flowchart TD
 3. Para quitarlo, toca otra vez "Guardado". Vuelve a decir "Me interesa".
 
 **Qué pasa después.**
-- El contador de "Mis depas" en el encabezado sube. Se oculta cuando no hay ninguno guardado.
-- Todos los botones del mismo depa se actualizan juntos: tarjeta, detalle y otras pestañas abiertas.
-- "Mis depas" **se guarda en el navegador de la persona**. Si entra desde otro celular o computadora, no ve lo que guardó aquí, salvo que tenga cuenta.
+- El contador de "Mis inmuebles" en el encabezado sube. Se oculta cuando no hay ninguno guardado.
+- Todos los botones del mismo inmueble se actualizan juntos: tarjeta, detalle y otras pestañas abiertas.
+- "Mis inmuebles" **se guarda en el navegador de la persona**. Si entra desde otro celular o computadora, no ve lo que guardó aquí, salvo que tenga cuenta.
 - **Con sesión iniciada**, lo guardado en el navegador se une con lo guardado en la cuenta y cada cambio se guarda también en la cuenta (ver el capítulo de cuentas).
-- El aviso "Guarda tus depas", que pide nombre y celular, se abre cuando la lista de "Mis depas" crece y queda con 2 o más depas (normalmente, al guardar el segundo). No se abre si la persona ya dejó sus datos en este navegador ni si lo cerró en los últimos 7 días; pasado ese plazo vuelve a abrirse con el siguiente depa que guarde. Puede abrirse aunque haya sesión iniciada, e incluso al cargar la página si al unir con la cuenta la lista crece. El detalle está en la sección de "Mis depas".
+- El aviso "Guarda tus inmuebles", que pide nombre y celular, se abre cuando la lista de "Mis inmuebles" crece y queda con 2 o más inmuebles (normalmente, al guardar el segundo). No se abre si la persona ya dejó sus datos en este navegador ni si lo cerró en los últimos 7 días; pasado ese plazo vuelve a abrirse con el siguiente inmueble que guarde. Puede abrirse aunque haya sesión iniciada, e incluso al cargar la página si al unir con la cuenta la lista crece. El detalle está en la sección de "Mis inmuebles".
 
 **Reglas y validaciones.**
 
 | Campo | Regla | Mensaje si falla |
 |---|---|---|
-| "Me interesa" | Máximo 20 depas en el navegador | Ninguno. Al guardar el número 21, se quita sin aviso el más antiguo |
+| "Me interesa" | Máximo 20 inmuebles en el navegador | Ninguno. Al guardar el número 21, se quita sin aviso el más antiguo |
 
 **Casos especiales.**
 - Si el navegador bloquea el almacenamiento (por ejemplo, con las cookies y los datos de sitios bloqueados), lo guardado dura solo mientras la página está abierta. Se pierde al recargar o al cambiar de página.
@@ -779,27 +774,27 @@ flowchart TD
 
 ### 2.8 "Para ti, según lo que has visto"
 
-**Para qué sirve.** Recomienda hasta 4 depas parecidos a los que la persona abrió o guardó.
+**Para qué sirve.** Recomienda hasta 4 inmuebles parecidos a los que la persona abrió o guardó.
 
 **Cuándo aparece.** Aparece debajo de las tarjetas solo si se cumplen las dos condiciones:
-- Este navegador tiene al menos un depa abierto en su detalle o guardado con "Me interesa".
+- Este navegador tiene al menos un inmueble abierto en su detalle o guardado con "Me interesa".
 - Hay al menos una recomendación.
 
 Para quien entra por primera vez, la fila no existe. Aparece un instante después de que carga la página, así que puede mover un poco lo que está debajo (problema conocido).
 
 **De dónde salen las recomendaciones.**
 - **Del navegador de la persona, no de su cuenta.** Se usan:
-  - el historial: los últimos 12 depas abiertos en su detalle, de los cuales cuentan los 6 más recientes;
-  - la lista de "Mis depas".
-- Se elige entre **todos** los depas publicados o reservados: de propietarios **y** proyectos de inmobiliarias.
-- Qué hace que un depa se parezca más:
+  - el historial: los últimos 12 inmuebles abiertos en su detalle, de los cuales cuentan los 6 más recientes;
+  - la lista de "Mis inmuebles".
+- Se elige entre **todos** los inmuebles publicados o reservados: de propietarios **y** proyectos de inmobiliarias.
+- Qué hace que un inmueble se parezca más:
   1. Que esté en el mismo distrito. Es lo que más pesa.
   2. Que tenga un precio cercano.
   3. Que sea del mismo tipo (de propietario o de proyecto).
   4. Que tenga una rentabilidad parecida.
 - Lo guardado pesa más que lo visto. Entre lo visto, lo más reciente pesa más.
-- Nunca recomienda un depa que ya está en "Mis depas".
-- Los depas ya vistos pueden salir, pero con menos prioridad que los nuevos.
+- Nunca recomienda un inmueble que ya está en "Mis inmuebles".
+- Los inmuebles ya vistos pueden salir, pero con menos prioridad que los nuevos.
 
 **Qué se ve.**
 - Cada recomendación es una tarjeta chica con:
@@ -812,13 +807,13 @@ Para quien entra por primera vez, la fila no existe. Aparece un instante despué
 
 **Qué puede hacer.**
 1. Toca una recomendación para abrir su detalle.
-2. Toca "Ver todos" para bajar a la lista de depas de la misma página.
+2. Toca "Ver todos" para bajar a la lista de inmuebles de la misma página.
 
 ```mermaid
 flowchart TD
-    abre["Abres la portada de Capital"] --> senal{"¿Este navegador tiene depas<br/>vistos o guardados?"}
+    abre["Abres la portada de Capital"] --> senal{"¿Este navegador tiene inmuebles<br/>vistos o guardados?"}
     senal -->|"No"| oculta["La fila no aparece"]
-    senal -->|"Sí"| carga["Se descarga el catálogo<br/>de depas y proyectos"]
+    senal -->|"Sí"| carga["Se descarga el catálogo<br/>de inmuebles y proyectos"]
     carga -->|"Falla la descarga"| oculta
     carga -->|"Carga bien"| calcula["Se eligen hasta 4 parecidos<br/>sin repetir los guardados"]
     calcula --> hay{"¿Salió al menos uno?"}
@@ -830,8 +825,8 @@ flowchart TD
 
 **Casos especiales.**
 - Si la persona llega sin historial y marca "Me interesa" en la portada, la fila **no aparece hasta que recarga** la página o vuelve a entrar.
-- Si ya había historial, la fila se recalcula sola cada vez que toca "Me interesa". Un depa recién guardado sale de la fila.
-- Si la persona abre depas en otra pestaña, la fila se actualiza al recargar la portada.
+- Si ya había historial, la fila se recalcula sola cada vez que toca "Me interesa". Un inmueble recién guardado sale de la fila.
+- Si la persona abre inmuebles en otra pestaña, la fila se actualiza al recargar la portada.
 - Si falla la descarga del catálogo, la fila no aparece y no se muestra ningún error.
 
 ### 2.9 "Proyectos de aliados"
@@ -859,15 +854,15 @@ flowchart TD
 
 ### 2.10 Top 10
 
-**Para qué sirve.** Ordena los depas con mejor rentabilidad estimada, para decidir rápido.
+**Para qué sirve.** Ordena los inmuebles con mejor rentabilidad estimada, para decidir rápido.
 
 **Cómo se llega.**
-- Toca la barra "Los 10 depas para invertir ahora". Toda la barra es un enlace.
+- Toca la barra "Los 10 inmuebles para invertir ahora". Toda la barra es un enlace.
 - El botón de la barra dice "Ver el top 10 →" en tablet y escritorio, y "Ver →" en el celular.
 - Al tocarla, la página baja hasta el ranking.
 
 **Qué se ve.**
-- El título es "Los 10 depas para invertir ahora" solo si hay exactamente 10. Si hay menos, dice "Los depas para invertir ahora". Con los datos de ejemplo hay 6, así que se ve el segundo título.
+- El título es "Los 10 inmuebles para invertir ahora" solo si hay exactamente 10. Si hay menos, dice "Los inmuebles para invertir ahora". Con los datos de ejemplo hay 6, así que se ve el segundo título.
 - Debajo dice "Ordenados por rentabilidad anual estimada."
 - Cada fila muestra:
   - su número de puesto;
@@ -876,7 +871,7 @@ flowchart TD
   - a la derecha, la rentabilidad.
 
 **Qué entra y cómo se ordena.**
-- Entran depas de propietarios **y** proyectos de inmobiliarias.
+- Entran inmuebles de propietarios **y** proyectos de inmobiliarias.
 - Solo los **publicados**. Los reservados no entran.
 - El orden:
   1. Primero la rentabilidad máxima más alta.
@@ -884,10 +879,10 @@ flowchart TD
   3. Si siguen empatados, el precio más bajo.
 
 **Qué puede hacer.**
-1. Toca cualquier fila para abrir el detalle de ese depa. El enlace es el nombre del distrito, pero toda la fila responde al toque: el número, la dirección y la rentabilidad también abren el detalle. Al pasar el mouse, la fila entera se resalta.
+1. Toca cualquier fila para abrir el detalle de ese inmueble. El enlace es el nombre del distrito, pero toda la fila responde al toque: el número, la dirección y la rentabilidad también abren el detalle. Al pasar el mouse, la fila entera se resalta.
 
 **Casos especiales.**
-- Si no hay ningún depa publicado, el ranking no aparece, pero la barra sí. En ese caso tocarla no lleva a ningún lado.
+- Si no hay ningún inmueble publicado, el ranking no aparece, pero la barra sí. En ese caso tocarla no lleva a ningún lado.
 - El precio se muestra siempre con "S/", y el desempate por precio usa el monto sin convertir la moneda (ver 2.6).
 
 ### 2.11 Formulario en inglés
@@ -900,35 +895,35 @@ Es lo único en inglés: el resto del sitio está solo en español. Sus campos, 
 
 **Referencia técnica:** [src/pages/capital/index.astro](../../src/pages/capital/index.astro), [SearchFilters.astro](../../src/components/SearchFilters.astro), [PropertyCard.astro](../../src/components/PropertyCard.astro), [PropertyGrid.astro](../../src/components/PropertyGrid.astro), [SaveButton.astro](../../src/components/SaveButton.astro), [SaveListDialog.astro](../../src/components/SaveListDialog.astro), [ForYouRow.astro](../../src/components/ForYouRow.astro), [MiniCard.astro](../../src/components/MiniCard.astro), [AlliesStrip.astro](../../src/components/AlliesStrip.astro), [Step.astro](../../src/components/Step.astro), [property-filters.ts](../../src/scripts/property-filters.ts), [saved-buttons.ts](../../src/scripts/saved-buttons.ts), [catalog.ts](../../src/scripts/catalog.ts), [filters.ts](../../src/lib/filters.ts), [recommend.ts](../../src/lib/recommend.ts), [saved-store.ts](../../src/lib/saved-store.ts), [profile.ts](../../src/lib/profile.ts), [properties.ts](../../src/lib/properties.ts), [format.ts](../../src/lib/format.ts), [datos de ejemplo](../../src/content/properties.json). Capítulos: [02 · Frontend](../plataforma/02-frontend.md#detalle-de-la-portada-de-capital), [05 · Flujos, apartados 5, 6 y 9](../plataforma/05-flujos.md#5-buscar-y-filtrar), [08 · Panel y cuentas](../plataforma/08-panel-y-cuentas.md).
 
-## 3. Ver un depa y los proyectos de una inmobiliaria
+## 3. Ver un inmueble y los proyectos de una inmobiliaria
 
-Esta sección explica la ficha de cada depa y la página con los proyectos de cada inmobiliaria aliada. Ninguna de las dos pide cuenta. Un visitante, un comprador (rol buyer) y un propietario (rol seller) ven exactamente lo mismo.
+Esta sección explica la ficha de cada inmueble y la página con los proyectos de cada inmobiliaria aliada. Ninguna de las dos pide cuenta. Un visitante, un comprador (rol buyer) y un propietario (rol seller) ven exactamente lo mismo.
 
-### 3.1 La ficha de un depa
+### 3.1 La ficha de un inmueble
 
-![Ficha de un depa](img/manual/10-detalle.webp)
+![Ficha de un inmueble](img/manual/10-detalle.webp)
 
-*Ficha de un depa.*
+*Ficha de un inmueble.*
 
-**Para qué sirve.** Reúne todo lo que se sabe de un depa para que decidas si te interesa: precio, rentabilidad estimada, en cuántos años se paga, fotos, características y quién lo ofrece. Desde la ficha lo guardas en "Mis depas" o pides que te acompañen.
+**Para qué sirve.** Reúne todo lo que se sabe de un inmueble para que decidas si te interesa: precio, rentabilidad estimada, en cuántos años se paga, fotos, características y quién lo ofrece. Desde la ficha lo guardas en "Mis inmuebles" o pides que te acompañen.
 
 **Cómo se llega.**
 
-- **URL:** `depahostperu.com/capital/{slug}`. El sistema arma el slug con el distrito y la dirección cuando el equipo crea el depa. Por ejemplo, en los datos de ejemplo: `lince-av-arequipa-cuadra-12`. El equipo puede escribir otro slug.
+- **URL:** `depahostperu.com/capital/{slug}`. El sistema arma el slug con el distrito y la dirección cuando el equipo crea el inmueble. Por ejemplo, en los datos de ejemplo: `lince-av-arequipa-cuadra-12`. El equipo puede escribir otro slug.
 - **Desde el sitio:**
 
 | Desde | Qué tocas |
 |---|---|
-| `/capital`, lista de depas de propietarios | La tarjeta o "Ver más detalle" |
-| `/capital`, "Los 10 depas para invertir ahora" (si hay menos de 10, el título es "Los depas para invertir ahora") | Cualquier parte de la fila. El enlace es el nombre del distrito, pero toda la fila responde al toque |
+| `/capital`, lista de inmuebles de propietarios | La tarjeta o "Ver más detalle" |
+| `/capital`, "Los 10 inmuebles para invertir ahora" (si hay menos de 10, el título es "Los inmuebles para invertir ahora") | Cualquier parte de la fila. El enlace es el nombre del distrito, pero toda la fila responde al toque |
 | `/capital`, "Para ti, según lo que has visto" | La tarjeta |
 | `/capital/aliados/{slug}` | La tarjeta del proyecto o "Ver más detalle" |
-| Otra ficha, "Depas similares que te pueden interesar" | La tarjeta |
-| `/mis-depas` y "Te acompañamos al proyecto" | El nombre del distrito |
+| Otra ficha, "Inmuebles similares que te pueden interesar" | La tarjeta |
+| `/mis-inmuebles` y "Te acompañamos al proyecto" | El nombre del distrito |
 
 - **Desde el panel app.depahostperu.com:**
-  - Comprador: en "Mis depas" toca "Ver en el sitio". En "Mis consultas" toca el nombre del distrito.
-  - Propietario: en el detalle de su solicitud toca "Ver mi depa en el sitio".
+  - Comprador: en "Mis inmuebles" toca "Ver en el sitio". En "Mis consultas" toca el nombre del distrito.
+  - Propietario: en el detalle de su solicitud toca "Ver mi inmueble en el sitio".
 - **Desde un enlace compartido** (WhatsApp, redes).
 
 **Qué se ve.** De arriba hacia abajo:
@@ -937,7 +932,7 @@ Esta sección explica la ficha de cada depa y la página con los proyectos de ca
 |---|---|---|
 | Miga de pan | "Capital" › nombre de la inmobiliaria › distrito | La inmobiliaria aparece solo en los proyectos |
 | Fotos | Una foto grande y, debajo, las demás en miniatura | Si no hay fotos, sale un recuadro con el dibujo de una casa |
-| Etiqueta superior (en mayúsculas) | Estado, origen e insignia. En los proyectos, el origen incluye el nombre de la inmobiliaria: "De proyecto · {inmobiliaria}". Por ejemplo: "De propietario · Súper precio" (datos de ejemplo) o, en un proyecto reservado de Urbana, "Reservado · De proyecto · Urbana" | El estado sale solo si el depa está reservado. La insignia sale solo si está publicado |
+| Etiqueta superior (en mayúsculas) | Estado, origen e insignia. En los proyectos, el origen incluye el nombre de la inmobiliaria: "De proyecto · {inmobiliaria}". Por ejemplo: "De propietario · Súper precio" (datos de ejemplo) o, en un proyecto reservado de Urbana, "Reservado · De proyecto · Urbana" | El estado sale solo si el inmueble está reservado. La insignia sale solo si está publicado |
 | Título | "{Distrito} · {calle}", sin el número de cuadra. Por ejemplo: "Lince · Av. Arequipa" | Siempre |
 | Dirección | La dirección completa y el distrito, con un ícono de ubicación. Por ejemplo: "Av. Arequipa cuadra 12, Lince" | Siempre |
 | Tres datos | "valor", "rentabilidad" y "se paga en" (ver 3.2) | Siempre |
@@ -946,30 +941,30 @@ Esta sección explica la ficha de cada depa y la página con los proyectos de ca
 | Botones | "Me interesa" y "Contactar" | Siempre |
 | Descripción | Texto libre, con sus saltos de línea | Solo si existe |
 | Bloque del aliado | Ver 3.3 | Siempre |
-| Depas similares | Hasta 4 tarjetas (ver 3.6) | Si hay otros depas en el sitio |
+| Inmuebles similares | Hasta 4 tarjetas (ver 3.6) | Si hay otros inmuebles en el sitio |
 | Nota de cuota estimada | Texto al pie (ver 3.2) | Siempre |
 
 **Qué puedes hacer.**
 
 1. Mira las fotos. Las miniaturas no se agrandan al tocarlas: no hay visor de fotos.
-2. Toca "Me interesa" para guardar el depa (ver 3.4).
+2. Toca "Me interesa" para guardar el inmueble (ver 3.4).
 3. Toca "Contactar" para pedir acompañamiento por WhatsApp (ver 3.5).
 4. Toca el nombre de la inmobiliaria en la miga de pan, o "Ver sus N proyectos", para ver sus otros proyectos (ver 3.3 y 3.8).
-5. Toca una tarjeta de "Depas similares que te pueden interesar" para abrir otra ficha (ver 3.6).
+5. Toca una tarjeta de "Inmuebles similares que te pueden interesar" para abrir otra ficha (ver 3.6).
 6. Toca "Capital" en la miga de pan para volver a la lista.
 
 ```mermaid
 flowchart TD
-    LINK["Abres un enlace<br/>/capital/slug-del-depa"] --> CHECK{"¿El depa estaba publicado o reservado<br/>la última vez que se generó el sitio?"}
-    CHECK -->|"Sí"| FICHA["Se abre la ficha del depa"]
+    LINK["Abres un enlace<br/>/capital/slug-del-depa"] --> CHECK{"¿El inmueble estaba publicado o reservado<br/>la última vez que se generó el sitio?"}
+    CHECK -->|"Sí"| FICHA["Se abre la ficha del inmueble"]
     CHECK -->|"No"| NF["Página 404<br/>No encontramos esta página"]
     FICHA --> VISTO["El navegador lo anota como visto<br/>para Para ti"]
-    FICHA --> SAVE["Me interesa<br/>se guarda en Mis depas"]
+    FICHA --> SAVE["Me interesa<br/>se guarda en Mis inmuebles"]
     FICHA --> CONT["Contactar<br/>Te acompañamos al proyecto"]
     CONT --> WA["Escribir por WhatsApp"]
-    FICHA --> SIM["Depas similares<br/>abre otra ficha"]
+    FICHA --> SIM["Inmuebles similares<br/>abre otra ficha"]
     FICHA --> ALLY["Ver sus N proyectos<br/>página de la inmobiliaria"]
-    NF --> BTN["Ver depas para invertir<br/>o Ir al inicio"]
+    NF --> BTN["Ver inmuebles para invertir<br/>o Ir al inicio"]
 ```
 
 ### 3.2 Precio, rentabilidad, recupero y "cuota estimada"
@@ -978,7 +973,7 @@ flowchart TD
 
 | Etiqueta | Qué muestra | Nota debajo | Formato |
 |---|---|---|---|
-| "valor" | El precio, en la moneda del depa | "Precio de compra" si es de propietario. "Precio desde" si es de proyecto | "S/ 310,000" o "US$ 50,000", sin decimales |
+| "valor" | El precio, en la moneda del inmueble | "Precio de compra" si es de propietario. "Precio desde" si es de proyecto | "S/ 310,000" o "US$ 50,000", sin decimales |
 | "rentabilidad" | La rentabilidad anual estimada, en verde | "Estimada" | Un rango, como "8–10% anual", o un solo valor, como "5.8% anual" |
 | "se paga en" | En cuántos años se recupera la inversión | "Plazo de inversión" | "11 años" o "1 año" |
 
@@ -995,7 +990,7 @@ flowchart TD
 
 ### 3.3 Bloque del aliado
 
-| Origen del depa | Título | Nombre | Texto | Enlace |
+| Origen del inmueble | Título | Nombre | Texto | Enlace |
 |---|---|---|---|---|
 | Proyecto de inmobiliaria | "Aliado del proyecto" | Nombre de la inmobiliaria | Su descripción. Si no tiene: "Inmobiliaria aliada de DepaHost Capital." | "Ver sus N proyectos", solo si tiene más de 1 proyecto visible |
 | Propietario | "Te acompaña" | "DepaHost Capital" | "Plataforma inmobiliaria con enfoque en inversión accesible y de confianza." | Ninguno |
@@ -1007,11 +1002,11 @@ flowchart TD
 
 ### 3.4 "Me interesa" en la ficha
 
-**Para qué sirve.** Guarda el depa en "Mis depas" para compararlo después y pedir acompañamiento con varios a la vez.
+**Para qué sirve.** Guarda el inmueble en "Mis inmuebles" para compararlo después y pedir acompañamiento con varios a la vez.
 
 **Qué puedes hacer.**
 
-1. Toca "Me interesa". El corazón se rellena, el botón cambia a "Guardado" y sube el contador de "Mis depas" en el encabezado.
+1. Toca "Me interesa". El corazón se rellena, el botón cambia a "Guardado" y sube el contador de "Mis inmuebles" en el encabezado.
 2. Para quitarlo, toca "Guardado". El botón vuelve a "Me interesa".
 
 **Reglas y validaciones.**
@@ -1019,56 +1014,56 @@ flowchart TD
 | Campo | Regla | Mensaje si falla |
 |---|---|---|
 | "Me interesa" | Funciona como interruptor: un toque guarda y el siguiente quita | — |
-| Mis depas en el navegador | Guarda como máximo 20 depas | Sin mensaje. Al guardar el número 21 se quita el más antiguo |
-| Mis depas en la cuenta | La cuenta admite hasta 50. Al iniciar sesión, el sitio une la lista de la cuenta con la del navegador y guarda en la cuenta **la lista unida completa**, aunque pase de 20. Si la lista unida pasa de 50, la cuenta no la acepta y queda como estaba. En los dos casos, el navegador se queda solo con los 20 más recientes de esa lista. La cuenta baja a esos 20 con el siguiente cambio de la lista en el navegador: cuando guardas o quitas un depa (también desde otra pestaña), o cuando `/mis-depas` quita por su cuenta los que ya no están disponibles. Desde ese momento, cada cambio guarda en la cuenta la lista del navegador. Los que no existen o son borradores se descartan | Sin mensaje. Si la sincronización falla, la lista sigue en el navegador |
+| Mis inmuebles en el navegador | Guarda como máximo 20 inmuebles | Sin mensaje. Al guardar el número 21 se quita el más antiguo |
+| Mis inmuebles en la cuenta | La cuenta admite hasta 50. Al iniciar sesión, el sitio une la lista de la cuenta con la del navegador y guarda en la cuenta **la lista unida completa**, aunque pase de 20. Si la lista unida pasa de 50, la cuenta no la acepta y queda como estaba. En los dos casos, el navegador se queda solo con los 20 más recientes de esa lista. La cuenta baja a esos 20 con el siguiente cambio de la lista en el navegador: cuando guardas o quitas un inmueble (también desde otra pestaña), o cuando `/mis-inmuebles` quita por su cuenta los que ya no están disponibles. Desde ese momento, cada cambio guarda en la cuenta la lista del navegador. Los que no existen o son borradores se descartan | Sin mensaje. Si la sincronización falla, la lista sigue en el navegador |
 | Almacenamiento del navegador bloqueado | La lista vive solo mientras la página esté abierta | Sin mensaje |
 
 **Qué pasa después.**
 
-- **Sin cuenta:** "Mis depas" se guarda en el navegador de la persona. Solo lo ves en ese dispositivo y en ese navegador. Si tienes otras pestañas abiertas del sitio, se actualizan solas.
-- **Con sesión iniciada en el panel** (comprador o propietario): el sitio junta lo del navegador con lo de la cuenta y guarda cada cambio en la cuenta. Lo ves en "Mis depas" del panel desde cualquier dispositivo. Esto funciona solo si el sitio tiene configurado el API.
-- **Cuando guardas un depa y ya tienes al menos 2 en Mis depas** (el segundo, el tercero, etc.), puede abrirse la ventana "Guarda tus depas", que pide nombre y celular. Aparece si nunca dejaste tu nombre ahí y no la cerraste en los últimos 7 días. Puede salir aunque tengas sesión iniciada, porque solo revisa si dejaste tu nombre en esa ventana. Los detalles están en la sección de Mis depas.
-- Guardar no avisa al equipo por sí solo. Al propietario, "Veces guardado" le muestra cuántas cuentas tienen hoy ese depa en Mis depas. Sube cuando alguien con sesión lo guarda y baja cuando lo quita. Los guardados sin sesión no cuentan.
+- **Sin cuenta:** "Mis inmuebles" se guarda en el navegador de la persona. Solo lo ves en ese dispositivo y en ese navegador. Si tienes otras pestañas abiertas del sitio, se actualizan solas.
+- **Con sesión iniciada en el panel** (comprador o propietario): el sitio junta lo del navegador con lo de la cuenta y guarda cada cambio en la cuenta. Lo ves en "Mis inmuebles" del panel desde cualquier dispositivo. Esto funciona solo si el sitio tiene configurado el API.
+- **Cuando guardas un inmueble y ya tienes al menos 2 en Mis inmuebles** (el segundo, el tercero, etc.), puede abrirse la ventana "Guarda tus inmuebles", que pide nombre y celular. Aparece si nunca dejaste tu nombre ahí y no la cerraste en los últimos 7 días. Puede salir aunque tengas sesión iniciada, porque solo revisa si dejaste tu nombre en esa ventana. Los detalles están en la sección de Mis inmuebles.
+- Guardar no avisa al equipo por sí solo. Al propietario, "Veces guardado" le muestra cuántas cuentas tienen hoy ese inmueble en Mis inmuebles. Sube cuando alguien con sesión lo guarda y baja cuando lo quita. Los guardados sin sesión no cuentan.
 
 ### 3.5 "Contactar"
 
-**Para qué sirve.** Pide que el equipo te acompañe con este depa en particular. La conversación sigue por WhatsApp.
+**Para qué sirve.** Pide que el equipo te acompañe con este inmueble en particular. La conversación sigue por WhatsApp.
 
 **Cómo se llega.** Es el botón "Contactar", con ícono de sobre, al lado de "Me interesa". Lleva a `/capital/empecemos?depa={slug}`.
 
 **Qué puedes hacer.**
 
 1. Toca "Contactar".
-2. Se abre "Te acompañamos al proyecto". En "Departamento seleccionado" aparece **solo este depa**, aunque tengas otros en Mis depas. El subtítulo dice "Estamos de tu lado para que encuentres el departamento ideal en {distrito}."
+2. Se abre "Te acompañamos al proyecto". En "Inmueble seleccionado" aparece **solo este inmueble**, aunque tengas otros en Mis inmuebles. El subtítulo dice "Estamos de tu lado para que encuentres el inmueble ideal en {distrito}."
 3. Revisa los tres pasos: "Entramos juntos", "Coordinamos la visita" y "Cierras la compra".
-4. Si prefieres consultar por varios depas, toca "Cambiar selección". Te lleva a `/mis-depas`.
+4. Si prefieres consultar por varios inmuebles, toca "Cambiar selección". Te lleva a `/mis-inmuebles`.
 5. Toca "Escribir por WhatsApp". WhatsApp se abre con este mensaje ya escrito:
    ```
-   Hola, quiero que me acompañen con este depa:
+   Hola, quiero que me acompañen con este inmueble:
    - {Distrito} ({dirección}): {precio}
    ```
 6. Envía el mensaje desde WhatsApp.
 
 **Qué pasa después.**
 
-- Si el API está configurado, al tocar "Escribir por WhatsApp" el sitio registra una consulta **sin nombre, correo ni teléfono**: guarda qué depa pediste, de qué campaña llegaste (UTM) y, si tienes sesión iniciada, tu cuenta. Se registra aunque después no envíes el mensaje.
-- Solo ese toque registra la consulta. Abrir "Te acompañamos al proyecto", tocar "Contactar" o "Cambiar selección", o llegar desde "Empecemos con estos" de Mis depas no envía nada.
-- El API acepta hasta 10 consultas por minuto desde una misma conexión. El cupo se comparte con los demás formularios de contacto del sitio y con "Guarda tus depas". Si se pasa del límite, la consulta no se registra.
+- Si el API está configurado, al tocar "Escribir por WhatsApp" el sitio registra una consulta **sin nombre, correo ni teléfono**: guarda qué inmueble pediste, de qué campaña llegaste (UTM) y, si tienes sesión iniciada, tu cuenta. Se registra aunque después no envíes el mensaje.
+- Solo ese toque registra la consulta. Abrir "Te acompañamos al proyecto", tocar "Contactar" o "Cambiar selección", o llegar desde "Empecemos con estos" de Mis inmuebles no envía nada.
+- El API acepta hasta 10 consultas por minuto desde una misma conexión. El cupo se comparte con los demás formularios de contacto del sitio y con "Guarda tus inmuebles". Si se pasa del límite, la consulta no se registra.
 - Para este tipo de consulta el equipo no recibe correo. Si hay CRM configurado, la consulta le llega.
 - Si tienes sesión iniciada, la consulta aparece en "Mis consultas" del panel como "Te acompañamos (WhatsApp)".
-- Al propietario del depa se le suma en el contador "Consultas" de su solicitud.
+- Al propietario del inmueble se le suma en el contador "Consultas" de su solicitud.
 - Si el API falla o se pasa del límite, WhatsApp se abre igual.
 
 **Casos especiales.**
 
 - **Número de WhatsApp de relleno:** si no se configuró el número real, el enlace usa `51XXXXXXXXX` y no llega a nadie.
 - **Dos botones con el mismo nombre:** el "Contactar" del encabezado es otro botón. Aparece desde 640 px de ancho y abre WhatsApp directo con "Hola, les escribo desde la web de Depa Host Perú.". En celulares, en su lugar está el botón flotante de WhatsApp.
-- **El catálogo no carga:** la tarjeta de selección queda vacía, el mensaje pasa a ser genérico ("Hola, quiero invertir en un depa en Lima y me gustaría que me acompañen.") y no se registra ninguna consulta.
-- **El depa ya no está en el catálogo:** la página muestra lo que tengas en Mis depas en lugar de ese depa.
+- **El catálogo no carga:** la tarjeta de selección queda vacía, el mensaje pasa a ser genérico ("Hola, quiero invertir en un inmueble en Lima y me gustaría que me acompañen.") y no se registra ninguna consulta.
+- **El inmueble ya no está en el catálogo:** la página muestra lo que tengas en Mis inmuebles en lugar de ese inmueble.
 
-### 3.6 Depas similares
+### 3.6 Inmuebles similares
 
-**Qué se ve.** Bajo el título "Depas similares que te pueden interesar" aparecen hasta 4 tarjetas pequeñas. Cada una muestra:
+**Qué se ve.** Bajo el título "Inmuebles similares que te pueden interesar" aparecen hasta 4 tarjetas pequeñas. Cada una muestra:
 
 - la foto, o el dibujo de la casa si no hay foto;
 - "{Distrito} · {calle}";
@@ -1077,7 +1072,7 @@ flowchart TD
 
 Toda la tarjeta es un enlace a su ficha. Estas tarjetas no tienen botón "Me interesa".
 
-**Cómo se eligen.** Se comparan todos los depas visibles con el que estás viendo:
+**Cómo se eligen.** Se comparan todos los inmuebles visibles con el que estás viendo:
 
 | Criterio | Puntos |
 |---|---|
@@ -1089,20 +1084,20 @@ Toda la tarjeta es un enlace a su ficha. Estas tarjetas no tienen botón "Me int
 **Reglas.**
 
 - Se calculan cuando se genera el sitio. Todos ven los mismos similares: no dependen de tu historial.
-- Mezclan depas de propietarios y proyectos. Nunca incluyen el mismo depa ni los vendidos.
-- Pueden incluir depas reservados, y en estas tarjetas no se marcan como "Reservado".
-- No hay un mínimo de parecido. Con pocos depas en el sitio, igual salen 4 aunque no se parezcan mucho. La sección solo desaparece si no hay otros depas.
+- Mezclan inmuebles de propietarios y proyectos. Nunca incluyen el mismo inmueble ni los vendidos.
+- Pueden incluir inmuebles reservados, y en estas tarjetas no se marcan como "Reservado".
+- No hay un mínimo de parecido. Con pocos inmuebles en el sitio, igual salen 4 aunque no se parezcan mucho. La sección solo desaparece si no hay otros inmuebles.
 
-### 3.7 El depa queda como "visto" para "Para ti"
+### 3.7 El inmueble queda como "visto" para "Para ti"
 
-- Al abrir la ficha, el navegador anota el depa como visto. No aparece ningún aviso.
-- Guarda los últimos 12 depas vistos. Si vuelves a abrir uno, pasa a ser el más reciente.
-- Con esa lista se arman "Para ti, según lo que has visto" en `/capital` y "Parecidos a los que guardaste" en `/mis-depas`:
-  - se usan los 6 últimos vistos más lo que tienes en Mis depas;
+- Al abrir la ficha, el navegador anota el inmueble como visto. No aparece ningún aviso.
+- Guarda los últimos 12 inmuebles vistos. Si vuelves a abrir uno, pasa a ser el más reciente.
+- Con esa lista se arman "Para ti, según lo que has visto" en `/capital` y "Parecidos a los que guardaste" en `/mis-inmuebles`:
+  - se usan los 6 últimos vistos más lo que tienes en Mis inmuebles;
   - lo más reciente pesa más;
-  - nunca te recomienda lo que ya está en Mis depas;
+  - nunca te recomienda lo que ya está en Mis inmuebles;
   - lo que ya viste sale después de lo nuevo;
-  - si solo viste un depa, ese no aparece en sus propias recomendaciones.
+  - si solo viste un inmueble, ese no aparece en sus propias recomendaciones.
 - La lista de vistos **vive solo en ese navegador**. No se envía al API, no se guarda en la cuenta y no pasa a otros dispositivos.
 - No hay botón para borrarla. Se borra solo si se eliminan los datos del sitio en el navegador. Si el navegador bloquea el almacenamiento, la visita no se recuerda.
 
@@ -1130,8 +1125,8 @@ flowchart LR
     VER["Ver sus N proyectos<br/>en una ficha de proyecto"] --> DEV
     DEV --> BUSCA["Buscar y filtros rápidos<br/>N proyectos encontrados"]
     DEV --> DET["Ver más detalle<br/>ficha del proyecto"]
-    DEV --> MI["Me interesa<br/>Mis depas"]
-    DEV --> VOLVER["Volver a todos los depas"]
+    DEV --> MI["Me interesa<br/>Mis inmuebles"]
+    DEV --> VOLVER["Volver a todos los inmuebles"]
 ```
 
 **Qué se ve.**
@@ -1140,7 +1135,7 @@ flowchart LR
 |---|---|
 | Miga de pan | "Capital" › "Aliados" › nombre. "Aliados" lleva a la franja de aliados de `/capital` |
 | Encabezado | "Inmobiliaria aliada" y el título "Proyectos de {nombre}" |
-| Descripción | La descripción de la inmobiliaria. Si no tiene: "Departamentos en venta de esta inmobiliaria." |
+| Descripción | La descripción de la inmobiliaria. Si no tiene: "Inmuebles en venta de esta inmobiliaria." |
 | Web | "Sitio web de {nombre}", que se abre en otra pestaña. Solo aparece si el equipo cargó la web |
 | Buscador | La caja "Buscar por distrito, proyecto o palabra clave" y el botón "Buscar" |
 | Filtros rápidos | Botones redondos (chips) con distritos, topes de precio ("Hasta S/ …") y rentabilidad mínima ("Desde …% anual") |
@@ -1149,7 +1144,7 @@ flowchart LR
 | Tarjetas de proyecto | Ver la tabla siguiente. Los destacados van primero y luego los más nuevos |
 | Sin resultados | "No encontramos proyectos con esos criterios." |
 | Nota de cuota estimada | La misma de 3.2 |
-| "Volver a todos los depas" | Lleva a la lista de depas de `/capital` |
+| "Volver a todos los inmuebles" | Lleva a la lista de inmuebles de `/capital` |
 
 Cada tarjeta de proyecto muestra:
 
@@ -1196,37 +1191,37 @@ Si tocas cualquier parte de la tarjeta que no sea un botón, se abre la ficha.
 - **Datos de ejemplo:** sin el API, el sitio trae una sola inmobiliaria con proyectos, "Urbana", con 3 proyectos. Por eso no aparecen sus chips de rentabilidad. "Lima Sur", "Andes", "Miraflores Hotel" y "Nova" salen sin enlace. Ninguna tiene descripción ni web.
 - **Móvil frente a escritorio:** las tarjetas van en 1 columna en celular, 2 desde 640 px y 3 desde 1024 px. En pantallas de menos de 480 px el botón "Buscar" muestra solo la palabra, sin ícono.
 
-### 3.9 Depas reservados, vendidos y enlaces que ya no existen
+### 3.9 Inmuebles reservados, vendidos y enlaces que ya no existen
 
-El equipo es quien cambia el estado de cada depa desde el panel.
+El equipo es quien cambia el estado de cada inmueble desde el panel.
 
-| Estado | Ficha `/capital/{slug}` | Tarjetas y listas | Mis depas | Página de la inmobiliaria |
+| Estado | Ficha `/capital/{slug}` | Tarjetas y listas | Mis inmuebles | Página de la inmobiliaria |
 |---|---|---|---|---|
 | Publicado | Se ve completa, con la insignia si tiene | Aparece en todas | Se muestra | Cuenta como proyecto |
-| Reservado | Se abre. La etiqueta empieza con "Reservado · " y no muestra insignia. Igual puedes usar "Me interesa" y "Contactar" | En `/capital` y en las tarjetas de proyecto sale la etiqueta "Reservado". En similares y "Para ti" no se marca. No entra en "Los 10 depas para invertir ahora" | Se muestra con "Reservado" | Cuenta, con la etiqueta "Reservado" |
-| Vendido | No se genera: da 404 | Desaparece de todo | Se quita de la lista al abrir `/mis-depas`. Hasta entonces, el contador del encabezado lo sigue contando | No cuenta. Si era su último proyecto, la página desaparece |
+| Reservado | Se abre. La etiqueta empieza con "Reservado · " y no muestra insignia. Igual puedes usar "Me interesa" y "Contactar" | En `/capital` y en las tarjetas de proyecto sale la etiqueta "Reservado". En similares y "Para ti" no se marca. No entra en "Los 10 inmuebles para invertir ahora" | Se muestra con "Reservado" | Cuenta, con la etiqueta "Reservado" |
+| Vendido | No se genera: da 404 | Desaparece de todo | Se quita de la lista al abrir `/mis-inmuebles`. Hasta entonces, el contador del encabezado lo sigue contando | No cuenta. Si era su último proyecto, la página desaparece |
 | Borrador | Nunca se ve: da 404 | No aparece | No aparece | No cuenta |
 
-- **Pendiente:** el código de la ficha ya contempla la etiqueta "Vendido · ", pero no se ve nunca, porque los depas vendidos no generan página. Mostrar la ficha con "Vendido" está anotado como pendiente.
-- **Reservados en Google:** la ficha lleva datos para buscadores con el precio y la disponibilidad. Un depa publicado se marca como disponible y uno reservado como agotado. Por eso, en los resultados de Google un depa reservado puede aparecer como agotado, aunque su ficha siga abierta y acepte "Me interesa" y "Contactar".
+- **Pendiente:** el código de la ficha ya contempla la etiqueta "Vendido · ", pero no se ve nunca, porque los inmuebles vendidos no generan página. Mostrar la ficha con "Vendido" está anotado como pendiente.
+- **Reservados en Google:** la ficha lleva datos para buscadores con el precio y la disponibilidad. Un inmueble publicado se marca como disponible y uno reservado como agotado. Por eso, en los resultados de Google un inmueble reservado puede aparecer como agotado, aunque su ficha siga abierta y acepte "Me interesa" y "Contactar".
 
 **Cuándo se ven los cambios.** El sitio se genera de antemano, así que un cambio de estado, precio o fotos aparece recién cuando el sitio se vuelve a generar.
 
 - Si está configurada la regeneración automática, el API espera 30 segundos para juntar los cambios seguidos y luego pide al hosting que regenere el sitio. A eso se suma lo que tarde esa generación.
 - Si no está configurada, el cambio aparece recién en la siguiente publicación manual.
-- Mientras tanto se sigue viendo el estado anterior. Los términos (en borrador) lo advierten: un depa reservado o vendido "puede seguir apareciendo por un tiempo".
+- Mientras tanto se sigue viendo el estado anterior. Los términos (en borrador) lo advierten: un inmueble reservado o vendido "puede seguir apareciendo por un tiempo".
 
 **Enlace que ya no existe (página 404).**
 
-- **Qué se ve:** un "404" grande, el título "No encontramos esta página" y el texto "Puede que el depa ya no esté disponible o que el link tenga un error.". Hay dos botones: "Ver depas para invertir", que lleva a `/capital`, y "Ir al inicio", que lleva a `/`. Google no indexa esta página.
+- **Qué se ve:** un "404" grande, el título "No encontramos esta página" y el texto "Puede que el inmueble ya no esté disponible o que el link tenga un error.". Hay dos botones: "Ver inmuebles para invertir", que lleva a `/capital`, y "Ir al inicio", que lleva a `/`. Google no indexa esta página.
 - **Cuándo sale:**
   - el slug está mal escrito;
-  - el depa se vendió, volvió a borrador o se eliminó;
+  - el inmueble se vendió, volvió a borrador o se eliminó;
   - el equipo cambió el slug: el enlace antiguo deja de funcionar y no redirige al nuevo;
-  - el depa se acaba de publicar, pero el sitio todavía no se regeneró.
+  - el inmueble se acaba de publicar, pero el sitio todavía no se regeneró.
 - **Desde el panel:**
-  - Propietario: el botón "Ver mi depa en el sitio" aparece apenas su solicitud queda vinculada a un depa. Si ese depa todavía es borrador, ya se vendió o el sitio no se regeneró, el botón lleva a la página 404.
-  - Comprador: los vendidos desaparecen de "Mis depas" del panel. En "Mis consultas" se ven como "Ya no disponible".
+  - Propietario: el botón "Ver mi inmueble en el sitio" aparece apenas su solicitud queda vinculada a un inmueble. Si ese inmueble todavía es borrador, ya se vendió o el sitio no se regeneró, el botón lleva a la página 404.
+  - Comprador: los vendidos desaparecen de "Mis inmuebles" del panel. En "Mis consultas" se ven como "Ya no disponible".
 
 ### 3.10 Otros casos especiales
 
@@ -1234,134 +1229,134 @@ El equipo es quien cambia el estado de cada depa desde el panel.
   - En celular y tablet (menos de 1024 px), la ficha va en una sola columna: primero las fotos y luego los datos. "Me interesa" y "Contactar" quedan lado a lado.
   - En escritorio, las fotos van a la izquierda y los datos a la derecha. El bloque de datos se queda fijo mientras bajas.
   - Los similares van en 1 columna en celular, 2 desde 640 px y 4 desde 1024 px.
-- **Datos de ejemplo:** si el sitio se genera sin el API, usa 6 depas de ejemplo: 3 de propietarios y 3 de "Urbana". Tienen una sola foto cada uno (algunas fotos se repiten entre depas), y no traen dormitorios, baños ni metros cuadrados. Los de propietarios tampoco tienen descripción. Por eso, con esos datos, las fichas no muestran ni miniaturas ni características.
-- **Fotos:** con el API, las fotos vienen del almacenamiento del API (Cloudflare R2) y el sitio las optimiza al generarse. Un depa sin fotos muestra el dibujo de la casa.
-- **Precio en dólares:** la ficha, los similares y las tarjetas de proyecto muestran "US$". En cambio, la tarjeta de `/capital` y "Los 10 depas para invertir ahora" siempre muestran el precio con "S/".
-- **Al compartir el enlace:** la vista previa (en WhatsApp, por ejemplo) muestra el título "{Distrito} · {calle} | Depa Host Perú" y el texto "Depa en {distrito} desde {precio}. Rentabilidad {rentabilidad}.". La imagen es una genérica del sitio, no la foto del depa, y todavía está pendiente la imagen final de marca. En la página de una inmobiliaria, el título es "Proyectos de {nombre} | Depa Host Perú".
+- **Datos de ejemplo:** si el sitio se genera sin el API, usa 6 inmuebles de ejemplo: 3 de propietarios y 3 de "Urbana". Tienen una sola foto cada uno (algunas fotos se repiten entre inmuebles), y no traen dormitorios, baños ni metros cuadrados. Los de propietarios tampoco tienen descripción. Por eso, con esos datos, las fichas no muestran ni miniaturas ni características.
+- **Fotos:** con el API, las fotos vienen del almacenamiento del API (Cloudflare R2) y el sitio las optimiza al generarse. Un inmueble sin fotos muestra el dibujo de la casa.
+- **Precio en dólares:** la ficha, los similares y las tarjetas de proyecto muestran "US$". En cambio, la tarjeta de `/capital` y "Los 10 inmuebles para invertir ahora" siempre muestran el precio con "S/".
+- **Al compartir el enlace:** la vista previa (en WhatsApp, por ejemplo) muestra el título "{Distrito} · {calle} | Depa Host Perú" y el texto "Inmueble en {distrito} desde {precio}. Rentabilidad {rentabilidad}.". La imagen es una genérica del sitio, no la foto del inmueble, y todavía está pendiente la imagen final de marca. En la página de una inmobiliaria, el título es "Proyectos de {nombre} | Depa Host Perú".
 - **Observación para QA:** los íconos de las características se asignan por posición: cama, baño y área. Si falta un dato, los siguientes se corren y toman el ícono equivocado. Por ejemplo, si solo hay metros cuadrados, salen con el ícono de cama.
 
 **Referencia técnica:** [`src/pages/capital/[slug].astro`](../../src/pages/capital/%5Bslug%5D.astro) · [`src/pages/capital/aliados/[slug].astro`](../../src/pages/capital/aliados/%5Bslug%5D.astro) · [`src/pages/capital/index.astro`](../../src/pages/capital/index.astro) · [`src/pages/404.astro`](../../src/pages/404.astro) · [`src/pages/capital/empecemos.astro`](../../src/pages/capital/empecemos.astro) · [`src/components/SaveButton.astro`](../../src/components/SaveButton.astro) · [`src/components/SaveListDialog.astro`](../../src/components/SaveListDialog.astro) · [`src/components/MiniCard.astro`](../../src/components/MiniCard.astro) · [`src/components/ProjectCard.astro`](../../src/components/ProjectCard.astro) · [`src/components/AlliesStrip.astro`](../../src/components/AlliesStrip.astro) · [`src/components/SearchFilters.astro`](../../src/components/SearchFilters.astro) · [`src/lib/properties.ts`](../../src/lib/properties.ts) · [`src/lib/recommend.ts`](../../src/lib/recommend.ts) · [`src/lib/format.ts`](../../src/lib/format.ts) · [`src/lib/filters.ts`](../../src/lib/filters.ts) · [`src/lib/saved-store.ts`](../../src/lib/saved-store.ts) · [`src/lib/account.ts`](../../src/lib/account.ts) · [`src/scripts/saved-buttons.ts`](../../src/scripts/saved-buttons.ts) · [`src/scripts/property-filters.ts`](../../src/scripts/property-filters.ts) · [`src/content/financing.json`](../../src/content/financing.json) · [`depahost-api/src/modules/properties/service.ts`](../../../depahost-api/src/modules/properties/service.ts) · [`depahost-api/src/modules/accounts/service.ts`](../../../depahost-api/src/modules/accounts/service.ts) · [`depahost-api/src/modules/leads/routes.ts`](../../../depahost-api/src/modules/leads/routes.ts) · [`depahost-panel/src/views/seller/RequestDetailView.vue`](../../../depahost-panel/src/views/seller/RequestDetailView.vue) · Capítulos: [05-flujos.md](05-flujos.md) (flujos 5, 6, 8, 9 y 11), [07-decisiones-y-pendientes.md](07-decisiones-y-pendientes.md), [08-panel-y-cuentas.md](08-panel-y-cuentas.md)
 
-## 4. Guardar depas y pedir acompañamiento
+## 4. Guardar inmuebles y pedir acompañamiento
 
-Aquí se explica cómo la persona arma su lista de depas favoritos, cómo deja sus datos para que el equipo le haga seguimiento y cómo pide acompañamiento por WhatsApp. Todo funciona sin cuenta. Con cuenta, la lista también se guarda en ella (ver 4.8).
+Aquí se explica cómo la persona arma su lista de inmuebles favoritos, cómo deja sus datos para que el equipo le haga seguimiento y cómo pide acompañamiento por WhatsApp. Todo funciona sin cuenta. Con cuenta, la lista también se guarda en ella (ver 4.8).
 
 ```mermaid
 flowchart LR
-    boton["Me interesa<br/>en tarjeta o ficha"] --> lista["Lista Mis depas<br/>en el navegador"]
-    lista --> pagina["Página Mis depas<br/>/mis-depas"]
-    lista -.->|"al subir a 2 o más depas"| aviso["Aviso Guarda tus depas<br/>nombre y celular"]
+    boton["Me interesa<br/>en tarjeta o ficha"] --> lista["Lista Mis inmuebles<br/>en el navegador"]
+    lista --> pagina["Página Mis inmuebles<br/>/mis-inmuebles"]
+    lista -.->|"al subir a 2 o más inmuebles"| aviso["Aviso Guarda tus inmuebles<br/>nombre y celular"]
     aviso --> equipo["Equipo Depa Host<br/>recibe la solicitud"]
     pagina -->|"Empecemos con estos"| acompana["Te acompañamos<br/>/capital/empecemos"]
-    ficha["Ficha del depa<br/>botón Contactar"] -->|"solo ese depa"| acompana
+    ficha["Ficha del inmueble<br/>botón Contactar"] -->|"solo ese inmueble"| acompana
     acompana -->|"Escribir por WhatsApp"| wa["WhatsApp con<br/>mensaje prellenado"]
     acompana -.->|"aviso sin datos personales"| equipo
 ```
 
 ### 4.1 Botón "Me interesa"
 
-**Para qué sirve.** Marca un depa para revisarlo después en "Mis depas". No pide datos ni cuenta.
+**Para qué sirve.** Marca un inmueble para revisarlo después en "Mis inmuebles". No pide datos ni cuenta.
 
 **Dónde está.**
 
 | Lugar | Ruta |
 |---|---|
-| Tarjetas de depas de propietarios | `/capital` |
+| Tarjetas de inmuebles de propietarios | `/capital` |
 | Tarjetas de proyectos de una inmobiliaria aliada | `/capital/aliados/{inmobiliaria}` |
-| Ficha del depa, junto al botón "Contactar" | `/capital/{depa}` |
+| Ficha del inmueble, junto al botón "Contactar" | `/capital/{depa}` |
 
-No aparece en las tarjetas pequeñas ("Depas similares", "Para ti, según lo que has visto", "Parecidos a los que guardaste"). Para guardar uno de esos, abre su ficha.
+No aparece en las tarjetas pequeñas ("Inmuebles similares", "Para ti, según lo que has visto", "Parecidos a los que guardaste"). Para guardar uno de esos, abre su ficha.
 
-**Qué se ve.** Un corazón vacío con el texto "Me interesa". Cuando el depa ya está guardado, el corazón se rellena y el texto cambia a "Guardado".
+**Qué se ve.** Un corazón vacío con el texto "Me interesa". Cuando el inmueble ya está guardado, el corazón se rellena y el texto cambia a "Guardado".
 
 **Qué puede hacer.**
 1. Toca "Me interesa" en la tarjeta o en la ficha.
-2. Fíjate que el botón cambie a "Guardado" y que suba el contador "Mis depas" del encabezado.
+2. Fíjate que el botón cambie a "Guardado" y que suba el contador "Mis inmuebles" del encabezado.
 3. Para quitarlo, toca otra vez "Guardado".
 
 **Reglas.**
 
 | Regla | Detalle |
 |---|---|
-| Máximo 20 depas | Si ya tienes 20 y guardas otro, el más antiguo sale de la lista sin aviso. |
-| Sin repetidos | Cada depa aparece una sola vez. |
+| Máximo 20 inmuebles | Si ya tienes 20 y guardas otro, el más antiguo sale de la lista sin aviso. |
+| Sin repetidos | Cada inmueble aparece una sola vez. |
 | Orden | Del más antiguo al más reciente. |
-| Mismo depa en varios lugares | Si el mismo depa aparece dos veces en la página, todos sus botones cambian a la vez. |
+| Mismo inmueble en varios lugares | Si el mismo inmueble aparece dos veces en la página, todos sus botones cambian a la vez. |
 
-**Qué pasa después.** Si la lista llega a 2 o más depas, puede abrirse el aviso "Guarda tus depas" (4.3).
+**Qué pasa después.** Si la lista llega a 2 o más inmuebles, puede abrirse el aviso "Guarda tus inmuebles" (4.3).
 
-### 4.2 La lista "Mis depas" sin cuenta
+### 4.2 La lista "Mis inmuebles" sin cuenta
 
-**Dónde se guarda.** En el navegador del dispositivo de la persona. El equipo no la recibe hasta que la persona llena "Guarda tus depas" o toca "Escribir por WhatsApp" en "Te acompañamos". La lista no vence. Funciona aunque la persona rechace las cookies de analítica.
+**Dónde se guarda.** En el navegador del dispositivo de la persona. El equipo no la recibe hasta que la persona llena "Guarda tus inmuebles" o toca "Escribir por WhatsApp" en "Te acompañamos". La lista no vence. Funciona aunque la persona rechace las cookies de analítica.
 
 **Contador del encabezado.**
-- Es un ícono de carpeta con el texto "Mis depas". Se ve en celular y en escritorio.
-- Muestra un círculo con el número de depas guardados. Si no hay ninguno, el círculo no aparece.
-- Al tocarlo, lleva a `/mis-depas`.
-- Cuenta todo lo guardado en el navegador, incluidos los depas que ya no están publicados. El número se corrige al abrir `/mis-depas` (ver 4.5).
+- Es un ícono de carpeta con el texto "Mis inmuebles". Se ve en celular y en escritorio.
+- Muestra un círculo con el número de inmuebles guardados. Si no hay ninguno, el círculo no aparece.
+- Al tocarlo, lleva a `/mis-inmuebles`.
+- Cuenta todo lo guardado en el navegador, incluidos los inmuebles que ya no están publicados. El número se corrige al abrir `/mis-inmuebles` (ver 4.5).
 
 **Casos especiales.**
 
 | Situación | Qué pasa |
 |---|---|
-| El sitio está abierto en otra pestaña | El contador, los botones "Me interesa", la lista y el resumen de la página "Mis depas" y "Parecidos a los que guardaste" se actualizan solos. El saludo "Hola, …", la nota final de "Mis depas" ("Guardado en este dispositivo…" / "Guardado para {nombre}…") y la página "Te acompañamos" no se actualizan: muestran lo último al recargar. El aviso "Guarda tus depas" puede abrirse también en la otra pestaña. |
+| El sitio está abierto en otra pestaña | El contador, los botones "Me interesa", la lista y el resumen de la página "Mis inmuebles" y "Parecidos a los que guardaste" se actualizan solos. El saludo "Hola, …", la nota final de "Mis inmuebles" ("Guardado en este dispositivo…" / "Guardado para {nombre}…") y la página "Te acompañamos" no se actualizan: muestran lo último al recargar. El aviso "Guarda tus inmuebles" puede abrirse también en la otra pestaña. |
 | Otro navegador u otro dispositivo | No se ve la lista. Cada navegador tiene la suya. Para verla en todos, hace falta una cuenta (4.8). |
 | La persona borra los datos del navegador | Se pierden la lista, el nombre del saludo, la pausa del aviso (que puede volver a salir) y el historial de fichas vistas. Lo que ya se envió al equipo se conserva. |
 | El navegador no deja guardar datos del sitio | La lista funciona, pero solo hasta que la persona cambia de página. |
 
-### 4.3 Aviso "Guarda tus depas"
+### 4.3 Aviso "Guarda tus inmuebles"
 
-![Aviso "Guarda tus depas" al guardar el segundo depa](img/manual/06-guarda-tus-depas.webp)
+![Aviso "Guarda tus inmuebles" al guardar el segundo inmueble](img/manual/06-guarda-tus-depas.webp)
 
-*Aviso "Guarda tus depas" al guardar el segundo depa.*
+*Aviso "Guarda tus inmuebles" al guardar el segundo inmueble.*
 
 ![Confirmación después de dejar nombre y celular](img/manual/07-guarda-tus-depas-listo.webp)
 
 *Confirmación después de dejar nombre y celular.*
 
-**Para qué sirve.** Pide nombre y celular para que el equipo le escriba por WhatsApp sobre los depas que marcó.
+**Para qué sirve.** Pide nombre y celular para que el equipo le escriba por WhatsApp sobre los inmuebles que marcó.
 
 **Cómo se llega.**
-- **Solo:** se abre en cualquier página cuando la lista sube a 2 o más depas al tocar "Me interesa". No sale si en ese navegador la persona ya dejó sus datos, ni si cerró el aviso hace menos de 7 días.
-- **A pedido:** con el enlace "Guárdalos con tu celular" de la página `/mis-depas`. Así se abre siempre, aunque esté en pausa. El enlace solo se ve mientras la persona no haya dejado su nombre.
+- **Solo:** se abre en cualquier página cuando la lista sube a 2 o más inmuebles al tocar "Me interesa". No sale si en ese navegador la persona ya dejó sus datos, ni si cerró el aviso hace menos de 7 días.
+- **A pedido:** con el enlace "Guárdalos con tu celular" de la página `/mis-inmuebles`. Así se abre siempre, aunque esté en pausa. El enlace solo se ve mientras la persona no haya dejado su nombre.
 
 ```mermaid
 flowchart TD
-    sube["La lista sube a 2 o más depas<br/>al tocar Me interesa"] --> datos{"¿Ya dejaste tus datos<br/>en este navegador?"}
+    sube["La lista sube a 2 o más inmuebles<br/>al tocar Me interesa"] --> datos{"¿Ya dejaste tus datos<br/>en este navegador?"}
     datos -->|"Sí"| nada["No aparece"]
     datos -->|"No"| pausa{"¿Lo cerraste hace<br/>menos de 7 días?"}
     pausa -->|"Sí"| nada
-    pausa -->|"No"| abierto["Se abre Guarda tus depas"]
-    enlace["Enlace Guárdalos con tu celular<br/>en la página Mis depas"] --> abierto
+    pausa -->|"No"| abierto["Se abre Guarda tus inmuebles"]
+    enlace["Enlace Guárdalos con tu celular<br/>en la página Mis inmuebles"] --> abierto
     abierto -->|"Cerrar, Seguir viendo,<br/>Esc o clic fuera"| espera["Pausa de 7 días"]
     abierto -->|"Guardar y continuar<br/>con éxito"| listo["Pantalla Listo, Nombre<br/>y saludo Hola, Nombre"]
     listo --> fin["No vuelve a abrirse solo<br/>en este navegador"]
 ```
 
 **Qué se ve.**
-- Título "Guarda tus depas" y el texto "Te escribimos con los que marcaste.".
+- Título "Guarda tus inmuebles" y el texto "Te escribimos con los que marcaste.".
 - Campos "Nombre" ("Tu nombre"), "Celular" ("9XX XXX XXX") y "Correo" con la marca "opcional" ("tu@correo.com").
-- Un resumen de lo guardado, por ejemplo "2 departamentos seleccionados: Lince y Surquillo" (los distritos son de ejemplo). Con uno solo dice "1 departamento seleccionado". Si la lista está vacía, el resumen no aparece.
+- Un resumen de lo guardado, por ejemplo "2 inmuebles seleccionados: Lince y Surquillo" (los distritos son de ejemplo). Con uno solo dice "1 inmueble seleccionado". Si la lista está vacía, el resumen no aparece.
 - La casilla "Acepto la política de privacidad.", que enlaza a `/privacidad`.
 - La verificación anti-robots de Cloudflare, solo si está configurada.
 - El botón "Guardar y continuar", el enlace "Seguir viendo", la "X" para cerrar y el texto "Sin spam. Solo el seguimiento de tu selección.".
 
 **Cómo se arma el resumen.**
-- El número cuenta todo lo que está guardado en el navegador. Eso incluye depas vendidos o retirados que siguen en la lista porque la persona todavía no abrió `/mis-depas`, que es donde se limpian (4.5).
-- Los distritos salen solo de los depas que siguen en el catálogo, sin repetir. Por eso puede decir, por ejemplo, "3 departamentos seleccionados: Lince y Surquillo" aunque uno de los tres ya no esté publicado.
-- Si el catálogo no carga, el resumen muestra solo el número, sin distritos (por ejemplo "2 departamentos seleccionados").
+- El número cuenta todo lo que está guardado en el navegador. Eso incluye inmuebles vendidos o retirados que siguen en la lista porque la persona todavía no abrió `/mis-inmuebles`, que es donde se limpian (4.5).
+- Los distritos salen solo de los inmuebles que siguen en el catálogo, sin repetir. Por eso puede decir, por ejemplo, "3 inmuebles seleccionados: Lince y Surquillo" aunque uno de los tres ya no esté publicado.
+- Si el catálogo no carga, el resumen muestra solo el número, sin distritos (por ejemplo "2 inmuebles seleccionados").
 
 **Qué puede hacer.**
 1. Escribe tu nombre en "Nombre".
 2. Escribe tu número en "Celular".
 3. Si quieres, escribe tu correo en "Correo".
-4. Revisa el resumen de depas seleccionados.
+4. Revisa el resumen de inmuebles seleccionados.
 5. Marca "Acepto la política de privacidad.".
 6. Si aparece la verificación anti-robots, complétala.
 7. Toca "Guardar y continuar". El botón se bloquea y aparece "Enviando…".
-8. En la pantalla "Listo, {tu primer nombre}" (por ejemplo, "Listo, Ana" si escribiste "ana lucía"), toca "Ver Mis depas" para ir a tu lista o "Seguir viendo" para cerrar.
+8. En la pantalla "Listo, {tu primer nombre}" (por ejemplo, "Listo, Ana" si escribiste "ana lucía"), toca "Ver Mis inmuebles" para ir a tu lista o "Seguir viendo" para cerrar.
 
-Para cerrar sin dejar datos, toca la "X", "Seguir viendo", la tecla Esc o fuera del aviso. Los depas siguen guardados y el aviso queda en pausa 7 días.
+Para cerrar sin dejar datos, toca la "X", "Seguir viendo", la tecla Esc o fuera del aviso. Los inmuebles siguen guardados y el aviso queda en pausa 7 días.
 
 **Reglas y validaciones.**
 
@@ -1379,108 +1374,108 @@ Para cerrar sin dejar datos, toca la "X", "Seguir viendo", la tecla Esc o fuera 
 Cuando el servidor marca errores por campo, aparece "Revisa los campos marcados." y el mensaje se muestra debajo de "Nombre", "Celular" o "Correo". La verificación anti-robots se reinicia después de cada error.
 
 **Qué pasa después.**
-- Se crea una solicitud de tipo "Guarda tus depas". Lleva el nombre, el celular, el correo si se puso, los depas de la lista en ese momento, la fecha en que se aceptó la privacidad y los datos de campaña si la persona llegó desde un anuncio en esa misma pestaña del navegador.
-- Los depas se envían tal como están en el navegador. Si quedaba alguno vendido o retirado, también va en la solicitud. El sistema no lo rechaza.
+- Se crea una solicitud de tipo "Guarda tus inmuebles". Lleva el nombre, el celular, el correo si se puso, los inmuebles de la lista en ese momento, la fecha en que se aceptó la privacidad y los datos de campaña si la persona llegó desde un anuncio en esa misma pestaña del navegador.
+- Los inmuebles se envían tal como están en el navegador. Si quedaba alguno vendido o retirado, también va en la solicitud. El sistema no lo rechaza.
 - Si la persona tenía la sesión iniciada, la solicitud queda vinculada a su cuenta (4.8).
-- El equipo la ve como lead nuevo en el panel de administración. Si el correo de avisos está configurado, también recibe un correo "Nuevo lead · Guarda tus depas (lista de interés)". En ese correo los depas salen con su código interno, no con su nombre. Si hay un CRM conectado, también se le avisa.
+- El equipo la ve como lead nuevo en el panel de administración. Si el correo de avisos está configurado, también recibe un correo "Nuevo lead · Guarda tus inmuebles (lista de interés)". En ese correo los inmuebles salen con su código interno, no con su nombre. Si hay un CRM conectado, también se le avisa.
 - La persona no recibe ningún correo ni mensaje automático. El seguimiento por WhatsApp lo hace el equipo a mano.
 - En pantalla sale "Listo, {primer nombre}" con el texto "Guardamos tu selección. Te escribiremos por WhatsApp para darle seguimiento.".
 - El navegador guarda solo el primer nombre, para el saludo (4.4). El aviso ya no se abre solo en ese navegador.
 
 **Casos especiales.**
-- **La API no está configurada:** al tocar "Guardar y continuar" aparece "Por ahora recibimos estas consultas por WhatsApp." con el enlace "Escribir por WhatsApp". Ese enlace abre WhatsApp con el mensaje "Hola, quiero que me ayuden con los depas que guardé en DepaHost Capital.". No se guarda el nombre y, al cerrar, el aviso entra en pausa de 7 días.
+- **La API no está configurada:** al tocar "Guardar y continuar" aparece "Por ahora recibimos estas consultas por WhatsApp." con el enlace "Escribir por WhatsApp". Ese enlace abre WhatsApp con el mensaje "Hola, quiero que me ayuden con los inmuebles que guardé en DepaHost Capital.". No se guarda el nombre y, al cerrar, el aviso entra en pausa de 7 días.
 - **La verificación anti-robots depende de la configuración:** si la API la exige y el sitio no la muestra, todos los envíos fallan con el mensaje del robot.
-- **La solicitud es una foto del momento:** los depas que la persona guarde o quite después no se envían de nuevo.
-- **Depas que ya no están en el catálogo:** como la lista solo se limpia al abrir `/mis-depas`, el resumen puede contar un depa vendido o retirado sin nombrarlo, y la solicitud lo incluye (ver "Cómo se arma el resumen").
+- **La solicitud es una foto del momento:** los inmuebles que la persona guarde o quite después no se envían de nuevo.
+- **Inmuebles que ya no están en el catálogo:** como la lista solo se limpia al abrir `/mis-inmuebles`, el resumen puede contar un inmueble vendido o retirado sin nombrarlo, y la solicitud lo incluye (ver "Cómo se arma el resumen").
 - **La política de privacidad es un borrador:** el texto de `/privacidad` está pendiente de revisión legal y su fecha de actualización dice "[fecha pendiente]".
 - **En celular** el aviso ocupa casi todo el ancho de la pantalla.
 
 ### 4.4 Saludo "Hola, …"
 
-- Después de enviar "Guarda tus depas", el encabezado muestra "Hola, {nombre}" con un círculo que lleva la inicial. Al tocarlo, lleva a `/mis-depas`.
+- Después de enviar "Guarda tus inmuebles", el encabezado muestra "Hola, {nombre}" con un círculo que lleva la inicial. Al tocarlo, lleva a `/mis-inmuebles`.
 - Usa solo la primera palabra del nombre, con mayúscula inicial. Por ejemplo, "ana lucía" se muestra como "Ana".
 - Se ve en pantallas desde 640 px de ancho. En celulares angostos no aparece. Entre 1024 y 1279 px solo se ve el círculo con la inicial.
-- En `/mis-depas`, la nota final cambia a "Guardado para {nombre}. La próxima vez te mostramos depas parecidos.".
+- En `/mis-inmuebles`, la nota final cambia a "Guardado para {nombre}. La próxima vez te mostramos inmuebles parecidos.".
 - Si la persona tiene la sesión iniciada, el saludo usa el nombre de la cuenta y lleva al panel (4.8).
 - Si la persona borra los datos del navegador, el saludo desaparece.
 
-### 4.5 Página "Mis depas"
+### 4.5 Página "Mis inmuebles"
 
-![Página "Mis depas" con dos depas guardados](img/manual/08-mis-depas.webp)
+![Página "Mis inmuebles" con dos inmuebles guardados](img/manual/08-mis-inmuebles.webp)
 
-*Página "Mis depas" con dos depas guardados.*
+*Página "Mis inmuebles" con dos inmuebles guardados.*
 
-**Para qué sirve.** Revisar y comparar los depas guardados, ver cuánto suman y pasar a pedir acompañamiento.
+**Para qué sirve.** Revisar y comparar los inmuebles guardados, ver cuánto suman y pasar a pedir acompañamiento.
 
-**Cómo se llega.** Por el ícono "Mis depas" del encabezado, por el saludo "Hola, …" (sin cuenta), por "Ver Mis depas" en el aviso o por "Cambiar selección" en "Te acompañamos". La ruta es `/mis-depas`. La página no sale en Google.
+**Cómo se llega.** Por el ícono "Mis inmuebles" del encabezado, por el saludo "Hola, …" (sin cuenta), por "Ver Mis inmuebles" en el aviso o por "Cambiar selección" en "Te acompañamos". La ruta es `/mis-inmuebles`. La página no sale en Google.
 
 **Qué se ve.**
 
 | Parte | Contenido |
 |---|---|
-| Encabezado | "Mis depas" y "Revisa los departamentos que seleccionaste." |
-| "Seleccionados" | Cuántos depas guardados se encontraron en el catálogo. |
-| Tarjeta de cada depa | Foto (o un ícono de casa si no tiene foto); el distrito como título, con enlace a la ficha; la "X" para quitar; la dirección y el distrito; dormitorios, baños y m² si existen, y si no, la rentabilidad y "Se paga en …"; una línea con la inmobiliaria y la descripción o etiqueta del depa ("Reservado" si está reservado); y "Valor" (depa de propietario) o "Desde" (proyecto) con el precio. |
-| "Resumen de selección" | El número de depas con "seleccionados", la lista de distritos con su precio, la "Inversión total" y el botón "Empecemos con estos". |
-| Nota final | Sin nombre guardado: "Guardado en este dispositivo. Guárdalos con tu celular y te escribimos con los que marcaste." ("Guárdalos con tu celular" abre el aviso de 4.3). Con nombre: "Guardado para {nombre}. La próxima vez te mostramos depas parecidos." |
-| "Parecidos a los que guardaste" | Hasta 4 depas sugeridos, con el enlace "Ver todos" a la lista de `/capital`. |
+| Encabezado | "Mis inmuebles" y "Revisa los inmuebles que seleccionaste." |
+| "Seleccionados" | Cuántos inmuebles guardados se encontraron en el catálogo. |
+| Tarjeta de cada inmueble | Foto (o un ícono de casa si no tiene foto); el distrito como título, con enlace a la ficha; la "X" para quitar; la dirección y el distrito; dormitorios, baños y m² si existen, y si no, la rentabilidad y "Se paga en …"; una línea con la inmobiliaria y la descripción o etiqueta del inmueble ("Reservado" si está reservado); y "Valor" (inmueble de propietario) o "Desde" (proyecto) con el precio. |
+| "Resumen de selección" | El número de inmuebles con "seleccionados", la lista de distritos con su precio, la "Inversión total" y el botón "Empecemos con estos". |
+| Nota final | Sin nombre guardado: "Guardado en este dispositivo. Guárdalos con tu celular y te escribimos con los que marcaste." ("Guárdalos con tu celular" abre el aviso de 4.3). Con nombre: "Guardado para {nombre}. La próxima vez te mostramos inmuebles parecidos." |
+| "Parecidos a los que guardaste" | Hasta 4 inmuebles sugeridos, con el enlace "Ver todos" a la lista de `/capital`. |
 
 **Qué puede hacer.**
 1. Toca el distrito de una tarjeta para abrir su ficha.
-2. Toca la "X" de una tarjeta para quitar ese depa. No pide confirmación y no se puede deshacer. Para recuperarlo, vuelve a tocar "Me interesa" en su ficha.
+2. Toca la "X" de una tarjeta para quitar ese inmueble. No pide confirmación y no se puede deshacer. Para recuperarlo, vuelve a tocar "Me interesa" en su ficha.
 3. Revisa la "Inversión total" en el resumen.
 4. Toca "Empecemos con estos" para ir a "Te acompañamos" (4.7).
 5. Si aún no dejaste tus datos, toca "Guárdalos con tu celular".
 
 **Reglas.**
 - **Inversión total:** suma los precios por moneda, por ejemplo "S/ 595,000" o "S/ 595,000 + US$ 80,000".
-- **"Empecemos con estos":** se ve apagado y no responde mientras no haya ningún depa.
-- **Depas que ya no están en el catálogo:** se quitan solos de la lista al abrir la página, sin aviso. Son los vendidos o retirados. Los reservados se quedan, marcados como "Reservado".
-- **"Parecidos a los que guardaste":** se arma con los depas guardados (pesan más) y con las últimas 6 fichas que la persona abrió. Nunca sugiere un depa ya guardado. A los que ya vio les baja la prioridad, pero pueden salir antes que otros si se parecen mucho. Se recalcula al quitar un depa. Si no hay nada guardado ni visto, o no hay sugerencias, la sección no aparece.
+- **"Empecemos con estos":** se ve apagado y no responde mientras no haya ningún inmueble.
+- **Inmuebles que ya no están en el catálogo:** se quitan solos de la lista al abrir la página, sin aviso. Son los vendidos o retirados. Los reservados se quedan, marcados como "Reservado".
+- **"Parecidos a los que guardaste":** se arma con los inmuebles guardados (pesan más) y con las últimas 6 fichas que la persona abrió. Nunca sugiere un inmueble ya guardado. A los que ya vio les baja la prioridad, pero pueden salir antes que otros si se parecen mucho. Se recalcula al quitar un inmueble. Si no hay nada guardado ni visto, o no hay sugerencias, la sección no aparece.
 
 **Casos especiales.**
-- **Lista vacía:** aparece "Aún no guardaste departamentos. Toca Me interesa en los que te gusten." con el botón "Explorar departamentos" (va a `/capital`). Si la persona abrió fichas antes, igual pueden salir sugerencias abajo.
-- **No hay botón "Seguir viendo" en esta página.** "Seguir viendo" solo existe en el aviso "Guarda tus depas". Para seguir explorando desde aquí se usan "Explorar departamentos", "Ver todos" o el menú "Capital".
-- **Solo depas en dólares:** la inversión total igual muestra soles en cero, por ejemplo "S/ 0 + US$ 80,000".
-- **El catálogo no carga:** aparece "No pudimos cargar tus depas guardados. Recarga la página.".
+- **Lista vacía:** aparece "Aún no guardaste inmuebles. Toca Me interesa en los que te gusten." con el botón "Explorar inmuebles" (va a `/capital`). Si la persona abrió fichas antes, igual pueden salir sugerencias abajo.
+- **No hay botón "Seguir viendo" en esta página.** "Seguir viendo" solo existe en el aviso "Guarda tus inmuebles". Para seguir explorando desde aquí se usan "Explorar inmuebles", "Ver todos" o el menú "Capital".
+- **Solo inmuebles en dólares:** la inversión total igual muestra soles en cero, por ejemplo "S/ 0 + US$ 80,000".
+- **El catálogo no carga:** aparece "No pudimos cargar tus inmuebles guardados. Recarga la página.".
 - **Celular frente a escritorio:** desde 900 px de ancho, el resumen va a la derecha y acompaña al bajar la página. En pantallas más angostas va debajo de la lista. Hasta 480 px, cada tarjeta pone la foto arriba. Las sugerencias se ven en 1 columna en celular, en 2 desde 640 px y en 4 desde 1024 px.
 
 ### 4.6 Dirección antigua `/carrito`
 
-"Mis depas" antes estaba en `/carrito`. Quien abra esa dirección, por ejemplo desde un enlace viejo, pasa automáticamente a `/mis-depas`. Esa dirección tampoco sale en Google.
+"Mis inmuebles" antes estaba en `/carrito`. Quien abra esa dirección, por ejemplo desde un enlace viejo, pasa automáticamente a `/mis-inmuebles`. Esa dirección tampoco sale en Google.
 
 ### 4.7 Página "Te acompañamos"
 
-![Página "Te acompañamos" con los depas elegidos](img/manual/09-te-acompanamos.webp)
+![Página "Te acompañamos" con los inmuebles elegidos](img/manual/09-te-acompanamos.webp)
 
-*Página "Te acompañamos" con los depas elegidos.*
+*Página "Te acompañamos" con los inmuebles elegidos.*
 
-**Para qué sirve.** Es el paso previo a WhatsApp. Muestra los depas elegidos, explica cómo acompaña el equipo y abre WhatsApp con un mensaje ya escrito.
+**Para qué sirve.** Es el paso previo a WhatsApp. Muestra los inmuebles elegidos, explica cómo acompaña el equipo y abre WhatsApp con un mensaje ya escrito.
 
 **Cómo se llega.** La ruta es `/capital/empecemos` (en la pestaña dice "Te acompañamos"). La página no sale en Google.
 
-| Desde | Botón | Qué depas muestra |
+| Desde | Botón | Qué inmuebles muestra |
 |---|---|---|
-| Página "Mis depas" | "Empecemos con estos" | Todos los de Mis depas |
-| Portada de Capital (`/capital`) | "Empecemos" | Todos los de Mis depas, o ninguno |
-| Ficha de un depa | "Contactar" | Solo ese depa, aunque haya otros guardados. Ese depa no se agrega a Mis depas. |
-| "Mis depas" del panel (con cuenta) | "Empecemos con estos" | Todos los de Mis depas de ese navegador |
-| "Mis consultas" del panel, sin consultas (con cuenta) | "Empecemos" | Todos los de Mis depas de ese navegador, o ninguno |
+| Página "Mis inmuebles" | "Empecemos con estos" | Todos los de Mis inmuebles |
+| Portada de Capital (`/capital`) | "Empecemos" | Todos los de Mis inmuebles, o ninguno |
+| Ficha de un inmueble | "Contactar" | Solo ese inmueble, aunque haya otros guardados. Ese inmueble no se agrega a Mis inmuebles. |
+| "Mis inmuebles" del panel (con cuenta) | "Empecemos con estos" | Todos los de Mis inmuebles de ese navegador |
+| "Mis consultas" del panel, sin consultas (con cuenta) | "Empecemos" | Todos los de Mis inmuebles de ese navegador, o ninguno |
 
 Estos botones solo llevan a la página. No envían nada al equipo. La solicitud se registra recién al tocar "Escribir por WhatsApp".
 
 **Qué se ve.**
-- El título "Te acompañamos al proyecto" y el texto "Estamos de tu lado para que encuentres el departamento ideal en Lima.". Con un solo depa, el texto termina con su distrito, por ejemplo "… ideal en Lince.".
-- Una tarjeta titulada "Departamento seleccionado" o "{n} departamentos seleccionados". El título en singular se usa con un depa y también cuando no hay ninguno. Cada depa lleva foto, distrito (con enlace a la ficha), "{dirección}. Proyecto de {inmobiliaria}." o "{dirección}. Depa de propietario.", y el precio con la rentabilidad (por ejemplo "S/ 310,000 · 8–10% anual"). Con varios depas, la foto se achica a la izquierda.
-- El botón "Cambiar selección", que vuelve a `/mis-depas`. Se ve siempre, haya o no depas.
+- El título "Te acompañamos al proyecto" y el texto "Estamos de tu lado para que encuentres el inmueble ideal en Lima.". Con un solo inmueble, el texto termina con su distrito, por ejemplo "… ideal en Lince.".
+- Una tarjeta titulada "Inmueble seleccionado" o "{n} inmuebles seleccionados". El título en singular se usa con un inmueble y también cuando no hay ninguno. Cada inmueble lleva foto, distrito (con enlace a la ficha), "{dirección}. Proyecto de {inmobiliaria}." o "{dirección}. Inmueble de propietario.", y el precio con la rentabilidad (por ejemplo "S/ 310,000 · 8–10% anual"). Con varios inmuebles, la foto se achica a la izquierda.
+- El botón "Cambiar selección", que vuelve a `/mis-inmuebles`. Se ve siempre, haya o no inmuebles.
 - La sección "Así es como te acompañamos", con tres pasos:
   - "Entramos juntos": "Conocemos lo que buscas, tu presupuesto y tus preferencias para alinearnos a tu inversión."
-  - "Coordinamos la visita": "Agendamos y organizamos la visita a los departamentos que te interesan."
-  - "Cierras la compra": "Cuando elijas tu depa, cierras directamente con la inmobiliaria o el propietario. Te acompañamos hasta la firma."
+  - "Coordinamos la visita": "Agendamos y organizamos la visita a los inmuebles que te interesan."
+  - "Cierras la compra": "Cuando elijas tu inmueble, cierras directamente con la inmobiliaria o el propietario. Te acompañamos hasta la firma."
 - El botón verde "Escribir por WhatsApp".
 
 **Qué puede hacer.**
-1. Revisa los depas de la tarjeta. Si quieres cambiarlos, toca "Cambiar selección".
+1. Revisa los inmuebles de la tarjeta. Si quieres cambiarlos, toca "Cambiar selección".
 2. Toca "Escribir por WhatsApp".
 3. En WhatsApp, que se abre en una pestaña nueva con el mensaje ya escrito, revisa el texto y envíalo. El sitio no lo envía por ti.
 
@@ -1488,24 +1483,24 @@ Estos botones solo llevan a la página. No envían nada al equipo. La solicitud 
 
 | Selección | Texto |
 |---|---|
-| Ningún depa | "Hola, quiero invertir en un depa en Lima y me gustaría que me acompañen." |
-| Un depa | "Hola, quiero que me acompañen con este depa:" y debajo una línea como "- Lince (Av. Arequipa cuadra 12): S/ 310,000" |
-| Varios depas | "Hola, quiero que me acompañen con estos depas:" y debajo una línea por depa con distrito, dirección y precio |
+| Ningún inmueble | "Hola, quiero invertir en un inmueble en Lima y me gustaría que me acompañen." |
+| Un inmueble | "Hola, quiero que me acompañen con este inmueble:" y debajo una línea como "- Lince (Av. Arequipa cuadra 12): S/ 310,000" |
+| Varios inmuebles | "Hola, quiero que me acompañen con estos inmuebles:" y debajo una línea por inmueble con distrito, dirección y precio |
 
 Los distritos, direcciones y precios del cuadro son de ejemplo.
 
-**Qué se envía al equipo.** Al tocar "Escribir por WhatsApp" con al menos un depa, el sitio registra una solicitud de tipo "Te acompañamos". Solo lleva qué depas eligió la persona y los datos de campaña: no lleva nombre ni teléfono. No pide aceptar la privacidad ni pasa por la verificación anti-robots.
+**Qué se envía al equipo.** Al tocar "Escribir por WhatsApp" con al menos un inmueble, el sitio registra una solicitud de tipo "Te acompañamos". Solo lleva qué inmuebles eligió la persona y los datos de campaña: no lleva nombre ni teléfono. No pide aceptar la privacidad ni pasa por la verificación anti-robots.
 - El equipo la ve en el panel de administración. Este tipo de solicitud no genera correo al equipo. Si hay un CRM conectado, también se le avisa.
 - El equipo sabe quién es la persona cuando le llega su mensaje de WhatsApp.
 - Cada toque del botón registra una solicitud nueva, hasta 10 por minuto desde la misma conexión (el mismo límite de 4.3). Las que pasan ese límite no se registran y no se avisa; WhatsApp se abre igual.
 - Si la persona tenía la sesión iniciada, queda vinculada a su cuenta.
 
 **Casos especiales.**
-- **Sin depas elegidos:** la tarjeta mantiene el título "Departamento seleccionado" (en singular) y muestra a la vez el aviso "Todavía no elegiste un depa. Marca Me interesa en los que te gusten o escríbenos y te ayudamos a elegir.", el botón "Ver depas" (va a `/capital`) y el botón "Cambiar selección" (va a `/mis-depas`). WhatsApp se abre con el mensaje general y no se registra nada.
+- **Sin inmuebles elegidos:** la tarjeta mantiene el título "Inmueble seleccionado" (en singular) y muestra a la vez el aviso "Todavía no elegiste un inmueble. Marca Me interesa en los que te gusten o escríbenos y te ayudamos a elegir.", el botón "Ver inmuebles" (va a `/capital`) y el botón "Cambiar selección" (va a `/mis-inmuebles`). WhatsApp se abre con el mensaje general y no se registra nada.
 - **La API no está configurada o falla:** WhatsApp se abre igual. La solicitud simplemente no se registra.
-- **El enlace de "Contactar" apunta a un depa que ya no está publicado:** la página muestra los depas de Mis depas.
-- **Botón tocado antes de tiempo:** el botón queda listo cuando la página termina de cargar los depas. Si se toca antes, abre una pestaña sin WhatsApp.
-- **El catálogo no carga:** la tarjeta queda con el título "Departamento seleccionado" y el botón "Cambiar selección", sin depas y sin el aviso "Todavía no elegiste un depa…" ni el botón "Ver depas". WhatsApp se abre con el mensaje general y no se registra nada.
+- **El enlace de "Contactar" apunta a un inmueble que ya no está publicado:** la página muestra los inmuebles de Mis inmuebles.
+- **Botón tocado antes de tiempo:** el botón queda listo cuando la página termina de cargar los inmuebles. Si se toca antes, abre una pestaña sin WhatsApp.
+- **El catálogo no carga:** la tarjeta queda con el título "Inmueble seleccionado" y el botón "Cambiar selección", sin inmuebles y sin el aviso "Todavía no elegiste un inmueble…" ni el botón "Ver inmuebles". WhatsApp se abre con el mensaje general y no se registra nada.
 - **Número de WhatsApp de relleno:** el número sale de la configuración del sitio. El valor por defecto es `51XXXXXXXXX`; mientras no se configure el real, el mensaje no llega a Depa Host.
 - **No se actualiza sola:** la página muestra la lista tal como estaba al abrirla. Los cambios hechos en otra pestaña se ven al recargar.
 - **Celular frente a escritorio:** desde 1024 px de ancho, la selección va a la izquierda y los pasos con el botón a la derecha. En pantallas más angostas va todo en una columna.
@@ -1516,31 +1511,31 @@ Aplica igual a compradores (rol buyer) y propietarios (rol seller). Cómo crear 
 
 | Tema | Sin cuenta | Con sesión iniciada |
 |---|---|---|
-| Dónde vive Mis depas | Solo en ese navegador | En el navegador y en la cuenta |
+| Dónde vive Mis inmuebles | Solo en ese navegador | En el navegador y en la cuenta |
 | Otros dispositivos | No ven la lista | La ven al iniciar sesión y abrir cualquier página del sitio |
-| Encabezado | "Hola, {nombre del aviso}" lleva a `/mis-depas`; se ve "Ingresar" | "Hola, {nombre de la cuenta}" lleva al panel; "Ingresar" se oculta |
-| Solicitudes enviadas | No quedan ligadas a nadie | Aparecen en "Mis consultas" del panel como "Guarda tus depas" o "Te acompañamos (WhatsApp)" |
+| Encabezado | "Hola, {nombre del aviso}" lleva a `/mis-inmuebles`; se ve "Ingresar" | "Hola, {nombre de la cuenta}" lleva al panel; "Ingresar" se oculta |
+| Solicitudes enviadas | No quedan ligadas a nadie | Aparecen en "Mis consultas" del panel como "Guarda tus inmuebles" o "Te acompañamos (WhatsApp)" |
 
 **Cómo se sincroniza.**
 1. Inicia sesión (sección 6) y abre cualquier página del sitio.
-2. El sitio une las dos listas: primero van los depas de la cuenta y después los que tenías solo en ese navegador. Lo que guardaste antes de ingresar no se pierde.
-3. Desde ese momento, cada "Me interesa" o cada depa que quitas se guarda también en la cuenta, en menos de un segundo.
+2. El sitio une las dos listas: primero van los inmuebles de la cuenta y después los que tenías solo en ese navegador. Lo que guardaste antes de ingresar no se pierde.
+3. Desde ese momento, cada "Me interesa" o cada inmueble que quitas se guarda también en la cuenta, en menos de un segundo.
 4. En otro dispositivo, inicia sesión y abre el sitio. El contador y la lista se completan con lo de tu cuenta.
 
-**"Mis depas" en el panel** (`app.depahostperu.com/mis-depas`, en el menú "Mi cuenta"):
-- Es la misma lista. Muestra "Los departamentos que marcaste con Me interesa, en el sitio o aquí. Se guardan en tu cuenta.".
-- Cada depa tiene la "X" para quitar, que muestra el aviso "Quitaste {distrito}", y el enlace "Ver en el sitio".
+**"Mis inmuebles" en el panel** (`app.depahostperu.com/mis-inmuebles`, en el menú "Mi cuenta"):
+- Es la misma lista. Muestra "Los inmuebles que marcaste con Me interesa, en el sitio o aquí. Se guardan en tu cuenta.".
+- Cada inmueble tiene la "X" para quitar, que muestra el aviso "Quitaste {distrito}", y el enlace "Ver en el sitio".
 - El "Resumen" lleva los "seleccionados", la "Inversión total" y el botón "Empecemos con estos", que abre "Te acompañamos" del sitio.
-- Con la lista vacía muestra "Aún no guardaste departamentos" y el botón "Ver depas para invertir".
+- Con la lista vacía muestra "Aún no guardaste inmuebles" y el botón "Ver inmuebles para invertir".
 
 **Casos especiales.**
-- **Un depa quitado puede volver.** Si quitas un depa en el panel o en otro dispositivo, vuelve a la cuenta cuando abres el sitio en un navegador que todavía lo tenía guardado. Pasa también en el mismo navegador donde usas el panel. En ese caso, quítalo desde el sitio, en ese navegador.
-- **Límite de 20 en el sitio.** Si al unir las listas hay más de 20 depas, el sitio se queda con los 20 últimos de la lista unida: salen primero los depas más antiguos de la cuenta, aunque un depa que solo estaba en el navegador sea más antiguo. La cuenta guarda la lista unida completa (y el panel la muestra entera) hasta el siguiente cambio en el sitio, cuando también queda con esos 20.
-- **El aviso "Guarda tus depas" puede aparecer igual.** No distingue si la persona tiene sesión. Puede abrirse incluso cuando llega la lista de la cuenta a un dispositivo nuevo, si trae 2 o más depas.
-- **La nota de `/mis-depas` no cambia con la cuenta.** Sigue diciendo "Guardado en este dispositivo." si la persona nunca llenó el aviso en ese navegador, aunque la lista ya esté en su cuenta.
+- **Un inmueble quitado puede volver.** Si quitas un inmueble en el panel o en otro dispositivo, vuelve a la cuenta cuando abres el sitio en un navegador que todavía lo tenía guardado. Pasa también en el mismo navegador donde usas el panel. En ese caso, quítalo desde el sitio, en ese navegador.
+- **Límite de 20 en el sitio.** Si al unir las listas hay más de 20 inmuebles, el sitio se queda con los 20 últimos de la lista unida: salen primero los inmuebles más antiguos de la cuenta, aunque un inmueble que solo estaba en el navegador sea más antiguo. La cuenta guarda la lista unida completa (y el panel la muestra entera) hasta el siguiente cambio en el sitio, cuando también queda con esos 20.
+- **El aviso "Guarda tus inmuebles" puede aparecer igual.** No distingue si la persona tiene sesión. Puede abrirse incluso cuando llega la lista de la cuenta a un dispositivo nuevo, si trae 2 o más inmuebles.
+- **La nota de `/mis-inmuebles` no cambia con la cuenta.** Sigue diciendo "Guardado en este dispositivo." si la persona nunca llenó el aviso en ese navegador, aunque la lista ya esté en su cuenta.
 - **Al cerrar sesión o si la sesión vence:** la lista queda en ese navegador, pero los cambios posteriores ya no se guardan en la cuenta. El encabezado vuelve a mostrar "Ingresar".
 
-**Referencia técnica:** [`src/components/SaveButton.astro`](../../src/components/SaveButton.astro), [`src/scripts/saved-buttons.ts`](../../src/scripts/saved-buttons.ts), [`src/lib/saved-store.ts`](../../src/lib/saved-store.ts), [`src/components/Header.astro`](../../src/components/Header.astro), [`src/components/SaveListDialog.astro`](../../src/components/SaveListDialog.astro), [`src/scripts/forms.ts`](../../src/scripts/forms.ts), [`src/lib/profile.ts`](../../src/lib/profile.ts), [`src/pages/mis-depas.astro`](../../src/pages/mis-depas.astro), [`src/components/SavedDepa.astro`](../../src/components/SavedDepa.astro), [`src/components/ForYouRow.astro`](../../src/components/ForYouRow.astro), [`src/lib/recommend.ts`](../../src/lib/recommend.ts), [`src/pages/capital/empecemos.astro`](../../src/pages/capital/empecemos.astro), [`src/data/contacto.ts`](../../src/data/contacto.ts), [`src/lib/account.ts`](../../src/lib/account.ts), [`astro.config.mjs`](../../astro.config.mjs) · API: `depahost-api/src/modules/leads/` (`schema.ts`, `service.ts`, `routes.ts`) y `depahost-api/src/modules/accounts/service.ts` · Panel: `depahost-panel/src/views/buyer/SavedView.vue` y `depahost-panel/src/views/buyer/MyLeadsView.vue` · Capítulos: [05-flujos.md](05-flujos.md) (flujos 6, 7, 9, 10 y 11) y [08-panel-y-cuentas.md](08-panel-y-cuentas.md#mis-depas-del-navegador-a-la-cuenta).
+**Referencia técnica:** [`src/components/SaveButton.astro`](../../src/components/SaveButton.astro), [`src/scripts/saved-buttons.ts`](../../src/scripts/saved-buttons.ts), [`src/lib/saved-store.ts`](../../src/lib/saved-store.ts), [`src/components/Header.astro`](../../src/components/Header.astro), [`src/components/SaveListDialog.astro`](../../src/components/SaveListDialog.astro), [`src/scripts/forms.ts`](../../src/scripts/forms.ts), [`src/lib/profile.ts`](../../src/lib/profile.ts), [`src/pages/mis-inmuebles.astro`](../../src/pages/mis-inmuebles.astro), [`src/components/SavedDepa.astro`](../../src/components/SavedDepa.astro), [`src/components/ForYouRow.astro`](../../src/components/ForYouRow.astro), [`src/lib/recommend.ts`](../../src/lib/recommend.ts), [`src/pages/capital/empecemos.astro`](../../src/pages/capital/empecemos.astro), [`src/data/contacto.ts`](../../src/data/contacto.ts), [`src/lib/account.ts`](../../src/lib/account.ts), [`astro.config.mjs`](../../astro.config.mjs) · API: `depahost-api/src/modules/leads/` (`schema.ts`, `service.ts`, `routes.ts`) y `depahost-api/src/modules/accounts/service.ts` · Panel: `depahost-panel/src/views/buyer/SavedView.vue` y `depahost-panel/src/views/buyer/MyLeadsView.vue` · Capítulos: [05-flujos.md](05-flujos.md) (flujos 6, 7, 9, 10 y 11) y [08-panel-y-cuentas.md](08-panel-y-cuentas.md#mis-inmuebles-del-navegador-a-la-cuenta).
 
 ## 5. Formularios: propietarios, inversionistas del extranjero y Libro de Reclamaciones
 
@@ -1615,14 +1610,14 @@ Cada formulario tiene un campo "Sitio web" ("Website" en inglés) que las person
 
 | Formulario | Límite | Qué se comparte |
 |---|---|---|
-| Propietarios y formulario en inglés | 10 envíos por minuto desde la misma conexión (IP) | El mismo cupo que "Guarda tus depas" y que la consulta que se registra al tocar "Escribir por WhatsApp" en "Te acompañamos al proyecto" (`/capital/empecemos`) |
+| Propietarios y formulario en inglés | 10 envíos por minuto desde la misma conexión (IP) | El mismo cupo que "Guarda tus inmuebles" y que la consulta que se registra al tocar "Escribir por WhatsApp" en "Te acompañamos al proyecto" (`/capital/empecemos`) |
 | Libro de Reclamaciones | 5 envíos por minuto desde la misma conexión (IP) | Solo ese formulario |
 
 Cuenta cada intento, incluso los que fallan. Las personas que usan la misma red, por ejemplo en una oficina, comparten el cupo.
 
 **Si tienes sesión iniciada**
 
-Si iniciaste sesión en app.depahostperu.com en el mismo navegador, los envíos de Propietarios y del formulario en inglés quedan unidos a tu cuenta. Aparecen en el panel, en "Mis consultas", con su origen ("Quiero vender mi depa", "Quiero alquilar mi depa" o "Formulario para inversionistas") y su estado ("Nuevo", "En conversación" o "Cerrado"). Esto vale para compradores (buyer) y propietarios (seller). El Libro de Reclamaciones **no** se une a ninguna cuenta.
+Si iniciaste sesión en app.depahostperu.com en el mismo navegador, los envíos de Propietarios y del formulario en inglés quedan unidos a tu cuenta. Aparecen en el panel, en "Mis consultas", con su origen ("Quiero vender mi inmueble", "Quiero alquilar mi inmueble" o "Formulario para inversionistas") y su estado ("Nuevo", "En conversación" o "Cerrado"). Esto vale para compradores (buyer) y propietarios (seller). El Libro de Reclamaciones **no** se une a ninguna cuenta.
 
 **De qué campaña vienes**
 
@@ -1653,7 +1648,7 @@ flowchart TB
 
 **Para qué sirve**
 
-Es para el dueño de un depa que quiere venderlo, alquilarlo a largo plazo o que Depa Host lo opere en Airbnb. Es un contacto rápido: no pide cuenta y el equipo sigue la conversación por WhatsApp.
+Es para el dueño de un inmueble que quiere venderlo, alquilarlo a largo plazo o que Depa Host lo opere en Airbnb. Es un contacto rápido: no pide cuenta y el equipo sigue la conversación por WhatsApp.
 
 **Cómo se llega**
 
@@ -1667,14 +1662,14 @@ Es para el dueño de un depa que quiere venderlo, alquilarlo a largo plazo o que
 
 **Qué se ve**
 
-- Título "Vende o alquila tu departamento en Lima" y el texto "Te sugerimos el precio para venderlo en máximo 2 meses, o lo operamos en Airbnb."
+- Título "Vende o alquila tu inmueble en Lima" y el texto "Te sugerimos el precio para venderlo en máximo 2 meses, o lo operamos en Airbnb."
 - Botones "Quiero vender" y "Poner en alquiler".
-- El formulario "Cuéntanos de tu depa". Debajo del botón dice "Te escribimos por WhatsApp para concretar."
+- El formulario "Cuéntanos de tu inmueble". Debajo del botón dice "Te escribimos por WhatsApp para concretar."
 - Tres pasos numerados, cada uno con su texto:
 
   | Paso | Texto |
   |---|---|
-  | 1. "Precio" | "Te sugerimos el valor con el que tu depa se mueve." |
+  | 1. "Precio" | "Te sugerimos el valor con el que tu inmueble se mueve." |
   | 2. "Pauta" | "Lo publicamos en portales, medios y redes." |
   | 3. "Cierre" | "Te acompañamos hasta la firma o el primer huésped." |
 
@@ -1712,14 +1707,14 @@ Es para el dueño de un depa que quiere venderlo, alquilarlo a largo plazo o que
 **Qué pasa después**
 
 1. Aparece "¡Listo! Te escribimos por WhatsApp para concretar." con el enlace "Adelantar por WhatsApp".
-2. El enlace abre WhatsApp con este mensaje ya escrito: "Hola, soy [nombre]. Quiero [vender / poner en alquiler / operar en Airbnb] mi depa en [distrito]."
+2. El enlace abre WhatsApp con este mensaje ya escrito: "Hola, soy [nombre]. Quiero [vender / poner en alquiler / operar en Airbnb] mi inmueble en [distrito]."
 3. El formulario se vacía.
 4. Queda registrado: nombre, celular, correo, distrito, tipo, qué quiere hacer, precio, fecha del consentimiento, campaña y cuenta (si había sesión).
-5. Se clasifica como venta si eligió "Vender", y como alquiler si eligió alquiler o Airbnb. En el correo al equipo sale como "Propietario: vender" / "Propietario: alquilar". En el panel, como "Quiero vender mi depa" / "Quiero alquilar mi depa". El detalle "qué quieres hacer" indica cuál de los dos.
+5. Se clasifica como venta si eligió "Vender", y como alquiler si eligió alquiler o Airbnb. En el correo al equipo sale como "Propietario: vender" / "Propietario: alquilar". En el panel, como "Quiero vender mi inmueble" / "Quiero alquilar mi inmueble". El detalle "qué quieres hacer" indica cuál de los dos.
 6. Del lado del equipo:
    - Llega un correo "Nuevo lead · Propietario: vender" (o "· Propietario: alquilar") con todos los datos. Responder ese correo le escribe directo al propietario, si dejó correo.
    - Si hay un CRM conectado, también recibe el aviso.
-   - El contacto aparece en el panel de administración, en "Leads", con el origen "Quiero vender mi depa" o "Quiero alquilar mi depa" y el estado "Sin contactar".
+   - El contacto aparece en el panel de administración, en "Leads", con el origen "Quiero vender mi inmueble" o "Quiero alquilar mi inmueble" y el estado "Sin contactar".
 7. La persona **no** recibe correo de confirmación. El siguiente paso es el WhatsApp del equipo.
 
 El correo al equipo y el CRM dependen de la configuración. Si están apagados o fallan, el contacto igual queda guardado.
@@ -1731,7 +1726,7 @@ El correo al equipo y el CRM dependen de la configuración. Si están apagados o
 - **Segundo envío sin recargar:** la verificación anti-bots no se reinicia después de un envío correcto. Un segundo envío seguido puede fallar con el mensaje del robot. Vuelve a completar el recuadro (se reinicia tras el error) o recarga la página.
 - **Etiqueta del precio:** después de enviar, "Qué quieres hacer" vuelve a "Selecciona". Si antes elegiste alquiler, el campo de precio puede seguir diciendo "Alquiler mensual esperado".
 - **Airbnb:** no tiene enlace directo. `#alquiler` elige el alquiler a largo plazo y "Operarlo en Airbnb" se elige en la lista.
-- **Propietario con cuenta:** el panel tiene otro camino, "Publicar un depa", para registrar el depa completo. Este formulario no crea esa solicitud: solo deja el contacto.
+- **Propietario con cuenta:** el panel tiene otro camino, "Publicar un inmueble", para registrar el inmueble completo. Este formulario no crea esa solicitud: solo deja el contacto.
 
 ### 5.3 Inversionistas del extranjero: formulario en inglés (`/capital`)
 
@@ -1742,7 +1737,7 @@ Es para inversionistas de fuera del Perú. Dejan su nombre, su correo y cuánto 
 **Cómo se llega**
 
 - Menú "Capital", botón "Comprar para rentabilizar" o tarjeta "Capital: compra para que rinda" del inicio.
-- Baja hasta el final de `/capital`, después del ranking "Los 10 depas para invertir ahora". Con menos de 10 depas, el ranking se titula "Los depas para invertir ahora". Si no hay ninguno, no aparece, pero el formulario sigue al final de la página.
+- Baja hasta el final de `/capital`, después del ranking "Los 10 inmuebles para invertir ahora". Con menos de 10 inmuebles, el ranking se titula "Los inmuebles para invertir ahora". Si no hay ninguno, no aparece, pero el formulario sigue al final de la página.
 - El bloque se titula "Also in English for international investors", con el texto "We help you find high-yield rental apartments in Lima."
 
 **Qué se ve**
@@ -1849,7 +1844,7 @@ Bloque 1, tus datos:
 Bloque 2, el bien contratado:
 
 7. Elige "Servicio" (viene marcado) o "Producto".
-8. Escribe la "Descripción". Ejemplo de la pantalla: "p. ej. Estadía en depa de Lince del 10 al 12 de octubre".
+8. Escribe la "Descripción". Ejemplo de la pantalla: "p. ej. Estadía en inmueble de Lince del 10 al 12 de octubre".
 9. Si quieres, escribe el "Monto reclamado (S/)" (es opcional).
 
 Bloque 3, el detalle:
@@ -1959,11 +1954,11 @@ La cuenta es gratis y opcional. Todo el sitio funciona sin ella. Las cuentas se 
 
 ### 6.1 Para qué sirve tener cuenta
 
-| Qué quieres hacer | Sin cuenta | Comprador o inversionista ("Quiero invertir") | Propietario ("Tengo un depa") |
+| Qué quieres hacer | Sin cuenta | Comprador o inversionista ("Quiero invertir") | Propietario ("Tengo un inmueble") |
 |---|---|---|---|
-| Guardar depas con "Me interesa" | Sí, pero solo en ese navegador | Sí. Además se guardan en la cuenta y los ves en otros dispositivos | Igual que el comprador |
+| Guardar inmuebles con "Me interesa" | Sí, pero solo en ese navegador | Sí. Además se guardan en la cuenta y los ves en otros dispositivos | Igual que el comprador |
 | Ver tus consultas y en qué estado están ("Mis consultas") | No | Sí, las que envías con la sesión abierta | Sí |
-| Publicar tu depa y seguir su revisión ("Mis propiedades", "Publicar un depa") | No desde el panel. Puedes usar el formulario de la página Propietarios | No. Primero cambia a propietario en "Perfil" | Sí |
+| Publicar tu inmueble y seguir su revisión ("Mis propiedades", "Publicar un inmueble") | No desde el panel. Puedes usar el formulario de la página Propietarios | No. Primero cambia a propietario en "Perfil" | Sí |
 | Formularios del sitio y WhatsApp | Sí | Sí | Sí |
 
 - Cada cuenta tiene un solo tipo a la vez, comprador o propietario. Puedes cambiarlo cuando quieras en "Perfil" (ver 6.7).
@@ -1995,18 +1990,18 @@ La cuenta es gratis y opcional. Todo el sitio funciona sin ella. Las cuentas se 
 | "Recupera tu contraseña" | /recuperar | Personas sin sesión |
 | "Crea una contraseña nueva" | /restablecer (se abre con el enlace del correo) | Cualquiera, con sesión o sin ella |
 | "Perfil" | /perfil | Personas con sesión |
-| Inicio del comprador | /mis-depas | Comprador |
+| Inicio del comprador | /mis-inmuebles | Comprador |
 | Inicio del propietario | /mis-propiedades | Propietario |
 
 - Si ya tienes la sesión abierta y entras a /ingresar, /registro o /recuperar, el panel te lleva directo a tu inicio.
 - Si abres una página del panel sin sesión, el panel te manda a "Ingresa a tu cuenta" y recuerda a dónde ibas. La dirección principal es la excepción: no se recuerda, y después de ingresar vas a tu inicio.
 - Si la dirección no existe, verás "No encontramos esta página" y el botón "Ir a mi cuenta". Esa pantalla sale con sesión o sin ella. El botón lleva a la dirección principal del panel:
-  - Con sesión, vas a tu inicio: "Mis depas" si eres comprador o "Mis propiedades" si eres propietario.
+  - Con sesión, vas a tu inicio: "Mis inmuebles" si eres comprador o "Mis propiedades" si eres propietario.
   - Sin sesión, vas a "Ingresa a tu cuenta". Después de ingresar vas a tu inicio.
 
 **Cómo se ven las pantallas de acceso**
 
-- **Computadora (desde 960 px):** a la izquierda hay una franja azul marino con el logo, la frase "El depa en Lima, con la decisión correcta." y el texto "Guarda depas, sigue tus consultas o publica el tuyo. Todo en un solo lugar.". El logo lleva al sitio. Si el panel no tiene configurada la dirección del sitio, lleva al inicio del panel. A la derecha está el formulario.
+- **Computadora (desde 960 px):** a la izquierda hay una franja azul marino con el logo, la frase "El inmueble en Lima, con la decisión correcta." y el texto "Guarda inmuebles, sigue tus consultas o publica el tuyo. Todo en un solo lugar.". El logo lleva al sitio. Si el panel no tiene configurada la dirección del sitio, lleva al inicio del panel. A la derecha está el formulario.
 - **Celular o tablet (menos de 960 px):** solo se ve el formulario, con el logo arriba. Ese logo no lleva al sitio. Lleva al inicio del panel, o sea, de vuelta a "Ingresa a tu cuenta". Para regresar al sitio, usa el botón atrás del navegador.
 
 ```mermaid
@@ -2022,7 +2017,7 @@ flowchart TD
     volver -->|"sí"| pedida["Esa misma página"]
     volver -->|"no, o era de otro tipo de cuenta"| rol{"¿Qué tipo de cuenta es?"}
     registro -->|"cuenta creada"| rol
-    rol -->|"Comprador"| misdepas["Mis depas"]
+    rol -->|"Comprador"| misdepas["Mis inmuebles"]
     rol -->|"Propietario"| misprop["Mis propiedades"]
 ```
 
@@ -2057,8 +2052,8 @@ flowchart TD
 
 - El título "Crea tu cuenta" y el texto "Es gratis y te toma un minuto.".
 - Dos tarjetas para elegir:
-  - "Quiero invertir": "Guarda depas, compáralos y te acompañamos a comprar."
-  - "Tengo un depa": "Publícalo para vender o alquilar y sigue su estado."
+  - "Quiero invertir": "Guarda inmuebles, compáralos y te acompañamos a comprar."
+  - "Tengo un inmueble": "Publícalo para vender o alquilar y sigue su estado."
   - Ya viene elegida "Quiero invertir".
 - Los campos "Nombre", "Correo", "Celular" y "Contraseña".
   - "Celular" está marcado "opcional" y trae el ejemplo "9XX XXX XXX".
@@ -2071,7 +2066,7 @@ flowchart TD
 
 **Qué puedes hacer:**
 
-1. Elige "Quiero invertir" si buscas comprar o invertir. Elige "Tengo un depa" si quieres publicar tu depa para venderlo o alquilarlo.
+1. Elige "Quiero invertir" si buscas comprar o invertir. Elige "Tengo un inmueble" si quieres publicar tu inmueble para venderlo o alquilarlo.
 2. Escribe tu nombre y tu correo.
 3. Si quieres, escribe tu celular.
 4. Crea una contraseña de al menos 10 caracteres.
@@ -2083,7 +2078,7 @@ flowchart TD
 
 | Campo | Regla | Mensaje si falla |
 |---|---|---|
-| Tipo de cuenta | "Quiero invertir" (comprador) o "Tengo un depa" (propietario) | Nunca falla: siempre hay uno elegido |
+| Tipo de cuenta | "Quiero invertir" (comprador) o "Tengo un inmueble" (propietario) | Nunca falla: siempre hay uno elegido |
 | "Nombre" | Obligatorio. De 2 a 120 caracteres, sin contar los espacios al inicio y al final | "Too small: expected string to have >=2 characters". Con más de 120: "Too big: expected string to have <=120 characters". Los dos salen en inglés |
 | "Correo" | Obligatorio y con formato de correo, hasta 200 caracteres. Se guarda en minúsculas y sin espacios | "Correo inválido". Con más de 200 caracteres: "Too big: expected string to have <=200 characters", en inglés |
 | "Celular" | Opcional. Si lo llenas: un "+" opcional al inicio y luego de 6 a 20 caracteres entre números, espacios, paréntesis y guiones. Antes de revisarlo se quitan los espacios del inicio y del final | "Teléfono inválido" |
@@ -2097,7 +2092,7 @@ flowchart TD
 
 - Se crea la cuenta con tu nombre, tu correo en minúsculas, tu celular y el tipo que elegiste. La contraseña se guarda cifrada: nadie del equipo puede verla.
 - Quedas con la sesión abierta en ese navegador, en el panel y también en el sitio.
-- El panel te lleva a tu inicio. Con "Quiero invertir" vas a "Mis depas". Con "Tengo un depa" vas a "Mis propiedades".
+- El panel te lleva a tu inicio. Con "Quiero invertir" vas a "Mis inmuebles". Con "Tengo un inmueble" vas a "Mis propiedades".
 - No llega correo de bienvenida ni de verificación, ni aviso por WhatsApp.
 - El equipo ve la cuenta en su lista de usuarios: nombre, contacto, fecha de creación y tipo. Su columna "Último ingreso" dice "Nunca" hasta que ingreses por la pantalla "Ingresa a tu cuenta", porque crear la cuenta no cuenta como ingreso.
 
@@ -2112,7 +2107,7 @@ flowchart TD
   - Ese mismo mensaje sale si tocas "Crear cuenta" antes de que termine la verificación, o si ya venció.
   - Después de un error del sistema (datos inválidos, correo ya registrado, verificación fallida o límite de intentos), la verificación vuelve a empezar. Espera a que se complete otra vez antes de reintentar. Si el único problema era la casilla sin marcar, la verificación no se reinicia.
 - **Consentimiento:** marcar la casilla es obligatorio, pero el sistema no guarda ninguna constancia ni fecha de la aceptación.
-- **Política de privacidad:** es un borrador. Todavía muestra "[fecha pendiente]" y "[plazo pendiente]" y no habla de las cuentas: sigue diciendo que "Mis depas" se guarda solo en el navegador. Hay que actualizarla.
+- **Política de privacidad:** es un borrador. Todavía muestra "[fecha pendiente]" y "[plazo pendiente]" y no habla de las cuentas: sigue diciendo que "Mis inmuebles" se guarda solo en el navegador. Hay que actualizarla.
 - Si el panel no tiene configurada la dirección del sitio, el enlace a la política abre "No encontramos esta página".
 - **Celular:** el sistema no revisa que haya dígitos ni que sea un celular peruano. Por ejemplo, acepta "((((((".
 - **Contraseña:** no hay campo para repetirla ni botón para verla. Revisa bien lo que escribes.
@@ -2134,7 +2129,7 @@ flowchart TD
 
 **Qué se ve:**
 
-- El título "Ingresa a tu cuenta" y el texto "Tus depas guardados, tus consultas y tus propiedades.".
+- El título "Ingresa a tu cuenta" y el texto "Tus inmuebles guardados, tus consultas y tus propiedades.".
 - Los campos "Correo" y "Contraseña". Junto a "Contraseña" está el enlace "¿La olvidaste?".
 - El botón "Ingresar". Al pie, "¿Aún no tienes cuenta?" con el enlace "Crea una gratis".
 
@@ -2158,7 +2153,7 @@ flowchart TD
 **Qué pasa después:**
 
 - Queda abierta tu sesión en ese navegador, en el panel y en el sitio. Dura 30 días (ver 6.9).
-- Si llegaste aquí porque intentabas abrir una página del panel, vuelves a esa página. Si no, vas a tu inicio: "Mis depas" si eres comprador o "Mis propiedades" si eres propietario.
+- Si llegaste aquí porque intentabas abrir una página del panel, vuelves a esa página. Si no, vas a tu inicio: "Mis inmuebles" si eres comprador o "Mis propiedades" si eres propietario.
 - Si la página que pedías no corresponde a tu tipo de cuenta, vas a tu inicio. Por ejemplo, cuando un comprador abre "Mis propiedades".
 - Se guardan la fecha y la hora del ingreso. El equipo las ve como "Último ingreso".
 - No llega correo ni aviso.
@@ -2236,7 +2231,7 @@ El correo es de texto simple. Sale del remitente configurado, que por defecto es
 - **Envío de correos:** si el servicio de correo (Resend) no está configurado, como en desarrollo o preproducción, el correo no sale. El servidor solo anota que hubo un correo, sin el enlace. Si el envío falla, la persona ve el mismo aviso y el error solo queda en el registro del servidor.
 - **Varios pedidos:** cada pedido genera un enlace distinto. Cada enlace sirve una sola vez y vence a la hora. Pedir uno nuevo no anula los anteriores: siguen sirviendo hasta que se usen o venzan.
 - **"Pedir otro enlace" con la sesión abierta:** si abriste el enlace con tu sesión iniciada y tocas "Pedir otro enlace", no ves "Recupera tu contraseña". El panel te lleva a tu inicio, porque esa pantalla es solo para personas sin sesión. Para pedir otro enlace, cierra sesión primero (ver 6.8), o cambia tu contraseña desde "Perfil" si recuerdas la actual.
-- **Enlace abierto con la sesión iniciada:** al guardar, esa sesión también se cierra. El panel puede seguir mostrándote como si estuvieras dentro, con errores como "No pudimos cargar tus depas.". Lo mismo pasa si tocas "Ingresar" después del mensaje "Listo…": en lugar de "Ingresa a tu cuenta", el panel te lleva a tu inicio y no carga tus datos. Recarga la página: el panel te pedirá ingresar.
+- **Enlace abierto con la sesión iniciada:** al guardar, esa sesión también se cierra. El panel puede seguir mostrándote como si estuvieras dentro, con errores como "No pudimos cargar tus inmuebles.". Lo mismo pasa si tocas "Ingresar" después del mensaje "Listo…": en lugar de "Ingresa a tu cuenta", el panel te lleva a tu inicio y no carga tus datos. Recarga la página: el panel te pedirá ingresar.
 
 ### 6.7 Perfil
 
@@ -2254,7 +2249,7 @@ El correo es de texto simple. Sale del remitente configurado, que por defecto es
 - La tarjeta "Tus datos":
   - "Correo", sin poder editarlo y con la nota "Para cambiar tu correo, escríbenos.".
   - "Nombre" y "Celular".
-  - "Uso tu cuenta para", con las opciones "Invertir en depas" y "Vender o alquilar mi depa".
+  - "Uso tu cuenta para", con las opciones "Invertir en inmuebles" y "Vender o alquilar mi inmueble".
   - El botón "Guardar".
 - La tarjeta "Contraseña":
   - Los campos "Contraseña actual" y "Contraseña nueva".
@@ -2272,10 +2267,10 @@ El correo es de texto simple. Sale del remitente configurado, que por defecto es
 
 **Cambiar entre comprador y propietario:**
 
-- "Invertir en depas" es comprador y "Vender o alquilar mi depa" es propietario.
-- Si guardas con otro tipo, el panel te lleva al inicio del tipo nuevo: "Mis propiedades" si pasaste a propietario, "Mis depas" si pasaste a comprador. El menú cambia en ese momento.
-- Si pasas de propietario a comprador, tus solicitudes de propietario no se borran. Lo que pasa es que "Mis propiedades" y "Publicar un depa" desaparecen del menú y no puedes verlas hasta que vuelvas a ser propietario.
-- "Mis depas", "Mis consultas" y "Perfil" se mantienen con los dos tipos.
+- "Invertir en inmuebles" es comprador y "Vender o alquilar mi inmueble" es propietario.
+- Si guardas con otro tipo, el panel te lleva al inicio del tipo nuevo: "Mis propiedades" si pasaste a propietario, "Mis inmuebles" si pasaste a comprador. El menú cambia en ese momento.
+- Si pasas de propietario a comprador, tus solicitudes de propietario no se borran. Lo que pasa es que "Mis propiedades" y "Publicar un inmueble" desaparecen del menú y no puedes verlas hasta que vuelvas a ser propietario.
+- "Mis inmuebles", "Mis consultas" y "Perfil" se mantienen con los dos tipos.
 - El equipo también puede cambiarte el tipo desde su lista de usuarios.
 
 **Cambiar tu contraseña:**
@@ -2322,14 +2317,14 @@ El panel no pide confirmación. Al pie del menú también están tu nombre compl
 **Qué pasa después:**
 
 - Vuelves a "Ingresa a tu cuenta".
-- Se cierra la sesión de ese navegador, en el panel y en el sitio. En la próxima página del sitio que abras o recargues, vuelve "Ingresar" y desaparece "Hola, {tu nombre}". Excepción: si antes dejaste tu nombre en "Guarda tus depas", el sitio sigue mostrando "Hola, {ese nombre}" junto a "Ingresar", y ese saludo lleva a "Mis depas" del sitio, no al panel.
+- Se cierra la sesión de ese navegador, en el panel y en el sitio. En la próxima página del sitio que abras o recargues, vuelve "Ingresar" y desaparece "Hola, {tu nombre}". Excepción: si antes dejaste tu nombre en "Guarda tus inmuebles", el sitio sigue mostrando "Hola, {ese nombre}" junto a "Ingresar", y ese saludo lleva a "Mis inmuebles" del sitio, no al panel.
 - Las pestañas del sitio que ya tenías abiertas siguen mostrando el saludo hasta que las recargues.
 - Tus sesiones en otros dispositivos siguen abiertas. No hay un botón para cerrarlas todas: para hacerlo, cambia tu contraseña.
-- "Mis depas" del sitio no se borra de ese navegador. Los depas que llegaron desde tu cuenta siguen apareciendo ahí, pero los cambios que hagas ya no se guardan en tu cuenta.
+- "Mis inmuebles" del sitio no se borra de ese navegador. Los inmuebles que llegaron desde tu cuenta siguen apareciendo ahí, pero los cambios que hagas ya no se guardan en tu cuenta.
 
 **Casos especiales:**
 
-- **Computadora compartida:** después de que cierres sesión, la siguiente persona verá tus depas en "Mis depas" del sitio. Si dejaste tu nombre en "Guarda tus depas", también verá el saludo con tu nombre. Si esa persona ingresa con su cuenta en ese navegador, esos depas se suman a su cuenta.
+- **Computadora compartida:** después de que cierres sesión, la siguiente persona verá tus inmuebles en "Mis inmuebles" del sitio. Si dejaste tu nombre en "Guarda tus inmuebles", también verá el saludo con tu nombre. Si esa persona ingresa con su cuenta en ese navegador, esos inmuebles se suman a su cuenta.
 - **Sin conexión al cerrar sesión:** el panel igual te muestra "Ingresa a tu cuenta", pero la sesión puede seguir abierta en el servidor. Si recargas cuando vuelva la conexión, puedes quedar dentro otra vez. Repite "Cerrar sesión" con conexión.
 
 ### 6.9 Cuánto dura la sesión
@@ -2362,11 +2357,11 @@ La sesión dura 30 días. Ese número se puede configurar, y la configuración p
 ```mermaid
 flowchart TD
     abre["Abres o recargas una página del sitio"] --> marca{"¿El navegador tiene la marca de sesión?"}
-    marca -->|"no"| anonimo["Se ve Ingresar<br/>Mis depas solo en este navegador"]
+    marca -->|"no"| anonimo["Se ve Ingresar<br/>Mis inmuebles solo en este navegador"]
     marca -->|"sí"| consulta["El sitio pregunta al sistema<br/>quién tiene la sesión"]
     consulta -->|"sesión vencida o cerrada"| borra["Borra la marca<br/>se ve Ingresar"]
     consulta -->|"sesión válida"| saludo["Hola, nombre<br/>el saludo lleva al panel"]
-    saludo --> une["Une Mis depas del navegador<br/>con los de la cuenta"]
+    saludo --> une["Une Mis inmuebles del navegador<br/>con los de la cuenta"]
     une --> guarda["Cada Me interesa o Quitar<br/>se guarda también en la cuenta"]
 ```
 
@@ -2386,22 +2381,22 @@ Si el navegador no tiene sesión, el sitio no hace ninguna consulta. Los visitan
 
 ![Encabezado del sitio con la sesión abierta](img/manual/24-sitio-con-sesion.webp)
 
-- **Saludo sin cuenta:** el sitio también saluda a quien dejó su nombre en "Guarda tus depas", aunque no tenga cuenta. Ese saludo lleva a "Mis depas" del sitio, no al panel, y "Ingresar" sigue visible. Si hay sesión, se usa el nombre de la cuenta.
+- **Saludo sin cuenta:** el sitio también saluda a quien dejó su nombre en "Guarda tus inmuebles", aunque no tenga cuenta. Ese saludo lleva a "Mis inmuebles" del sitio, no al panel, y "Ingresar" sigue visible. Si hay sesión, se usa el nombre de la cuenta.
 
-**Mis depas al ingresar**
+**Mis inmuebles al ingresar**
 
 1. Después de ingresar, abre o recarga cualquier página del sitio en ese navegador.
-2. El sitio une tus listas. Primero van los depas de tu cuenta. Después, los que habías guardado en el navegador y no estaban en la cuenta.
-3. Se descartan los depas que ya no existen o que volvieron a borrador.
-4. Si la lista unida tiene 20 depas o menos, queda igual en el navegador y en tu cuenta, y el panel muestra esa misma lista en "Mis depas". Si tiene más de 20, la cuenta guarda todos (hasta 50) y el navegador solo los 20 últimos de la lista unida. Si pasa de 50, la cuenta no se actualiza y no sale ningún aviso. El navegador igual se queda con los 20 últimos.
-5. Desde ese momento, cada "Me interesa" o cada depa que quites en el sitio se guarda en tu cuenta en menos de un segundo. Esto incluye lo que hagas en otras pestañas.
+2. El sitio une tus listas. Primero van los inmuebles de tu cuenta. Después, los que habías guardado en el navegador y no estaban en la cuenta.
+3. Se descartan los inmuebles que ya no existen o que volvieron a borrador.
+4. Si la lista unida tiene 20 inmuebles o menos, queda igual en el navegador y en tu cuenta, y el panel muestra esa misma lista en "Mis inmuebles". Si tiene más de 20, la cuenta guarda todos (hasta 50) y el navegador solo los 20 últimos de la lista unida. Si pasa de 50, la cuenta no se actualiza y no sale ningún aviso. El navegador igual se queda con los 20 últimos.
+5. Desde ese momento, cada "Me interesa" o cada inmueble que quites en el sitio se guarda en tu cuenta en menos de un segundo. Esto incluye lo que hagas en otras pestañas.
 
 **Casos especiales:**
 
-- **Quitar un depa desde el panel:** si ese depa sigue guardado en el navegador del sitio, vuelve a aparecer en tu cuenta la próxima vez que abras el sitio en ese navegador. Para quitarlo del todo, quítalo desde el sitio.
-- **Límite de 20 depas:** el navegador guarda como máximo 20. Si tu cuenta tiene más, o si la unión del paso 4 pasa de 20, el sitio muestra solo los 20 últimos de la lista. Los que traía el navegador van al final. El siguiente cambio que hagas desde el sitio deja en la cuenta solo esos 20.
+- **Quitar un inmueble desde el panel:** si ese inmueble sigue guardado en el navegador del sitio, vuelve a aparecer en tu cuenta la próxima vez que abras el sitio en ese navegador. Para quitarlo del todo, quítalo desde el sitio.
+- **Límite de 20 inmuebles:** el navegador guarda como máximo 20. Si tu cuenta tiene más, o si la unión del paso 4 pasa de 20, el sitio muestra solo los 20 últimos de la lista. Los que traía el navegador van al final. El siguiente cambio que hagas desde el sitio deja en la cuenta solo esos 20.
 - **Consultas:** las consultas que envías desde los formularios del sitio con la sesión abierta quedan vinculadas a tu cuenta y aparecen en "Mis consultas".
-- **Sitio sin conexión al sistema configurada:** el sitio no saluda con la cuenta ni sincroniza "Mis depas". Todo queda solo en el navegador.
+- **Sitio sin conexión al sistema configurada:** el sitio no saluda con la cuenta ni sincroniza "Mis inmuebles". Todo queda solo en el navegador.
 - **Pestañas ya abiertas:** el sitio revisa la sesión una vez por página. Si ingresas o cierras sesión, las pestañas abiertas cambian recién cuando las recargas.
 
 ### 6.11 Lo que todavía no existe
@@ -2424,13 +2419,13 @@ El código confirma que estas funciones no existen:
 
 ## 7. El panel del comprador
 
-El panel de cuentas (app.depahostperu.com) es donde el comprador o inversionista con cuenta revisa los depas que guardó y las consultas que envió. Tiene tres pantallas: "Mis depas", "Mis consultas" y "Perfil". El propietario también tiene estas tres pantallas, en el bloque "Mi cuenta" de su menú.
+El panel de cuentas (app.depahostperu.com) es donde el comprador o inversionista con cuenta revisa los inmuebles que guardó y las consultas que envió. Tiene tres pantallas: "Mis inmuebles", "Mis consultas" y "Perfil". El propietario también tiene estas tres pantallas, en el bloque "Mi cuenta" de su menú.
 
 ### 7.1 Al ingresar: inicio y menú
 
-![Primer ingreso de un comprador: "Mis depas" vacío](img/manual/23-comprador-inicio.webp)
+![Primer ingreso de un comprador: "Mis inmuebles" vacío](img/manual/23-comprador-inicio.webp)
 
-*Primer ingreso de un comprador: "Mis depas" vacío.*
+*Primer ingreso de un comprador: "Mis inmuebles" vacío.*
 
 **Para qué sirve.** Es la parte común de todas las pantallas del panel. Desde aquí cambias de pantalla, vuelves al sitio o cierras sesión.
 
@@ -2440,8 +2435,8 @@ El panel de cuentas (app.depahostperu.com) es donde el comprador o inversionista
 - Desde el sitio, con la sesión iniciada, en tablet o computadora (pantallas de 640 px o más): toca tu saludo "Hola, {tu nombre}" arriba. Entre 1024 y 1279 px solo se ve el círculo con tu inicial.
 - En el teléfono, con la sesión iniciada, el sitio no muestra ningún enlace al panel: escribe app.depahostperu.com en el navegador.
 - Desde el sitio, sin sesión: toca "Ingresar". En el teléfono está dentro del menú, como "Ingresar a mi cuenta". Este botón solo aparece si el sitio tiene configurada la dirección del panel.
-- Cuando ingresas o creas tu cuenta, llegas a "Mis depas", que es la pantalla de inicio del comprador. Si antes intentaste abrir otra pantalla del panel, al ingresar vuelves a esa pantalla. Esto pasa al ingresar, no al crear la cuenta.
-- El logo del panel también te lleva a "Mis depas".
+- Cuando ingresas o creas tu cuenta, llegas a "Mis inmuebles", que es la pantalla de inicio del comprador. Si antes intentaste abrir otra pantalla del panel, al ingresar vuelves a esa pantalla. Esto pasa al ingresar, no al crear la cuenta.
+- El logo del panel también te lleva a "Mis inmuebles".
 
 **Qué se ve**
 
@@ -2455,14 +2450,14 @@ El menú del comprador tiene un solo bloque, "Mi cuenta":
 
 | Opción | Dirección | Qué hay |
 |---|---|---|
-| "Mis depas" | /mis-depas | Los depas que marcaste con "Me interesa" (7.2) |
+| "Mis inmuebles" | /mis-inmuebles | Los inmuebles que marcaste con "Me interesa" (7.2) |
 | "Mis consultas" | /mis-consultas | Lo que enviaste desde el sitio con tu sesión iniciada (7.3) |
 | "Perfil" | /perfil | Tus datos, tu contraseña y tu rol (sección 6) |
 
 - La opción de la pantalla en la que estás se ve resaltada, con una barra a la izquierda.
 - Al pie del menú está tu tarjeta: un círculo con la inicial de tu nombre, tu nombre completo y la etiqueta "Comprador".
 - Debajo de la tarjeta están "Ver el sitio" y "Cerrar sesión".
-- La pestaña del navegador muestra el nombre de la pantalla, por ejemplo "Mis depas · DepaHost Capital".
+- La pestaña del navegador muestra el nombre de la pantalla, por ejemplo "Mis inmuebles · DepaHost Capital".
 
 **Qué puede hacer**
 
@@ -2483,52 +2478,52 @@ Cerrar sesión:
 
 **Qué pasa después de cerrar sesión**
 
-- Se cierra la sesión de este navegador. En el sitio vuelve a aparecer "Ingresar". Si alguna vez dejaste tu nombre en "Guarda tus depas" en ese navegador, el saludo "Hola, {nombre}" sigue a la vista junto a "Ingresar", pero ya no lleva al panel: lleva a "Mis depas" del sitio.
+- Se cierra la sesión de este navegador. En el sitio vuelve a aparecer "Ingresar". Si alguna vez dejaste tu nombre en "Guarda tus inmuebles" en ese navegador, el saludo "Hola, {nombre}" sigue a la vista junto a "Ingresar", pero ya no lleva al panel: lleva a "Mis inmuebles" del sitio.
 - Tus otros dispositivos mantienen su sesión abierta.
-- Los depas guardados en este navegador siguen en "Mis depas" del sitio. En una computadora compartida, la siguiente persona los verá.
+- Los inmuebles guardados en este navegador siguen en "Mis inmuebles" del sitio. En una computadora compartida, la siguiente persona los verá.
 - Si vuelves a abrir una pantalla del panel, te pide ingresar otra vez.
 
 **Casos especiales**
 
-- "Ver el sitio" solo aparece si el panel tiene configurada la dirección del sitio. Sin esa configuración, los demás enlaces al sitio ("Explorar depas", "Ver en el sitio", "Empecemos con estos") abren la página "No encontramos esta página" del propio panel.
+- "Ver el sitio" solo aparece si el panel tiene configurada la dirección del sitio. Sin esa configuración, los demás enlaces al sitio ("Explorar inmuebles", "Ver en el sitio", "Empecemos con estos") abren la página "No encontramos esta página" del propio panel.
 - La sesión dura 30 días desde que ingresas. Ese es el valor por defecto y se puede configurar. Al terminar ese plazo tienes que ingresar otra vez, aunque hayas usado el panel o el sitio todos los días. Cambiar la contraseña también inicia una sesión nueva de 30 días.
-- Si la sesión vence con el panel abierto, el menú sigue a la vista, pero las pantallas no cargan. "Mis depas" muestra "No pudimos cargar tus depas." y "Mis consultas" se ve vacía. Recarga la página y el panel te pedirá ingresar.
+- Si la sesión vence con el panel abierto, el menú sigue a la vista, pero las pantallas no cargan. "Mis inmuebles" muestra "No pudimos cargar tus inmuebles." y "Mis consultas" se ve vacía. Recarga la página y el panel te pedirá ingresar.
 - Si usas teclado, al presionar Tab la primera vez aparece el enlace "Saltar al contenido".
 
-### 7.2 Mis depas en el panel
+### 7.2 Mis inmuebles en el panel
 
-!["Mis depas" en el panel, sincronizado con el sitio](img/manual/25-comprador-mis-depas.webp)
+!["Mis inmuebles" en el panel, sincronizado con el sitio](img/manual/25-comprador-mis-inmuebles.webp)
 
-*"Mis depas" en el panel, sincronizado con el sitio.*
+*"Mis inmuebles" en el panel, sincronizado con el sitio.*
 
-**Para qué sirve.** Reúne en un solo lugar los departamentos que marcaste con "Me interesa" en el sitio, en cualquier dispositivo donde iniciaste sesión. Desde aquí puedes quitarlos, abrir su ficha en el sitio o pedir que te acompañen por WhatsApp.
+**Para qué sirve.** Reúne en un solo lugar los inmuebles que marcaste con "Me interesa" en el sitio, en cualquier dispositivo donde iniciaste sesión. Desde aquí puedes quitarlos, abrir su ficha en el sitio o pedir que te acompañen por WhatsApp.
 
-**Cómo se llega.** Es la pantalla de inicio del comprador. Está en app.depahostperu.com/mis-depas o en "Mis depas" del menú.
+**Cómo se llega.** Es la pantalla de inicio del comprador. Está en app.depahostperu.com/mis-inmuebles o en "Mis inmuebles" del menú.
 
 **Qué se ve**
 
-- Encabezado: "Hola, {tu nombre}", el título "Mis depas" y el texto "Los departamentos que marcaste con Me interesa, en el sitio o aquí. Se guardan en tu cuenta." A la derecha está el botón "Explorar depas".
+- Encabezado: "Hola, {tu nombre}", el título "Mis inmuebles" y el texto "Los inmuebles que marcaste con Me interesa, en el sitio o aquí. Se guardan en tu cuenta." A la derecha está el botón "Explorar inmuebles".
 - Mientras carga aparece "Cargando…".
-- Una tarjeta por depa, en el orden en que los guardaste: el primero que marcaste va arriba.
+- Una tarjeta por inmueble, en el orden en que los guardaste: el primero que marcaste va arriba.
 - El recuadro "Resumen".
 
 Cada tarjeta muestra:
 
 | Dato | Qué se ve |
 |---|---|
-| Foto | La primera foto del depa. Si no tiene foto, un ícono de edificio |
+| Foto | La primera foto del inmueble. Si no tiene foto, un ícono de edificio |
 | Título | El distrito |
-| Botón X | Quita el depa de tu lista |
+| Botón X | Quita el inmueble de tu lista |
 | Ubicación | Dirección y distrito |
 | Rentabilidad | Por ejemplo, "8–10% anual" |
 | Plazo | "Se paga en {n} años" |
-| Precio | "Desde" si es un proyecto de inmobiliaria, "Valor" si es el depa de un propietario |
+| Precio | "Desde" si es un proyecto de inmobiliaria, "Valor" si es el inmueble de un propietario |
 | Enlace | "Ver en el sitio" |
 
 El recuadro "Resumen" muestra:
 
-- Cuántos depas tienes: "{n} seleccionados".
-- La "Inversión total", que es la suma de los precios. Los soles y los dólares se suman por separado, por ejemplo "S/ 595,000 + USD 80,000". En el panel solo aparecen las monedas que tienen tus depas: si todos están en dólares, dice solo "USD 80,000". Las monedas van en el orden en que aparecen en la lista: si el primer depa está en dólares, los dólares van primero ("USD 80,000 + S/ 595,000").
+- Cuántos inmuebles tienes: "{n} seleccionados".
+- La "Inversión total", que es la suma de los precios. Los soles y los dólares se suman por separado, por ejemplo "S/ 595,000 + USD 80,000". En el panel solo aparecen las monedas que tienen tus inmuebles: si todos están en dólares, dice solo "USD 80,000". Las monedas van en el orden en que aparecen en la lista: si el primer inmueble está en dólares, los dólares van primero ("USD 80,000 + S/ 595,000").
 - El botón "Empecemos con estos".
 
 Los montos en dólares los escribe el navegador. En Chrome actual salen como "USD 80,000"; otro navegador podría escribirlos distinto.
@@ -2537,49 +2532,49 @@ En pantallas anchas, el "Resumen" va a la derecha y te sigue cuando bajas por la
 
 **Qué puede hacer**
 
-Quitar un depa:
+Quitar un inmueble:
 
 1. Toca la X junto al nombre del distrito.
-2. El depa sale de la lista en el acto. No se pide confirmación.
+2. El inmueble sale de la lista en el acto. No se pide confirmación.
 3. Abajo a la derecha aparece el aviso "Quitaste {distrito}" por unos segundos.
 
 Ver la ficha completa:
 
-1. Toca "Ver en el sitio". La ficha del depa se abre en el sitio, en la misma pestaña.
+1. Toca "Ver en el sitio". La ficha del inmueble se abre en el sitio, en la misma pestaña.
 
-Buscar más depas:
+Buscar más inmuebles:
 
-1. Toca "Explorar depas". Se abre la página Capital del sitio.
-2. Toca "Me interesa" en los depas que te gusten. Con tu sesión iniciada, se guardan en tu cuenta y los verás aquí la próxima vez que abras esta pantalla.
+1. Toca "Explorar inmuebles". Se abre la página Capital del sitio.
+2. Toca "Me interesa" en los inmuebles que te gusten. Con tu sesión iniciada, se guardan en tu cuenta y los verás aquí la próxima vez que abras esta pantalla.
 
 Pedir que te acompañen por WhatsApp:
 
-1. Toca "Empecemos con estos". Se abre la página "Te acompañamos al proyecto" del sitio, con tus depas.
-2. Revisa la selección. Si quieres cambiarla, toca "Cambiar selección", que te lleva a "Mis depas" del sitio.
-3. Toca "Escribir por WhatsApp". WhatsApp se abre con un mensaje ya escrito. Empieza con "Hola, quiero que me acompañen con estos depas:" (o "este depa", si es uno) y trae una línea por depa con el distrito, la dirección y el precio.
+1. Toca "Empecemos con estos". Se abre la página "Te acompañamos al proyecto" del sitio, con tus inmuebles.
+2. Revisa la selección. Si quieres cambiarla, toca "Cambiar selección", que te lleva a "Mis inmuebles" del sitio.
+3. Toca "Escribir por WhatsApp". WhatsApp se abre con un mensaje ya escrito. Empieza con "Hola, quiero que me acompañen con estos inmuebles:" (o "este inmueble", si es uno) y trae una línea por inmueble con el distrito, la dirección y el precio.
 4. Envía el mensaje desde WhatsApp.
 
 El panel no tiene un botón de WhatsApp propio. Para escribir por WhatsApp siempre se pasa por esa página del sitio.
 
-**Cómo se relaciona con "Mis depas" del sitio**
+**Cómo se relaciona con "Mis inmuebles" del sitio**
 
 Hay dos listas:
 
-- **La lista del navegador.** El sitio guarda en cada navegador los depas que marcas con "Me interesa", aunque no tengas cuenta.
+- **La lista del navegador.** El sitio guarda en cada navegador los inmuebles que marcas con "Me interesa", aunque no tengas cuenta.
 - **La lista de tu cuenta.** Es la que muestra el panel y la misma en todos tus dispositivos.
 
 El sitio las une así:
 
-1. Cada vez que abres una página del sitio con la sesión iniciada, el sitio trae la lista de tu cuenta y le agrega los depas del navegador que no estaban.
+1. Cada vez que abres una página del sitio con la sesión iniciada, el sitio trae la lista de tu cuenta y le agrega los inmuebles del navegador que no estaban.
 2. Luego copia la lista de la cuenta en el navegador, para que las dos queden iguales.
-3. Desde ese momento, cada "Me interesa" que tocas y cada depa que quitas en el sitio se guarda también en tu cuenta.
+3. Desde ese momento, cada "Me interesa" que tocas y cada inmueble que quitas en el sitio se guarda también en tu cuenta.
 4. El panel lee la lista de la cuenta. Lo que quitas en el panel se quita de la cuenta.
 
 ```mermaid
 flowchart LR
-    NAV["Lista de este navegador<br/>en el sitio, hasta 20 depas"]
-    CUENTA["Mis depas de tu cuenta<br/>hasta 50 depas"]
-    PANEL["Mis depas en el panel"]
+    NAV["Lista de este navegador<br/>en el sitio, hasta 20 inmuebles"]
+    CUENTA["Mis inmuebles de tu cuenta<br/>hasta 50 inmuebles"]
+    PANEL["Mis inmuebles en el panel"]
     NAV -->|"Al abrir el sitio con sesión<br/>se suman los que falten"| CUENTA
     CUENTA -->|"Luego el navegador<br/>queda igual que la cuenta"| NAV
     NAV -->|"Cada Me interesa o quitar<br/>en el sitio con sesión"| CUENTA
@@ -2587,42 +2582,42 @@ flowchart LR
     PANEL -->|"Quitar con la X"| CUENTA
 ```
 
-Para que las listas se unan, el sitio tiene que estar conectado al sistema de cuentas (API). Si no lo está, el sitio solo guarda los depas en el navegador y el panel no los ve.
+Para que las listas se unan, el sitio tiene que estar conectado al sistema de cuentas (API). Si no lo está, el sitio solo guarda los inmuebles en el navegador y el panel no los ve.
 
-Aunque tengas la sesión iniciada, la página "Mis depas" del sitio sigue mostrando la nota "Guardado en este dispositivo." (o "Guardado para {nombre}. La próxima vez te mostramos depas parecidos." si dejaste tu nombre en "Guarda tus depas" en ese navegador). Igual se guarda en tu cuenta.
+Aunque tengas la sesión iniciada, la página "Mis inmuebles" del sitio sigue mostrando la nota "Guardado en este dispositivo." (o "Guardado para {nombre}. La próxima vez te mostramos inmuebles parecidos." si dejaste tu nombre en "Guarda tus inmuebles" en ese navegador). Igual se guarda en tu cuenta.
 
 **Reglas y validaciones**
 
 | Campo | Regla | Mensaje si falla |
 |---|---|---|
-| Lista de la cuenta | Hasta 50 depas. Un depa repetido cuenta una sola vez. Los depas que no existen o están en borrador se descartan | Ninguno: se descartan sin aviso |
-| Lista del navegador (sitio) | Hasta 20 depas. Si marcas uno más, se borra el más antiguo | Ninguno |
-| Depas que se muestran | Solo los publicados o reservados | Ninguno: los vendidos o retirados no aparecen |
-| Carga de la pantalla | Pide sesión activa y conexión con el sistema | "No pudimos cargar tus depas." |
-| Quitar | Pide sesión activa y conexión con el sistema | Ninguno: el depa se queda en la lista y no sale el aviso "Quitaste…" |
+| Lista de la cuenta | Hasta 50 inmuebles. Un inmueble repetido cuenta una sola vez. Los inmuebles que no existen o están en borrador se descartan | Ninguno: se descartan sin aviso |
+| Lista del navegador (sitio) | Hasta 20 inmuebles. Si marcas uno más, se borra el más antiguo | Ninguno |
+| Inmuebles que se muestran | Solo los publicados o reservados | Ninguno: los vendidos o retirados no aparecen |
+| Carga de la pantalla | Pide sesión activa y conexión con el sistema | "No pudimos cargar tus inmuebles." |
+| Quitar | Pide sesión activa y conexión con el sistema | Ninguno: el inmueble se queda en la lista y no sale el aviso "Quitaste…" |
 
 **Qué pasa después**
 
-- Cuando quitas un depa, el cambio se guarda en tu cuenta. Revisa los casos especiales: el sitio puede volver a sumarlo.
-- Cuando tocas "Escribir por WhatsApp" con al menos un depa elegido, el sitio registra una consulta "Te acompañamos (WhatsApp)" con esos depas. Si tienes la sesión iniciada, la consulta aparece en "Mis consultas".
+- Cuando quitas un inmueble, el cambio se guarda en tu cuenta. Revisa los casos especiales: el sitio puede volver a sumarlo.
+- Cuando tocas "Escribir por WhatsApp" con al menos un inmueble elegido, el sitio registra una consulta "Te acompañamos (WhatsApp)" con esos inmuebles. Si tienes la sesión iniciada, la consulta aparece en "Mis consultas".
 - La consulta se registra al tocar el botón, aunque después no envíes el mensaje. Cada vez que tocas el botón se registra una consulta nueva, hasta 10 por minuto. Pasado ese límite, WhatsApp se abre igual pero la consulta no se registra, y no sale ningún aviso.
-- Esta consulta no lleva tu nombre ni tu celular, solo los depas. El equipo no recibe un correo por ella: la ve en su lista de leads.
+- Esta consulta no lleva tu nombre ni tu celular, solo los inmuebles. El equipo no recibe un correo por ella: la ve en su lista de leads.
 
 **Casos especiales**
 
-- **Sin depas.** Aparece "Aún no guardaste departamentos" con el texto "Toca Me interesa en los depas del sitio y aparecerán aquí, en cualquier dispositivo." y el botón "Ver depas para invertir", que abre Capital en el sitio.
-- **No se pueden agregar depas desde el panel.** El encabezado dice "en el sitio o aquí", pero el panel solo permite quitar. Para agregar un depa, toca "Me interesa" en el sitio.
-- **Un depa que quitas en el panel puede volver.** Hoy, cuando el sitio une las dos listas, solo suma depas: no se acuerda de los que quitaste en otro lado. Si quitas un depa en el panel y ese depa sigue guardado en un navegador, vuelve a tu cuenta la próxima vez que abras el sitio en ese navegador con tu sesión. Esto pasa también si tocas "Ver en el sitio", "Explorar depas" o "Empecemos con estos" justo después de quitarlo. Para quitarlo del todo, quítalo desde el sitio con tu sesión iniciada en cada navegador donde lo tengas. Puedes tocar "Guardado" en la ficha del depa o la X en "Mis depas" del sitio.
-- **Lo que quitas en el sitio sin sesión también puede volver.** Si tu cuenta tenía ese depa, reaparece cuando inicias sesión.
-- **Más de 20 depas.** Si al unir las listas de dos dispositivos tu cuenta queda con más de 20 depas, el sitio guarda en el navegador solo los 20 últimos. La próxima vez que cambies algo en el sitio, tu cuenta también se queda solo con esos 20.
-- **Depa reservado.** En el panel aparece sin ninguna marca. En "Mis depas" del sitio sí dice "Reservado".
-- **Depa vendido o retirado.** Ya no se ve en el panel y no entra en el conteo ni en la "Inversión total".
-- **La "Inversión total" se escribe distinto en el panel y en el sitio.** Con la misma lista, los dos textos pueden no coincidir. El sitio (4.5) siempre muestra los soles primero, aunque sumen 0: con solo depas en dólares, el panel dice "USD 80,000" y "Mis depas" del sitio dice "S/ 0 + USD 80,000". Con las dos monedas, el panel puede poner los dólares primero si el primer depa de la lista está en dólares; el sitio siempre pone "S/ … + USD …". Los montos son los mismos; solo cambia cómo se escriben.
+- **Sin inmuebles.** Aparece "Aún no guardaste inmuebles" con el texto "Toca Me interesa en los inmuebles del sitio y aparecerán aquí, en cualquier dispositivo." y el botón "Ver inmuebles para invertir", que abre Capital en el sitio.
+- **No se pueden agregar inmuebles desde el panel.** El encabezado dice "en el sitio o aquí", pero el panel solo permite quitar. Para agregar un inmueble, toca "Me interesa" en el sitio.
+- **Un inmueble que quitas en el panel puede volver.** Hoy, cuando el sitio une las dos listas, solo suma inmuebles: no se acuerda de los que quitaste en otro lado. Si quitas un inmueble en el panel y ese inmueble sigue guardado en un navegador, vuelve a tu cuenta la próxima vez que abras el sitio en ese navegador con tu sesión. Esto pasa también si tocas "Ver en el sitio", "Explorar inmuebles" o "Empecemos con estos" justo después de quitarlo. Para quitarlo del todo, quítalo desde el sitio con tu sesión iniciada en cada navegador donde lo tengas. Puedes tocar "Guardado" en la ficha del inmueble o la X en "Mis inmuebles" del sitio.
+- **Lo que quitas en el sitio sin sesión también puede volver.** Si tu cuenta tenía ese inmueble, reaparece cuando inicias sesión.
+- **Más de 20 inmuebles.** Si al unir las listas de dos dispositivos tu cuenta queda con más de 20 inmuebles, el sitio guarda en el navegador solo los 20 últimos. La próxima vez que cambies algo en el sitio, tu cuenta también se queda solo con esos 20.
+- **Inmueble reservado.** En el panel aparece sin ninguna marca. En "Mis inmuebles" del sitio sí dice "Reservado".
+- **Inmueble vendido o retirado.** Ya no se ve en el panel y no entra en el conteo ni en la "Inversión total".
+- **La "Inversión total" se escribe distinto en el panel y en el sitio.** Con la misma lista, los dos textos pueden no coincidir. El sitio (4.5) siempre muestra los soles primero, aunque sumen 0: con solo inmuebles en dólares, el panel dice "USD 80,000" y "Mis inmuebles" del sitio dice "S/ 0 + USD 80,000". Con las dos monedas, el panel puede poner los dólares primero si el primer inmueble de la lista está en dólares; el sitio siempre pone "S/ … + USD …". Los montos son los mismos; solo cambia cómo se escriben.
 - **Selección vacía en "Te acompañamos al proyecto".** Esta página usa la lista del navegador. Si es la primera vez que usas el sitio en ese navegador, la selección puede salir vacía o incompleta. Recarga la página.
 - **Sitio sin conexión al sistema.** "Escribir por WhatsApp" abre WhatsApp igual, pero la consulta no se registra.
 - **Número de WhatsApp pendiente.** El número del sitio se configura aparte. Mientras no se configure, se usa el número de relleno 51XXXXXXXXX y los mensajes no llegan a nadie.
-- **Texto del Resumen con un solo depa.** El contador dice "seleccionados" aunque haya uno solo ("1 seleccionados").
-- **Cambios recientes.** El panel muestra los datos del momento. El sitio se actualiza cuando se vuelve a generar después de un cambio. Por un rato, "Ver en el sitio" puede mostrar datos anteriores o no encontrar un depa recién publicado.
+- **Texto del Resumen con un solo inmueble.** El contador dice "seleccionados" aunque haya uno solo ("1 seleccionados").
+- **Cambios recientes.** El panel muestra los datos del momento. El sitio se actualiza cuando se vuelve a generar después de un cambio. Por un rato, "Ver en el sitio" puede mostrar datos anteriores o no encontrar un inmueble recién publicado.
 
 ### 7.3 Mis consultas
 
@@ -2644,19 +2639,19 @@ Aunque tengas la sesión iniciada, la página "Mis depas" del sitio sigue mostra
 |---|---|
 | "Fecha" | Día y hora del envío, en hora de Lima |
 | "Consulta" | El tipo de consulta (ver la tabla siguiente) |
-| "Depas" | El distrito de cada depa incluido, con enlace a su ficha en el sitio. "—" si la consulta no tenía depas. "Ya no disponible" si el depa ya no está en el sitio |
+| "Inmuebles" | El distrito de cada inmueble incluido, con enlace a su ficha en el sitio. "—" si la consulta no tenía inmuebles. "Ya no disponible" si el inmueble ya no está en el sitio |
 | "Estado" | En qué va la consulta |
 
 **Qué consultas aparecen y por qué**
 
 Una consulta aparece aquí si la enviaste desde el sitio con la sesión iniciada en ese navegador. El sitio la manda junto con tu sesión y el sistema la vincula a tu cuenta.
 
-| Texto en "Consulta" | Desde dónde se envía en el sitio | ¿Lleva depas? |
+| Texto en "Consulta" | Desde dónde se envía en el sitio | ¿Lleva inmuebles? |
 |---|---|---|
-| "Te acompañamos (WhatsApp)" | Botón "Escribir por WhatsApp" de la página "Te acompañamos al proyecto". A esa página se llega con "Empecemos con estos" (Mis depas), con "Empecemos" en Capital o con "Contactar" en la ficha de un depa | Sí, los elegidos. Si llegaste con "Contactar" desde una ficha, solo ese depa |
-| "Guarda tus depas" | Formulario "Guarda tus depas". Se abre con "Guárdalos con tu celular" en "Mis depas" del sitio. También se abre solo al marcar un depa cuando la lista llega a dos o más, salvo que ya hayas dejado tu nombre en ese navegador o lo hayas cerrado sin enviar en los últimos 7 días | Sí, los que tenías en la lista en ese momento |
-| "Quiero vender mi depa" | Formulario de la página Propietarios, con la opción "Vender" | No |
-| "Quiero alquilar mi depa" | El mismo formulario, con "Alquilar (largo plazo)" u "Operarlo en Airbnb" | No |
+| "Te acompañamos (WhatsApp)" | Botón "Escribir por WhatsApp" de la página "Te acompañamos al proyecto". A esa página se llega con "Empecemos con estos" (Mis inmuebles), con "Empecemos" en Capital o con "Contactar" en la ficha de un inmueble | Sí, los elegidos. Si llegaste con "Contactar" desde una ficha, solo ese inmueble |
+| "Guarda tus inmuebles" | Formulario "Guarda tus inmuebles". Se abre con "Guárdalos con tu celular" en "Mis inmuebles" del sitio. También se abre solo al marcar un inmueble cuando la lista llega a dos o más, salvo que ya hayas dejado tu nombre en ese navegador o lo hayas cerrado sin enviar en los últimos 7 días | Sí, los que tenías en la lista en ese momento |
+| "Quiero vender mi inmueble" | Formulario de la página Propietarios, con la opción "Vender" | No |
+| "Quiero alquilar mi inmueble" | El mismo formulario, con "Alquilar (largo plazo)" u "Operarlo en Airbnb" | No |
 | "Formulario para inversionistas" | Formulario en inglés de la página Capital ("Also in English for international investors") | No |
 | "Contacto" | Hoy ningún formulario del sitio envía este tipo | — |
 
@@ -2685,7 +2680,7 @@ No aparecen aquí:
 **Qué puede hacer**
 
 1. Revisa la fecha, el tipo y el estado de cada consulta.
-2. Toca el nombre de un distrito en la columna "Depas" para abrir la ficha de ese depa en el sitio.
+2. Toca el nombre de un distrito en la columna "Inmuebles" para abrir la ficha de ese inmueble en el sitio.
 
 Esta pantalla es solo para mirar. No puedes editar, borrar ni responder consultas. Tampoco ves el mensaje ni los datos que enviaste.
 
@@ -2696,14 +2691,14 @@ Esta pantalla es solo para mirar. No puedes editar, borrar ni responder consulta
 | Campo | Regla | Mensaje si falla |
 |---|---|---|
 | Lista de consultas | Solo las vinculadas a tu cuenta. Hasta 100, con la más reciente arriba | — |
-| Depas de cada consulta | Se muestran mientras sigan publicados o reservados | "Ya no disponible" |
+| Inmuebles de cada consulta | Se muestran mientras sigan publicados o reservados | "Ya no disponible" |
 | Carga de la pantalla | Pide sesión activa y conexión con el sistema | No hay mensaje de error: se ve el estado vacío |
 
 **Casos especiales**
 
 - **Falla al cargar.** Si no hay conexión o la sesión venció, la pantalla muestra el mismo mensaje de lista vacía. Recarga antes de concluir que no tienes consultas.
-- **Fallan solo los datos de los depas.** Si las consultas cargan pero los datos de los depas no, todos los depas salen como "Ya no disponible". Lo mismo pasa si tus consultas suman más de 100 depas distintos: todos salen como "Ya no disponible".
-- **Dos depas del mismo distrito.** Se ven con el mismo nombre. Abre cada enlace para saber cuál es cuál.
+- **Fallan solo los datos de los inmuebles.** Si las consultas cargan pero los datos de los inmuebles no, todos los inmuebles salen como "Ya no disponible". Lo mismo pasa si tus consultas suman más de 100 inmuebles distintos: todos salen como "Ya no disponible".
+- **Dos inmuebles del mismo distrito.** Se ven con el mismo nombre. Abre cada enlace para saber cuál es cuál.
 - **En el teléfono.** La tabla se desliza de lado.
 - **Varios toques en "Escribir por WhatsApp".** Cada toque crea una fila nueva, hasta 10 por minuto.
 
@@ -2713,11 +2708,11 @@ El menú del comprador no muestra las pantallas de propietario ni las de adminis
 
 | Si el comprador abre… | Qué pasa |
 |---|---|
-| Una pantalla de propietario: /mis-propiedades, /mis-propiedades/nueva, el detalle de una propiedad o su edición | El panel lo lleva a "Mis depas", sin ningún mensaje |
-| Una pantalla de administración: /admin y sus secciones (Depas, Solicitudes, Leads, Reclamos, Inmobiliarias, Usuarios, Configuración), y el detalle o la edición de un depa o una solicitud | Lo lleva a "Mis depas", sin ningún mensaje. Si la dirección empieza con /admin/ pero no es una de esas pantallas, ve la página 404 |
-| Ingresar, Crear cuenta o Recuperar contraseña, ya con la sesión iniciada | Lo lleva a "Mis depas" |
-| Una dirección que no existe | Ve una página con "404", "No encontramos esta página" y el botón "Ir a mi cuenta", que lo lleva a "Mis depas" |
-| Cualquier pantalla del panel, sin sesión | Ve la pantalla de ingreso. Al ingresar vuelve a esa dirección, si su rol la permite. Si no la permite, va a "Mis depas". Ingresar, Crear cuenta y Recuperar contraseña se abren normalmente |
+| Una pantalla de propietario: /mis-propiedades, /mis-propiedades/nueva, el detalle de una propiedad o su edición | El panel lo lleva a "Mis inmuebles", sin ningún mensaje |
+| Una pantalla de administración: /admin y sus secciones (Depas, Solicitudes, Leads, Reclamos, Inmobiliarias, Usuarios, Configuración), y el detalle o la edición de un inmueble o una solicitud | Lo lleva a "Mis inmuebles", sin ningún mensaje. Si la dirección empieza con /admin/ pero no es una de esas pantallas, ve la página 404 |
+| Ingresar, Crear cuenta o Recuperar contraseña, ya con la sesión iniciada | Lo lleva a "Mis inmuebles" |
+| Una dirección que no existe | Ve una página con "404", "No encontramos esta página" y el botón "Ir a mi cuenta", que lo lleva a "Mis inmuebles" |
+| Cualquier pantalla del panel, sin sesión | Ve la pantalla de ingreso. Al ingresar vuelve a esa dirección, si su rol la permite. Si no la permite, va a "Mis inmuebles". Ingresar, Crear cuenta y Recuperar contraseña se abren normalmente |
 
 ```mermaid
 flowchart TD
@@ -2726,35 +2721,35 @@ flowchart TD
     B -->|"Sí"| E{"¿Es Ingresar, Crear cuenta<br/>o Recuperar?"}
     E -->|"Sí"| H{"¿Tiene la sesión iniciada?"}
     H -->|"No"| I["Se abre la pantalla"]
-    H -->|"Sí"| G["Va a Mis depas<br/>sin aviso"]
+    H -->|"Sí"| G["Va a Mis inmuebles<br/>sin aviso"]
     E -->|"No"| C{"¿Tiene la sesión iniciada?"}
     C -->|"No"| D["Pantalla de ingreso"]
     D -->|"Al ingresar"| R{"¿Qué pantalla era?"}
     C -->|"Sí"| R
-    R -->|"Mis depas, Mis consultas o Perfil"| F["Entra a la pantalla"]
+    R -->|"Mis inmuebles, Mis consultas o Perfil"| F["Entra a la pantalla"]
     R -->|"Propietario o administración"| G
 ```
 
 - La protección no está solo en el menú. Si alguien intenta pedir esos datos directamente al sistema, este responde "No tienes permiso para esto".
-- Para publicar un depa, cambia tu rol a propietario en "Perfil" (ver sección 6).
+- Para publicar un inmueble, cambia tu rol a propietario en "Perfil" (ver sección 6).
 - El rol de administrador no se puede elegir en el panel.
 
 ### 7.5 Perfil
 
 La opción "Perfil" (/perfil) se explica en la sección 6.
 
-**Referencia técnica:** [depahost-panel/src/layouts/PanelLayout.vue](../../../depahost-panel/src/layouts/PanelLayout.vue), [depahost-panel/src/router/nav.ts](../../../depahost-panel/src/router/nav.ts), [depahost-panel/src/router/access.ts](../../../depahost-panel/src/router/access.ts), [depahost-panel/src/router/index.ts](../../../depahost-panel/src/router/index.ts), [depahost-panel/src/views/buyer/SavedView.vue](../../../depahost-panel/src/views/buyer/SavedView.vue), [depahost-panel/src/views/buyer/MyLeadsView.vue](../../../depahost-panel/src/views/buyer/MyLeadsView.vue), [depahost-panel/src/composables/labels.ts](../../../depahost-panel/src/composables/labels.ts), [depahost-panel/src/components/StatusBadge.vue](../../../depahost-panel/src/components/StatusBadge.vue), [depahost-panel/src/views/NotFoundView.vue](../../../depahost-panel/src/views/NotFoundView.vue), [depahost-panel/src/brand/format.ts](../../../depahost-panel/src/brand/format.ts), [depahost-api/src/modules/accounts/service.ts](../../../depahost-api/src/modules/accounts/service.ts), [depahost-api/src/modules/accounts/routes.ts](../../../depahost-api/src/modules/accounts/routes.ts), [depahost-api/src/modules/leads/service.ts](../../../depahost-api/src/modules/leads/service.ts), [depahost-api/src/modules/leads/routes.ts](../../../depahost-api/src/modules/leads/routes.ts), [depahost-api/src/plugins/auth.ts](../../../depahost-api/src/plugins/auth.ts), [src/components/Header.astro](../../src/components/Header.astro), [src/components/SaveListDialog.astro](../../src/components/SaveListDialog.astro), [src/lib/account.ts](../../src/lib/account.ts), [src/lib/saved-store.ts](../../src/lib/saved-store.ts), [src/lib/profile.ts](../../src/lib/profile.ts), [src/pages/capital/empecemos.astro](../../src/pages/capital/empecemos.astro), [src/pages/mis-depas.astro](../../src/pages/mis-depas.astro) · Capítulos: [08-panel-y-cuentas.md](08-panel-y-cuentas.md), [05-flujos.md](05-flujos.md)
+**Referencia técnica:** [depahost-panel/src/layouts/PanelLayout.vue](../../../depahost-panel/src/layouts/PanelLayout.vue), [depahost-panel/src/router/nav.ts](../../../depahost-panel/src/router/nav.ts), [depahost-panel/src/router/access.ts](../../../depahost-panel/src/router/access.ts), [depahost-panel/src/router/index.ts](../../../depahost-panel/src/router/index.ts), [depahost-panel/src/views/buyer/SavedView.vue](../../../depahost-panel/src/views/buyer/SavedView.vue), [depahost-panel/src/views/buyer/MyLeadsView.vue](../../../depahost-panel/src/views/buyer/MyLeadsView.vue), [depahost-panel/src/composables/labels.ts](../../../depahost-panel/src/composables/labels.ts), [depahost-panel/src/components/StatusBadge.vue](../../../depahost-panel/src/components/StatusBadge.vue), [depahost-panel/src/views/NotFoundView.vue](../../../depahost-panel/src/views/NotFoundView.vue), [depahost-panel/src/brand/format.ts](../../../depahost-panel/src/brand/format.ts), [depahost-api/src/modules/accounts/service.ts](../../../depahost-api/src/modules/accounts/service.ts), [depahost-api/src/modules/accounts/routes.ts](../../../depahost-api/src/modules/accounts/routes.ts), [depahost-api/src/modules/leads/service.ts](../../../depahost-api/src/modules/leads/service.ts), [depahost-api/src/modules/leads/routes.ts](../../../depahost-api/src/modules/leads/routes.ts), [depahost-api/src/plugins/auth.ts](../../../depahost-api/src/plugins/auth.ts), [src/components/Header.astro](../../src/components/Header.astro), [src/components/SaveListDialog.astro](../../src/components/SaveListDialog.astro), [src/lib/account.ts](../../src/lib/account.ts), [src/lib/saved-store.ts](../../src/lib/saved-store.ts), [src/lib/profile.ts](../../src/lib/profile.ts), [src/pages/capital/empecemos.astro](../../src/pages/capital/empecemos.astro), [src/pages/mis-inmuebles.astro](../../src/pages/mis-inmuebles.astro) · Capítulos: [08-panel-y-cuentas.md](08-panel-y-cuentas.md), [05-flujos.md](05-flujos.md)
 
-## 8. El panel del propietario: publicar un depa
+## 8. El panel del propietario: publicar un inmueble
 
-En el panel de cuentas (app.depahostperu.com), el propietario envía su depa para venderlo, alquilarlo u operarlo en Airbnb, y sigue el avance de su solicitud. Ningún depa sale en el sitio sin que el equipo lo revise antes. El panel le muestra al propietario cuánto interés genera su depa una vez publicado.
+En el panel de cuentas (app.depahostperu.com), el propietario envía su inmueble para venderlo, alquilarlo u operarlo en Airbnb, y sigue el avance de su solicitud. Ningún inmueble sale en el sitio sin que el equipo lo revise antes. El panel le muestra al propietario cuánto interés genera su inmueble una vez publicado.
 
 | Pantalla | Dirección | Para qué sirve |
 |---|---|---|
 | "Mis propiedades" | `/mis-propiedades` | Ver tus solicitudes, su estado y el interés que generan |
-| "Publicar un depa" | `/mis-propiedades/nueva` | Crear una solicitud nueva |
+| "Publicar un inmueble" | `/mis-propiedades/nueva` | Crear una solicitud nueva |
 | Detalle de una solicitud | `/mis-propiedades/{id}` | Ver el estado, el comentario del equipo, el interés, los datos y las fotos |
-| "Editar mi depa" | `/mis-propiedades/{id}/editar` | Corregir una solicitud "Enviada" o "No aprobada" |
+| "Editar mi inmueble" | `/mis-propiedades/{id}/editar` | Corregir una solicitud "Enviada" o "No aprobada" |
 
 ### 8.1 Quién puede entrar a estas pantallas
 
@@ -2763,11 +2758,11 @@ En el panel de cuentas (app.depahostperu.com), el propietario envía su depa par
 | Situación | Qué pasa |
 |---|---|
 | No tienes sesión y abres cualquiera de estas direcciones | El panel te lleva a "Ingresar" (`/ingresar`). Cuando ingresas, vuelves a la pantalla que querías abrir. |
-| Creas tu cuenta y eliges "Tengo un depa" ("Publícalo para vender o alquilar y sigue su estado.") | Entras directo a "Mis propiedades". |
+| Creas tu cuenta y eliges "Tengo un inmueble" ("Publícalo para vender o alquilar y sigue su estado.") | Entras directo a "Mis propiedades". |
 | Ingresas con una cuenta de propietario | Entras directo a "Mis propiedades". |
-| Tienes cuenta de comprador y abres una de estas direcciones | El panel te devuelve a "Mis depas" sin mostrar ningún mensaje. Tu menú no tiene la sección "Propietario". |
-| Eres comprador y quieres publicar un depa | 1. Abre "Perfil". 2. En "Uso tu cuenta para", elige "Vender o alquilar mi depa". 3. Toca "Guardar". Verás "Guardamos tus datos" y pasarás a "Mis propiedades". El equipo también puede cambiar tu rol desde su panel. |
-| Eres propietario y cambias a "Invertir en depas" | Tus solicitudes no se borran, pero dejas de ver "Mis propiedades" hasta que vuelvas a elegir "Vender o alquilar mi depa". |
+| Tienes cuenta de comprador y abres una de estas direcciones | El panel te devuelve a "Mis inmuebles" sin mostrar ningún mensaje. Tu menú no tiene la sección "Propietario". |
+| Eres comprador y quieres publicar un inmueble | 1. Abre "Perfil". 2. En "Uso tu cuenta para", elige "Vender o alquilar mi inmueble". 3. Toca "Guardar". Verás "Guardamos tus datos" y pasarás a "Mis propiedades". El equipo también puede cambiar tu rol desde su panel. |
+| Eres propietario y cambias a "Invertir en inmuebles" | Tus solicitudes no se borran, pero dejas de ver "Mis propiedades" hasta que vuelvas a elegir "Vender o alquilar mi inmueble". |
 
 ### 8.2 Al ingresar: "Mis propiedades"
 
@@ -2788,9 +2783,9 @@ En el panel de cuentas (app.depahostperu.com), el propietario envía su depa par
 
 **Qué se ve.**
 
-- **Menú.** Tiene dos secciones. La sección "Propietario" trae "Mis propiedades" y "Publicar un depa". La sección "Mi cuenta" trae "Mis depas", "Mis consultas" y "Perfil", que son las mismas opciones del comprador. Abajo aparecen tu nombre, la etiqueta "Propietario", "Ver el sitio" y "Cerrar sesión".
-- **Encabezado.** Primero dice "Hola, {tu primer nombre}" (por ejemplo, "Hola, Ana" para "Ana Pérez"). Luego vienen el título "Mis propiedades", el texto "Los depas que nos enviaste para vender o alquilar, su estado y el interés que generan." y el botón "Publicar un depa".
-- **Si aún no tienes solicitudes.** Ves el título "Aún no publicaste ningún depa", el texto "Cuéntanos de tu depa: te sugerimos el precio y lo publicamos para venderlo o alquilarlo." y el botón "Publicar mi depa".
+- **Menú.** Tiene dos secciones. La sección "Propietario" trae "Mis propiedades" y "Publicar un inmueble". La sección "Mi cuenta" trae "Mis inmuebles", "Mis consultas" y "Perfil", que son las mismas opciones del comprador. Abajo aparecen tu nombre, la etiqueta "Propietario", "Ver el sitio" y "Cerrar sesión".
+- **Encabezado.** Primero dice "Hola, {tu primer nombre}" (por ejemplo, "Hola, Ana" para "Ana Pérez"). Luego vienen el título "Mis propiedades", el texto "Los inmuebles que nos enviaste para vender o alquilar, su estado y el interés que generan." y el botón "Publicar un inmueble".
+- **Si aún no tienes solicitudes.** Ves el título "Aún no publicaste ningún inmueble", el texto "Cuéntanos de tu inmueble: te sugerimos el precio y lo publicamos para venderlo o alquilarlo." y el botón "Publicar mi inmueble".
 
 ![Mis propiedades sin solicitudes, en escritorio](img/manual/30-propietario-inicio.webp)
 
@@ -2800,49 +2795,49 @@ En el panel de cuentas (app.depahostperu.com), el propietario envía su depa par
 |---|---|
 | "En revisión" | Las solicitudes en estado "Enviada" más las que están "En revisión" |
 | "Publicados" | Las solicitudes en estado "Publicada" |
-| "Veces guardados" ("por compradores con cuenta") | La suma de las veces que guardaron todos tus depas publicados |
-| "Consultas" ("que mencionan tus depas") | La suma de las consultas que incluyen tus depas publicados (cuenta toques, no personas: ver 8.7) |
+| "Veces guardados" ("por compradores con cuenta") | La suma de las veces que guardaron todos tus inmuebles publicados |
+| "Consultas" ("que mencionan tus inmuebles") | La suma de las consultas que incluyen tus inmuebles publicados (cuenta toques, no personas: ver 8.7) |
 
 - **Lista de solicitudes.** Va de la más nueva a la más antigua según la fecha en que la enviaste; editarla no la mueve de lugar. Cada fila muestra:
   - la foto de portada, o un ícono de edificio si no tiene fotos;
   - la dirección y el distrito;
   - el tipo, el precio (por ejemplo "S/ 320,000", o "Precio por definir" si no lo pusiste) y la fecha del último cambio ("actualizado …");
-  - si el depa ya está publicado, cuántas veces lo guardaron (corazón) y cuántas consultas tiene (sobre);
+  - si el inmueble ya está publicado, cuántas veces lo guardaron (corazón) y cuántas consultas tiene (sobre);
   - dos etiquetas: lo que quieres hacer ("Vender", "Alquilar" o "Airbnb") y el estado ("Enviada", "En revisión", "Publicada" o "No aprobada").
 
 **Qué puede hacer.**
 
 1. Toca una fila para abrir el detalle de esa solicitud (ver 8.5).
-2. Toca "Publicar un depa" para crear una solicitud nueva (ver 8.3).
+2. Toca "Publicar un inmueble" para crear una solicitud nueva (ver 8.3).
 
 **Casos especiales.**
 
 - **Celular y tablet (menos de 1024 px).** El menú lateral se esconde. Arriba aparecen el logo y un botón ☰ ("Abrir menú"). El menú se abre como un panel desde la izquierda. Se cierra con la X ("Cerrar menú"), tocando fuera o al elegir una opción que te lleva a otra pantalla. Si tocas la opción de la pantalla en la que ya estás (por ejemplo, "Mis propiedades" estando en "Mis propiedades"), el menú sigue abierto: ciérralo con la X.
 - **Pantallas angostas (menos de 720 px).** Las tarjetas se apilan una debajo de otra. Para llegar a la lista tienes que bajar.
 - **"Ver el sitio".** Solo aparece si el panel tiene configurada la dirección del sitio.
-- **Error al cargar la lista.** Si el servidor falla al cargar la lista, la pantalla muestra "Aún no publicaste ningún depa" aunque sí tengas solicitudes. Recarga la página.
+- **Error al cargar la lista.** Si el servidor falla al cargar la lista, la pantalla muestra "Aún no publicaste ningún inmueble" aunque sí tengas solicitudes. Recarga la página.
 
 ![Mis propiedades en el celular](img/manual/34-panel-movil.webp)
 
-### 8.3 Publicar un depa: crear la solicitud
+### 8.3 Publicar un inmueble: crear la solicitud
 
-![Formulario "Publicar un depa"](img/manual/31-solicitud-formulario.webp)
+![Formulario "Publicar un inmueble"](img/manual/31-solicitud-formulario.webp)
 
-*Formulario "Publicar un depa".*
+*Formulario "Publicar un inmueble".*
 
-**Para qué sirve.** Sirve para contarle al equipo cómo es tu depa y qué quieres hacer con él. El equipo revisa la solicitud y, si la aprueba, publica el depa en el sitio.
+**Para qué sirve.** Sirve para contarle al equipo cómo es tu inmueble y qué quieres hacer con él. El equipo revisa la solicitud y, si la aprueba, publica el inmueble en el sitio.
 
-Este camino es distinto del formulario de la página Propietarios del sitio. Ese formulario no pide cuenta y no crea una solicitud en "Mis propiedades": el equipo lo recibe como una consulta. Si lo envías con la sesión iniciada, lo verás en "Mis consultas" como "Quiero vender mi depa" o "Quiero alquilar mi depa", con el estado de la consulta, sin los estados de revisión de 8.6 y sin fotos.
+Este camino es distinto del formulario de la página Propietarios del sitio. Ese formulario no pide cuenta y no crea una solicitud en "Mis propiedades": el equipo lo recibe como una consulta. Si lo envías con la sesión iniciada, lo verás en "Mis consultas" como "Quiero vender mi inmueble" o "Quiero alquilar mi inmueble", con el estado de la consulta, sin los estados de revisión de 8.6 y sin fotos.
 
 **Cómo se llega.** Hay tres formas:
 
-- "Publicar un depa", en el menú o en el encabezado de "Mis propiedades";
-- "Publicar mi depa", si aún no tienes solicitudes;
+- "Publicar un inmueble", en el menú o en el encabezado de "Mis propiedades";
+- "Publicar mi inmueble", si aún no tienes solicitudes;
 - la dirección `/mis-propiedades/nueva`.
 
-**Qué se ve.** Arriba aparecen el título "Publicar un depa" y el texto "Te sugerimos el precio para venderlo en máximo 2 meses, o lo operamos en Airbnb. Revisamos cada depa antes de publicarlo." Luego vienen tres bloques: "¿Qué quieres hacer?", "Tu depa" y "Fotos" ("opcional"). Al final están los botones "Enviar para revisión" y "Cancelar".
+**Qué se ve.** Arriba aparecen el título "Publicar un inmueble" y el texto "Te sugerimos el precio para venderlo en máximo 2 meses, o lo operamos en Airbnb. Revisamos cada inmueble antes de publicarlo." Luego vienen tres bloques: "¿Qué quieres hacer?", "Tu inmueble" y "Fotos" ("opcional"). Al final están los botones "Enviar para revisión" y "Cancelar".
 
-![Formulario Publicar un depa](img/manual/31-solicitud-formulario.webp)
+![Formulario Publicar un inmueble](img/manual/31-solicitud-formulario.webp)
 
 **Qué puede hacer (pasos).**
 
@@ -2886,10 +2881,10 @@ Si escribes una coma (por ejemplo "320,000" o un área "65,5"), el navegador pue
 
 **Qué pasa después.**
 
-- Ves el aviso "Recibimos tu depa. Lo revisaremos pronto." y se abre el detalle de la solicitud, en estado "Enviada".
+- Ves el aviso "Recibimos tu inmueble. Lo revisaremos pronto." y se abre el detalle de la solicitud, en estado "Enviada".
 - El equipo recibe el correo "Nueva solicitud de propietario · {distrito}" (ver 8.9).
 - Tú no recibes correo en este paso.
-- El depa todavía no aparece en el sitio.
+- El inmueble todavía no aparece en el sitio.
 
 ![Solicitud recién enviada](img/manual/32-solicitud-enviada.webp)
 
@@ -2904,7 +2899,7 @@ Si escribes una coma (por ejemplo "320,000" o un área "65,5"), el navegador pue
 
 ### 8.4 Subir fotos
 
-**Para qué sirve.** Sirve para mostrarle el depa al equipo. Si se publica, el equipo parte de estas fotos para armar la ficha del sitio.
+**Para qué sirve.** Sirve para mostrarle el inmueble al equipo. Si se publica, el equipo parte de estas fotos para armar la ficha del sitio.
 
 **Qué puede hacer (pasos).**
 
@@ -2913,7 +2908,7 @@ Si escribes una coma (por ejemplo "320,000" o un área "65,5"), el navegador pue
 3. Espera. Las fotos se suben de inmediato, una tras otra, y el botón dice "Subiendo…".
 4. Cada foto subida aparece en una cuadrícula. La primera lleva la marca "Portada".
 5. Para ordenarlas, usa "Subir" y "Bajar". Para sacar una, toca "Quitar". La foto que quede primera será la portada.
-6. Si quieres, cambia la descripción de cada foto ("Describe la foto"). Viene escrita como "Depa en {distrito}", o "Depa en Lima" si aún no elegiste el distrito.
+6. Si quieres, cambia la descripción de cada foto ("Describe la foto"). Viene escrita como "Inmueble en {distrito}", o "Inmueble en Lima" si aún no elegiste el distrito.
 
 **Reglas y validaciones.**
 
@@ -2963,7 +2958,7 @@ flowchart TD
 
 *Solicitud recién enviada.*
 
-**Para qué sirve.** Sirve para seguir el avance de una solicitud, leer lo que dice el equipo y ver el interés que genera el depa publicado.
+**Para qué sirve.** Sirve para seguir el avance de una solicitud, leer lo que dice el equipo y ver el interés que genera el inmueble publicado.
 
 **Cómo se llega.** Hay tres formas:
 
@@ -2979,7 +2974,7 @@ flowchart TD
   2. "En revisión".
   3. "Publicada", o "No aprobada" en rojo con una X si el equipo no la aprobó.
 - **Comentario del equipo.** Si el equipo dejó uno, aparece "Comentario del equipo:" con el texto (ver 8.7).
-- **Si el depa ya está publicado.** Aparecen tres tarjetas: "Estado en el sitio", "Veces guardado" y "Consultas". Debajo está el botón "Ver mi depa en el sitio".
+- **Si el inmueble ya está publicado.** Aparecen tres tarjetas: "Estado en el sitio", "Veces guardado" y "Consultas". Debajo está el botón "Ver mi inmueble en el sitio".
 - **Bloque "Datos".** Muestra:
   - "Estado";
   - "Tipo";
@@ -3010,7 +3005,7 @@ En el panel, los estados se llaman "Enviada", "En revisión", "Publicada" y "No 
 |---|---|---|---|---|
 | "Enviada" | La recibimos y espera que el equipo la revise | Sí | Sí | No |
 | "En revisión" | El equipo la está evaluando | No | Sí | Sí, cuando pasa a este estado |
-| "Publicada" | El equipo armó la ficha del depa con tus datos y la vinculó a tu solicitud | No | No | Sí |
+| "Publicada" | El equipo armó la ficha del inmueble con tus datos y la vinculó a tu solicitud | No | No | Sí |
 | "No aprobada" | El equipo no la aprobó. El panel del equipo le pide escribir el motivo, así que normalmente verás un comentario y también te llegará en el correo | Sí; al guardar vuelve a "Enviada" | Sí | Sí |
 
 ```mermaid
@@ -3030,9 +3025,9 @@ flowchart LR
     noaprobada -->|"El equipo la publica"| publicada
 ```
 
-"Publicada" no siempre quiere decir que el depa ya se ve en el sitio (ver 8.7).
+"Publicada" no siempre quiere decir que el inmueble ya se ve en el sitio (ver 8.7).
 
-### 8.7 Comentario del equipo, depa publicado e interés
+### 8.7 Comentario del equipo, inmueble publicado e interés
 
 **Comentario del equipo.**
 
@@ -3041,38 +3036,38 @@ flowchart LR
 - El equipo puede dejarlo o cambiarlo en cualquier momento sin cambiar el estado. En ese caso no te llega correo: solo lo ves en el panel.
 - Si corriges una solicitud "No aprobada", el comentario sigue visible después de guardar.
 
-**El depa publicado.**
+**El inmueble publicado.**
 
-Para publicarlo, el equipo arma la ficha del depa con tus datos: dirección, distrito, descripción, precio esperado, área, dormitorios, baños y fotos, en tu mismo orden. Luego completa lo que el formulario no pide, como la rentabilidad estimada, el plazo y la moneda. El equipo puede ajustar cualquier dato, también el precio. En el sitio, el depa aparece por defecto con la etiqueta "De propietario".
+Para publicarlo, el equipo arma la ficha del inmueble con tus datos: dirección, distrito, descripción, precio esperado, área, dormitorios, baños y fotos, en tu mismo orden. Luego completa lo que el formulario no pide, como la rentabilidad estimada, el plazo y la moneda. El equipo puede ajustar cualquier dato, también el precio. En el sitio, el inmueble aparece por defecto con la etiqueta "De propietario".
 
 Cuando el equipo guarda la ficha, tu solicitud pasa a "Publicada" y te llega el correo, aunque la ficha haya quedado como borrador. Revisa la tarjeta "Estado en el sitio":
 
-| "Estado en el sitio" | Qué significa | "Ver mi depa en el sitio" |
+| "Estado en el sitio" | Qué significa | "Ver mi inmueble en el sitio" |
 |---|---|---|
-| "Publicado" | El depa se ve en el sitio | Abre la ficha (`/capital/…`) |
-| "Reservado" | El depa sigue en el sitio, marcado como reservado | Abre la ficha |
-| "Vendido" | El depa ya no aparece en el sitio | Muestra "No encontramos esta página" |
+| "Publicado" | El inmueble se ve en el sitio | Abre la ficha (`/capital/…`) |
+| "Reservado" | El inmueble sigue en el sitio, marcado como reservado | Abre la ficha |
+| "Vendido" | El inmueble ya no aparece en el sitio | Muestra "No encontramos esta página" |
 | "Borrador" | El equipo todavía no lo hizo visible | Muestra "No encontramos esta página" |
 
-El sitio es estático y se reconstruye después de cada cambio. La ficha que se crea desde tu solicitud empieza como borrador. Si el equipo la guarda como visible, ve el aviso "Guardado. El sitio se actualizará en unos minutos."; si la deja como borrador, ve "Guardado como borrador" y tu depa no aparece en el sitio hasta que cambie su estado. Mientras el sitio se reconstruye, el enlace puede mostrar "No encontramos esta página".
+El sitio es estático y se reconstruye después de cada cambio. La ficha que se crea desde tu solicitud empieza como borrador. Si el equipo la guarda como visible, ve el aviso "Guardado. El sitio se actualizará en unos minutos."; si la deja como borrador, ve "Guardado como borrador" y tu inmueble no aparece en el sitio hasta que cambie su estado. Mientras el sitio se reconstruye, el enlace puede mostrar "No encontramos esta página".
 
-La reconstrucción automática depende de configurar el *deploy hook*, que figura en la lista de pendientes. Si el equipo borra la ficha del depa, tu solicitud sigue "Publicada", pero sin tarjetas ni enlace, y no puedes editarla ni eliminarla.
+La reconstrucción automática depende de configurar el *deploy hook*, que figura en la lista de pendientes. Si el equipo borra la ficha del inmueble, tu solicitud sigue "Publicada", pero sin tarjetas ni enlace, y no puedes editarla ni eliminarla.
 
 **El interés que genera.** Solo ves números, no quién guardó o consultó. Del contacto se encarga el equipo.
 
 | Tarjeta | Qué cuenta | Qué no cuenta |
 |---|---|---|
-| "Veces guardado" | Cuántas personas con cuenta tienen tu depa en su "Mis depas" (botón "Me interesa"). Si alguien lo quita, el número baja. | A quien lo guardó sin cuenta: su lista vive solo en su navegador. Cuenta cuando esa persona inicia sesión en el sitio y su lista se une a su cuenta. |
-| "Consultas" | Cuántos pedidos de contacto registrados incluyen tu depa. Por ejemplo: alguien toca "Escribir por WhatsApp" en "Te acompañamos al proyecto" con tu depa elegido, o envía el formulario "Guarda tus depas" con tu depa en su lista. Cuentan también los visitantes sin cuenta. | Las consultas hechas mientras el sitio no está conectado al API |
+| "Veces guardado" | Cuántas personas con cuenta tienen tu inmueble en su "Mis inmuebles" (botón "Me interesa"). Si alguien lo quita, el número baja. | A quien lo guardó sin cuenta: su lista vive solo en su navegador. Cuenta cuando esa persona inicia sesión en el sitio y su lista se une a su cuenta. |
+| "Consultas" | Cuántos pedidos de contacto registrados incluyen tu inmueble. Por ejemplo: alguien toca "Escribir por WhatsApp" en "Te acompañamos al proyecto" con tu inmueble elegido, o envía el formulario "Guarda tus inmuebles" con tu inmueble en su lista. Cuentan también los visitantes sin cuenta. | Las consultas hechas mientras el sitio no está conectado al API |
 
-**"Consultas" mide toques, no personas.** Cada toque en "Escribir por WhatsApp" de "Te acompañamos al proyecto" registra una consulta nueva, aunque sea la misma persona y aunque luego no escriba nada en WhatsApp. Si alguien toca el botón tres veces, tu depa suma tres consultas. Ese botón no pide cuenta ni captcha: basta con que el sitio esté conectado al API. El único freno es el límite de 10 consultas por minuto desde la misma conexión. Toma la cifra como una señal de interés, no como un número de interesados.
+**"Consultas" mide toques, no personas.** Cada toque en "Escribir por WhatsApp" de "Te acompañamos al proyecto" registra una consulta nueva, aunque sea la misma persona y aunque luego no escriba nada en WhatsApp. Si alguien toca el botón tres veces, tu inmueble suma tres consultas. Ese botón no pide cuenta ni captcha: basta con que el sitio esté conectado al API. El único freno es el límite de 10 consultas por minuto desde la misma conexión. Toma la cifra como una señal de interés, no como un número de interesados.
 
 ### 8.8 Editar o eliminar una solicitud
 
 **Editar.**
 
 1. Abre el detalle de la solicitud y toca "Editar". Solo aparece si está "Enviada" o "No aprobada".
-2. Se abre "Editar mi depa" con tus datos cargados. Las reglas son las mismas de 8.3 y las fotos funcionan igual que en 8.4.
+2. Se abre "Editar mi inmueble" con tus datos cargados. Las reglas son las mismas de 8.3 y las fotos funcionan igual que en 8.4.
 3. Toca "Guardar cambios". Mientras se guarda, el botón dice "Enviando…". Para salir sin guardar, toca "Cancelar" y vuelves al detalle.
 
 Qué pasa después:
@@ -3083,7 +3078,7 @@ Qué pasa después:
 
 Si el equipo pasó la solicitud a revisión mientras tú la editabas, al guardar aparece "La solicitud ya está en revisión o publicada: escríbenos para cambiarla". Pasa lo mismo si abres la dirección de edición cuando la solicitud ya no se puede editar: el formulario se carga con tus datos, pero no deja guardar.
 
-Si abres "Editar mi depa" con el enlace de una solicitud que no existe o que es de otra persona, ves el título "Editar mi depa" y debajo "Cargando…" para siempre, sin ningún mensaje de error. Vuelve a "Mis propiedades" y abre la solicitud desde la lista.
+Si abres "Editar mi inmueble" con el enlace de una solicitud que no existe o que es de otra persona, ves el título "Editar mi inmueble" y debajo "Cargando…" para siempre, sin ningún mensaje de error. Vuelve a "Mis propiedades" y abre la solicitud desde la lista.
 
 El panel no ofrece un botón ni un número para "escribirnos". Su configuración trae una variable para el WhatsApp con el valor de relleno 51XXXXXXXXX, pero hoy ninguna pantalla la usa. Del otro lado, el equipo puede escribirte por WhatsApp al celular de tu "Perfil", si lo registraste, o por correo.
 
@@ -3098,7 +3093,7 @@ Qué pasa después y límites:
 - Ves el aviso "Eliminamos la solicitud" y vuelves a "Mis propiedades".
 - Al equipo no le llega aviso: la solicitud simplemente desaparece de su lista.
 - Puedes eliminar en "Enviada", "En revisión" y "No aprobada".
-- En "Publicada" el botón no aparece, y el sistema lo rechaza ("Una solicitud publicada no se puede borrar"). Para retirar un depa publicado, habla con el equipo.
+- En "Publicada" el botón no aparece, y el sistema lo rechaza ("Una solicitud publicada no se puede borrar"). Para retirar un inmueble publicado, habla con el equipo.
 - Si la eliminación falla (por ejemplo, porque el equipo la publicó en ese momento), la ventana se queda abierta sin mensaje. Recarga la página.
 
 ### 8.9 Correos que recibe el propietario
@@ -3120,7 +3115,7 @@ Qué pasa después y límites:
 - **Cuándo no te llega correo.**
   - cuando creas, editas o eliminas una solicitud;
   - cuando el equipo solo guarda un comentario;
-  - cuando cambia el estado del depa en el sitio ("Reservado", "Vendido");
+  - cuando cambia el estado del inmueble en el sitio ("Reservado", "Vendido");
   - cuando suben las cifras de interés.
 - **Depende de la configuración.**
   - Sin la clave de Resend, ningún correo se envía: solo queda registrado en el API.
@@ -3136,17 +3131,17 @@ Qué pasa después y límites:
 
 ## 9. Preguntas frecuentes
 
-**1. ¿Necesito una cuenta para ver o guardar depas?**
-No. Sin cuenta puedes buscar depas, abrir fichas, tocar "Me interesa", pedir acompañamiento y enviar formularios. La cuenta sirve para tener "Mis depas" en todos tus dispositivos, ver "Mis consultas" y, si eres propietario, publicar tu depa desde el panel. Ver [4.8](#48-qué-cambia-cuando-la-persona-tiene-cuenta) y [6.1](#61-para-qué-sirve-tener-cuenta).
+**1. ¿Necesito una cuenta para ver o guardar inmuebles?**
+No. Sin cuenta puedes buscar inmuebles, abrir fichas, tocar "Me interesa", pedir acompañamiento y enviar formularios. La cuenta sirve para tener "Mis inmuebles" en todos tus dispositivos, ver "Mis consultas" y, si eres propietario, publicar tu inmueble desde el panel. Ver [4.8](#48-qué-cambia-cuando-la-persona-tiene-cuenta) y [6.1](#61-para-qué-sirve-tener-cuenta).
 
-**2. Guardé depas en mi celular y no los veo en mi computadora. ¿Por qué?**
-Sin cuenta, "Mis depas" se guarda solo en el navegador donde tocaste "Me interesa". Para verlos en otro dispositivo, crea una cuenta, ingresa en los dos y abre cualquier página del sitio: tus listas se unen. Ver [4.2](#42-la-lista-mis-depas-sin-cuenta).
+**2. Guardé inmuebles en mi celular y no los veo en mi computadora. ¿Por qué?**
+Sin cuenta, "Mis inmuebles" se guarda solo en el navegador donde tocaste "Me interesa". Para verlos en otro dispositivo, crea una cuenta, ingresa en los dos y abre cualquier página del sitio: tus listas se unen. Ver [4.2](#42-la-lista-mis-inmuebles-sin-cuenta).
 
-**3. ¿Cuántos depas puedo guardar?**
+**3. ¿Cuántos inmuebles puedo guardar?**
 Hasta 20 en el navegador. Si guardas uno más, se quita el más antiguo, sin aviso. La cuenta admite hasta 50, pero el navegador siempre se queda con los 20 más recientes de la lista. Ver [4.1](#41-botón-me-interesa).
 
 **4. ¿Cómo pido que me acompañen a comprar?**
-Toca "Empecemos con estos" en "Mis depas", o "Contactar" en la ficha de un depa. En "Te acompañamos al proyecto", toca "Escribir por WhatsApp" y envía el mensaje que se abre ya escrito. El sitio no envía el mensaje por ti. Ver [4.7](#47-página-te-acompañamos).
+Toca "Empecemos con estos" en "Mis inmuebles", o "Contactar" en la ficha de un inmueble. En "Te acompañamos al proyecto", toca "Escribir por WhatsApp" y envía el mensaje que se abre ya escrito. El sitio no envía el mensaje por ti. Ver [4.7](#47-página-te-acompañamos).
 
 **5. Toqué un botón de WhatsApp y no llegó a nadie. ¿Qué pasó?**
 Hoy el número configurado es de relleno ("51XXXXXXXXX"), así que los botones no abren un chat real. Falta configurar el número real en producción. Ver [1.8](#18-botones-de-whatsapp).
@@ -3154,14 +3149,14 @@ Hoy el número configurado es de relleno ("51XXXXXXXXX"), así que los botones n
 **6. ¿Puedo reservar una estadía desde el sitio?**
 Todavía no. "Estadías" es una página en construcción, aunque el inicio ofrezca "Reservar estadía". Por ahora la única forma de consultar es WhatsApp. Ver [1.10](#110-páginas-en-construcción-estadías-y-nosotros).
 
-**7. Cerré el aviso "Guarda tus depas". ¿Vuelve a aparecer?**
-Sí, pero no antes de 7 días, y solo cuando guardes otro depa y la lista tenga 2 o más. Si quieres abrirlo antes, toca "Guárdalos con tu celular" en "Mis depas". Si ya dejaste tus datos en ese navegador, no se vuelve a abrir solo. Ver [4.3](#43-aviso-guarda-tus-depas).
+**7. Cerré el aviso "Guarda tus inmuebles". ¿Vuelve a aparecer?**
+Sí, pero no antes de 7 días, y solo cuando guardes otro inmueble y la lista tenga 2 o más. Si quieres abrirlo antes, toca "Guárdalos con tu celular" en "Mis inmuebles". Si ya dejaste tus datos en ese navegador, no se vuelve a abrir solo. Ver [4.3](#43-aviso-guarda-tus-inmuebles).
 
-**8. Un enlace a un depa muestra "No encontramos esta página". ¿Por qué?**
-Puede ser que el depa se haya vendido, que haya vuelto a borrador, que cambiara su dirección web, o que se haya publicado hace poco y el sitio todavía no se haya regenerado. Los depas reservados sí siguen teniendo su ficha. Ver [3.9](#39-depas-reservados-vendidos-y-enlaces-que-ya-no-existen).
+**8. Un enlace a un inmueble muestra "No encontramos esta página". ¿Por qué?**
+Puede ser que el inmueble se haya vendido, que haya vuelto a borrador, que cambiara su dirección web, o que se haya publicado hace poco y el sitio todavía no se haya regenerado. Los inmuebles reservados sí siguen teniendo su ficha. Ver [3.9](#39-inmuebles-reservados-vendidos-y-enlaces-que-ya-no-existen).
 
 **9. ¿Cómo creo una cuenta y cómo elijo si soy comprador o propietario?**
-Toca "Ingresar" en el sitio y luego "Crea una gratis". Elige "Quiero invertir" para comprar o "Tengo un depa" para publicar. Después puedes cambiar el rol en "Perfil", en "Uso tu cuenta para". No llega correo de verificación ni de bienvenida. Ver [6.4](#64-crear-cuenta) y [6.7](#67-perfil).
+Toca "Ingresar" en el sitio y luego "Crea una gratis". Elige "Quiero invertir" para comprar o "Tengo un inmueble" para publicar. Después puedes cambiar el rol en "Perfil", en "Uso tu cuenta para". No llega correo de verificación ni de bienvenida. Ver [6.4](#64-crear-cuenta) y [6.7](#67-perfil).
 
 **10. Olvidé mi contraseña. ¿Qué hago?**
 En "Ingresa a tu cuenta", toca "¿La olvidaste?", escribe tu correo y abre el enlace que llega con el asunto "Restablece tu contraseña · DepaHost Capital". El enlace vence en 1 hora y sirve una sola vez. Al guardar la contraseña nueva se cierran todas tus sesiones. Si los correos no están configurados en ese entorno, el correo no llega. Ver [6.6](#66-olvidé-mi-contraseña).
@@ -3172,14 +3167,14 @@ La sesión dura 30 días desde que ingresaste o desde tu último cambio de contr
 **12. Envié una consulta y no aparece en "Mis consultas". ¿Por qué?**
 Solo aparecen las consultas enviadas con la sesión iniciada en ese navegador. Tampoco aparecen las conversaciones directas por WhatsApp, los reclamos, las consultas que no se registraron (por ejemplo, cuando el sitio no estaba conectado al API) ni lo que enviaste antes de crear la cuenta. Si la pantalla sale vacía, recárgala antes de concluir que no tienes consultas: un error de carga también la muestra vacía. Ver [7.3](#73-mis-consultas).
 
-**13. Quité un depa en el panel y volvió a aparecer. ¿Por qué?**
-Cuando abres el sitio con la sesión iniciada, el sitio suma a tu cuenta los depas que siguen guardados en ese navegador. Para quitarlo del todo, quítalo desde el sitio, en cada navegador donde lo tengas. Ver [7.2](#72-mis-depas-en-el-panel).
+**13. Quité un inmueble en el panel y volvió a aparecer. ¿Por qué?**
+Cuando abres el sitio con la sesión iniciada, el sitio suma a tu cuenta los inmuebles que siguen guardados en ese navegador. Para quitarlo del todo, quítalo desde el sitio, en cada navegador donde lo tengas. Ver [7.2](#72-mis-inmuebles-en-el-panel).
 
-**14. Soy propietario. ¿Uso el formulario de Propietarios o "Publicar un depa"?**
-El formulario de `/propietarios` es un contacto rápido, sin cuenta: el equipo te escribe por WhatsApp. "Publicar un depa" en el panel crea una solicitud con datos y fotos, que el equipo revisa y puedes seguir en "Mis propiedades". Ver [5.2](#52-propietarios-vender-o-poner-en-alquiler-propietarios) y [8.3](#83-publicar-un-depa-crear-la-solicitud).
+**14. Soy propietario. ¿Uso el formulario de Propietarios o "Publicar un inmueble"?**
+El formulario de `/propietarios` es un contacto rápido, sin cuenta: el equipo te escribe por WhatsApp. "Publicar un inmueble" en el panel crea una solicitud con datos y fotos, que el equipo revisa y puedes seguir en "Mis propiedades". Ver [5.2](#52-propietarios-vender-o-poner-en-alquiler-propietarios) y [8.3](#83-publicar-un-inmueble-crear-la-solicitud).
 
-**15. Mi solicitud dice "Publicada", pero no veo mi depa en el sitio. ¿Por qué?**
-Revisa la tarjeta "Estado en el sitio" del detalle. Si dice "Borrador", el equipo todavía no lo hizo visible. Si dice "Publicado", espera a que el sitio se regenere: tarda al menos 30 segundos más lo que demore la generación, y si la regeneración automática no está configurada, depende de una publicación manual. Para registrar un reclamo, en cambio, usa el Libro de Reclamaciones: recibes un código LR y una respuesta en un plazo máximo de 15 días hábiles. Ver [8.7](#87-comentario-del-equipo-depa-publicado-e-interés) y [5.4](#54-libro-de-reclamaciones-libro-de-reclamaciones).
+**15. Mi solicitud dice "Publicada", pero no veo mi inmueble en el sitio. ¿Por qué?**
+Revisa la tarjeta "Estado en el sitio" del detalle. Si dice "Borrador", el equipo todavía no lo hizo visible. Si dice "Publicado", espera a que el sitio se regenere: tarda al menos 30 segundos más lo que demore la generación, y si la regeneración automática no está configurada, depende de una publicación manual. Para registrar un reclamo, en cambio, usa el Libro de Reclamaciones: recibes un código LR y una respuesta en un plazo máximo de 15 días hábiles. Ver [8.7](#87-comentario-del-equipo-inmueble-publicado-e-interés) y [5.4](#54-libro-de-reclamaciones-libro-de-reclamaciones).
 
 **Referencia técnica:** [05-flujos.md](05-flujos.md), [07-decisiones-y-pendientes.md](07-decisiones-y-pendientes.md), [08-panel-y-cuentas.md](08-panel-y-cuentas.md)
 
@@ -3191,26 +3186,26 @@ Estos casos sirven para comprobar que el sitio y el panel se comportan como dice
 
 | ID | Dado | Cuando | Entonces |
 |---|---|---|---|
-| ESC-1.1 | Una persona sin sesión, en escritorio | Abre `/` | Ve el título "El depa en Lima, con la decisión correcta.", los botones "Reservar estadía", "Soy propietario" y "Comprar para rentabilizar", y tres tarjetas de servicios. La pestaña dice "Inicio \| Depa Host Perú" |
+| ESC-1.1 | Una persona sin sesión, en escritorio | Abre `/` | Ve el título "El inmueble en Lima, con la decisión correcta.", los botones "Reservar estadía", "Soy propietario" y "Comprar para rentabilizar", y tres tarjetas de servicios. La pestaña dice "Inicio \| Depa Host Perú" |
 | ESC-1.2 | La home abierta | Toca "Comprar para rentabilizar" | Llega a `/capital` |
 | ESC-1.3 | La home abierta | Toca "Reservar estadía", el botón o la tarjeta | Llega a `/estadias` y ve solo "Estadías" y "Página en construcción." |
 | ESC-1.4 | La home abierta | Toca "Soy propietario" y luego "Vender mi propiedad" | Llega a `/propietarios#vender`. En "Qué quieres hacer" ya está elegido "Vender" |
 | ESC-1.5 | La home abierta | Toca "Soy propietario" y luego "Poner en alquiler mi propiedad" | Llega a `/propietarios#alquiler`. En "Qué quieres hacer" ya está elegido "Alquilar (largo plazo)" |
 | ESC-1.6 | El menú de "Soy propietario" abierto | Presiona Esc, toca fuera o toca otra vez "Soy propietario" | El menú se cierra sin navegar |
 | ESC-1.7 | Una tarjeta de servicio en la home | Toca el texto de la tarjeta, no "Ver más →" | Navega igual a la página de esa tarjeta |
-| ESC-1.8 | Cualquier página principal | Mira el menú del encabezado | La página actual aparece subrayada. En el detalle de un depa no se subraya "Capital" |
+| ESC-1.8 | Cualquier página principal | Mira el menú del encabezado | La página actual aparece subrayada. En el detalle de un inmueble no se subraya "Capital" |
 | ESC-1.9 | Navegación con teclado | Presiona Tab al cargar una página | Aparece "Saltar al contenido" y lleva directo al contenido |
-| ESC-1.10 | Un navegador sin sesión y sin nombre en "Guarda tus depas", con `PUBLIC_PANEL_URL` configurada | Abre cualquier página en escritorio | No hay saludo. Se ve el candado con "Ingresar", que lleva a app.depahostperu.com/ingresar |
+| ESC-1.10 | Un navegador sin sesión y sin nombre en "Guarda tus inmuebles", con `PUBLIC_PANEL_URL` configurada | Abre cualquier página en escritorio | No hay saludo. Se ve el candado con "Ingresar", que lleva a app.depahostperu.com/ingresar |
 | ESC-1.11 | El sitio generado sin `PUBLIC_PANEL_URL` | Abre cualquier página, con sesión o sin ella | No aparecen nunca "Ingresar" ni "Ingresar a mi cuenta" |
-| ESC-1.12 | Un navegador sin sesión que dejó el nombre "ana lucía" en "Guarda tus depas" | Abre una página en 1280 px | Ve "Hola, Ana" con el círculo "A" y también "Ingresar". El saludo lleva a `/mis-depas` del sitio |
-| ESC-1.13 | Una sesión iniciada de comprador, con API y panel configurados | Abre una página y toca "Hola, …" | El saludo usa el nombre de la cuenta y "Ingresar" se oculta. Lleva a "Mis depas" del panel |
+| ESC-1.12 | Un navegador sin sesión que dejó el nombre "ana lucía" en "Guarda tus inmuebles" | Abre una página en 1280 px | Ve "Hola, Ana" con el círculo "A" y también "Ingresar". El saludo lleva a `/mis-inmuebles` del sitio |
+| ESC-1.13 | Una sesión iniciada de comprador, con API y panel configurados | Abre una página y toca "Hola, …" | El saludo usa el nombre de la cuenta y "Ingresar" se oculta. Lleva a "Mis inmuebles" del panel |
 | ESC-1.14 | Una sesión iniciada de propietario | Toca el saludo | Lleva a "Mis propiedades" del panel |
-| ESC-1.15 | Una sesión iniciada, con API pero sin `PUBLIC_PANEL_URL` | Toca el saludo | Muestra el nombre de la cuenta, pero lleva a `/mis-depas` del sitio |
+| ESC-1.15 | Una sesión iniciada, con API pero sin `PUBLIC_PANEL_URL` | Toca el saludo | Muestra el nombre de la cuenta, pero lleva a `/mis-inmuebles` del sitio |
 | ESC-1.16 | Una sesión iniciada, en un teléfono de menos de 640 px | Revisa la barra y el menú de tres rayas | El saludo no aparece en ningún lado (pendiente conocido) |
 | ESC-1.17 | Una sesión iniciada | La sesión vence o se cierra y se recarga la página | Desaparece el saludo de la cuenta y vuelve "Ingresar" |
 | ESC-1.18 | Pantalla entre 1024 y 1279 px, sin sesión | Mira el encabezado | Se ve solo el candado, sin el texto "Ingresar". El saludo, si existe, es solo el círculo |
-| ESC-1.19 | 0 depas guardados | Mira "Mis depas" del encabezado | No se ve ningún número |
-| ESC-1.20 | Dos pestañas del sitio abiertas | Guarda un depa en una pestaña | El contador de "Mis depas" sube también en la otra |
+| ESC-1.19 | 0 inmuebles guardados | Mira "Mis inmuebles" del encabezado | No se ve ningún número |
+| ESC-1.20 | Dos pestañas del sitio abiertas | Guarda un inmueble en una pestaña | El contador de "Mis inmuebles" sube también en la otra |
 | ESC-1.21 | Pantalla de menos de 1024 px | Toca "Abrir menú" | El panel entra por la derecha, el fondo se oscurece y no se puede desplazar la página de atrás. Muestra "Inicio", "Estadías", "Propietarios", "Capital", "Nosotros", "Ingresar a mi cuenta" (sin sesión), "ES \| EN" y "WhatsApp" |
 | ESC-1.22 | El menú de tres rayas abierto | Toca la "✕", toca la zona oscura o presiona Esc | El menú se cierra y el scroll vuelve |
 | ESC-1.23 | El menú abierto en una ventana angosta | Agranda la ventana a 1024 px o más | El menú se cierra solo |
@@ -3218,7 +3213,7 @@ Estos casos sirven para comprobar que el sitio y el panel se comportan como dice
 | ESC-1.25 | Un teléfono de menos de 640 px, en `/` o `/capital` | Carga la página y luego baja | El botón flotante de WhatsApp aparece recién al pasar la parte de arriba de la página |
 | ESC-1.26 | Un teléfono, en `/propietarios` | Carga la página | El botón flotante se ve desde el principio. Se esconde al aparecer la franja azul del pie y al abrir el menú |
 | ESC-1.27 | Cualquier página desde 640 px | Toca "Contactar" del encabezado | WhatsApp se abre en una pestaña nueva con "Hola, les escribo desde la web de Depa Host Perú." |
-| ESC-1.28 | Cualquier página | Toca "Escribir por WhatsApp" del pie | WhatsApp se abre con "Hola, les cuento qué quiero hacer con mi depa." |
+| ESC-1.28 | Cualquier página | Toca "Escribir por WhatsApp" del pie | WhatsApp se abre con "Hola, les cuento qué quiero hacer con mi inmueble." |
 | ESC-1.29 | Preproducción | Abre cualquier enlace de WhatsApp del sitio | El enlace va al número "51XXXXXXXXX" |
 | ESC-1.30 | El pie de página | Revisa la fila legal | Ve "Nosotros", "Política de privacidad", "Términos", "Libro de Reclamaciones", "RUC [pendiente]" y "Preferencias de cookies" |
 | ESC-1.31 | Primera visita, con los datos del navegador limpios | Abre cualquier página | Aparece "Usamos cookies de analítica" con "Rechazar" y "Aceptar", sin botón de cerrar. La página se puede seguir usando |
@@ -3229,86 +3224,86 @@ Estos casos sirven para comprobar que el sitio y el panel se comportan como dice
 | ESC-1.36 | Ya se eligió una opción | Toca "Preferencias de cookies" en el pie | El aviso vuelve a aparecer y se puede cambiar la elección |
 | ESC-1.37 | Se aceptó antes y Clarity está activo | Cambia a "Rechazar" y luego abre otra página | En la página actual Clarity sigue cargado. En la siguiente ya no se carga |
 | ESC-1.38 | Un navegador que bloquea el almacenamiento | Elige una opción y cambia de página | El aviso reaparece en cada página |
-| ESC-1.39 | Cualquier dirección inexistente, por ejemplo `/xyz` | La abre | Ve "404", "No encontramos esta página", "Ver depas para invertir" (a `/capital`) e "Ir al inicio" (a `/`). La pestaña dice "Página no encontrada \| Depa Host Perú" |
-| ESC-1.40 | Un enlace viejo a `/carrito` | Lo abre | Pasa solo a `/mis-depas` |
+| ESC-1.39 | Cualquier dirección inexistente, por ejemplo `/xyz` | La abre | Ve "404", "No encontramos esta página", "Ver inmuebles para invertir" (a `/capital`) e "Ir al inicio" (a `/`). La pestaña dice "Página no encontrada \| Depa Host Perú" |
+| ESC-1.40 | Un enlace viejo a `/carrito` | Lo abre | Pasa solo a `/mis-inmuebles` |
 | ESC-1.41 | El pie de página | Toca "Política de privacidad" y "Términos" | Se ven los borradores con "Última actualización: [fecha pendiente]", "[Razón social pendiente]" y RUC "[pendiente]" |
 | ESC-1.42 | El pie de página | Toca "Nosotros" | Ve "Nosotros" y "Página en construcción." |
 
-### 10.2 Buscar depas en DepaHost Capital (sección 2)
+### 10.2 Buscar inmuebles en DepaHost Capital (sección 2)
 
 Los ejemplos usan los datos de ejemplo: Lince S/ 310,000, Surquillo y Magdalena.
 
 | ID | Dado | Cuando | Entonces |
 |---|---|---|---|
-| ESC-2.1 | Una persona sin cuenta | Abre `/capital` | La pestaña dice "Capital \| Depa Host Perú". Ve "Los mejores departamentos para invertir en Lima.", los pasos "Comparas", "Consultas", "Te acompañamos", "Cierras" y solo tarjetas "De propietario" |
-| ESC-2.2 | El sitio sin API | Abre `/capital` | Ve 3 depas de propietarios (Lince, Surquillo, Magdalena), la franja con "Urbana" ("3 proyectos") y 4 inmobiliarias en gris |
+| ESC-2.1 | Una persona sin cuenta | Abre `/capital` | La pestaña dice "Capital \| Depa Host Perú". Ve "Los mejores inmuebles para invertir en Lima.", los pasos "Comparas", "Consultas", "Te acompañamos", "Cierras" y solo tarjetas "De propietario" |
+| ESC-2.2 | El sitio sin API | Abre `/capital` | Ve 3 inmuebles de propietarios (Lince, Surquillo, Magdalena), la franja con "Urbana" ("3 proyectos") y 4 inmobiliarias en gris |
 | ESC-2.3 | La portada de Capital | Toca "Ver todos los proyectos" | La página baja hasta "Proyectos de aliados". No abre otra página |
-| ESC-2.4 | Ningún depa en "Mis depas" | Toca "Empecemos" | Se abre `/capital/empecemos` con "Todavía no elegiste un depa. Marca **Me interesa** en los que te gusten o escríbenos y te ayudamos a elegir." |
+| ESC-2.4 | Ningún inmueble en "Mis inmuebles" | Toca "Empecemos" | Se abre `/capital/empecemos` con "Todavía no elegiste un inmueble. Marca **Me interesa** en los que te gusten o escríbenos y te ayudamos a elegir." |
 | ESC-2.5 | La portada de Capital | Escribe "surq" en "Busca por distrito, dirección o precio" | Mientras escribe, queda solo Surquillo |
-| ESC-2.6 | La portada de Capital | Busca "310000", "310,000", "310 000" o "S/ 310" | Cada vez aparece el depa de S/ 310,000 |
-| ESC-2.7 | La portada de Capital | Busca "ejercito", sin tilde | Encuentra el depa de "Av. del Ejército" |
+| ESC-2.6 | La portada de Capital | Busca "310000", "310,000", "310 000" o "S/ 310" | Cada vez aparece el inmueble de S/ 310,000 |
+| ESC-2.7 | La portada de Capital | Busca "ejercito", sin tilde | Encuentra el inmueble de "Av. del Ejército" |
 | ESC-2.8 | La portada de Capital | Busca "super precio" | Encuentra la tarjeta con la etiqueta "Súper precio" |
-| ESC-2.9 | La portada de Capital | Busca un texto que no coincide con ningún depa | Se ocultan todas las tarjetas y aparece "No encontramos departamentos con esos criterios." |
+| ESC-2.9 | La portada de Capital | Busca un texto que no coincide con ningún inmueble | Se ocultan todas las tarjetas y aparece "No encontramos inmuebles con esos criterios." |
 | ESC-2.10 | El buscador con texto | Presiona Enter | La página no se recarga. En el celular se cierra el teclado |
 | ESC-2.11 | Los datos de ejemplo | Revisa los chips | Ve "Lince", "Magdalena", "Surquillo", "Hasta S/ 300,000", "Desde 8% anual" y "Desde 9% anual". No ve "Hasta S/ 350,000" |
 | ESC-2.12 | Ningún chip activo | Toca "Lince" | El chip se pinta de azul oscuro con una "x" y queda solo Lince. Aparece "Limpiar filtros" |
 | ESC-2.13 | "Lince" activo | Toca "Magdalena" | Queda solo Magdalena. "Lince" se apaga |
 | ESC-2.14 | La portada | Activa "Surquillo" y "Desde 9% anual" | Queda Surquillo |
-| ESC-2.15 | La portada | Escribe "Lince" y activa "Hasta S/ 300,000" | No queda ninguno. Aparece "No encontramos departamentos con esos criterios." |
-| ESC-2.16 | Un depa de "7–9% anual" | Activa "Desde 8% anual" | Ese depa no aparece, porque se compara su mínimo |
+| ESC-2.15 | La portada | Escribe "Lince" y activa "Hasta S/ 300,000" | No queda ninguno. Aparece "No encontramos inmuebles con esos criterios." |
+| ESC-2.16 | Un inmueble de "7–9% anual" | Activa "Desde 8% anual" | Ese inmueble no aparece, porque se compara su mínimo |
 | ESC-2.17 | Un chip activo | Lo toca otra vez | Se quita el filtro |
 | ESC-2.18 | Un chip activo y texto en el buscador | Toca "Limpiar filtros" | Se apagan los chips, se borra el texto, vuelven todas las tarjetas, el cursor queda en el buscador y el botón se oculta |
-| ESC-2.19 | Filtros aplicados | Recarga la página | Vuelven a verse todos los depas. La URL no cambió |
-| ESC-2.20 | El sitio generado con un solo depa de propietario | Abre `/capital` | Solo aparece el chip de su distrito, sin chips de precio ni de rentabilidad |
-| ESC-2.21 | Ningún depa de propietario publicado | Abre `/capital` | Aparece "No encontramos departamentos con esos criterios." al cargar y no hay chips |
+| ESC-2.19 | Filtros aplicados | Recarga la página | Vuelven a verse todos los inmuebles. La URL no cambió |
+| ESC-2.20 | El sitio generado con un solo inmueble de propietario | Abre `/capital` | Solo aparece el chip de su distrito, sin chips de precio ni de rentabilidad |
+| ESC-2.21 | Ningún inmueble de propietario publicado | Abre `/capital` | Aparece "No encontramos inmuebles con esos criterios." al cargar y no hay chips |
 | ESC-2.22 | JavaScript desactivado | Abre `/capital` | Se ven todas las tarjetas, pero el buscador, los chips y "Me interesa" no responden |
-| ESC-2.23 | Una tarjeta de depa | Revisa su contenido | Ve "De propietario", el distrito, la dirección, "valor", "rentabilidad", "se paga en", "Me interesa" y "Ver más detalle". No tiene botón de contacto |
-| ESC-2.24 | Un depa reservado | Mira su tarjeta en `/capital` | Ve "De propietario" y "Reservado" en lugar de la etiqueta comercial |
-| ESC-2.25 | Un depa cargado en USD 90,000 | Mira su tarjeta y activa "Hasta S/ 300,000" | La tarjeta muestra "S/" y el depa pasa el chip |
+| ESC-2.23 | Una tarjeta de inmueble | Revisa su contenido | Ve "De propietario", el distrito, la dirección, "valor", "rentabilidad", "se paga en", "Me interesa" y "Ver más detalle". No tiene botón de contacto |
+| ESC-2.24 | Un inmueble reservado | Mira su tarjeta en `/capital` | Ve "De propietario" y "Reservado" en lugar de la etiqueta comercial |
+| ESC-2.25 | Un inmueble cargado en USD 90,000 | Mira su tarjeta y activa "Hasta S/ 300,000" | La tarjeta muestra "S/" y el inmueble pasa el chip |
 | ESC-2.26 | Una tarjeta | Toca fuera de los botones o "Ver más detalle" | Abre `/capital/{slug}` |
 | ESC-2.27 | Una tarjeta | Toca "Me interesa" y luego "Guardado" | Primero cambia a "Guardado" con el corazón relleno y el contador sube. Después vuelve a "Me interesa" y el contador baja |
-| ESC-2.28 | 20 depas guardados | Guarda uno más | El contador sigue en 20. Sale el más antiguo, sin aviso |
+| ESC-2.28 | 20 inmuebles guardados | Guarda uno más | El contador sigue en 20. Sale el más antiguo, sin aviso |
 | ESC-2.29 | Supuestos de cuota sin cargar | Mira la nota bajo las tarjetas | Ve "*Cuota estimada con tasa pizarra a [plazo] años y [X] % de inicial, al [fecha]. …" |
-| ESC-2.30 | Un navegador sin historial ni depas guardados | Abre `/capital` | La fila "Para ti, según lo que has visto" no aparece |
+| ESC-2.30 | Un navegador sin historial ni inmuebles guardados | Abre `/capital` | La fila "Para ti, según lo que has visto" no aparece |
 | ESC-2.31 | Un navegador sin historial, en `/capital` | Toca "Me interesa" en una tarjeta | La fila no aparece hasta recargar |
-| ESC-2.32 | Un navegador que ya abrió fichas | Abre `/capital` | Aparecen hasta 4 tarjetas chicas, sin "Me interesa" ni "Reservado". Ninguna está en "Mis depas" |
-| ESC-2.33 | La fila "Para ti" visible | Toca "Me interesa" en una tarjeta de la lista | La fila se recalcula y el depa guardado no sale en ella |
+| ESC-2.32 | Un navegador que ya abrió fichas | Abre `/capital` | Aparecen hasta 4 tarjetas chicas, sin "Me interesa" ni "Reservado". Ninguna está en "Mis inmuebles" |
+| ESC-2.33 | La fila "Para ti" visible | Toca "Me interesa" en una tarjeta de la lista | La fila se recalcula y el inmueble guardado no sale en ella |
 | ESC-2.34 | Hay historial, pero falla la descarga del catálogo | Abre `/capital` | La fila no aparece y no se muestra ningún error |
 | ESC-2.35 | La franja "Proyectos de aliados" con los datos de ejemplo | Toca "Urbana" y luego "Andes" | "Urbana" abre "Proyectos de Urbana". "Andes" está en gris y no responde |
 | ESC-2.36 | Ninguna inmobiliaria registrada | Abre `/capital` y toca "Ver todos los proyectos" | La franja no aparece y el botón no hace nada |
-| ESC-2.37 | Los datos de ejemplo (6 depas) | Mira la barra y el ranking | El título es "Los depas para invertir ahora". Debajo dice "Ordenados por rentabilidad anual estimada." |
-| ESC-2.38 | Hay exactamente 10 depas publicados | Mira el ranking | El título es "Los 10 depas para invertir ahora" |
-| ESC-2.39 | Hay un depa reservado | Revisa el ranking | El reservado no aparece |
-| ESC-2.40 | El ranking visible | Toca el número o la rentabilidad de una fila | Abre el detalle de ese depa |
+| ESC-2.37 | Los datos de ejemplo (6 inmuebles) | Mira la barra y el ranking | El título es "Los inmuebles para invertir ahora". Debajo dice "Ordenados por rentabilidad anual estimada." |
+| ESC-2.38 | Hay exactamente 10 inmuebles publicados | Mira el ranking | El título es "Los 10 inmuebles para invertir ahora" |
+| ESC-2.39 | Hay un inmueble reservado | Revisa el ranking | El reservado no aparece |
+| ESC-2.40 | El ranking visible | Toca el número o la rentabilidad de una fila | Abre el detalle de ese inmueble |
 | ESC-2.41 | Un celular | Mira la barra del Top 10 | El botón dice "Ver →". En tablet y escritorio dice "Ver el top 10 →" |
-| ESC-2.42 | Ningún depa publicado | Toca la barra del Top 10 | El ranking no aparece y tocar la barra no lleva a ningún lado |
+| ESC-2.42 | Ningún inmueble publicado | Toca la barra del Top 10 | El ranking no aparece y tocar la barra no lleva a ningún lado |
 | ESC-2.43 | Un celular de menos de 640 px | Abre `/capital` | Las tarjetas forman un carrusel horizontal. Hay 2 columnas en tablet y 3 desde 1024 px |
 
-### 10.3 Ver un depa y los proyectos de una inmobiliaria (sección 3)
+### 10.3 Ver un inmueble y los proyectos de una inmobiliaria (sección 3)
 
 | ID | Dado | Cuando | Entonces |
 |---|---|---|---|
 | ESC-3.1 | Los datos de ejemplo | Abre `/capital/lince-av-arequipa-cuadra-12` | El título es "Lince · Av. Arequipa", la dirección "Av. Arequipa cuadra 12, Lince" y la etiqueta "De propietario · Súper precio". Ve "valor" con "Precio de compra", "rentabilidad" con "Estimada" y "se paga en" con "Plazo de inversión" |
-| ESC-3.2 | La ficha de un depa de propietario | Revisa el bloque del aliado | Ve "Te acompaña", "DepaHost Capital" y "Plataforma inmobiliaria con enfoque en inversión accesible y de confianza.", sin enlace |
+| ESC-3.2 | La ficha de un inmueble de propietario | Revisa el bloque del aliado | Ve "Te acompaña", "DepaHost Capital" y "Plataforma inmobiliaria con enfoque en inversión accesible y de confianza.", sin enlace |
 | ESC-3.3 | La ficha de un proyecto de Urbana | Revisa la miga de pan y el bloque | La miga es "Capital" › "Urbana" › distrito. Ve "Aliado del proyecto", "Inmobiliaria aliada de DepaHost Capital." y "Ver sus 3 proyectos". La nota de "valor" dice "Precio desde" |
 | ESC-3.4 | Una inmobiliaria con un solo proyecto | Abre la ficha de ese proyecto | No aparece "Ver sus N proyectos". El nombre de la miga lleva a su página |
 | ESC-3.5 | Un proyecto reservado de Urbana | Abre su ficha | La etiqueta es "Reservado · De proyecto · Urbana", sin insignia. "Me interesa" y "Contactar" funcionan |
-| ESC-3.6 | Un depa vendido o en borrador | Abre su `/capital/{slug}` | Ve la página 404 |
-| ESC-3.7 | El equipo cambió el slug de un depa | Abre el enlace con el slug antiguo | Ve la 404, sin redirección |
-| ESC-3.8 | Un depa sin dormitorios, baños ni m² | Abre su ficha | No aparece la fila de características |
-| ESC-3.9 | Un depa con solo los m² cargados | Abre su ficha | Los m² salen con el ícono de cama (observación conocida) |
-| ESC-3.10 | Un depa sin fotos | Abre su ficha | Ve un recuadro con el dibujo de una casa |
-| ESC-3.11 | Un depa con varias fotos | Toca una miniatura | No se abre ningún visor |
-| ESC-3.12 | Un depa en dólares | Mira la ficha, la tarjeta de `/capital` y el Top 10 | La ficha muestra "US$". La tarjeta de `/capital` y el Top 10 muestran "S/" |
+| ESC-3.6 | Un inmueble vendido o en borrador | Abre su `/capital/{slug}` | Ve la página 404 |
+| ESC-3.7 | El equipo cambió el slug de un inmueble | Abre el enlace con el slug antiguo | Ve la 404, sin redirección |
+| ESC-3.8 | Un inmueble sin dormitorios, baños ni m² | Abre su ficha | No aparece la fila de características |
+| ESC-3.9 | Un inmueble con solo los m² cargados | Abre su ficha | Los m² salen con el ícono de cama (observación conocida) |
+| ESC-3.10 | Un inmueble sin fotos | Abre su ficha | Ve un recuadro con el dibujo de una casa |
+| ESC-3.11 | Un inmueble con varias fotos | Toca una miniatura | No se abre ningún visor |
+| ESC-3.12 | Un inmueble en dólares | Mira la ficha, la tarjeta de `/capital` y el Top 10 | La ficha muestra "US$". La tarjeta de `/capital` y el Top 10 muestran "S/" |
 | ESC-3.13 | Cualquier ficha | Revisa el aviso | Ve "Renta estimada. No constituye una garantía de rentabilidad futura." |
-| ESC-3.14 | Una ficha sin "Mis depas" | Toca "Me interesa" y luego "Guardado" | Primero cambia a "Guardado" y el contador sube. Después vuelve a "Me interesa" |
-| ESC-3.15 | Una ficha, con 2 depas en "Mis depas" | Toca "Contactar" | Se abre `/capital/empecemos?depa={slug}` con "Departamento seleccionado", solo ese depa y "… ideal en {distrito}." |
-| ESC-3.16 | La página abierta desde "Contactar", con API | Toca "Escribir por WhatsApp" | WhatsApp se abre con "Hola, quiero que me acompañen con este depa:" y "- {Distrito} ({dirección}): {precio}". Se registra una consulta sin datos personales |
-| ESC-3.17 | Una ficha | Revisa "Depas similares que te pueden interesar" | Hay hasta 4 tarjetas chicas sin "Me interesa". No está el mismo depa ni ningún vendido |
-| ESC-3.18 | Un depa reservado entre los similares | Mira su tarjeta | No dice "Reservado" |
-| ESC-3.19 | El sitio con un único depa visible | Abre su ficha | No aparece la sección de similares |
+| ESC-3.14 | Una ficha sin "Mis inmuebles" | Toca "Me interesa" y luego "Guardado" | Primero cambia a "Guardado" y el contador sube. Después vuelve a "Me interesa" |
+| ESC-3.15 | Una ficha, con 2 inmuebles en "Mis inmuebles" | Toca "Contactar" | Se abre `/capital/empecemos?depa={slug}` con "Inmueble seleccionado", solo ese inmueble y "… ideal en {distrito}." |
+| ESC-3.16 | La página abierta desde "Contactar", con API | Toca "Escribir por WhatsApp" | WhatsApp se abre con "Hola, quiero que me acompañen con este inmueble:" y "- {Distrito} ({dirección}): {precio}". Se registra una consulta sin datos personales |
+| ESC-3.17 | Una ficha | Revisa "Inmuebles similares que te pueden interesar" | Hay hasta 4 tarjetas chicas sin "Me interesa". No está el mismo inmueble ni ningún vendido |
+| ESC-3.18 | Un inmueble reservado entre los similares | Mira su tarjeta | No dice "Reservado" |
+| ESC-3.19 | El sitio con un único inmueble visible | Abre su ficha | No aparece la sección de similares |
 | ESC-3.20 | Un navegador limpio | Abre 13 fichas distintas | El historial guarda solo las últimas 12. No se envía nada al API |
-| ESC-3.21 | Los datos de ejemplo | Abre `/capital/aliados/urbana` | Ve "Inmobiliaria aliada", "Proyectos de Urbana", "Departamentos en venta de esta inmobiliaria.", "3 proyectos encontrados" y ningún chip "Desde …% anual". La pestaña dice "Proyectos de Urbana \| Depa Host Perú" |
+| ESC-3.21 | Los datos de ejemplo | Abre `/capital/aliados/urbana` | Ve "Inmobiliaria aliada", "Proyectos de Urbana", "Inmuebles en venta de esta inmobiliaria.", "3 proyectos encontrados" y ningún chip "Desde …% anual". La pestaña dice "Proyectos de Urbana \| Depa Host Perú" |
 | ESC-3.22 | `/capital/aliados/urbana` | Escribe un texto que no coincide | Ve "No encontramos proyectos con esos criterios." y "0 proyectos encontrados" |
 | ESC-3.23 | `/capital/aliados/urbana` | Busca "595000" o "S/ 595,000" | Encuentra el mismo proyecto |
 | ESC-3.24 | Un proyecto en US$ 50,000 | Busca "US$ 50,000" y luego "50000" | La primera búsqueda no da resultados. La segunda sí |
@@ -3317,54 +3312,54 @@ Los ejemplos usan los datos de ejemplo: Lince S/ 310,000, Surquillo y Magdalena.
 | ESC-3.27 | La página con un chip activo y texto | Toca "Limpiar filtros" | Se borran el texto y los chips, el contador vuelve al total y el cursor queda en la caja |
 | ESC-3.28 | Una inmobiliaria con más de 3 proyectos | Abre su página | Aparecen chips "Desde …% anual" |
 | ESC-3.29 | Una inmobiliaria sin proyectos publicados ni reservados | Abre `/capital/aliados/{slug}` | Ve la 404 |
-| ESC-3.30 | La página de una inmobiliaria | Toca "Volver a todos los depas" y "Aliados" de la miga | El primero lleva a la lista de `/capital`. El segundo, a la franja de aliados |
+| ESC-3.30 | La página de una inmobiliaria | Toca "Volver a todos los inmuebles" y "Aliados" de la miga | El primero lleva a la lista de `/capital`. El segundo, a la franja de aliados |
 | ESC-3.31 | La inmobiliaria con web cargada | Toca "Sitio web de {nombre}" | Se abre en una pestaña nueva. Sin web cargada, el enlace no aparece |
 | ESC-3.32 | Un proyecto reservado | Mira la página de su inmobiliaria | La tarjeta dice "Reservado" y cuenta en el contador |
-| ESC-3.33 | Un depa publicado con regeneración automática | El equipo lo pasa a vendido | Al menos 30 segundos después, y una vez regenerado el sitio, la ficha da 404 y desaparece de las listas |
+| ESC-3.33 | Un inmueble publicado con regeneración automática | El equipo lo pasa a vendido | Al menos 30 segundos después, y una vez regenerado el sitio, la ficha da 404 y desaparece de las listas |
 | ESC-3.34 | Una pantalla de menos de 480 px | Abre la página de una inmobiliaria | El botón "Buscar" muestra solo la palabra, sin ícono |
 
-### 10.4 Guardar depas y pedir acompañamiento (sección 4)
+### 10.4 Guardar inmuebles y pedir acompañamiento (sección 4)
 
 | ID | Dado | Cuando | Entonces |
 |---|---|---|---|
-| ESC-4.1 | Un navegador limpio, sin sesión | Toca "Me interesa" en un depa | Cambia a "Guardado", el contador muestra 1 y no se abre ningún aviso |
-| ESC-4.2 | 1 depa guardado y nunca se dejaron datos | Guarda un segundo depa | Se abre "Guarda tus depas" con "2 departamentos seleccionados: {distritos}" |
-| ESC-4.3 | "Guarda tus depas" abierto | Toca la "X", "Seguir viendo", Esc o fuera | Se cierra, los depas siguen guardados y no vuelve a abrirse solo durante 7 días |
-| ESC-4.4 | El aviso cerrado hace menos de 7 días | Guarda otro depa | No se abre el aviso |
-| ESC-4.5 | El aviso en pausa | Toca "Guárdalos con tu celular" en `/mis-depas` | El aviso se abre igual |
+| ESC-4.1 | Un navegador limpio, sin sesión | Toca "Me interesa" en un inmueble | Cambia a "Guardado", el contador muestra 1 y no se abre ningún aviso |
+| ESC-4.2 | 1 inmueble guardado y nunca se dejaron datos | Guarda un segundo inmueble | Se abre "Guarda tus inmuebles" con "2 inmuebles seleccionados: {distritos}" |
+| ESC-4.3 | "Guarda tus inmuebles" abierto | Toca la "X", "Seguir viendo", Esc o fuera | Se cierra, los inmuebles siguen guardados y no vuelve a abrirse solo durante 7 días |
+| ESC-4.4 | El aviso cerrado hace menos de 7 días | Guarda otro inmueble | No se abre el aviso |
+| ESC-4.5 | El aviso en pausa | Toca "Guárdalos con tu celular" en `/mis-inmuebles` | El aviso se abre igual |
 | ESC-4.6 | El aviso abierto | Toca "Guardar y continuar" con "Nombre" vacío o la casilla sin marcar | El navegador avisa y no se envía nada |
 | ESC-4.7 | El aviso abierto, con API | Envía "Celular" = "abc123" con lo demás válido | Ve "Revisa los campos marcados." y, bajo "Celular", "Teléfono inválido" |
 | ESC-4.8 | El aviso abierto | Envía "Correo" = `ana@correo` | El navegador lo acepta y el servidor responde "Invalid email address" bajo "Correo" |
 | ESC-4.9 | El aviso abierto | Envía "Nombre" = " a" | El servidor rechaza con "Too small: expected string to have >=2 characters" |
-| ESC-4.10 | El aviso abierto, con API | Envía "ana lucía", un celular válido y la casilla marcada | El botón se bloquea con "Enviando…". Luego aparece "Listo, Ana" con "Guardamos tu selección. Te escribiremos por WhatsApp para darle seguimiento.", "Ver Mis depas" y "Seguir viendo" |
-| ESC-4.11 | Un envío correcto de "Guarda tus depas" | Revisa el encabezado en 1280 px | Ve "Hola, Ana", que lleva a `/mis-depas`. El aviso no vuelve a abrirse solo en ese navegador |
-| ESC-4.12 | Un envío correcto | El equipo revisa el panel de administración | Hay un lead nuevo de tipo "Guarda tus depas" con los depas de ese momento. Si el correo de avisos está configurado, llega "Nuevo lead · Guarda tus depas (lista de interés)" |
-| ESC-4.13 | El sitio sin API | Toca "Guardar y continuar" | Ve "Por ahora recibimos estas consultas por WhatsApp." y "Escribir por WhatsApp", con "Hola, quiero que me ayuden con los depas que guardé en DepaHost Capital.". No se guarda el nombre |
+| ESC-4.10 | El aviso abierto, con API | Envía "ana lucía", un celular válido y la casilla marcada | El botón se bloquea con "Enviando…". Luego aparece "Listo, Ana" con "Guardamos tu selección. Te escribiremos por WhatsApp para darle seguimiento.", "Ver Mis inmuebles" y "Seguir viendo" |
+| ESC-4.11 | Un envío correcto de "Guarda tus inmuebles" | Revisa el encabezado en 1280 px | Ve "Hola, Ana", que lleva a `/mis-inmuebles`. El aviso no vuelve a abrirse solo en ese navegador |
+| ESC-4.12 | Un envío correcto | El equipo revisa el panel de administración | Hay un lead nuevo de tipo "Guarda tus inmuebles" con los inmuebles de ese momento. Si el correo de avisos está configurado, llega "Nuevo lead · Guarda tus inmuebles (lista de interés)" |
+| ESC-4.13 | El sitio sin API | Toca "Guardar y continuar" | Ve "Por ahora recibimos estas consultas por WhatsApp." y "Escribir por WhatsApp", con "Hola, quiero que me ayuden con los inmuebles que guardé en DepaHost Capital.". No se guarda el nombre |
 | ESC-4.14 | El API caído o sin conexión | Envía el aviso | Ve "No pudimos enviar tus datos. Revisa tu conexión o escríbenos por WhatsApp." y el enlace "Escribir por WhatsApp" |
 | ESC-4.15 | 10 envíos en un minuto desde la misma IP, contando "Te acompañamos" y otros formularios | Hace el envío 11 | Ve "Hiciste varios envíos seguidos. Espera un minuto e inténtalo otra vez.", sin enlace a WhatsApp |
 | ESC-4.16 | El API exige Turnstile, pero el sitio no tiene la clave | Envía el aviso | Ve "No pudimos verificar que no eres un robot. Recarga la página e inténtalo otra vez." y "Escribir por WhatsApp" |
-| ESC-4.17 | 3 depas guardados, uno de ellos ya vendido, sin haber abierto `/mis-depas` | Se abre el aviso | El resumen dice "3 departamentos seleccionados" y nombra solo los distritos que siguen en el catálogo |
-| ESC-4.18 | Lista vacía | Abre `/mis-depas` | Ve "Aún no guardaste departamentos. Toca Me interesa en los que te gusten." con "Explorar departamentos". "Empecemos con estos" está apagado |
-| ESC-4.19 | Un depa de S/ 310,000 y otro de S/ 285,000 guardados | Abre `/mis-depas` | El resumen muestra "Inversión total" "S/ 595,000" |
-| ESC-4.20 | Solo depas en dólares | Abre `/mis-depas` | La inversión total sale como "S/ 0 + US$ 80,000" |
-| ESC-4.21 | Un depa vendido en la lista | Abre `/mis-depas` | Se quita solo, sin aviso, y el contador del encabezado se corrige. Un reservado se queda con "Reservado" |
-| ESC-4.22 | `/mis-depas` con depas | Toca la "X" de una tarjeta | Se quita sin confirmación. "Parecidos a los que guardaste" se recalcula |
-| ESC-4.23 | Sin datos dejados en el aviso | Mira la nota final de `/mis-depas` | Ve "Guardado en este dispositivo. Guárdalos con tu celular y te escribimos con los que marcaste." |
-| ESC-4.24 | Datos dejados como "Ana" | Mira la nota final | Ve "Guardado para Ana. La próxima vez te mostramos depas parecidos." y no aparece "Guárdalos con tu celular" |
-| ESC-4.25 | Falla la descarga del catálogo | Abre `/mis-depas` | Ve "No pudimos cargar tus depas guardados. Recarga la página." |
-| ESC-4.26 | 2 depas en "Mis depas" | Toca "Empecemos con estos" | Ve "2 departamentos seleccionados", los pasos "Entramos juntos", "Coordinamos la visita", "Cierras la compra" y "Cambiar selección". No se registra nada |
-| ESC-4.27 | 2 depas elegidos, con API | Toca "Escribir por WhatsApp" | WhatsApp se abre con "Hola, quiero que me acompañen con estos depas:" y una línea por depa. Se registra una solicitud "Te acompañamos" sin nombre ni teléfono, que no genera correo al equipo |
-| ESC-4.28 | Ningún depa elegido | Abre `/capital/empecemos` y toca "Escribir por WhatsApp" | Ve "Departamento seleccionado", "Todavía no elegiste un depa…", "Ver depas" y "Cambiar selección". WhatsApp se abre con "Hola, quiero invertir en un depa en Lima y me gustaría que me acompañen." y no se registra nada |
-| ESC-4.29 | El sitio sin API | Toca "Escribir por WhatsApp" con depas | WhatsApp se abre igual y no se registra nada |
-| ESC-4.30 | Falla la descarga del catálogo | Abre `/capital/empecemos` | La tarjeta queda con "Departamento seleccionado" y "Cambiar selección", sin el aviso ni "Ver depas". WhatsApp usa el mensaje general |
-| ESC-4.31 | El enlace `?depa=` de un depa ya no publicado | Abre la página | Muestra los depas de "Mis depas" |
-| ESC-4.32 | "Te acompañamos" abierta | Guarda otro depa en otra pestaña | La página no cambia hasta recargarla |
-| ESC-4.33 | Una sesión iniciada con 2 depas en la cuenta y 1 distinto en el navegador | Abre una página del sitio | Los 3 quedan en el navegador y en la cuenta, primero los de la cuenta |
-| ESC-4.34 | Una sesión iniciada | Toca "Me interesa" en el sitio | En menos de un segundo, el depa aparece en "Mis depas" del panel |
-| ESC-4.35 | Una sesión iniciada, con un depa guardado en el navegador | Lo quita en el panel y luego abre el sitio en ese navegador | El depa vuelve a la cuenta |
-| ESC-4.36 | La cuenta con 15 depas y el navegador con 10 distintos | Abre el sitio con sesión | La cuenta guarda los 25 y el navegador se queda con los 20 últimos. Con el siguiente cambio en el sitio, la cuenta baja a esos 20 |
+| ESC-4.17 | 3 inmuebles guardados, uno de ellos ya vendido, sin haber abierto `/mis-inmuebles` | Se abre el aviso | El resumen dice "3 inmuebles seleccionados" y nombra solo los distritos que siguen en el catálogo |
+| ESC-4.18 | Lista vacía | Abre `/mis-inmuebles` | Ve "Aún no guardaste inmuebles. Toca Me interesa en los que te gusten." con "Explorar inmuebles". "Empecemos con estos" está apagado |
+| ESC-4.19 | Un inmueble de S/ 310,000 y otro de S/ 285,000 guardados | Abre `/mis-inmuebles` | El resumen muestra "Inversión total" "S/ 595,000" |
+| ESC-4.20 | Solo inmuebles en dólares | Abre `/mis-inmuebles` | La inversión total sale como "S/ 0 + US$ 80,000" |
+| ESC-4.21 | Un inmueble vendido en la lista | Abre `/mis-inmuebles` | Se quita solo, sin aviso, y el contador del encabezado se corrige. Un reservado se queda con "Reservado" |
+| ESC-4.22 | `/mis-inmuebles` con inmuebles | Toca la "X" de una tarjeta | Se quita sin confirmación. "Parecidos a los que guardaste" se recalcula |
+| ESC-4.23 | Sin datos dejados en el aviso | Mira la nota final de `/mis-inmuebles` | Ve "Guardado en este dispositivo. Guárdalos con tu celular y te escribimos con los que marcaste." |
+| ESC-4.24 | Datos dejados como "Ana" | Mira la nota final | Ve "Guardado para Ana. La próxima vez te mostramos inmuebles parecidos." y no aparece "Guárdalos con tu celular" |
+| ESC-4.25 | Falla la descarga del catálogo | Abre `/mis-inmuebles` | Ve "No pudimos cargar tus inmuebles guardados. Recarga la página." |
+| ESC-4.26 | 2 inmuebles en "Mis inmuebles" | Toca "Empecemos con estos" | Ve "2 inmuebles seleccionados", los pasos "Entramos juntos", "Coordinamos la visita", "Cierras la compra" y "Cambiar selección". No se registra nada |
+| ESC-4.27 | 2 inmuebles elegidos, con API | Toca "Escribir por WhatsApp" | WhatsApp se abre con "Hola, quiero que me acompañen con estos inmuebles:" y una línea por inmueble. Se registra una solicitud "Te acompañamos" sin nombre ni teléfono, que no genera correo al equipo |
+| ESC-4.28 | Ningún inmueble elegido | Abre `/capital/empecemos` y toca "Escribir por WhatsApp" | Ve "Inmueble seleccionado", "Todavía no elegiste un inmueble…", "Ver inmuebles" y "Cambiar selección". WhatsApp se abre con "Hola, quiero invertir en un inmueble en Lima y me gustaría que me acompañen." y no se registra nada |
+| ESC-4.29 | El sitio sin API | Toca "Escribir por WhatsApp" con inmuebles | WhatsApp se abre igual y no se registra nada |
+| ESC-4.30 | Falla la descarga del catálogo | Abre `/capital/empecemos` | La tarjeta queda con "Inmueble seleccionado" y "Cambiar selección", sin el aviso ni "Ver inmuebles". WhatsApp usa el mensaje general |
+| ESC-4.31 | El enlace `?depa=` de un inmueble ya no publicado | Abre la página | Muestra los inmuebles de "Mis inmuebles" |
+| ESC-4.32 | "Te acompañamos" abierta | Guarda otro inmueble en otra pestaña | La página no cambia hasta recargarla |
+| ESC-4.33 | Una sesión iniciada con 2 inmuebles en la cuenta y 1 distinto en el navegador | Abre una página del sitio | Los 3 quedan en el navegador y en la cuenta, primero los de la cuenta |
+| ESC-4.34 | Una sesión iniciada | Toca "Me interesa" en el sitio | En menos de un segundo, el inmueble aparece en "Mis inmuebles" del panel |
+| ESC-4.35 | Una sesión iniciada, con un inmueble guardado en el navegador | Lo quita en el panel y luego abre el sitio en ese navegador | El inmueble vuelve a la cuenta |
+| ESC-4.36 | La cuenta con 15 inmuebles y el navegador con 10 distintos | Abre el sitio con sesión | La cuenta guarda los 25 y el navegador se queda con los 20 últimos. Con el siguiente cambio en el sitio, la cuenta baja a esos 20 |
 | ESC-4.37 | La lista unida pasa de 50 | Abre el sitio con sesión | La cuenta no cambia y no hay aviso. El navegador se queda con 20 |
-| ESC-4.38 | Una sesión iniciada, sin datos en el aviso y con 2 o más depas en la cuenta | Abre el sitio en un dispositivo nuevo | Puede abrirse "Guarda tus depas" igual |
+| ESC-4.38 | Una sesión iniciada, sin datos en el aviso y con 2 o más inmuebles en la cuenta | Abre el sitio en un dispositivo nuevo | Puede abrirse "Guarda tus inmuebles" igual |
 
 ### 10.5 Formularios (sección 5)
 
@@ -3376,14 +3371,14 @@ Los ejemplos usan los datos de ejemplo: Lince S/ 310,000, Surquillo y Magdalena.
 | ESC-5.4 | El formulario de Propietarios, con API | Envía "Celular" = "abc" con lo demás válido | El campo queda con borde rojo y "Teléfono inválido", y aparece "Revisa los campos marcados." |
 | ESC-5.5 | El formulario de Propietarios | Escribe letras en el precio | El navegador no deja enviar |
 | ESC-5.6 | El formulario de Propietarios, con API | Envía datos válidos | El botón se bloquea con "Enviando…". Luego aparece "¡Listo! Te escribimos por WhatsApp para concretar." con "Adelantar por WhatsApp" y el formulario se vacía |
-| ESC-5.7 | El éxito anterior con "Ana", "Vender" y "Lince" | Toca "Adelantar por WhatsApp" | El mensaje es "Hola, soy Ana. Quiero vender mi depa en Lince." |
-| ESC-5.8 | Un envío correcto con "Vender" | El equipo revisa | Llega "Nuevo lead · Propietario: vender". En "Leads" sale como "Quiero vender mi depa", "Sin contactar". La persona no recibe correo |
-| ESC-5.9 | Un envío con "Operarlo en Airbnb" | El equipo revisa | El lead es de alquiler: "Propietario: alquilar" / "Quiero alquilar mi depa" |
+| ESC-5.7 | El éxito anterior con "Ana", "Vender" y "Lince" | Toca "Adelantar por WhatsApp" | El mensaje es "Hola, soy Ana. Quiero vender mi inmueble en Lince." |
+| ESC-5.8 | Un envío correcto con "Vender" | El equipo revisa | Llega "Nuevo lead · Propietario: vender". En "Leads" sale como "Quiero vender mi inmueble", "Sin contactar". La persona no recibe correo |
+| ESC-5.9 | Un envío con "Operarlo en Airbnb" | El equipo revisa | El lead es de alquiler: "Propietario: alquilar" / "Quiero alquilar mi inmueble" |
 | ESC-5.10 | El formulario de Propietarios | Envía el precio "250.000" | Se guarda 250 |
 | ESC-5.11 | Un envío correcto con Turnstile activo | Envía otra vez sin recargar | Puede fallar con "No pudimos verificar que no eres un robot…". El recuadro se reinicia tras el error |
 | ESC-5.12 | El sitio sin API | Envía Propietarios | Ve "Por ahora recibimos estas consultas por WhatsApp." y "Escribir por WhatsApp", con el mensaje armado. No se guarda nada |
 | ESC-5.13 | Una prueba automatizada | Llena el campo oculto "Sitio web" y envía | El sitio muestra éxito, pero no se guarda nada ni se avisa al equipo |
-| ESC-5.14 | Una sesión iniciada | Envía Propietarios | Aparece en "Mis consultas" del panel como "Quiero vender mi depa" o "Quiero alquilar mi depa", con estado "Nuevo" |
+| ESC-5.14 | Una sesión iniciada | Envía Propietarios | Aparece en "Mis consultas" del panel como "Quiero vender mi inmueble" o "Quiero alquilar mi inmueble", con estado "Nuevo" |
 | ESC-5.15 | El origen del sitio no está en la lista de orígenes del API | Envía cualquier formulario | Ve "No pudimos enviar tus datos. Revisa tu conexión o escríbenos por WhatsApp." y no se guarda nada |
 | ESC-5.16 | El formulario en inglés de `/capital`, con API | Envía "Jane", "jane@email.com", "50000" y la casilla marcada | Aparece "Sending…" y luego "Thanks! We got your details and will contact you soon." con "Message us on WhatsApp", que trae "Hi, I'm Jane. I'd like to invest in Lima with about USD 50,000." |
 | ESC-5.17 | El formulario en inglés | Envía el monto vacío | El mensaje de WhatsApp es "Hi, I'm Jane. I'd like to invest in Lima." |
@@ -3413,14 +3408,14 @@ Los ejemplos usan los datos de ejemplo: Lince S/ 310,000, Surquillo y Magdalena.
 
 | ID | Dado | Cuando | Entonces |
 |---|---|---|---|
-| ESC-6.1 | Una persona sin sesión | Abre `/registro` | Ve "Crea tu cuenta", "Quiero invertir" ya elegido, "Tengo un depa", "Celular" con "opcional" y "Al menos 10 caracteres." |
+| ESC-6.1 | Una persona sin sesión | Abre `/registro` | Ve "Crea tu cuenta", "Quiero invertir" ya elegido, "Tengo un inmueble", "Celular" con "opcional" y "Al menos 10 caracteres." |
 | ESC-6.2 | El formulario de registro | Toca "Crear cuenta" sin marcar la privacidad | Ve "Debes aceptar la política de privacidad" y nada más. Turnstile no se reinicia |
 | ESC-6.3 | El formulario de registro | Envía "Nombre" = "A" | Ve "Too small: expected string to have >=2 characters" |
 | ESC-6.4 | El formulario de registro | Envía una contraseña de 9 caracteres | Ve "La contraseña debe tener al menos 10 caracteres" |
 | ESC-6.5 | El formulario de registro | Envía el celular "abc" | Ve "Teléfono inválido". "((((((" se acepta |
 | ESC-6.6 | Un correo ya registrado | Se registra con él | Ve "Ya existe una cuenta con ese correo. Inicia sesión o recupera tu contraseña." |
-| ESC-6.7 | Datos válidos con "Quiero invertir" | Toca "Crear cuenta" | El botón dice "Creando tu cuenta…" y llega a "Mis depas" con la sesión iniciada. No llega correo. En la lista de usuarios, "Último ingreso" dice "Nunca" |
-| ESC-6.8 | Datos válidos con "Tengo un depa" | Crea la cuenta | Llega a "Mis propiedades" |
+| ESC-6.7 | Datos válidos con "Quiero invertir" | Toca "Crear cuenta" | El botón dice "Creando tu cuenta…" y llega a "Mis inmuebles" con la sesión iniciada. No llega correo. En la lista de usuarios, "Último ingreso" dice "Nunca" |
+| ESC-6.8 | Datos válidos con "Tengo un inmueble" | Crea la cuenta | Llega a "Mis propiedades" |
 | ESC-6.9 | 5 registros en un minuto desde la misma IP | Hace el sexto | Ve "Rate limit exceeded, retry in …" |
 | ESC-6.10 | El API exige Turnstile y el panel no tiene la clave | Intenta registrarse | Ve "No pudimos verificar que no eres un robot. Recarga la página e inténtalo otra vez." |
 | ESC-6.11 | Una cuenta existente | Ingresa en `/ingresar` con "ANA@Correo.com " | Funciona: no importan las mayúsculas ni los espacios del correo |
@@ -3428,7 +3423,7 @@ Los ejemplos usan los datos de ejemplo: Lince S/ 310,000, Surquillo y Magdalena.
 | ESC-6.13 | `/ingresar` | Envía la contraseña vacía | Ve solo "Revisa los campos marcados.", sin mensaje bajo el campo |
 | ESC-6.14 | 10 intentos de ingreso en un minuto | Hace el 11 | Ve "Rate limit exceeded, retry in …". La cuenta no se bloquea |
 | ESC-6.15 | Un comprador sin sesión | Abre `/mis-consultas` e ingresa | Vuelve a "Mis consultas" |
-| ESC-6.16 | Un comprador sin sesión | Abre `/mis-propiedades` e ingresa | Va a "Mis depas" |
+| ESC-6.16 | Un comprador sin sesión | Abre `/mis-propiedades` e ingresa | Va a "Mis inmuebles" |
 | ESC-6.17 | Sin sesión | Abre la raíz del panel e ingresa | Va a su inicio, sin recordar la raíz |
 | ESC-6.18 | Una sesión iniciada | Abre `/ingresar`, `/registro` o `/recuperar` | Va directo a su inicio |
 | ESC-6.19 | Una dirección del panel inexistente | La abre, con sesión o sin ella | Ve "No encontramos esta página" e "Ir a mi cuenta" |
@@ -3440,11 +3435,11 @@ Los ejemplos usan los datos de ejemplo: Lince S/ 310,000, Surquillo y Magdalena.
 | ESC-6.25 | Dos enlaces pedidos seguidos | Usa el primero | Funciona: pedir otro no anula el anterior |
 | ESC-6.26 | `/perfil` | Cambia el nombre y toca "Guardar" | Ve "Guardamos tus datos", que se va a los 4 segundos. El menú se actualiza y el saludo del sitio cambia en la próxima página |
 | ESC-6.27 | `/perfil` | Revisa el campo "Correo" | No es editable y dice "Para cambiar tu correo, escríbenos." |
-| ESC-6.28 | Un comprador en `/perfil` | Elige "Vender o alquilar mi depa" y guarda | Va a "Mis propiedades" y el menú muestra la sección "Propietario" |
+| ESC-6.28 | Un comprador en `/perfil` | Elige "Vender o alquilar mi inmueble" y guarda | Va a "Mis propiedades" y el menú muestra la sección "Propietario" |
 | ESC-6.29 | `/perfil` | Cambia la contraseña con una "Contraseña actual" incorrecta | Ve "La contraseña actual no es correcta" |
 | ESC-6.30 | Sesiones en dos navegadores | Cambia la contraseña en uno | Ve "Cambiaste tu contraseña. Cerramos tus otras sesiones." y los campos se vacían. Ese navegador sigue dentro y el otro queda fuera |
 | ESC-6.31 | Una sesión iniciada | Toca "Cerrar sesión" en el menú o en "Perfil" | Sin confirmación, vuelve a "Ingresa a tu cuenta". Al recargar el sitio aparece "Ingresar" |
-| ESC-6.32 | Se cerró sesión, pero antes se dejó un nombre en "Guarda tus depas" | Recarga el sitio | Ve "Hola, {ese nombre}" junto a "Ingresar". El saludo lleva a `/mis-depas` |
+| ESC-6.32 | Se cerró sesión, pero antes se dejó un nombre en "Guarda tus inmuebles" | Recarga el sitio | Ve "Hola, {ese nombre}" junto a "Ingresar". El saludo lleva a `/mis-inmuebles` |
 | ESC-6.33 | Una sesión vencida con el panel abierto | Guarda algo en "Perfil" | Ve "Inicia sesión para continuar" |
 | ESC-6.34 | Un panel menor de 960 px | Abre `/ingresar` | Solo se ve el formulario, y el logo lleva al panel |
 | ESC-6.35 | Un navegador sin la marca de sesión | Abre el sitio | No se consulta al API por la sesión |
@@ -3453,30 +3448,30 @@ Los ejemplos usan los datos de ejemplo: Lince S/ 310,000, Surquillo y Magdalena.
 
 | ID | Dado | Cuando | Entonces |
 |---|---|---|---|
-| ESC-7.1 | Un comprador con sesión | Abre el panel | Llega a "Mis depas". El menú tiene solo "Mi cuenta" ("Mis depas", "Mis consultas", "Perfil"), la etiqueta "Comprador", "Ver el sitio" y "Cerrar sesión". La pestaña dice "Mis depas · DepaHost Capital" |
+| ESC-7.1 | Un comprador con sesión | Abre el panel | Llega a "Mis inmuebles". El menú tiene solo "Mi cuenta" ("Mis inmuebles", "Mis consultas", "Perfil"), la etiqueta "Comprador", "Ver el sitio" y "Cerrar sesión". La pestaña dice "Mis inmuebles · DepaHost Capital" |
 | ESC-7.2 | El panel en un celular | Toca la opción de la pantalla actual en el menú | El menú sigue abierto hasta tocar la X, tocar fuera o presionar Esc |
 | ESC-7.3 | El panel con la dirección del sitio configurada | Toca "Ver el sitio" | Va a la página Capital del sitio |
-| ESC-7.4 | El panel sin la dirección del sitio configurada | Revisa el menú y toca "Explorar depas" | "Ver el sitio" no aparece. "Explorar depas" abre "No encontramos esta página" del panel |
-| ESC-7.5 | La cuenta sin depas | Abre "Mis depas" | Ve "Aún no guardaste departamentos", "Toca Me interesa en los depas del sitio y aparecerán aquí, en cualquier dispositivo." y "Ver depas para invertir" |
-| ESC-7.6 | La cuenta con depas | Abre "Mis depas" | Ve una tarjeta por depa (el más antiguo arriba), con "Ver en el sitio", "Desde" o "Valor", y el "Resumen" con "{n} seleccionados" y "Inversión total" |
-| ESC-7.7 | La cuenta con un solo depa | Mira el Resumen | Dice "1 seleccionados" |
-| ESC-7.8 | Solo depas en dólares | Mira la "Inversión total" | Dice solo "USD 80,000". El sitio dice "S/ 0 + USD 80,000" |
-| ESC-7.9 | El primer depa de la lista en dólares y otro en soles | Mira la "Inversión total" | Dice "USD … + S/ …" |
-| ESC-7.10 | La lista con depas | Toca la X de uno | Sale sin confirmación y aparece "Quitaste {distrito}" |
-| ESC-7.11 | La sesión vencida | Toca la X | El depa se queda y no aparece "Quitaste…" |
-| ESC-7.12 | La sesión vencida | Abre "Mis depas" | Ve "No pudimos cargar tus depas." |
-| ESC-7.13 | Un depa reservado en la cuenta | Lo mira en el panel | Aparece sin marca de reservado |
-| ESC-7.14 | Un depa vendido en la cuenta | Abre "Mis depas" | No aparece ni entra en el total |
-| ESC-7.15 | La lista con depas | Toca "Empecemos con estos" | Se abre "Te acompañamos al proyecto" del sitio con los depas de ese navegador |
+| ESC-7.4 | El panel sin la dirección del sitio configurada | Revisa el menú y toca "Explorar inmuebles" | "Ver el sitio" no aparece. "Explorar inmuebles" abre "No encontramos esta página" del panel |
+| ESC-7.5 | La cuenta sin inmuebles | Abre "Mis inmuebles" | Ve "Aún no guardaste inmuebles", "Toca Me interesa en los inmuebles del sitio y aparecerán aquí, en cualquier dispositivo." y "Ver inmuebles para invertir" |
+| ESC-7.6 | La cuenta con inmuebles | Abre "Mis inmuebles" | Ve una tarjeta por inmueble (el más antiguo arriba), con "Ver en el sitio", "Desde" o "Valor", y el "Resumen" con "{n} seleccionados" y "Inversión total" |
+| ESC-7.7 | La cuenta con un solo inmueble | Mira el Resumen | Dice "1 seleccionados" |
+| ESC-7.8 | Solo inmuebles en dólares | Mira la "Inversión total" | Dice solo "USD 80,000". El sitio dice "S/ 0 + USD 80,000" |
+| ESC-7.9 | El primer inmueble de la lista en dólares y otro en soles | Mira la "Inversión total" | Dice "USD … + S/ …" |
+| ESC-7.10 | La lista con inmuebles | Toca la X de uno | Sale sin confirmación y aparece "Quitaste {distrito}" |
+| ESC-7.11 | La sesión vencida | Toca la X | El inmueble se queda y no aparece "Quitaste…" |
+| ESC-7.12 | La sesión vencida | Abre "Mis inmuebles" | Ve "No pudimos cargar tus inmuebles." |
+| ESC-7.13 | Un inmueble reservado en la cuenta | Lo mira en el panel | Aparece sin marca de reservado |
+| ESC-7.14 | Un inmueble vendido en la cuenta | Abre "Mis inmuebles" | No aparece ni entra en el total |
+| ESC-7.15 | La lista con inmuebles | Toca "Empecemos con estos" | Se abre "Te acompañamos al proyecto" del sitio con los inmuebles de ese navegador |
 | ESC-7.16 | Sin consultas | Abre "Mis consultas" | Ve "Todavía no nos escribiste", el texto "Cuando uses Empecemos o un formulario con tu sesión iniciada, verás aquí cada consulta." y "Empecemos" |
 | ESC-7.17 | Una sesión iniciada | Toca "Escribir por WhatsApp" en "Te acompañamos" y abre "Mis consultas" | Hay una fila "Te acompañamos (WhatsApp)" arriba, con la fecha en hora de Lima, los distritos enlazados y "Nuevo" |
 | ESC-7.18 | Una sesión iniciada | Toca "Escribir por WhatsApp" tres veces | Aparecen tres filas |
 | ESC-7.19 | Un formulario enviado sin sesión | Luego crea la cuenta y abre "Mis consultas" | Esa consulta no aparece |
-| ESC-7.20 | Una consulta con un depa ya vendido | Abre "Mis consultas" | La columna "Depas" dice "Ya no disponible" |
-| ESC-7.21 | Una consulta sin depas, como la de Propietarios | Mira la columna "Depas" | Muestra "—" |
+| ESC-7.20 | Una consulta con un inmueble ya vendido | Abre "Mis consultas" | La columna "Inmuebles" dice "Ya no disponible" |
+| ESC-7.21 | Una consulta sin inmuebles, como la de Propietarios | Mira la columna "Inmuebles" | Muestra "—" |
 | ESC-7.22 | El equipo pasa un lead a "En conversación" | El comprador recarga "Mis consultas" | Ve "En conversación". No llega correo |
 | ESC-7.23 | Un reclamo enviado con sesión | Abre "Mis consultas" | No aparece |
-| ESC-7.24 | Un comprador con sesión | Abre `/mis-propiedades`, `/mis-propiedades/nueva` o `/admin` | Va a "Mis depas" sin mensaje |
+| ESC-7.24 | Un comprador con sesión | Abre `/mis-propiedades`, `/mis-propiedades/nueva` o `/admin` | Va a "Mis inmuebles" sin mensaje |
 | ESC-7.25 | Un comprador con sesión | Abre `/admin/algo-inexistente` | Ve la 404 del panel |
 | ESC-7.26 | Un comprador | Pide datos de propietario o de administración directo al API | El API responde "No tienes permiso para esto" |
 
@@ -3484,17 +3479,17 @@ Los ejemplos usan los datos de ejemplo: Lince S/ 310,000, Surquillo y Magdalena.
 
 | ID | Dado | Cuando | Entonces |
 |---|---|---|---|
-| ESC-8.1 | Un propietario sin solicitudes | Ingresa | Llega a "Mis propiedades" y ve "Aún no publicaste ningún depa" y "Publicar mi depa". El menú tiene las secciones "Propietario" y "Mi cuenta" |
-| ESC-8.2 | "Publicar un depa" | Abre la pantalla | "Vender" y "Departamento" vienen marcados. Están los bloques "¿Qué quieres hacer?", "Tu depa" y "Fotos" ("opcional") |
+| ESC-8.1 | Un propietario sin solicitudes | Ingresa | Llega a "Mis propiedades" y ve "Aún no publicaste ningún inmueble" y "Publicar mi inmueble". El menú tiene las secciones "Propietario" y "Mi cuenta" |
+| ESC-8.2 | "Publicar un inmueble" | Abre la pantalla | "Vender" y "Departamento" vienen marcados. Están los bloques "¿Qué quieres hacer?", "Tu inmueble" y "Fotos" ("opcional") |
 | ESC-8.3 | El formulario | Elige "Alquilar" | El precio pasa a llamarse "Alquiler mensual (S/)" |
 | ESC-8.4 | El formulario | Envía sin distrito y con la dirección "ab" | Ve "Revisa los campos marcados.", "Too small: expected string to have >=2 characters" bajo "Distrito" y "Too small: expected string to have >=3 characters" bajo "Dirección" |
 | ESC-8.5 | El formulario | Envía "Dormitorios" = 60 o un precio con decimales | Ve solo "Revisa los campos marcados.". El campo no se marca |
 | ESC-8.6 | El formulario | Envía el precio "320.000" | Se guarda 320 |
-| ESC-8.7 | Datos válidos | Toca "Enviar para revisión" | El botón dice "Enviando…". Luego aparece "Recibimos tu depa. Lo revisaremos pronto." y se abre el detalle en "Enviada". El equipo recibe "Nueva solicitud de propietario · {distrito}" y el propietario no recibe correo |
+| ESC-8.7 | Datos válidos | Toca "Enviar para revisión" | El botón dice "Enviando…". Luego aparece "Recibimos tu inmueble. Lo revisaremos pronto." y se abre el detalle en "Enviada". El equipo recibe "Nueva solicitud de propietario · {distrito}" y el propietario no recibe correo |
 | ESC-8.8 | El formulario | Lo envía | No pide Turnstile |
 | ESC-8.9 | 10 envíos en un minuto desde la misma IP | Hace el 11 | Ve "Rate limit exceeded, retry in 1 minute" |
 | ESC-8.10 | R2 sin configurar | Elige fotos | Ve "La subida de fotos todavía no está disponible". Puede enviar sin fotos |
-| ESC-8.11 | R2 configurado | Elige 3 fotos JPG | El botón dice "Subiendo…". Las fotos aparecen en la cuadrícula, la primera con "Portada" y la descripción "Depa en {distrito}" |
+| ESC-8.11 | R2 configurado | Elige 3 fotos JPG | El botón dice "Subiendo…". Las fotos aparecen en la cuadrícula, la primera con "Portada" y la descripción "Inmueble en {distrito}" |
 | ESC-8.12 | Fotos subidas | Toca "Bajar" en la portada | Otra foto pasa a ser "Portada" |
 | ESC-8.13 | Una subida que falla en la segunda foto de un lote | Mira el resultado | Ve "No se pudo subir la foto. Inténtalo otra vez.". La primera se queda y las siguientes no se suben |
 | ESC-8.14 | 21 fotos en la solicitud | Envía | Ve "Revisa los campos marcados.", sin campo marcado |
@@ -3506,17 +3501,17 @@ Los ejemplos usan los datos de ejemplo: Lince S/ 310,000, Surquillo y Magdalena.
 | ESC-8.20 | El administrador la marca "No aprobada" con un comentario | El propietario abre el detalle | Ve "No aprobada" en rojo con X, "Comentario del equipo:" en rojo y "Editar". Le llega "Tu solicitud de {distrito} fue no aprobada" |
 | ESC-8.21 | Una solicitud "No aprobada" | La edita y guarda | Vuelve a "Enviada" y el comentario sigue visible |
 | ESC-8.22 | El administrador solo cambia el comentario | El propietario revisa | Ve el comentario nuevo y no le llega correo |
-| ESC-8.23 | El administrador crea la ficha visible desde la solicitud | El propietario abre el detalle | Ve "Publicada", las tarjetas "Estado en el sitio" ("Publicado"), "Veces guardado" y "Consultas", y "Ver mi depa en el sitio". No están "Editar" ni "Eliminar". Le llega "Tu solicitud de {distrito} fue aprobada y publicada" |
-| ESC-8.24 | La ficha guardada como borrador | El propietario revisa | La solicitud dice "Publicada", con "Estado en el sitio" "Borrador". "Ver mi depa en el sitio" da "No encontramos esta página" |
-| ESC-8.25 | Un depa publicado | Una persona con sesión lo guarda y luego lo quita | "Veces guardado" sube 1 y después baja 1 |
-| ESC-8.26 | Un depa publicado | Una persona sin sesión lo guarda | "Veces guardado" no cambia |
-| ESC-8.27 | Un depa publicado, con el sitio conectado al API | Un visitante sin cuenta toca dos veces "Escribir por WhatsApp" con ese depa | "Consultas" sube 2 |
+| ESC-8.23 | El administrador crea la ficha visible desde la solicitud | El propietario abre el detalle | Ve "Publicada", las tarjetas "Estado en el sitio" ("Publicado"), "Veces guardado" y "Consultas", y "Ver mi inmueble en el sitio". No están "Editar" ni "Eliminar". Le llega "Tu solicitud de {distrito} fue aprobada y publicada" |
+| ESC-8.24 | La ficha guardada como borrador | El propietario revisa | La solicitud dice "Publicada", con "Estado en el sitio" "Borrador". "Ver mi inmueble en el sitio" da "No encontramos esta página" |
+| ESC-8.25 | Un inmueble publicado | Una persona con sesión lo guarda y luego lo quita | "Veces guardado" sube 1 y después baja 1 |
+| ESC-8.26 | Un inmueble publicado | Una persona sin sesión lo guarda | "Veces guardado" no cambia |
+| ESC-8.27 | Un inmueble publicado, con el sitio conectado al API | Un visitante sin cuenta toca dos veces "Escribir por WhatsApp" con ese inmueble | "Consultas" sube 2 |
 | ESC-8.28 | Una solicitud en "Enviada", "En revisión" o "No aprobada" | Toca "Eliminar" y confirma | Ve "¿Eliminar la solicitud?" y "Se borrará la solicitud de {dirección}. No se puede deshacer.". Al confirmar ve "Eliminamos la solicitud" y vuelve a la lista |
 | ESC-8.29 | Una solicitud "Publicada" | Pide borrarla directo al API | El API responde "Una solicitud publicada no se puede borrar" |
 | ESC-8.30 | La ventana de eliminar abierta | Toca "Cancelar", la X, Esc o fuera | La ventana se cierra y la solicitud sigue |
 | ESC-8.31 | Un propietario | Abre `/mis-propiedades/{id}` de otra persona o de una solicitud que no existe | La pantalla se queda en "Cargando…", sin mensaje |
 | ESC-8.32 | Solicitudes en varios estados | Abre "Mis propiedades" | "En revisión" suma las "Enviada" y las "En revisión". "Publicados" cuenta las "Publicada". La lista va de la más nueva a la más antigua, con etiquetas de acción y estado |
 | ESC-8.33 | Una solicitud sin precio | Mira la fila | Dice "Precio por definir" |
-| ESC-8.34 | Un propietario | Cambia a "Invertir en depas" en "Perfil" | Va a "Mis depas" y ya no ve "Mis propiedades". Al volver a "Vender o alquilar mi depa", las solicitudes siguen ahí |
+| ESC-8.34 | Un propietario | Cambia a "Invertir en inmuebles" en "Perfil" | Va a "Mis inmuebles" y ya no ve "Mis propiedades". Al volver a "Vender o alquilar mi inmueble", las solicitudes siguen ahí |
 | ESC-8.35 | Un propietario sin sesión | Abre el enlace del correo de cambio de estado | Pasa por "Ingresa a tu cuenta" y luego llega a esa solicitud |
 | ESC-8.36 | Un propietario con sesión | Envía el formulario de `/propietarios` del sitio | No se crea una solicitud en "Mis propiedades". Aparece en "Mis consultas" |

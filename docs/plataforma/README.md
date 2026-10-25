@@ -26,10 +26,10 @@ escritos con [Mermaid](https://mermaid.js.org/). GitHub y VS Code (con la extens
 
 Depa Host Perú (depahostperu.com) tiene tres líneas de negocio:
 
-- **Estadías:** reservar un depa por días. Hoy es una página "en construcción".
-- **Propietarios:** vender o alquilar un depa, en largo plazo o en Airbnb.
-- **DepaHost Capital:** comprar departamentos en Lima para que rindan. Es la parte más
-  desarrollada: catálogo, inmobiliarias aliadas, recomendaciones y "Mis depas".
+- **Estadías:** reservar un inmueble por días. Hoy es una página "en construcción".
+- **Propietarios:** vender o alquilar un inmueble, en largo plazo o en Airbnb.
+- **DepaHost Capital:** comprar inmuebles en Lima para que rindan. Es la parte más
+  desarrollada: catálogo, inmobiliarias aliadas, recomendaciones y "Mis inmuebles".
 
 Técnicamente son **tres repositorios** que se hablan por HTTP:
 
@@ -58,27 +58,27 @@ flowchart LR
     V -- "abre páginas" --> H
     V -- "envía formularios" --> A
     A --- DB
-    H -. "el build lee los depas" .-> A
+    H -. "el build lee los inmuebles" .-> A
     A -. "deploy hook: reconstruir" .-> H
     V -- "conversa con el equipo" --> W
 ```
 
 **La idea central:** las páginas se generan una vez, en el build, con los datos del API. Lo que
-depende de cada visitante se arma en su navegador: sus depas guardados, sus recomendaciones,
-su nombre. Los formularios van directo al API. Cuando el equipo publica o edita un depa, el
+depende de cada visitante se arma en su navegador: sus inmuebles guardados, sus recomendaciones,
+su nombre. Los formularios van directo al API. Cuando el equipo publica o edita un inmueble, el
 API pide al hosting que vuelva a construir el sitio. Quien crea una cuenta en el panel tiene su
-sesión también en el sitio, y sus depas guardados se sincronizan entre los dos.
+sesión también en el sitio, y sus inmuebles guardados se sincronizan entre los dos.
 
 ## Glosario
 
 | Término | Significado |
 |---|---|
-| **Depa de propietario** (`origin: owner`) | Depa que publica una persona dueña. Aparece en la portada de Capital. |
-| **Proyecto** (`origin: developer`) | Depa de una inmobiliaria aliada. Aparece en la página de esa inmobiliaria. |
+| **Inmueble de propietario** (`origin: owner`) | Inmueble que publica una persona dueña. Aparece en la portada de Capital. |
+| **Proyecto** (`origin: developer`) | Inmueble de una inmobiliaria aliada. Aparece en la página de esa inmobiliaria. |
 | **Inmobiliaria aliada** (`developer`) | Empresa con proyectos en el catálogo. Tiene su página `/capital/aliados/{slug}`. |
-| **Mis depas** | Lista de depas que la persona marcó con "Me interesa". Vive en su navegador. |
-| **Historial** | Últimos depas que la persona abrió. Alimenta "Para ti, según lo que has visto". |
-| **Lead** | Registro de interés que llega al API: formularios, "Guarda tus depas" o "Empecemos". |
+| **Mis inmuebles** | Lista de inmuebles que la persona marcó con "Me interesa". Vive en su navegador. |
+| **Historial** | Últimos inmuebles que la persona abrió. Alimenta "Para ti, según lo que has visto". |
+| **Lead** | Registro de interés que llega al API: formularios, "Guarda tus inmuebles" o "Empecemos". |
 | **Reclamo / queja** | Registro del Libro de Reclamaciones, con código correlativo y plazo legal de respuesta. |
 | **Build** | El momento en que Astro genera todas las páginas. Pasa al publicar y con cada deploy hook. |
 | **Deploy hook** | URL secreta del hosting que, al llamarla, reconstruye el sitio. |
@@ -87,7 +87,7 @@ sesión también en el sitio, y sus depas guardados se sincronizan entre los dos
 | **Turnstile** | Verificación anti-bots de Cloudflare en los formularios. |
 | **Cuenta** | Usuario con rol comprador (`buyer`), propietario (`seller`) o administrador (`admin`). |
 | **Sesión** | Cookie `dh_session` que el API entrega al ingresar; la comparten sitio, panel y API. |
-| **Solicitud de propietario** | Depa que un propietario envía desde el panel; el equipo la revisa y la publica. |
+| **Solicitud de propietario** | Inmueble que un propietario envía desde el panel; el equipo la revisa y la publica. |
 | **Honeypot** | Campo oculto que solo llenan los bots. Si viene lleno, el envío se descarta en silencio. |
 | **Preproducción** | Copia de producción que corre en tu máquina: builds de producción contra su propia base (`depahost_preprod`). Sirve para probar antes de publicar. |
 | **Postgres local** | Servidor PostgreSQL del proyecto en `depahost-api/.data/postgres`, que se enciende con `pnpm db:up`. Tiene las bases de desarrollo y preproducción. |
@@ -98,11 +98,11 @@ sesión también en el sitio, y sus depas guardados se sincronizan entre los dos
 | Ruta | Qué muestra |
 |---|---|
 | `/` | Home de Depa Host Perú con los tres servicios |
-| `/capital` | Portada de Capital: depas de propietarios, "Para ti" y aliados |
-| `/capital/depas` | Todos los depas con filtros por tipo, distrito, inmobiliaria, precio, rentabilidad y plazo, y orden |
-| `/capital/{slug}` | Detalle de un depa: galería, datos, caja de compra, aliado y depas similares |
+| `/capital` | Portada de Capital: inmuebles de propietarios, "Para ti" y aliados |
+| `/capital/inmuebles` | Todos los inmuebles con filtros por tipo, distrito, inmobiliaria, precio, rentabilidad y plazo, y orden |
+| `/capital/{slug}` | Detalle de un inmueble: galería, datos, caja de compra, aliado y inmuebles similares |
 | `/capital/aliados/{slug}` | Proyectos de una inmobiliaria aliada |
-| `/mis-depas` | Depas guardados, resumen, inversión total y paso a WhatsApp. `/carrito` y `/capital/empecemos` redirigen aquí |
+| `/mis-inmuebles` | Inmuebles guardados, resumen, inversión total y paso a WhatsApp. `/carrito` y `/capital/empecemos` redirigen aquí |
 | `/propietarios` | Formulario para vender o alquilar |
 | `/libro-de-reclamaciones` | Libro de Reclamaciones virtual |
 | `/privacidad`, `/terminos` | Textos legales (borradores pendientes de revisión legal) |

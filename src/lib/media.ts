@@ -1,4 +1,4 @@
-// Videos de los depas: un link de YouTube o Vimeo, o un archivo de video (.mp4, .webm).
+// Videos de los inmuebles: un link de YouTube o Vimeo, o un archivo de video (.mp4, .webm).
 // YouTube y Vimeo se insertan con su reproductor en modo privado (sin cookies de seguimiento)
 // y solo al tocar "reproducir", para no cargar sus scripts antes de tiempo.
 

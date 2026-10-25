@@ -32,7 +32,7 @@ export function getAccount(): Promise<AccountUser | null> {
 let syncing = false
 
 /**
- * Une "Mis depas" del navegador con los de la cuenta y, desde ahí, guarda cada cambio en la cuenta.
+ * Une "Mis inmuebles" del navegador con los de la cuenta y, desde ahí, guarda cada cambio en la cuenta.
  * Así lo que la persona guardó antes de iniciar sesión no se pierde.
  */
 export async function syncSavedWithAccount() {

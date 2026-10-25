@@ -192,19 +192,19 @@ Detalles del servidor:
 | POST | `/v1/auth/reset-password` | Sin sesión | Contraseña nueva con el token; cierra todas las sesiones |
 | PATCH | `/v1/me` | Con sesión | Nombre, teléfono y rol comprador ↔ propietario |
 | POST | `/v1/me/password` | Con sesión | Cambia la contraseña y cierra las demás sesiones |
-| GET, PUT | `/v1/me/saved` | Con sesión | Mis depas de la cuenta (PUT reemplaza la lista) |
+| GET, PUT | `/v1/me/saved` | Con sesión | Mis inmuebles de la cuenta (PUT reemplaza la lista) |
 | GET | `/v1/me/leads` | Con sesión | Leads enviados con la sesión iniciada |
 | GET, POST | `/v1/me/owner-requests` | Propietario o admin | Sus solicitudes |
 | GET, PATCH, DELETE | `/v1/me/owner-requests/{id}` | Propietario o admin | Una solicitud (editar solo si está enviada o rechazada) |
-| POST | `/v1/me/uploads` | Propietario o admin | URL prefirmada de R2 para fotos de su depa |
+| POST | `/v1/me/uploads` | Propietario o admin | URL prefirmada de R2 para fotos de su inmueble |
 
 ### Administración (sesión de admin o `Authorization: Bearer <ADMIN_API_KEY>`)
 
 | Método | Ruta | Qué hace |
 |---|---|---|
-| GET | `/v1/admin/properties` | Todos los depas, incluidos borradores y vendidos |
-| POST | `/v1/admin/properties` | Crea un depa |
-| GET | `/v1/admin/properties/{id}` | Un depa |
+| GET | `/v1/admin/properties` | Todos los inmuebles, incluidos borradores y vendidos |
+| POST | `/v1/admin/properties` | Crea un inmueble |
+| GET | `/v1/admin/properties/{id}` | Un inmueble |
 | PATCH | `/v1/admin/properties/{id}` | Edita. Si se envía `images`, reemplaza todas las fotos |
 | DELETE | `/v1/admin/properties/{id}` | Borra (las fotos se borran en cascada) |
 | GET, POST | `/v1/admin/districts` | Lista y crea distritos (409 si el slug existe) |
@@ -214,7 +214,7 @@ Detalles del servidor:
 | GET | `/v1/admin/leads` | Leads del más nuevo al más viejo, filtrables por `source` y `status` |
 | PATCH | `/v1/admin/leads/{id}` | Mueve el lead por el embudo: `new`, `contacted`, `closed` |
 | GET | `/v1/admin/owner-requests`, `/{id}` | Solicitudes de propietarios con sus datos de contacto |
-| PATCH | `/v1/admin/owner-requests/{id}` | Cambia el estado, deja un comentario o vincula el depa publicado (avisa al propietario) |
+| PATCH | `/v1/admin/owner-requests/{id}` | Cambia el estado, deja un comentario o vincula el inmueble publicado (avisa al propietario) |
 | GET | `/v1/admin/users` | Cuentas, con búsqueda `q` y filtro `role` |
 | PATCH | `/v1/admin/users/{id}` | Cambia el rol (nunca el propio) |
 | GET | `/v1/admin/stats` | Indicadores del resumen del panel |
@@ -238,7 +238,7 @@ el mismo `name` en el formulario.
 
 ## 5. Reglas de negocio por módulo
 
-### Depas (`modules/properties`)
+### Inmuebles (`modules/properties`)
 
 | Regla | Detalle |
 |---|---|
@@ -246,11 +246,11 @@ el mismo `name` en el formulario.
 | Visibilidad | Catálogo: `published` y `reserved`. Detalle: además `sold`. `draft` nunca sale por la API pública |
 | Orden | Destacados primero, luego más recientes (`publishedAt`), luego `id` |
 | Slug | Si no se envía: `slugify(distrito + dirección)`. Si existe, agrega `-2`, `-3`… |
-| `publishedAt` | Se fija la primera vez que el depa deja de ser borrador |
+| `publishedAt` | Se fija la primera vez que el inmueble deja de ser borrador |
 | Origen | `owner` (propietario) o `developer` (proyecto). Un proyecto exige `developerId` de una inmobiliaria existente |
 | Rentabilidad | `yield.min` no puede ser mayor que `yield.max` |
 | Fotos | Se guardan en orden (`position`). Editar `images` reemplaza la lista entera |
-| Rebuild | Crear, editar o borrar un depa visible llama al deploy hook. Editar un borrador que sigue siendo borrador no lo llama |
+| Rebuild | Crear, editar o borrar un inmueble visible llama al deploy hook. Editar un borrador que sigue siendo borrador no lo llama |
 
 ### Inmobiliarias (`modules/developers`)
 
@@ -265,8 +265,8 @@ el mismo `name` en el formulario.
 | `intl-form` | Formulario en inglés de Capital | Nombre + correo o teléfono | Sí |
 | `owner-sell` | Propietarios con "Vender" | Nombre + correo o teléfono | Sí |
 | `owner-rent` | Propietarios con "Alquilar" o "Airbnb" | Nombre + correo o teléfono | Sí |
-| `saved-list` | Diálogo "Guarda tus depas" | Nombre + correo o teléfono | Sí |
-| `cart` | Clic en WhatsApp de "Te acompañamos" | Ninguno (solo IDs de depas) | No |
+| `saved-list` | Diálogo "Guarda tus inmuebles" | Nombre + correo o teléfono | Sí |
+| `cart` | Clic en WhatsApp de "Te acompañamos" | Ninguno (solo IDs de inmuebles) | No |
 | `contact` | Reservado para un contacto general | Nombre + correo o teléfono | Sí |
 
 Reglas comunes:
@@ -302,7 +302,7 @@ Reglas comunes:
 1. El panel pide `POST /v1/admin/uploads` con nombre y tipo (JPEG, PNG, WebP o AVIF).
 2. El API responde una URL prefirmada de R2 válida 10 minutos y la URL pública final.
 3. El panel hace `PUT` del archivo directo a R2. El API nunca recibe el archivo.
-4. El panel agrega la URL pública a `images` del depa con `PATCH`.
+4. El panel agrega la URL pública a `images` del inmueble con `PATCH`.
 
 ## 6. Seguridad
 
@@ -341,7 +341,7 @@ Cada entorno tiene su archivo de ejemplo: `.env.example` (desarrollo), `.env.pre
 | `PANEL_URL` | Sí | URL del panel para los enlaces de los correos |
 | `TURNSTILE_SECRET` | Sí | Verificación anti-bots |
 | `RESEND_API_KEY`, `MAIL_FROM`, `NOTIFY_EMAIL` | Recomendadas | Correos de constancia y avisos |
-| `DEPLOY_HOOK_URL` | Recomendada | Reconstruir el sitio al cambiar depas |
+| `DEPLOY_HOOK_URL` | Recomendada | Reconstruir el sitio al cambiar inmuebles |
 | `CRM_WEBHOOK_URL` | Opcional | Enviar cada lead al CRM |
 | `SENTRY_DSN`, `SENTRY_ENVIRONMENT` | Opcional | Errores; el entorno separa preproducción (`preprod`) de producción |
 | `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET`, `R2_PUBLIC_URL` | Para subir fotos | Cloudflare R2 |

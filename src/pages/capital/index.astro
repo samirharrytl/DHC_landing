@@ -24,7 +24,7 @@ const steps = [
   { number: 4, title: 'Cierras' },
 ]
 
-// La portada muestra los depas de propietarios; los proyectos de inmobiliarias están en sus páginas
+// La portada muestra los inmuebles de propietarios; los proyectos de inmobiliarias están en sus páginas
 const depas = await getOwnerProperties()
 const total = (await getProperties()).length
 const fastFilters = await getFastFilters(depas)
@@ -44,9 +44,9 @@ const disclaimer = buildDisclaimer(await getFinancingAssumptions())
         <span>Los mejores inmuebles</span>
         <span>para invertir en Lima.</span>
       </h1>
-      <p class="hero-sub">Depas de propietarios, elegidos por ubicación, rentabilidad y plusvalía.</p>
+      <p class="hero-sub">Seleccionados según el perfil, necesidades y objetivos de cada cliente.</p>
       <div class="btn-group ctas">
-        <Button href="/capital/depas">Ver todos los proyectos</Button>
+        <Button href="/capital/inmuebles">Ver todos los proyectos</Button>
       </div>
     </div>
 
@@ -61,33 +61,41 @@ const disclaimer = buildDisclaimer(await getFinancingAssumptions())
     </div>
   </section>
 
-  <!-- ---------- Depas de propietarios: buscador, filtros y tarjetas ---------- -->
-  <section id="proyectos" class="container listing" data-filter-root aria-labelledby="depas-title">
+  <!-- ---------- Inmuebles de propietarios: buscador, filtros y tarjetas ---------- -->
+  <!-- Máximo 6 inmuebles a la vista; el buscador y los filtros buscan entre todos (property-filters.ts) -->
+  <section
+    id="proyectos"
+    class="container listing"
+    data-filter-root
+    data-max-visible="6"
+    data-filter-pending
+    aria-labelledby="depas-title"
+  >
     <h2 id="depas-title" class="sr-only">
-      Depas de propietarios
+      Inmuebles de propietarios
     </h2>
     <SearchFilters filters={fastFilters} />
 
-    <PropertyGrid id="lista-depas" label="Depas de propietarios">
+    <PropertyGrid id="lista-inmuebles" label="Inmuebles de propietarios">
       {depas.map((d, index) => (
         <PropertyCard property={d} priority={index < 3} />
       ))}
       <!-- Al final de la lista: lleva a la búsqueda con todos los filtros -->
-      <a class="see-all-tile" href="/capital/depas">
+      <a class="see-all-tile" href="/capital/inmuebles">
         <span class="see-all-icon">
           <Icon name="search" size={26} />
         </span>
         <span class="see-all-text">
           <strong>Ver todos los proyectos</strong>
           <span>
-            {total} depas de propietarios e inmobiliarias, con filtros por distrito, precio y rentabilidad
+            {total} inmuebles de propietarios e inmobiliarias, con filtros por distrito, precio y rentabilidad
           </span>
         </span>
         <Icon name="arrow-right" size={24} class="see-all-arrow" />
       </a>
     </PropertyGrid>
     <p class="no-results" data-filter-empty role="status" hidden>
-      No encontramos departamentos con esos criterios.
+      No encontramos inmuebles con esos criterios.
     </p>
     <p class="disclaimer">{disclaimer}</p>
   </section>
@@ -109,10 +117,10 @@ const disclaimer = buildDisclaimer(await getFinancingAssumptions())
     container-type: inline-size;
   }
   .hero h1 {
-    /* 2 líneas en cualquier pantalla: la más larga ("Los mejores inmuebles") mide ~9.7em,
-       así que el tamaño sale del ancho disponible (10cqi deja un margen), con tope de 60px.
-       Si cambia el texto, hay que volver a medir la línea más larga */
-    font-size: min(3.75rem, 10cqi);
+    /* 2 líneas en cualquier pantalla: la más larga ("Los mejores inmuebles") mide ~11.35em en Poppins,
+       así que el tamaño sale del ancho disponible (8.6cqi deja un margen), con tope de 60px.
+       Si cambia el texto o la fuente, hay que volver a medir la línea más larga */
+    font-size: min(3.75rem, 8.6cqi);
     line-height: 1.05;
     color: var(--color-navy-800);
   }
@@ -128,6 +136,10 @@ const disclaimer = buildDisclaimer(await getFinancingAssumptions())
   }
   .ctas {
     margin-top: var(--space-6);
+  }
+  /* Antes de que corra el script de filtros: solo las primeras 6 tarjetas (sin salto al cargar) */
+  .listing[data-filter-pending] :global(article[data-property-card]:nth-of-type(n + 7)) {
+    display: none;
   }
   .listing {
     padding-bottom: var(--space-4);
@@ -191,7 +203,9 @@ const disclaimer = buildDisclaimer(await getFinancingAssumptions())
       flex: none;
     }
   }
-  @media (min-width: 1024px) {
+  /* Pasos a la derecha del título solo desde 1280px: antes no entran los 4 en la columna
+     y se montan sobre el título; quedan debajo, como en tablet */
+  @media (min-width: 1280px) {
     .hero {
       display: grid;
       /* el título (izquierda) necesita más ancho para quedar en 2 líneas */
@@ -206,11 +220,19 @@ const disclaimer = buildDisclaimer(await getFinancingAssumptions())
   }
 
   /* ---------- Pasos ---------- */
-  /* Móvil: vertical (lo maneja Step). Desde 640px: 4 columnas */
+  /* Móvil: no se muestran (el hero queda corto y la lista sube). Desde 640px: 4 columnas */
+  .hero-steps {
+    display: none;
+  }
   .stepper {
     margin: var(--space-8) 0 0;
     padding: 0;
     list-style: none;
+  }
+  @media (min-width: 640px) {
+    .hero-steps {
+      display: block;
+    }
   }
   @media (min-width: 640px) {
     .stepper {

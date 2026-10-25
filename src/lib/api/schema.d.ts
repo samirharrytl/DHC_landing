@@ -66,7 +66,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Catálogo público de depas (publicados y reservados) */
+        /** Catálogo público de inmuebles (publicados y reservados) */
         get: {
             parameters: {
                 query?: {
@@ -125,7 +125,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Detalle de un depa */
+        /** Detalle de un inmueble */
         get: {
             parameters: {
                 query?: never;
@@ -337,7 +337,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Registrar un lead (formularios del sitio y "Empecemos con estos") */
+        /** Registrar un lead (formularios del sitio y "Mis inmuebles") */
         post: {
             parameters: {
                 query?: never;
@@ -850,7 +850,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Mis depas guardados */
+        /** Mis inmuebles guardados */
         get: {
             parameters: {
                 query?: never;
@@ -871,7 +871,7 @@ export interface paths {
                 };
             };
         };
-        /** Reemplazar Mis depas (el sitio une lo del navegador con lo de la cuenta) */
+        /** Reemplazar Mis inmuebles (el sitio une lo del navegador con lo de la cuenta) */
         put: {
             parameters: {
                 query?: never;
@@ -946,7 +946,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Mis depas enviados para vender o alquilar */
+        /** Mis inmuebles enviados para vender o alquilar */
         get: {
             parameters: {
                 query?: never;
@@ -968,7 +968,7 @@ export interface paths {
             };
         };
         put?: never;
-        /** Enviar un depa para que el equipo lo revise */
+        /** Enviar un inmueble para que el equipo lo revise */
         post: {
             parameters: {
                 query?: never;
@@ -1144,7 +1144,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** URL prefirmada para subir una foto de mi depa */
+        /** URL prefirmada para subir una foto de mi inmueble */
         post: {
             parameters: {
                 query?: never;
@@ -1202,7 +1202,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Todos los depas (incluye borradores y vendidos) */
+        /** Todos los inmuebles (incluye borradores y vendidos) */
         get: {
             parameters: {
                 query?: {
@@ -1227,7 +1227,7 @@ export interface paths {
             };
         };
         put?: never;
-        /** Crear depa */
+        /** Crear inmueble */
         post: {
             parameters: {
                 query?: never;
@@ -1338,7 +1338,7 @@ export interface paths {
         };
         options?: never;
         head?: never;
-        /** Editar depa. Si se envía images, reemplaza todas las fotos. */
+        /** Editar inmueble. Si se envía images, reemplaza todas las fotos. */
         patch: {
             parameters: {
                 query?: never;
@@ -1600,7 +1600,7 @@ export interface paths {
         get: {
             parameters: {
                 query?: {
-                    /** @description intl-form: formulario en inglés · owner-*: propietarios · cart: "Empecemos con estos" de Mis depas · saved-list: "Guarda tus depas" */
+                    /** @description intl-form: formulario en inglés · owner-*: propietarios · cart: "Conversemos ahora" o "Programar una sesión" de Mis inmuebles · saved-list: "Guarda tus inmuebles" */
                     source?: "intl-form" | "owner-sell" | "owner-rent" | "cart" | "contact" | "saved-list";
                     /** @description new: sin contactar · contacted: en conversación · closed: cerrado */
                     status?: "new" | "contacted" | "closed";
@@ -1909,7 +1909,7 @@ export interface paths {
         delete?: never;
         options?: never;
         head?: never;
-        /** Revisar: cambiar estado, dejar un comentario o vincular el depa publicado (avisa al propietario) */
+        /** Revisar: cambiar estado, dejar un comentario o vincular el inmueble publicado (avisa al propietario) */
         patch: {
             parameters: {
                 query?: never;
@@ -2354,7 +2354,7 @@ export interface components {
                 /** @description Rentabilidad anual máxima estimada, en % */
                 max: number;
             };
-            /** @description Años en que la renta paga el depa */
+            /** @description Años en que la renta paga el inmueble */
             paybackYears: number;
             areaM2: number | null;
             bedrooms: number | null;
@@ -2415,7 +2415,7 @@ export interface components {
                 /** @description Rentabilidad anual máxima estimada, en % */
                 max: number;
             };
-            /** @description Años en que la renta paga el depa */
+            /** @description Años en que la renta paga el inmueble */
             paybackYears: number;
             areaM2: number | null;
             bedrooms: number | null;
@@ -2568,7 +2568,7 @@ export interface components {
         };
         LeadCreateInput: {
             /**
-             * @description intl-form: formulario en inglés · owner-*: propietarios · cart: "Empecemos con estos" de Mis depas · saved-list: "Guarda tus depas"
+             * @description intl-form: formulario en inglés · owner-*: propietarios · cart: "Conversemos ahora" o "Programar una sesión" de Mis inmuebles · saved-list: "Guarda tus inmuebles"
              * @enum {string}
              */
             source: "intl-form" | "owner-sell" | "owner-rent" | "cart" | "contact" | "saved-list";
@@ -2614,7 +2614,7 @@ export interface components {
             /** Format: uuid */
             id: string;
             /**
-             * @description intl-form: formulario en inglés · owner-*: propietarios · cart: "Empecemos con estos" de Mis depas · saved-list: "Guarda tus depas"
+             * @description intl-form: formulario en inglés · owner-*: propietarios · cart: "Conversemos ahora" o "Programar una sesión" de Mis inmuebles · saved-list: "Guarda tus inmuebles"
              * @enum {string}
              */
             source: "intl-form" | "owner-sell" | "owner-rent" | "cart" | "contact" | "saved-list";
@@ -2682,7 +2682,7 @@ export interface components {
             status: "submitted" | "in_review" | "approved" | "rejected";
             /** @description Comentario del equipo para el propietario */
             adminNote: string | null;
-            /** @description Depa publicado a partir de esta solicitud */
+            /** @description Inmueble publicado a partir de esta solicitud */
             property: {
                 /** Format: uuid */
                 id: string;
@@ -2690,7 +2690,7 @@ export interface components {
                 /** @enum {string} */
                 status: "draft" | "published" | "reserved" | "sold";
             } | null;
-            /** @description Interés en el depa publicado: veces guardado y consultas */
+            /** @description Interés en el inmueble publicado: veces guardado y consultas */
             stats: {
                 saves: number;
                 leads: number;
@@ -2728,7 +2728,7 @@ export interface components {
             status: "submitted" | "in_review" | "approved" | "rejected";
             /** @description Comentario del equipo para el propietario */
             adminNote: string | null;
-            /** @description Depa publicado a partir de esta solicitud */
+            /** @description Inmueble publicado a partir de esta solicitud */
             property: {
                 /** Format: uuid */
                 id: string;
@@ -2736,7 +2736,7 @@ export interface components {
                 /** @enum {string} */
                 status: "draft" | "published" | "reserved" | "sold";
             } | null;
-            /** @description Interés en el depa publicado: veces guardado y consultas */
+            /** @description Interés en el inmueble publicado: veces guardado y consultas */
             stats: {
                 saves: number;
                 leads: number;
@@ -2802,7 +2802,7 @@ export interface components {
              */
             status?: "submitted" | "in_review" | "approved" | "rejected";
             adminNote?: string | null;
-            /** @description Depa creado a partir de la solicitud */
+            /** @description Inmueble creado a partir de la solicitud */
             propertyId?: string | null;
         };
         AdminOwnerRequestPageInput: {
@@ -3101,7 +3101,7 @@ export interface components {
                 /** @description Rentabilidad anual máxima estimada, en % */
                 max: number;
             };
-            /** @description Años en que la renta paga el depa */
+            /** @description Años en que la renta paga el inmueble */
             paybackYears: number;
             areaM2: number | null;
             bedrooms: number | null;
@@ -3162,7 +3162,7 @@ export interface components {
                 /** @description Rentabilidad anual máxima estimada, en % */
                 max: number;
             };
-            /** @description Años en que la renta paga el depa */
+            /** @description Años en que la renta paga el inmueble */
             paybackYears: number;
             areaM2: number | null;
             bedrooms: number | null;
@@ -3315,7 +3315,7 @@ export interface components {
         };
         LeadCreate: {
             /**
-             * @description intl-form: formulario en inglés · owner-*: propietarios · cart: "Empecemos con estos" de Mis depas · saved-list: "Guarda tus depas"
+             * @description intl-form: formulario en inglés · owner-*: propietarios · cart: "Conversemos ahora" o "Programar una sesión" de Mis inmuebles · saved-list: "Guarda tus inmuebles"
              * @enum {string}
              */
             source: "intl-form" | "owner-sell" | "owner-rent" | "cart" | "contact" | "saved-list";
@@ -3361,7 +3361,7 @@ export interface components {
             /** Format: uuid */
             id: string;
             /**
-             * @description intl-form: formulario en inglés · owner-*: propietarios · cart: "Empecemos con estos" de Mis depas · saved-list: "Guarda tus depas"
+             * @description intl-form: formulario en inglés · owner-*: propietarios · cart: "Conversemos ahora" o "Programar una sesión" de Mis inmuebles · saved-list: "Guarda tus inmuebles"
              * @enum {string}
              */
             source: "intl-form" | "owner-sell" | "owner-rent" | "cart" | "contact" | "saved-list";
@@ -3429,7 +3429,7 @@ export interface components {
             status: "submitted" | "in_review" | "approved" | "rejected";
             /** @description Comentario del equipo para el propietario */
             adminNote: string | null;
-            /** @description Depa publicado a partir de esta solicitud */
+            /** @description Inmueble publicado a partir de esta solicitud */
             property: {
                 /** Format: uuid */
                 id: string;
@@ -3437,7 +3437,7 @@ export interface components {
                 /** @enum {string} */
                 status: "draft" | "published" | "reserved" | "sold";
             } | null;
-            /** @description Interés en el depa publicado: veces guardado y consultas */
+            /** @description Interés en el inmueble publicado: veces guardado y consultas */
             stats: {
                 saves: number;
                 leads: number;
@@ -3475,7 +3475,7 @@ export interface components {
             status: "submitted" | "in_review" | "approved" | "rejected";
             /** @description Comentario del equipo para el propietario */
             adminNote: string | null;
-            /** @description Depa publicado a partir de esta solicitud */
+            /** @description Inmueble publicado a partir de esta solicitud */
             property: {
                 /** Format: uuid */
                 id: string;
@@ -3483,7 +3483,7 @@ export interface components {
                 /** @enum {string} */
                 status: "draft" | "published" | "reserved" | "sold";
             } | null;
-            /** @description Interés en el depa publicado: veces guardado y consultas */
+            /** @description Interés en el inmueble publicado: veces guardado y consultas */
             stats: {
                 saves: number;
                 leads: number;
@@ -3549,7 +3549,7 @@ export interface components {
              */
             status?: "submitted" | "in_review" | "approved" | "rejected";
             adminNote?: string | null;
-            /** @description Depa creado a partir de la solicitud */
+            /** @description Inmueble creado a partir de la solicitud */
             propertyId?: string | null;
         };
         AdminOwnerRequestPage: {

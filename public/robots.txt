@@ -1,6 +1,7 @@
 User-agent: *
 Allow: /
 Disallow: /carrito
+Disallow: /mis-inmuebles
 Disallow: /mis-depas
 Disallow: /capital/empecemos
 Disallow: /data/

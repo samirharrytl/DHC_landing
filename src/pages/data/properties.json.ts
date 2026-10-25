@@ -1,5 +1,5 @@
 // /data/properties.json: catálogo liviano generado en el build para las partes que dependen
-// del navegador de cada persona: Mis depas, "Para ti, según lo que has visto" y "Te acompañamos".
+// del navegador de cada persona: Mis inmuebles, "Para ti, según lo que has visto" y "Te acompañamos".
 // Las fotos ya van optimizadas (WebP en varios tamaños).
 import type { APIRoute } from 'astro'
 import { getImage } from 'astro:assets'

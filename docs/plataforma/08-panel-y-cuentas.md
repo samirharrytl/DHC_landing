@@ -5,9 +5,9 @@ es una app Vue en su propio repo, `depahost-panel`, servida en `app.depahostperu
 
 | Rol | Valor en el API | Qué hace en el panel |
 |---|---|---|
-| Comprador | `buyer` | Mis depas (sincronizado con el sitio), Mis consultas, Perfil |
-| Propietario | `seller` | Publicar su depa, seguir la revisión y el interés que genera, más lo del comprador |
-| Administrador | `admin` | Resumen, depas, solicitudes de propietarios, leads, reclamos, inmobiliarias, usuarios y configuración |
+| Comprador | `buyer` | Mis inmuebles (sincronizado con el sitio), Mis consultas, Perfil |
+| Propietario | `seller` | Publicar su inmueble, seguir la revisión y el interés que genera, más lo del comprador |
+| Administrador | `admin` | Resumen, inmuebles, solicitudes de propietarios, leads, reclamos, inmobiliarias, usuarios y configuración |
 
 ## 1. Las tres apps y la sesión
 
@@ -114,7 +114,7 @@ classDiagram
 | `/ingresar`, `/registro`, `/recuperar` | Sin sesión | Ingreso, registro (elige comprador o propietario), recuperar contraseña |
 | `/restablecer?token=` | Cualquiera | Contraseña nueva desde el correo |
 | `/` | Con sesión | Lleva al inicio de su rol |
-| `/mis-depas`, `/mis-consultas`, `/perfil` | Cualquier rol | Cuenta |
+| `/mis-inmuebles`, `/mis-consultas`, `/perfil` | Cualquier rol | Cuenta |
 | `/mis-propiedades`, `/mis-propiedades/nueva`, `/mis-propiedades/:id`, `/:id/editar` | Propietario o admin | Sus solicitudes |
 | `/admin`, `/admin/depas`, `/admin/depas/nuevo`, `/admin/depas/:id` | Admin | Resumen y catálogo |
 | `/admin/solicitudes`, `/admin/solicitudes/:id` | Admin | Revisión de propietarios |
@@ -145,7 +145,7 @@ flowchart TB
     R -- no --> HOME
 ```
 
-Inicio de cada rol: comprador → `/mis-depas`, propietario → `/mis-propiedades`, admin → `/admin`.
+Inicio de cada rol: comprador → `/mis-inmuebles`, propietario → `/mis-propiedades`, admin → `/admin`.
 `volver` solo acepta rutas internas: un link `?volver=https://otro-sitio` no redirige afuera.
 
 **La seguridad real está en el API.** El panel oculta lo que no corresponde, pero cada endpoint
@@ -163,7 +163,7 @@ sequenceDiagram
     participant API as depahost-api
     participant DB as PostgreSQL
 
-    P->>UI: /registro: elige "Quiero invertir" o "Tengo un depa"
+    P->>UI: /registro: elige "Quiero invertir" o "Tengo un inmueble"
     P->>UI: nombre, correo, celular, contraseña (10+), acepta privacidad
     UI->>API: POST /v1/auth/register con turnstileToken
     API->>API: Turnstile · correo en minúsculas · rol solo buyer o seller
@@ -203,7 +203,7 @@ sequenceDiagram
     API-->>UI: 204
 ```
 
-### Mis depas: del navegador a la cuenta
+### Mis inmuebles: del navegador a la cuenta
 
 ```mermaid
 sequenceDiagram
@@ -233,10 +233,10 @@ sequenceDiagram
     end
 ```
 
-El panel lee la misma lista con `GET /v1/me/saved` y los datos de cada depa con
-`GET /v1/properties?ids=`. Quitar un depa en el panel hace `PUT` sin ese ID.
+El panel lee la misma lista con `GET /v1/me/saved` y los datos de cada inmueble con
+`GET /v1/properties?ids=`. Quitar un inmueble en el panel hace `PUT` sin ese ID.
 
-Los leads que se envían con sesión iniciada (Guarda tus depas, Te acompañamos, formularios)
+Los leads que se envían con sesión iniciada (Guarda tus inmuebles, Te acompañamos, formularios)
 quedan vinculados a la cuenta y aparecen en **Mis consultas** con su estado.
 
 ## 5. Solicitudes de propietarios
@@ -250,7 +250,7 @@ stateDiagram-v2
     submitted --> in_review : el admin la pasa a revisión
     submitted --> rejected : el admin no la aprueba (con comentario)
     in_review --> rejected : el admin no la aprueba
-    in_review --> approved : el admin la publica como depa
+    in_review --> approved : el admin la publica como inmueble
     submitted --> approved : el admin la publica directo
     rejected --> submitted : el propietario la corrige y la reenvía
     approved --> [*]
@@ -259,7 +259,7 @@ stateDiagram-v2
         El propietario ya no puede editarla
     end note
     note right of approved
-        Queda vinculada al depa publicado.
+        Queda vinculada al inmueble publicado.
         El propietario ve cuántas veces lo guardaron
         y cuántas consultas lo mencionan.
     end note
@@ -278,7 +278,7 @@ sequenceDiagram
     participant API as depahost-api
     participant H as Sitio (build)
 
-    PR->>UI: Publicar un depa: distrito, dirección, tipo, intención, precio, fotos
+    PR->>UI: Publicar un inmueble: distrito, dirección, tipo, intención, precio, fotos
     opt fotos
         UI->>API: POST /v1/me/uploads
         API-->>UI: URL prefirmada de R2
@@ -289,7 +289,7 @@ sequenceDiagram
     AD->>UI: /admin/solicitudes → abre la solicitud → "Pasar a revisión"
     UI->>API: PATCH /v1/admin/owner-requests/{id} status in_review
     API--)PR: correo "Tu solicitud está en revisión"
-    AD->>UI: "Publicar como depa"
+    AD->>UI: "Publicar como inmueble"
     UI->>UI: /admin/depas/nuevo?solicitud={id} precargado (dirección, distrito, fotos…)
     AD->>UI: completa rentabilidad y plazo, elige Publicado
     UI->>API: POST /v1/admin/properties
@@ -303,10 +303,10 @@ sequenceDiagram
 
 | Pantalla | Qué muestra | Acciones |
 |---|---|---|
-| Resumen | Leads sin contactar, reclamos pendientes y por vencer, solicitudes por revisar, depas publicados, cuentas por rol | Ir a cada lista |
-| Depas | Todo el catálogo con búsqueda y filtros por estado y origen | Crear, editar, borrar, ver en el sitio |
-| Formulario de depa | Ubicación y origen, números, presentación y fotos (con orden y portada) | Guardar como borrador o publicar |
-| Solicitudes | Por estado, con datos del propietario | Pasar a revisión, publicar como depa, no aprobar con comentario, escribir por WhatsApp |
+| Resumen | Leads sin contactar, reclamos pendientes y por vencer, solicitudes por revisar, inmuebles publicados, cuentas por rol | Ir a cada lista |
+| Inmuebles | Todo el catálogo con búsqueda y filtros por estado y origen | Crear, editar, borrar, ver en el sitio |
+| Formulario de inmueble | Ubicación y origen, números, presentación y fotos (con orden y portada) | Guardar como borrador o publicar |
+| Solicitudes | Por estado, con datos del propietario | Pasar a revisión, publicar como inmueble, no aprobar con comentario, escribir por WhatsApp |
 | Leads | Por estado y origen, con contacto y detalle desplegable | Mover por el embudo: sin contactar, en conversación, cerrado |
 | Reclamos | Pendientes primero, con plazo y alerta de vencidos | Leer la hoja completa y responder por correo |
 | Inmobiliarias | Nombre, descripción y proyectos | Crear y editar |

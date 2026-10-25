@@ -1,7 +1,7 @@
 // Listas de IDs guardadas en el navegador:
-// - "Mis depas": los depas que la persona marcó con "Me interesa"
-// - Historial: los últimos depas que abrió (para "Según lo que has visto")
-// Hoy viven en localStorage. La interfaz permite cambiar "Mis depas" por una implementación que
+// - "Mis inmuebles": los inmuebles que la persona marcó con "Me interesa"
+// - Historial: los últimos inmuebles que abrió (para "Según lo que has visto")
+// Hoy viven en localStorage. La interfaz permite cambiar "Mis inmuebles" por una implementación que
 // sincronice con la API (GET/PUT /v1/me/saved) cuando haya login, sin tocar los componentes.
 
 export const SAVED_KEY = 'depahost:saved-depas:v2'
@@ -27,7 +27,7 @@ export interface IdListStore {
   subscribe(fn: (ids: string[]) => void): () => void
 }
 
-/** Se mantiene el nombre por compatibilidad: "Mis depas" es un IdListStore. */
+/** Se mantiene el nombre por compatibilidad: "Mis inmuebles" es un IdListStore. */
 export type SavedStore = IdListStore
 
 export interface StorageLike {
@@ -118,13 +118,13 @@ export function browserStorage(): StorageLike {
 let saved: IdListStore | undefined
 let history: IdListStore | undefined
 
-/** "Mis depas" del navegador. */
+/** "Mis inmuebles" del navegador. */
 export function getSavedStore(): IdListStore {
   saved ??= createLocalSavedStore(browserStorage(), window)
   return saved
 }
 
-/** Últimos depas abiertos (el más reciente al final). */
+/** Últimos inmuebles abiertos (el más reciente al final). */
 export function getHistoryStore(): IdListStore {
   history ??= createIdListStore(browserStorage(), window, {
     key: HISTORY_KEY,

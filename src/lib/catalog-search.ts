@@ -1,10 +1,10 @@
-// Búsqueda de "Todos los depas" (/capital/depas): filtros por facetas, orden y conteos, como en una
+// Búsqueda de "Todos los inmuebles" (/capital/inmuebles): filtros por facetas, orden y conteos, como en una
 // tienda en línea. Funciones puras: las usa el navegador y se prueban con Vitest
 // (tests/unit/catalog-search.test.ts). Los filtros viven en la URL para poder compartir la búsqueda.
 import { normalizeText } from './format'
 import { MY_LOCATION } from './geo'
 
-/** Lo que necesita la búsqueda de cada depa. En el navegador se arma con los data-* de la tarjeta. */
+/** Lo que necesita la búsqueda de cada inmueble. En el navegador se arma con los data-* de la tarjeta. */
 export interface SearchableDepa {
   id: string
   districtSlug: string
@@ -168,7 +168,7 @@ export interface RangeOption {
 
 const PRICE_EDGES = [300_000, 400_000, 500_000, 700_000, 1_000_000]
 
-/** Tramos de precio con al menos un depa: "Hasta S/ 300,000", "S/ 300,000 a S/ 400,000"… */
+/** Tramos de precio con al menos un inmueble: "Hasta S/ 300,000", "S/ 300,000 a S/ 400,000"… */
 export function priceRanges(prices: number[], format: (n: number) => string): RangeOption[] {
   const ranges: RangeOption[] = []
   let previous: number | undefined
@@ -187,7 +187,7 @@ export function priceRanges(prices: number[], format: (n: number) => string): Ra
   return ranges
 }
 
-/** "Desde 8% anual": un escalón por cada entero que deja fuera al menos un depa (mira el mínimo del rango). */
+/** "Desde 8% anual": un escalón por cada entero que deja fuera al menos un inmueble (mira el mínimo del rango). */
 export function yieldSteps(yieldMins: number[]): number[] {
   const lowest = Math.min(...yieldMins)
   const highest = Math.max(...yieldMins)
@@ -196,7 +196,7 @@ export function yieldSteps(yieldMins: number[]): number[] {
   return steps
 }
 
-/** "Se paga en hasta 12 años": escalones de 2 en 2 que separan a los depas. */
+/** "Se paga en hasta 12 años": escalones de 2 en 2 que separan a los inmuebles. */
 export function paybackSteps(years: number[]): number[] {
   const lowest = Math.min(...years)
   const highest = Math.max(...years)

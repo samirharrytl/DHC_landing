@@ -1,0 +1,29 @@
+---
+// Página que solo redirige a la dirección nueva de una sección que cambió de nombre
+// (p. ej. /mis-depas → /mis-inmuebles). A diferencia de `redirects` en astro.config.mjs, conserva
+// ?filtros, ?agregar= y #ancla, así los links que ya se compartieron siguen funcionando igual.
+interface Props {
+  to: string
+}
+const { to } = Astro.props
+const canonical = new URL(to, Astro.site)
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Redirigiendo…</title>
+    <meta name="robots" content="noindex" />
+    <link rel="canonical" href={canonical} />
+    <script is:inline define:vars={{ to }}>
+      location.replace(to + location.search + location.hash)
+    </script>
+    <!-- Sin JavaScript: redirige igual, aunque sin los filtros -->
+    <meta http-equiv="refresh" content={`0;url=${to}`} />
+  </head>
+  <body>
+    <a href={to}>Ir a la nueva dirección</a>
+  </body>
+</html>

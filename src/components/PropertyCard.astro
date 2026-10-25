@@ -1,5 +1,5 @@
 ---
-// Tarjeta de depa reutilizable (Capital y home). Toda la tarjeta lleva al detalle del depa.
+// Tarjeta de inmueble reutilizable (Capital y home). Toda la tarjeta lleva al detalle del inmueble.
 import type { Property } from '../types/property'
 import { formatPEN, formatYears, formatYield } from '../lib/format'
 import { buildSearchText } from '../lib/filters'
@@ -18,7 +18,7 @@ interface Props {
 const { property: p, priority = false } = Astro.props
 const href = `/capital/${p.slug}`
 const image = p.images[0]
-// Para "Cerca de" en Todos los depas: la ubicación exacta o el centro del distrito
+// Para "Cerca de" en Todos los inmuebles: la ubicación exacta o el centro del distrito
 const position = depaPosition(p)
 ---
 
@@ -71,7 +71,7 @@ const position = depaPosition(p)
       </a>
     </h3>
     <p class="address">{p.address}</p>
-    <!-- "a 1.2 km de Larcomar": lo llena la búsqueda de Todos los depas cuando se elige "Cerca de" -->
+    <!-- "a 1.2 km de Larcomar": lo llena la búsqueda de Todos los inmuebles cuando se elige "Cerca de" -->
     <p class="distance" data-distance hidden>
       <Icon name="pin" size={16} />
       <span data-distance-text></span>
@@ -246,11 +246,11 @@ const position = depaPosition(p)
 
   .stats {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    /* Columnas iguales si hay espacio; si no, cada una mide al menos su texto
+       (el precio no se monta sobre la línea de "rentabilidad") */
+    grid-template-columns: repeat(3, minmax(min-content, 1fr));
+    column-gap: var(--space-2); /* aire antes de cada línea divisoria */
     margin: var(--space-4) 0 0;
-  }
-  .stat {
-    min-width: 0;
   }
   .stat + .stat {
     border-left: var(--border-subtle);
@@ -267,9 +267,35 @@ const position = depaPosition(p)
     color: var(--color-text-strong);
     font-variant-numeric: tabular-nums;
   }
-  @container (max-width: 300px) {
+  @container (max-width: 320px) {
+    .body {
+      padding: var(--space-4);
+    }
+    .stats {
+      column-gap: var(--space-1);
+    }
     dd {
       font-size: var(--fs-15);
+    }
+    dt {
+      font-size: var(--fs-xs);
+    }
+    .stat + .stat {
+      padding-left: var(--space-2);
+    }
+  }
+  /* Tarjeta muy angosta (pantallas de 320px): el valor en su propia fila y debajo los otros dos */
+  @container (max-width: 260px) {
+    .stats {
+      grid-template-columns: repeat(2, minmax(min-content, 1fr));
+      row-gap: var(--space-3);
+    }
+    .stat:first-child {
+      grid-column: 1 / -1;
+    }
+    .stat:nth-child(2) {
+      border-left: 0;
+      padding-left: 0;
     }
   }
 
@@ -287,6 +313,16 @@ const position = depaPosition(p)
     flex: 1;
     min-width: 0;
     padding-inline: var(--space-3);
+  }
+  /* Tarjeta muy angosta (carrusel en pantallas de 320px): que "Ver más detalle" entre en el botón */
+  @container (max-width: 260px) {
+    .footer-actions {
+      padding-inline: var(--space-2);
+    }
+    .footer-actions > :global(*) {
+      padding-inline: var(--space-2);
+      font-size: var(--fs-sm);
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {

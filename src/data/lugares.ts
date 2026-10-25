@@ -1,6 +1,6 @@
-// Puntos de referencia para "Cerca de" en Todos los depas (/capital/depas).
+// Puntos de referencia para "Cerca de" en Todos los inmuebles (/capital/inmuebles).
 // Coordenadas de OpenStreetMap (Nominatim), con 5 decimales (~1 m). Los distritos usan un punto
-// central aproximado: sirve para ordenar por cercanía cuando un depa todavía no tiene su ubicación exacta.
+// central aproximado: sirve para ordenar por cercanía cuando un inmueble todavía no tiene su ubicación exacta.
 
 export interface Lugar {
   slug: string

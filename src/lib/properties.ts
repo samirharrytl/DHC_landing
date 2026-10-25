@@ -1,11 +1,11 @@
-// Única puerta de acceso a los datos de depas e inmobiliarias en el build.
+// Única puerta de acceso a los datos de inmuebles e inmobiliarias en el build.
 // Las páginas importan de aquí, nunca de src/content ni de la API directamente.
 import { getCollection, getEntry } from 'astro:content'
 import type { Developer, FinancingAssumptions, Property } from '../types/property'
 import { buildFastFilters, matchesFilters, toFilterable, type PropertyFilters } from './filters'
 import { similarTo, type Recommendable } from './recommend'
 
-/** Depas visibles en el sitio (publicados o reservados), destacados primero y luego los más nuevos. */
+/** Inmuebles visibles en el sitio (publicados o reservados), destacados primero y luego los más nuevos. */
 export async function getProperties(filters?: PropertyFilters): Promise<Property[]> {
   const entries = await getCollection('properties', ({ data }) => data.status !== 'sold')
   const list = entries
@@ -14,7 +14,7 @@ export async function getProperties(filters?: PropertyFilters): Promise<Property
   return filters ? list.filter((p) => matchesFilters(toFilterable(p), '', filters)) : list
 }
 
-/** Portada de Capital: los depas que publican propietarios. */
+/** Portada de Capital: los inmuebles que publican propietarios. */
 export async function getOwnerProperties(): Promise<Property[]> {
   return (await getProperties()).filter((p) => p.origin === 'owner')
 }
@@ -36,7 +36,7 @@ export const toRecommendable = (p: Property): Recommendable => ({
   yieldMax: p.yield.max,
 })
 
-/** "Depas similares que te pueden interesar" del detalle. */
+/** "Inmuebles similares que te pueden interesar" del detalle. */
 export async function getSimilarProperties(property: Property, limit = 4): Promise<Property[]> {
   const all = await getProperties()
   const byId = new Map(all.map((p) => [p.id, p]))

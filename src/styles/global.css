@@ -15,6 +15,23 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 
+/* Laptops con Windows al 125% o 150% (1536×864, 1280×720): la pantalla es baja y todo se ve grande.
+   Como casi todo está en rem, bajar la base achica textos, espacios y botones por igual.
+   El contenido mantiene su ancho de 1200px. Los @media siguen midiendo con 16px. */
+@media (min-width: 1024px) and (max-height: 900px) {
+  html {
+    font-size: 93.75%; /* 15px */
+  }
+  :root {
+    --container-max: 1200px;
+  }
+}
+@media (min-width: 1024px) and (max-height: 760px) {
+  html {
+    font-size: 87.5%; /* 14px */
+  }
+}
+
 /* Scroll suave solo si la persona no pidió reducir animaciones */
 @media (prefers-reduced-motion: no-preference) {
   html {
@@ -67,12 +84,11 @@ h3 {
   font-weight: var(--fw-bold);
 }
 
-/* Títulos editoriales en serif (Capital, Propietarios y sus páginas) */
+/* Títulos editoriales (Capital, Propietarios y sus páginas): en negrita, como en depahostperu.com */
 .display {
   font-family: var(--font-display);
-  font-weight: 500;
-  letter-spacing: -0.015em;
-  font-optical-sizing: auto;
+  font-weight: var(--fw-bold);
+  letter-spacing: -0.02em;
 }
 
 /* Etiqueta pequeña en mayúsculas: "DE PROPIETARIO", "SELECCIONADOS" */
@@ -191,7 +207,7 @@ html.menu-open {
 }
 
 /* Comprar: dorado de la marca, como el botón del carrito de una tienda.
-   Solo para la acción principal de compra: "Me interesa" y "Empecemos". */
+   Solo para la acción principal de compra: "Me interesa" y "Conversemos ahora". */
 .btn--cta {
   background: var(--color-gold-500);
   border-color: var(--color-gold-600);

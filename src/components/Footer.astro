@@ -20,10 +20,13 @@ const legalLinks = [
     <div class="container band-inner">
       <Logo inverse />
       <div class="band-text">
-        <p class="title">Cuéntanos qué quieres hacer con el depa.</p>
-        <p class="sub">Reserva, vende, alquila o invierte: te respondemos por WhatsApp.</p>
+        <p class="title">Cuéntanos qué quieres hacer con tu propiedad.</p>
+        <p class="sub">
+          Te ayudamos a venderla en el menor tiempo o a encontrar la que te genere renta. Te
+          respondemos por WhatsApp.
+        </p>
       </div>
-      <Button href={waLink('Hola, les cuento qué quiero hacer con mi depa.')} class="band-btn">
+      <Button href={waLink('Hola, les cuento qué quiero hacer con mi inmueble.')} class="band-btn">
         Escribir por WhatsApp
       </Button>
     </div>
@@ -41,7 +44,7 @@ const legalLinks = [
         </ul>
       </nav>
       <p>
-        © {year} Depa Host Perú · RUC {COMPANY.ruc} · depahostperu.com ·
+        © {year} Depa Host Perú · RUC {COMPANY.ruc} · depahostperu.com ·{' '}
         <button type="button" class="link-button" data-consent-open>
           Preferencias de cookies
         </button>
@@ -71,11 +74,13 @@ const legalLinks = [
     margin: 0;
     font-size: var(--fs-20);
     font-weight: var(--fw-semibold);
+    text-wrap: balance; /* líneas parejas, sin una palabra sola al final */
   }
   .sub {
     margin: var(--space-1) 0 0;
     font-size: var(--fs-15);
     color: var(--color-text-inverse-muted);
+    text-wrap: balance;
   }
   .band-inner :global(.band-btn) {
     width: 100%;

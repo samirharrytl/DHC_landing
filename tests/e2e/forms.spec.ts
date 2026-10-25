@@ -35,7 +35,7 @@ test('Libro de Reclamaciones: registra y muestra el código', async ({ page }) =
   await page.getByLabel('Teléfono').fill('987654321')
   await page.getByLabel('Correo electrónico').fill('ana@example.com')
   await page.getByLabel('Descripción').fill('Estadía de 3 noches')
-  await page.getByLabel('Detalle').fill('El departamento no tenía agua caliente.')
+  await page.getByLabel('Detalle').fill('El inmueble no tenía agua caliente.')
   await page.getByLabel('Pedido').fill('Devolución de una noche.')
   await page.getByLabel(/Acepto que mis datos/).check()
   await page.getByRole('button', { name: 'Enviar reclamo' }).click()

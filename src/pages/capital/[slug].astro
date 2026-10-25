@@ -1,5 +1,5 @@
 ---
-// Detalle de un depa. Una página estática por depa, generada en el build desde getProperties().
+// Detalle de un inmueble. Una página estática por inmueble, generada en el build desde getProperties().
 import type { GetStaticPaths } from 'astro'
 import BaseLayout from '../../layouts/BaseLayout.astro'
 import Icon from '../../components/Icon.astro'
@@ -61,8 +61,8 @@ const stats = [
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Product',
-  name: `Departamento en ${p.district.name}, ${p.address}`,
-  description: p.description ?? `Departamento para invertir en ${p.district.name}, Lima.`,
+  name: `Inmueble en ${p.district.name}, ${p.address}`,
+  description: p.description ?? `Inmueble para invertir en ${p.district.name}, Lima.`,
   offers: {
     '@type': 'Offer',
     price: p.price.amount,
@@ -74,7 +74,7 @@ const jsonLd = {
 
 <BaseLayout
   title={title}
-  description={`Depa en ${p.district.name} desde ${price}. Rentabilidad ${formatYield(p.yield)}.`}
+  description={`Inmueble en ${p.district.name} desde ${price}. Rentabilidad ${formatYield(p.yield)}.`}
 >
   <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   <article class="container detail" data-property-id={p.id}>
@@ -147,7 +147,7 @@ const jsonLd = {
 
         {p.description && (
           <section class="about" aria-labelledby="about-title">
-            <h2 id="about-title">Sobre este depa</h2>
+            <h2 id="about-title">Sobre este inmueble</h2>
             <p class="description">{p.description}</p>
           </section>
         )}
@@ -167,7 +167,7 @@ const jsonLd = {
 
         <div class="buy-actions">
           {p.status !== 'sold' && <SaveButton id={p.id} name={p.district.name} class="btn--block" />}
-          <a class="btn btn--primary btn--sm btn--block" href={`/mis-depas?agregar=${p.id}`}>
+          <a class="btn btn--primary btn--sm btn--block" href={`/mis-inmuebles?agregar=${p.id}`}>
             <Icon name="mail" size={18} />
             Contactar
           </a>
@@ -215,11 +215,11 @@ const jsonLd = {
       </div>
     </section>
 
-    <!-- ---------- Depas similares ---------- -->
+    <!-- ---------- Inmuebles similares ---------- -->
     {similar.length > 0 && (
       <section class="similar" aria-labelledby="similar-title">
         <h2 id="similar-title" class="display">
-          Depas similares que te pueden interesar
+          Inmuebles similares que te pueden interesar
         </h2>
         <div class="similar-list">
           {similar.map((s) => (
@@ -303,7 +303,8 @@ const jsonLd = {
   }
   .stat {
     display: grid;
-    grid-template-columns: 44px minmax(0, 1fr) auto;
+    /* la etiqueta no se corta; si falta espacio, el valor ("8–10% anual") pasa a 2 líneas */
+    grid-template-columns: 44px auto minmax(min-content, 1fr);
     align-items: center;
     gap: var(--space-3);
     padding-block: var(--space-3);

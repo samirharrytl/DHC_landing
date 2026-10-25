@@ -127,30 +127,30 @@ Para cada página: de dónde salen sus datos en el build y qué scripts corren e
 |---|---|---|---|
 | `/` | `pages/index.astro` | Ninguno (texto fijo y foto del hero) | Dropdown "Soy propietario" |
 | `/capital` | `pages/capital/index.astro` | `getOwnerProperties`, `getFastFilters`, `getDevelopers`, supuestos | Filtros, Me interesa, Para ti |
-| `/capital/depas` | `pages/capital/depas.astro` | `getProperties` (todos), `getDevelopers`, supuestos | Búsqueda con facetas, orden y conteos (`lib/catalog-search.ts`); los filtros quedan en la URL. "Cerca de": ubicación del navegador (no va a la URL) o un lugar de `data/lugares.ts` (`?cerca=larcomar&km=2`), orden "Más cercanos" y distancia en cada tarjeta (`lib/geo.ts`) |
-| `/capital/{slug}` | `pages/capital/[slug].astro` | Una página por depa de `getProperties`; `getSimilarProperties(p, 4)`; inmobiliaria | Galería (`PropertyGallery`), Me interesa; guarda la visita en el historial. "Contactar" lleva a `/mis-depas?agregar={id}` |
+| `/capital/inmuebles` | `pages/capital/inmuebles.astro` | `getProperties` (todos), `getDevelopers`, supuestos | Búsqueda con facetas, orden y conteos (`lib/catalog-search.ts`); los filtros quedan en la URL. "Cerca de": ubicación del navegador (no va a la URL) o un lugar de `data/lugares.ts` (`?cerca=larcomar&km=2`), orden "Más cercanos" y distancia en cada tarjeta (`lib/geo.ts`). "Lista \| Mapa" (`?vista=mapa`): pines con el precio en Leaflet (`scripts/depas-map.ts`), que se descarga al elegir "Mapa" |
+| `/capital/{slug}` | `pages/capital/[slug].astro` | Una página por inmueble de `getProperties`; `getSimilarProperties(p, 4)`; inmobiliaria | Galería (`PropertyGallery`), Me interesa; guarda la visita en el historial. "Contactar" lleva a `/mis-inmuebles?agregar={id}` |
 | `/capital/aliados/{slug}` | `pages/capital/aliados/[slug].astro` | Inmobiliarias con proyectos; `getDeveloperProjects` | Filtros con botón Buscar y contador |
-| `/mis-depas` | `pages/mis-depas.astro` | Ninguno | Pinta los guardados, resumen y total; agrega `?agregar={id}`; "Empecemos con estos" abre WhatsApp y registra el lead `cart`; Para ti |
+| `/mis-inmuebles` | `pages/mis-inmuebles.astro` | Ninguno | Pinta los guardados, resumen y total; agrega `?agregar={id}`; "Empecemos con estos" abre WhatsApp y registra el lead `cart`; Para ti |
 | `/propietarios` | `pages/propietarios.astro` | `getDevelopers` (franja de aliados) | Formulario con intención vender, alquilar o Airbnb |
 | `/libro-de-reclamaciones` | `pages/libro-de-reclamaciones.astro` | Datos de la empresa | Formulario de reclamo y constancia |
 | `/privacidad`, `/terminos` | `pages/*.astro` con `LegalLayout` | Datos de la empresa | — |
 | `/estadias`, `/nosotros` | `PlaceholderLayout` | — | — |
 | `/404` | `pages/404.astro` | — | — |
 | `/data/properties.json` | `pages/data/properties.json.ts` | `getProperties` + `getImage` | — (lo consumen los scripts) |
-| `/carrito`, `/capital/empecemos` | redirecciones en `astro.config.mjs` | — | Redirigen a `/mis-depas` |
+| `/carrito`, `/capital/empecemos` | redirecciones en `astro.config.mjs` | — | Redirigen a `/mis-inmuebles` |
 
 Páginas sin indexar (`<meta name="robots" content="noindex">` y fuera del sitemap):
-`/mis-depas`, `/404`. `robots.txt` además bloquea `/carrito`, `/mis-depas`, `/capital/empecemos`
+`/mis-inmuebles`, `/404`. `robots.txt` además bloquea `/carrito`, `/mis-inmuebles`, `/capital/empecemos`
 (hoy una redirección) y `/data/`.
 
 ### Detalle de la portada de Capital
 
 ```mermaid
 flowchart TB
-    A["Hero<br/>título serif en 2 líneas · subtítulo · Ver todos los proyectos → /capital/depas"]
+    A["Hero<br/>título serif en 2 líneas · subtítulo · Ver todos los proyectos → /capital/inmuebles"]
     B["Cómo funciona<br/>Comparas · Consultas · Te acompañamos · Cierras"]
     C["Buscador + chips<br/>SearchFilters"]
-    D["Grilla de depas de propietarios<br/>PropertyCard × N · #lista-depas · al final, tarjeta Ver todos los proyectos"]
+    D["Grilla de inmuebles de propietarios<br/>PropertyCard × N · #lista-inmuebles · al final, tarjeta Ver todos los proyectos"]
     E["Nota de cuota estimada<br/>buildDisclaimer"]
     F["Para ti, según lo que has visto<br/>ForYouRow · oculta sin historial"]
     G["Proyectos de aliados<br/>AlliesStrip · #aliados"]
@@ -161,7 +161,7 @@ flowchart TB
 
 | Layout | Usa | Aporta |
 |---|---|---|
-| `BaseLayout` | Todas las páginas | `<head>` (título, descripción, canonical, Open Graph, `noindex` opcional), fuentes, skip-link, Header, Footer, diálogo "Guarda tus depas", banner de cookies, monitoreo |
+| `BaseLayout` | Todas las páginas | `<head>` (título, descripción, canonical, Open Graph, `noindex` opcional), fuentes, skip-link, Header, Footer, diálogo "Guarda tus inmuebles", banner de cookies, monitoreo |
 | `LegalLayout` | Privacidad, Términos | Ancho de lectura y fecha de actualización |
 | `PlaceholderLayout` | Estadías, Nosotros | Título + "Página en construcción" |
 
@@ -169,7 +169,7 @@ flowchart TB
 
 | Componente | Props | Qué hace |
 |---|---|---|
-| `Header` | — | Logo, menú (Inicio, Compra → `/capital`, Vende → `/propietarios`; Compra queda marcado en `/capital/*` y `/mis-depas`), saludo "Hola, {nombre}", acceso a Mis depas con contador, WhatsApp, menú móvil (`<dialog>`) y botón flotante de WhatsApp |
+| `Header` | — | Logo (escala con la altura del header: 64, 72, 80 y 88px desde 1280), menú (Inicio, Compra → `/capital`, Vende → `/propietarios`; Compra queda marcado en `/capital/*` y `/mis-inmuebles`), saludo "Hola, {nombre}", acceso a Mis inmuebles con contador, WhatsApp, menú móvil (`<dialog>`) y botón flotante de WhatsApp |
 | `Footer` | — | Banda de WhatsApp, links legales, RUC y "Preferencias de cookies" |
 | `Logo` | `inverse?` | Marca de Depahost Capital (variante clara para fondos oscuros) |
 | `Button` | `href`, `variant?`, `size?`, `block?` | Link con estilo de botón. Si apunta a `wa.me`, siempre sale verde y abre en otra pestaña |
@@ -183,8 +183,8 @@ flowchart TB
 | `SearchFilters` | `filters`, `placeholder?`, `withButton?`, `count?` | Buscador, chips, "Limpiar filtros" y contador |
 | `ForYouRow` | `title?`, `seeAllHref?` | Fila de recomendaciones; se arma en el navegador |
 | `AlliesStrip` | `developers`, `title?`, `id?` | Inmobiliarias como marcas tipográficas; las que tienen proyectos son links |
-| `SavedDepa` | — | Plantilla `<template>` de un depa en Mis depas |
-| `SaveListDialog` | — | Diálogo "Guarda tus depas" (en todas las páginas) |
+| `SavedDepa` | — | Plantilla `<template>` de un inmueble en Mis inmuebles |
+| `SaveListDialog` | — | Diálogo "Guarda tus inmuebles" (en todas las páginas) |
 | `ConsentBanner` | — | Aviso de cookies; carga Clarity solo si se acepta |
 | `Turnstile` | `theme?` | Widget anti-bots; no aparece sin `PUBLIC_TURNSTILE_SITE_KEY` |
 | `Step` | `number`, `title`, `text?` | Paso del "Cómo funciona" |
@@ -213,14 +213,14 @@ Se usan en el build y en el navegador. No tocan el DOM, salvo `getSavedStore`,
 
 | Script | Lo carga | Qué hace |
 |---|---|---|
-| `saved-buttons.ts` | `SaveButton` | Escucha clics en `[data-add-property]` (delegación) y alterna Mis depas; actualiza texto y `aria-pressed` |
+| `saved-buttons.ts` | `SaveButton` | Escucha clics en `[data-add-property]` (delegación) y alterna Mis inmuebles; actualiza texto y `aria-pressed` |
 | `property-filters.ts` | `SearchFilters` | Filtra tarjetas dentro de cada `[data-filter-root]`; contador y "Limpiar filtros" |
-| `catalog.ts` | Mis depas, Te acompañamos, Para ti, diálogo | Descarga `/data/properties.json` una sola vez por página |
+| `catalog.ts` | Mis inmuebles, Te acompañamos, Para ti, diálogo | Descarga `/data/properties.json` una sola vez por página |
 | `forms.ts` | Todos los formularios | Arma el JSON, valida, envía, muestra errores por campo y ofrece WhatsApp |
 | `consent.ts` | `ConsentBanner` | Guarda la elección y carga Clarity |
 | `monitoring.ts` | `BaseLayout` | Inicia Sentry solo si hay DSN (descarga diferida) |
 
-Los scripts del Header, Mis depas, Te acompañamos, el detalle y el diálogo están dentro de su
+Los scripts del Header, Mis inmuebles, Te acompañamos, el detalle y el diálogo están dentro de su
 `.astro`. Astro los empaqueta y los carga una sola vez aunque el componente aparezca varias veces.
 
 ## 8. Datos de contenido (Content Layer)
@@ -265,7 +265,7 @@ Todas las `PUBLIC_*` terminan en el JavaScript público. Nunca deben contener se
 | WhatsApp | `--color-wa-700` `#094835` (botones), `--color-wa-500` (solo el ícono) |
 | Texto | `--color-text-strong`, `--color-text`, `--color-text-muted` |
 | Estados | `--color-success` (rentabilidad), `--color-error`, `--color-focus` |
-| Tipografía | `--font-sans` (Inter), `--font-display` (Newsreader), escala fluida `--fs-display` a `--fs-xs` |
+| Tipografía | `--font-sans` (Poppins), `--font-display` (Poppins en negrita para títulos editoriales), escala fluida `--fs-display` a `--fs-xs` |
 | Espacio | Base de 4 px: `--space-1` (4) a `--space-24` (96) |
 | Forma | Radios `--radius-sm/md/lg/pill`, sombras `--shadow-sm` a `--shadow-dropdown` |
 | Capas | `--z-header`, `--z-dropdown`, `--z-fab`, `--z-toast` |
@@ -294,6 +294,6 @@ WhatsApp; serif solo en títulos; íconos de línea del componente `Icon`; sin d
   "Me interesa", `aria-live` en resultados y formularios, etiquetas en todos los campos.
 - **Áreas táctiles:** mínimo 44 px (`--control-h-sm`).
 - **Imágenes:** AVIF y WebP en varios tamaños; las 3 primeras tarjetas cargan con prioridad.
-- **Fuentes:** autoalojadas, Inter precargada, con respaldo ajustado para no mover el texto.
+- **Fuentes:** autoalojadas, Poppins 400 y 700 precargadas, con respaldo ajustado para no mover el texto.
 - **SEO:** canonical, Open Graph, sitemap, `robots.txt` y datos estructurados `Product` en el detalle.
 - **Movimiento reducido:** se respetan las preferencias del sistema en animaciones y desplazamiento.

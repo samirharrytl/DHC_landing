@@ -22,17 +22,21 @@ export default defineConfig({
   // Precarga una página cuando el mouse pasa sobre un link con data-astro-prefetch
   prefetch: true,
 
-  // "Mis depas" vivía en /carrito: los links viejos siguen funcionando
+  // "Mis inmuebles" vivía en /carrito: los links viejos siguen funcionando.
+  // /mis-depas y /capital/depas (nombres anteriores) son páginas propias que conservan ?filtros y
+  // ?agregar= al redirigir (src/pages/mis-depas.astro, src/pages/capital/depas.astro).
   redirects: {
-    '/carrito': '/mis-depas',
-    // "Te acompañamos" se unió a Mis depas: ahí se arma la lista y se escribe por WhatsApp
-    '/capital/empecemos': '/mis-depas',
+    '/carrito': '/mis-inmuebles',
+    // "Te acompañamos" se unió a Mis inmuebles: ahí se arma la lista y se escribe por WhatsApp
+    '/capital/empecemos': '/mis-inmuebles',
   },
 
   integrations: [
     sitemap({
-      // "Mis depas" depende del navegador de cada persona: no se indexa
-      filter: (page) => !/\/(carrito|mis-depas|capital\/empecemos)\/?$/.test(page),
+      // "Mis inmuebles" depende del navegador de cada persona y las direcciones viejas solo redirigen:
+      // no se indexan
+      filter: (page) =>
+        !/\/(carrito|mis-depas|mis-inmuebles|capital\/empecemos|capital\/depas)\/?$/.test(page),
     }),
   ],
 
@@ -81,25 +85,16 @@ export default defineConfig({
   // Fuente Inter autoalojada: Astro la descarga al construir y la sirve desde nuestro sitio
   // (sin pedirle nada a Google). También genera una fuente de respaldo ajustada a sus medidas.
   fonts: [
+    // Poppins: la misma fuente de depahostperu.com, para textos y títulos.
+    // No es variable: un archivo por peso (los de --fw-regular a --fw-bold en tokens.css).
     {
       provider: fontProviders.fontsource(),
-      name: 'Inter',
-      cssVariable: '--font-inter',
-      weights: ['400 700'], // fuente variable: todos los pesos entre 400 y 700
+      name: 'Poppins',
+      cssVariable: '--font-poppins',
+      weights: [400, 500, 600, 700],
       styles: ['normal'],
       subsets: ['latin'],
       fallbacks: ['sans-serif'],
-    },
-    // Serif editorial para los títulos de Capital y Propietarios (combina con la serif del logo).
-    // Solo el peso 500 (el de .display): la versión variable pesa ~130 KB, esta ~25 KB.
-    {
-      provider: fontProviders.fontsource(),
-      name: 'Newsreader',
-      cssVariable: '--font-newsreader',
-      weights: [500],
-      styles: ['normal'],
-      subsets: ['latin'],
-      fallbacks: ['Georgia', 'serif'],
     },
   ],
 })

@@ -1,5 +1,5 @@
 ---
-// "Para ti, según lo que has visto": se arma en el navegador con el historial y Mis depas.
+// "Para ti, según lo que has visto": se arma en el navegador con el historial y Mis inmuebles.
 // Sin historial queda oculta. La lógica de recomendación está en src/lib/recommend.ts.
 import MiniCard from './MiniCard.astro'
 
@@ -7,7 +7,7 @@ interface Props {
   title?: string
   seeAllHref?: string
 }
-const { title = 'Para ti, según lo que has visto', seeAllHref = '/capital/depas' } = Astro.props
+const { title = 'Para ti, según lo que has visto', seeAllHref = '/capital/inmuebles' } = Astro.props
 ---
 
 <section class="container for-you" data-for-you hidden aria-labelledby="for-you-title">

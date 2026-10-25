@@ -9,8 +9,8 @@
 3. **Un contrato manda.** El API publica `openapi.json`. El frontend genera sus tipos desde ese
    archivo. Si mañana el API se reescribe en Go, el frontend no cambia mientras se respete el
    contrato.
-4. **Lo personal vive en el navegador, y en la cuenta si hay sesión.** "Mis depas", el
-   historial y el saludo se guardan en `localStorage`. Si la persona tiene cuenta, "Mis depas"
+4. **Lo personal vive en el navegador, y en la cuenta si hay sesión.** "Mis inmuebles", el
+   historial y el saludo se guardan en `localStorage`. Si la persona tiene cuenta, "Mis inmuebles"
    también se guarda en el API y se sincroniza. El sitio sigue siendo estático y rápido para todos.
 6. **El panel es otra app estática.** Comprador, propietario y administración usan
    `depahost-panel`, una app Vue servida aparte que solo habla con el API (ver
@@ -39,7 +39,7 @@ flowchart LR
     TER["Clarity · Sentry"]
 
     PAG -- "1 · GET páginas y<br/>/data/properties.json" --> DIST
-    JS <-- "2 · Mis depas, historial,<br/>perfil" --> LS
+    JS <-- "2 · Mis inmuebles, historial,<br/>perfil" --> LS
     JS -- "3 · POST leads y reclamos" --> API
     API --> PG
     API -- "4 · verifica, avisa" --> EXT
@@ -58,11 +58,11 @@ flowchart LR
     BUILD["Build de Astro<br/>en el hosting"]
     DIST["dist/<br/>sitio publicado"]
 
-    EQ -- "1 · crea o edita depas" --> API
+    EQ -- "1 · crea o edita inmuebles" --> API
     API --> PG
     EQ -- "2 · sube fotos con URL prefirmada" --> R2
     API -- "3 · deploy hook" --> BUILD
-    BUILD -- "4 · GET depas, inmobiliarias,<br/>supuestos" --> API
+    BUILD -- "4 · GET inmuebles, inmobiliarias,<br/>supuestos" --> API
     BUILD -- "5 · descarga y optimiza fotos" --> R2
     BUILD -- "6 · publica" --> DIST
 ```
@@ -72,11 +72,11 @@ flowchart LR
 | Componente | Hace | No hace |
 |---|---|---|
 | Páginas HTML | Mostrar catálogo, detalle, formularios y textos | Guardar datos |
-| Scripts del sitio | Filtros, Mis depas, recomendaciones, envío de formularios | Validar reglas de negocio |
+| Scripts del sitio | Filtros, Mis inmuebles, recomendaciones, envío de formularios | Validar reglas de negocio |
 | `/data/properties.json` | Dar a los scripts un catálogo liviano con fotos optimizadas | Reemplazar al API |
 | Build de Astro | Leer el API y generar todas las páginas | Correr en producción |
 | API | Validar, guardar, avisar y servir datos | Generar HTML |
-| PostgreSQL | Guardar depas, inmobiliarias, leads, reclamos y supuestos | — |
+| PostgreSQL | Guardar inmuebles, inmobiliarias, leads, reclamos y supuestos | — |
 | R2 | Guardar las fotos originales | Servir fotos al visitante: las sirve el hosting ya optimizadas |
 
 ## 3. Diagrama de despliegue (UML)
@@ -152,7 +152,7 @@ flowchart TB
         direction TB
         N1["Buscador y filtros<br/>muestran u ocultan tarjetas"]
         N2["Me interesa<br/>guarda IDs en localStorage"]
-        N3["Mis depas, Te acompañamos, Para ti<br/>leen /data/properties.json"]
+        N3["Mis inmuebles, Te acompañamos, Para ti<br/>leen /data/properties.json"]
         N4["Formularios<br/>POST al API"]
         N5["Saludo, consentimiento, Clarity"]
     end
@@ -162,11 +162,11 @@ flowchart TB
 
 | Qué | Dónde se resuelve | Por qué |
 |---|---|---|
-| Lista de depas, precios, fotos | Build | Es igual para todos y debe cargar rápido y salir en Google |
-| Depas similares del detalle | Build | Depende solo del depa, no de la persona |
-| Filtros rápidos (chips) | Build | Se derivan de los depas publicados |
+| Lista de inmuebles, precios, fotos | Build | Es igual para todos y debe cargar rápido y salir en Google |
+| Inmuebles similares del detalle | Build | Depende solo del inmueble, no de la persona |
+| Filtros rápidos (chips) | Build | Se derivan de los inmuebles publicados |
 | Buscar y filtrar | Navegador | Es interacción, no cambia los datos |
-| Mis depas y su resumen | Navegador | Cada persona guarda los suyos |
+| Mis inmuebles y su resumen | Navegador | Cada persona guarda los suyos |
 | "Para ti, según lo que has visto" | Navegador | Depende del historial de cada persona |
 | "Hola, Ana" | Navegador | El nombre lo dejó esa persona en su navegador |
 | Guardar leads y reclamos | API | Hay datos personales, validación y obligaciones legales |
@@ -180,7 +180,7 @@ flowchart TB
 | Framework | Astro 7 | Páginas estáticas, Content Layer, optimización de imágenes, fuentes |
 | Lenguaje | TypeScript 6 (modo estricto) | Todo el código, incluidos los `.astro` |
 | Estilos | CSS propio con variables | `tokens.css` y `global.css`, más CSS por componente |
-| Tipografías | Inter (texto) y Newsreader (títulos editoriales) | Autoalojadas con la API de fuentes de Astro |
+| Tipografías | Poppins (textos y títulos), la misma de depahostperu.com | Autoalojadas con la API de fuentes de Astro |
 | Cliente HTTP | `openapi-fetch` + tipos de `openapi-typescript` | Llamadas tipadas al API |
 | Sitemap | `@astrojs/sitemap` | `sitemap-index.xml` sin páginas personales |
 | Errores | `@sentry/browser` (carga diferida) | Solo si hay `PUBLIC_SENTRY_DSN` |

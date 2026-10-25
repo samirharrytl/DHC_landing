@@ -1,7 +1,7 @@
 # Depa Host Perú · sitio web
 
-Sitio de **Depa Host Perú** (depahostperu.com): reservar estadías, vender o alquilar tu depa,
-y **DepaHost Capital** (comprar departamentos en Lima para que rindan).
+Sitio de **Depa Host Perú** (depahostperu.com): reservar estadías, vender o alquilar tu inmueble,
+y **DepaHost Capital** (comprar inmuebles en Lima para que rindan).
 
 Esta app es solo el **frontend estático**. El backend es otra app del monorepo (`apps/depahost-api`,
 Fastify + PostgreSQL). Se comunican por HTTP con un contrato OpenAPI.
@@ -15,7 +15,7 @@ con diagramas UML) está en [docs/plataforma](docs/plataforma/README.md).
 
 - [Astro](https://astro.build) 7, sitio 100 % estático
 - CSS propio con variables (tokens de diseño), sin frameworks de CSS
-- Fuente Inter autoalojada con la API de fuentes de Astro
+- Fuente Poppins (la de depahostperu.com) autoalojada con la API de fuentes de Astro
 - Datos con Astro Content Layer: JSON local o la API, según `API_URL`
 - Cliente HTTP tipado (`openapi-fetch`) generado desde el contrato de la API
 - Node 24 + pnpm · Vitest · Playwright · Prettier · GitHub Actions
@@ -40,7 +40,7 @@ con diagramas UML) está en [docs/plataforma](docs/plataforma/README.md).
 
 Cada entorno tiene su archivo de ejemplo: `.env.example` → `.env` (desarrollo),
 `.env.preprod.example` → `.env.preprod` (preproducción local, con `pnpm preprod`) y
-`.env.production.example` (lo que va en el panel del hosting). En desarrollo, el sitio lee los depas
+`.env.production.example` (lo que va en el panel del hosting). En desarrollo, el sitio lee los inmuebles
 de `src/content/*.json` y envía formularios y cuentas al API local (`http://localhost:3000`).
 Ver los entornos en [docs/plataforma/06](docs/plataforma/06-desarrollo-y-operacion.md#2-entornos).
 
@@ -50,7 +50,7 @@ Variables principales:
 | --------------------------- | ----------------------------------------------------------------------------------------- |
 | `PUBLIC_WHATSAPP_NUMBER`    | Número de todos los botones de WhatsApp                                                   |
 | `PUBLIC_API_URL`            | API que reciben los formularios en el navegador. Vacío = los formularios ofrecen WhatsApp |
-| `API_URL`                   | API de la que el build lee los depas. Vacío = usa `src/content/*.json`                    |
+| `API_URL`                   | API de la que el build lee los inmuebles. Vacío = usa `src/content/*.json`                |
 | `PUBLIC_TURNSTILE_SITE_KEY` | Anti-spam de Cloudflare en los formularios                                                |
 | `PUBLIC_CLARITY_ID`         | Analítica; solo se carga si la persona acepta cookies                                     |
 | `PUBLIC_MEDIA_HOST`         | Dominio de las fotos de la API, para optimizarlas                                         |
@@ -70,15 +70,15 @@ navegador (src/scripts/forms.ts)
 ```
 
 - Las páginas **solo** leen datos con `src/lib/properties.ts`.
-- Cada depa tiene un origen: **de propietario** (portada de Capital) o **de proyecto** de una
+- Cada inmueble tiene un origen: **de propietario** (portada de Capital) o **de proyecto** de una
   inmobiliaria aliada (página `/capital/aliados/{slug}`).
-- "Para ti, según lo que has visto" y "Depas similares" salen de `src/lib/recommend.ts`, con el
-  historial de depas abiertos y Mis depas guardados en el navegador.
-- "Guarda tus depas" pide nombre y celular al guardar el segundo depa y crea un lead
+- "Para ti, según lo que has visto" y "Inmuebles similares" salen de `src/lib/recommend.ts`, con el
+  historial de inmuebles abiertos y Mis inmuebles guardados en el navegador.
+- "Guarda tus inmuebles" pide nombre y celular al guardar el segundo inmueble y crea un lead
   `saved-list` en la API. Solo el primer nombre queda en el navegador para saludar ("Hola, Ana").
-- "Mis depas" se guarda en el navegador (`src/lib/saved-store.ts`) y se pinta con
+- "Mis inmuebles" se guarda en el navegador (`src/lib/saved-store.ts`) y se pinta con
   `/data/properties.json`, un catálogo liviano generado en el build.
-- Al publicar o editar un depa, la API llama al deploy hook del hosting y el sitio se reconstruye.
+- Al publicar o editar un inmueble, la API llama al deploy hook del hosting y el sitio se reconstruye.
 
 ## Estructura
 
@@ -100,7 +100,7 @@ src/
 ├── pages/          una página por archivo:
 │                   capital/index (portada), capital/[slug] (detalle), capital/aliados/[slug]
 │                   (proyectos de una inmobiliaria), capital/empecemos (Te acompañamos),
-│                   mis-depas, propietarios
+│                   mis-inmuebles, propietarios
 ├── scripts/        JS del navegador (formularios, consentimiento, botones de guardado)
 └── styles/         tokens.css y global.css
 tests/unit, tests/e2e   Vitest y Playwright
@@ -115,7 +115,7 @@ openapi/            copia del contrato de la API
 | Razón social, RUC y dirección fiscal                     | `src/data/empresa.ts` y variables `COMPANY_*` de la API  |
 | Revisión legal de privacidad y términos (son borradores) | `src/pages/privacidad.astro`, `src/pages/terminos.astro` |
 | Supuestos de la cuota estimada                           | API: `POST /v1/admin/financing-assumptions`              |
-| Fotos de los depas en la API                             | Subir a R2 con `POST /v1/admin/uploads`                  |
+| Fotos de los inmuebles en la API                         | Subir a R2 con `POST /v1/admin/uploads`                  |
 | Logos de aliados                                         | `src/pages/capital/index.astro`                          |
 | Páginas Estadías y Nosotros (siguen en construcción)     | `src/pages/`                                             |
 | Versión en inglés del sitio                              | Selector EN deshabilitado en `LangSwitch.astro`          |

@@ -12,7 +12,7 @@ export const ICONS = {
     'M12 14.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z',
     'M12 2v3M12 19v3M2 12h3M19 12h3',
   ],
-  // "Lista | Mapa" en Todos los depas
+  // "Lista | Mapa" en Todos los inmuebles
   list: ['M9 6h11M9 12h11M9 18h11', 'M4.5 6h.01M4.5 12h.01M4.5 18h.01'],
   map: ['M9 4.5 3.5 6.5v13L9 17.5l6 2 5.5-2v-13L15 6.5l-6-2Z', 'M9 4.5v13M15 6.5v13'],
   bed: [

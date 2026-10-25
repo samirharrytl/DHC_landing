@@ -1,4 +1,4 @@
-// Botones "Me interesa" (tarjetas, detalle y proyectos): agregan o quitan el depa de Mis depas.
+// Botones "Me interesa" (tarjetas, detalle y proyectos): agregan o quitan el inmueble de Mis inmuebles.
 // Son botones de alternancia (aria-pressed), así que un segundo clic lo quita.
 import { getSavedStore } from '../lib/saved-store'
 
@@ -15,7 +15,7 @@ const render = (ids: string[]) => {
     if (label) label.textContent = saved ? 'Guardado' : 'Me interesa'
     button.setAttribute(
       'aria-label',
-      saved ? `Quitar ${name} de Mis depas` : `Me interesa: agregar ${name} a Mis depas`,
+      saved ? `Quitar ${name} de Mis inmuebles` : `Me interesa: agregar ${name} a Mis inmuebles`,
     )
   })
 }

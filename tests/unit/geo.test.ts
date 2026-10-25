@@ -16,7 +16,7 @@ describe('geo', () => {
     expect(distanceKm(kennedy, kennedy)).toBe(0)
   })
 
-  it('usa la ubicación del depa o, si no la tiene, el centro de su distrito', () => {
+  it('usa la ubicación del inmueble o, si no la tiene, el centro de su distrito', () => {
     expect(depaPosition({ location: { lat: -12.1, lng: -77.03 }, district: { slug: 'lince' } })).toEqual({
       lat: -12.1,
       lng: -77.03,

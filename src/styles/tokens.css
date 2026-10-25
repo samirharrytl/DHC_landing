@@ -16,7 +16,7 @@
   --color-navy-100: #e1e7f0; /* active de botón outline */
 
   /* ---------- Color · dorado (techos del logo) ---------- */
-  --color-gold-500: #e0b158; /* botón de compra: "Me interesa", "Empecemos" (navy encima: 8.9:1) */
+  --color-gold-500: #e0b158; /* botón de compra: "Me interesa", "Conversemos ahora" (navy encima: 8.9:1) */
   --color-gold-600: #d29f42; /* hover */
   --color-gold-700: #b8862d; /* active, bordes */
   --color-gold-100: #fbf3e2; /* fondos suaves: aviso "Agregado", insignias */
@@ -54,10 +54,10 @@
   --color-overlay: rgb(3 26 57 / 0.5); /* fondo del drawer móvil */
 
   /* ---------- Tipografía ---------- */
-  /* --font-inter lo crea Astro (astro.config.mjs → fonts): "Inter" + respaldo ajustado.
-     Si no existiera, se usan las fuentes del sistema. */
+  /* --font-poppins lo crea Astro (astro.config.mjs → fonts): "Poppins" + respaldo ajustado.
+     Es la fuente de depahostperu.com. Si no existiera, se usan las fuentes del sistema. */
   --font-sans: var(
-    --font-inter,
+    --font-poppins,
     ui-sans-serif,
     system-ui,
     -apple-system,
@@ -66,8 +66,8 @@
     Arial,
     sans-serif
   );
-  /* Títulos editoriales (Capital, Propietarios). --font-newsreader lo crea Astro. */
-  --font-display: var(--font-newsreader, Georgia, 'Times New Roman', serif);
+  /* Títulos editoriales (Capital, Propietarios): misma Poppins que el resto, como depahostperu.com */
+  --font-display: var(--font-sans);
   /* El logo script "Depa Host Perú" va como SVG, nunca como fuente web. */
 
   --fw-regular: 400;

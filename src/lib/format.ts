@@ -28,7 +28,7 @@ export function formatYield({ min, max }: { min: number; max: number }): string 
 /** 11 → "11 años" · 1 → "1 año" */
 export const formatYears = (years: number) => `${years} ${years === 1 ? 'año' : 'años'}`
 
-/** Datos físicos del depa que existan: ["2 dorm.", "2 baños", "68 m²"] */
+/** Datos físicos del inmueble que existan: ["2 dorm.", "2 baños", "68 m²"] */
 export function formatFacts(p: {
   bedrooms?: number | null
   bathrooms?: number | null
@@ -66,7 +66,7 @@ export const slugify = (value: string) =>
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '')
 
-/** Nota que va debajo de cada grid de depas. Los supuestos que falten se muestran como [campo]. */
+/** Nota que va debajo de cada grid de inmuebles. Los supuestos que falten se muestran como [campo]. */
 export function buildDisclaimer(f: {
   rate: number | null
   downPaymentPct: number | null

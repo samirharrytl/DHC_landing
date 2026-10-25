@@ -3,22 +3,22 @@
 Cada flujo indica qué archivo hace cada paso, para que puedas seguirlo en el código.
 
 Los flujos de cuentas y del panel (crear cuenta, ingresar, recuperar la contraseña, sincronizar
-Mis depas con la cuenta y publicar un depa como propietario) están en
+Mis inmuebles con la cuenta y publicar un inmueble como propietario) están en
 [08 · Panel y cuentas](08-panel-y-cuentas.md#4-flujos-de-cuenta).
 
 **Índice**
 
 1. [Recorrido completo del visitante](#1-recorrido-completo-del-visitante)
 2. [Generar el sitio (build)](#2-generar-el-sitio-build)
-3. [Publicar o editar un depa](#3-publicar-o-editar-un-depa)
+3. [Publicar o editar un inmueble](#3-publicar-o-editar-un-inmueble)
 4. [Subir fotos](#4-subir-fotos)
 5. [Buscar y filtrar](#5-buscar-y-filtrar)
 6. [Me interesa](#6-me-interesa)
-7. [Guarda tus depas](#7-guarda-tus-depas)
-8. [Ver el detalle de un depa](#8-ver-el-detalle-de-un-depa)
+7. [Guarda tus inmuebles](#7-guarda-tus-inmuebles)
+8. [Ver el detalle de un inmueble](#8-ver-el-detalle-de-un-inmueble)
 9. [Para ti, según lo que has visto](#9-para-ti-según-lo-que-has-visto)
-10. [Mis depas](#10-mis-depas)
-11. [Te acompañamos y WhatsApp](#11-te-acompañamos-y-whatsapp)
+10. [Mis inmuebles](#10-mis-inmuebles)
+11. [Empecemos con estos: WhatsApp desde Mis inmuebles](#11-empecemos-con-estos-whatsapp-desde-mis-inmuebles)
 12. [Formularios: inglés, propietarios y Libro de Reclamaciones](#12-formularios)
 13. [Cambiar el contrato del API](#13-cambiar-el-contrato-del-api)
 14. [Cookies y analítica](#14-cookies-y-analítica)
@@ -33,17 +33,17 @@ Este es el recorrido que diseñaste en el mock 5, con las páginas que lo implem
 ```mermaid
 flowchart TB
     START(("Llega a Capital"))
-    HOME["/capital<br/>depas de propietarios"]
-    BUSCA["Busca o filtra<br/>SearchFilters · /capital/depas"]
+    HOME["/capital<br/>inmuebles de propietarios"]
+    BUSCA["Busca o filtra<br/>SearchFilters · /capital/inmuebles"]
     FICHA["Abre la ficha<br/>/capital/{slug}"]
     MARCA["Marca Me interesa<br/>SaveButton"]
     ALIADO["Clic en un aliado<br/>/capital/aliados/{slug}"]
-    ACUM["Acumula en Mis depas<br/>localStorage"]
-    DEC{"¿Deja sus datos en<br/>Guarda tus depas?"}
+    ACUM["Acumula en Mis inmuebles<br/>localStorage"]
+    DEC{"¿Deja sus datos en<br/>Guarda tus inmuebles?"}
     NAV["Sigue navegando<br/>el navegador recuerda"]
     REG["Deja nombre y celular<br/>lead saved-list en el API"]
     PERS["Capital personalizada<br/>Para ti, según lo que has visto · Hola, Ana"]
-    ELIGE["Elige uno o varios<br/>/mis-depas"]
+    ELIGE["Elige uno o varios<br/>/mis-inmuebles"]
     WA["Empecemos con estos<br/>abre WhatsApp · lead cart en el API"]
     CIERRE(("Te acompañamos y cierras<br/>con la inmobiliaria o el propietario"))
 
@@ -66,9 +66,9 @@ Puntos de registro en el API durante el recorrido:
 
 | Momento | Lead | Datos personales |
 |---|---|---|
-| Deja sus datos en "Guarda tus depas" | `saved-list` | Nombre, celular, correo opcional |
-| Hace clic en "Empecemos con estos" en Mis depas | `cart` | Ninguno: solo los IDs de los depas |
-| Envía el formulario de propietarios | `owner-sell` u `owner-rent` | Nombre, celular, datos del depa |
+| Deja sus datos en "Guarda tus inmuebles" | `saved-list` | Nombre, celular, correo opcional |
+| Hace clic en "Empecemos con estos" en Mis inmuebles | `cart` | Ninguno: solo los IDs de los inmuebles |
+| Envía el formulario de propietarios | `owner-sell` u `owner-rent` | Nombre, celular, datos del inmueble |
 
 ---
 
@@ -115,12 +115,12 @@ Reglas importantes:
   recarga el sitio solo.
 - **Si el API falla durante el build, el build falla.** Es a propósito: es mejor no publicar que
   publicar datos viejos o de ejemplo.
-- **Páginas que se generan:** una por depa visible, una por inmobiliaria con proyectos, y el resto
-  de rutas fijas. Los depas vendidos no generan página.
+- **Páginas que se generan:** una por inmueble visible, una por inmobiliaria con proyectos, y el resto
+  de rutas fijas. Los inmuebles vendidos no generan página.
 
 ---
 
-## 3. Publicar o editar un depa
+## 3. Publicar o editar un inmueble
 
 Hoy no hay panel visual: se usa `/docs` del API, Drizzle Studio o cualquier cliente HTTP con la
 clave de administración.
@@ -138,12 +138,12 @@ sequenceDiagram
     API->>API: admin-auth compara la clave
     API->>DB: ¿existe el distrito? ¿y la inmobiliaria, si es proyecto?
     API->>DB: ¿slug libre? si no, agrega -2, -3…
-    API->>DB: INSERT depa y fotos en una transacción
+    API->>DB: INSERT inmueble y fotos en una transacción
     API-->>E: 201 AdminProperty
-    alt el depa no es borrador
+    alt el inmueble no es borrador
         API->>DH: triggerDeploy create
         Note over DH: espera 30 s por si llegan más cambios
-        E->>API: PATCH de otro depa dentro de esos 30 s
+        E->>API: PATCH de otro inmueble dentro de esos 30 s
         API->>DH: triggerDeploy update, reinicia la espera
         DH->>H: POST DEPLOY_HOOK_URL, una sola vez
         H->>H: build, ver flujo 2
@@ -215,17 +215,17 @@ sequenceDiagram
 Cómo se decide si una tarjeta coincide:
 
 1. **Texto:** se normaliza sin tildes, en minúsculas y solo letras y números. "S/ 310,000" queda
-   "s310000", así que buscar "310 000" o "310,000" encuentra el depa.
+   "s310000", así que buscar "310 000" o "310,000" encuentra el inmueble.
 2. **Distrito:** el slug del chip debe ser igual al de la tarjeta.
 3. **Precio máximo:** el precio de la tarjeta debe ser menor o igual.
-4. **Rentabilidad mínima:** la rentabilidad mínima de la tarjeta debe ser mayor o igual.
-5. Todos los criterios activos se combinan con "y".
+4. Todos los criterios activos se combinan con "y".
+
+La rentabilidad no es filtro rápido: está con el resto de filtros en "Todos los inmuebles" (`/capital/inmuebles`).
 
 Cómo se arman los chips (en el build, `buildFastFilters`):
 
-- Un chip por distrito presente, en orden alfabético.
-- Hasta 2 topes de precio, redondeados hacia arriba a S/ 50,000, solo si dejan fuera algún depa.
-- Hasta 2 rentabilidades mínimas, solo si dejan fuera algún depa.
+- Los 4 distritos con más inmuebles (a igualdad, los de mejor rentabilidad).
+- Un tope de precio redondeado a S/ 50,000, cerca de la mediana, solo si deja fuera algún inmueble.
 
 ---
 
@@ -236,7 +236,7 @@ sequenceDiagram
     autonumber
     actor V as Visitante
     participant B as Botón Me interesa<br/>saved-buttons.ts
-    participant ST as Mis depas<br/>saved-store.ts
+    participant ST as Mis inmuebles<br/>saved-store.ts
     participant HD as Header
     participant DL as Diálogo
 
@@ -258,14 +258,14 @@ pestaña también.
 
 ---
 
-## 7. Guarda tus depas
+## 7. Guarda tus inmuebles
 
 ### Cuándo aparece (UML de estados)
 
 ```mermaid
 stateDiagram-v2
     [*] --> Esperando
-    Esperando --> Abierto : guarda el 2.º depa y shouldPrompt()
+    Esperando --> Abierto : guarda el 2.º inmueble y shouldPrompt()
     Esperando --> Abierto : clic en "Guárdalos con tu celular"
     Abierto --> Enfriamiento : cierra, "Seguir viendo", Esc o clic afuera
     Abierto --> Completado : envío correcto
@@ -283,7 +283,7 @@ stateDiagram-v2
 ```
 
 `shouldPrompt()` (en `lib/profile.ts`) responde **no** si ya hay perfil o si el aviso se cerró hace
-menos de 7 días. El botón "Guárdalos con tu celular" de Mis depas abre el diálogo siempre.
+menos de 7 días. El botón "Guárdalos con tu celular" de Mis inmuebles abre el diálogo siempre.
 
 ### Envío (UML de secuencia)
 
@@ -298,8 +298,8 @@ sequenceDiagram
     participant HD as Header
 
     D->>CAT: loadCatalog()
-    CAT-->>D: nombres de los depas guardados
-    D->>V: 2 departamentos seleccionados: Lince y Surquillo
+    CAT-->>D: nombres de los inmuebles guardados
+    D->>V: 2 inmuebles seleccionados: Lince y Surquillo
     V->>D: nombre, celular, correo opcional, acepta privacidad
     V->>D: Guardar y continuar
     D->>D: validación nativa del navegador
@@ -311,7 +311,7 @@ sequenceDiagram
     D->>D: profile.set("ana lucía") guarda firstName Ana
     D-->>HD: evento profile-updated
     HD->>V: Hola, Ana
-    D->>V: Listo, Ana · Ver Mis depas · Seguir viendo
+    D->>V: Listo, Ana · Ver Mis inmuebles · Seguir viendo
 ```
 
 El cuerpo del `POST` lleva `source: saved-list`, `name`, `phone`, `email` (opcional),
@@ -319,7 +319,7 @@ El cuerpo del `POST` lleva `source: saved-list`, `name`, `phone`, `email` (opcio
 
 ---
 
-## 8. Ver el detalle de un depa
+## 8. Ver el detalle de un inmueble
 
 ```mermaid
 sequenceDiagram
@@ -335,7 +335,7 @@ sequenceDiagram
     HS->>LS: mueve el id al final de depahost:viewed-depas (máximo 12)
     V->>PG: Me interesa (flujo 6)
     V->>PG: Contactar
-    PG-->>V: /mis-depas?agregar={id}: el depa entra a Mis depas (flujo 11)
+    PG-->>V: /mis-inmuebles?agregar={id}: el inmueble entra a Mis inmuebles (flujo 11)
 ```
 
 Qué muestra el detalle:
@@ -346,19 +346,19 @@ Qué muestra el detalle:
 - **Características:** dormitorios, baños y m², solo si existen.
 - **Bloque de aliado:** la inmobiliaria con link a sus proyectos, o "Te acompaña · DepaHost
   Capital" si es de propietario.
-- **Depas similares:** los 4 más parecidos según `similarTo` (ver flujo 9).
+- **Inmuebles similares:** los 4 más parecidos según `similarTo` (ver flujo 9).
 
 ---
 
 ## 9. Para ti, según lo que has visto
 
-Aparece en `/capital` y, con el título "Parecidos a los que guardaste", en `/mis-depas`.
+Aparece en `/capital` y, con el título "Parecidos a los que guardaste", en `/mis-inmuebles`.
 
 ```mermaid
 sequenceDiagram
     autonumber
     participant R as ForYouRow
-    participant ST as Mis depas e historial
+    participant ST as Mis inmuebles e historial
     participant CAT as /data/properties.json
     participant RC as lib/recommend.ts
     participant T as Plantilla MiniCard
@@ -370,12 +370,12 @@ sequenceDiagram
         R->>CAT: loadCatalog()
         CAT-->>R: CatalogItem[]
         R->>RC: recommend(catálogo, { viewed, saved }, 4)
-        RC-->>R: hasta 4 depas
-        loop por cada depa
+        RC-->>R: hasta 4 inmuebles
+        loop por cada inmueble
             R->>T: clona la plantilla y completa foto, título, precio, rentabilidad y plazo
         end
         R->>R: muestra la sección (u oculta si no hay resultados)
-        R->>ST: se suscribe: si cambia Mis depas, recalcula
+        R->>ST: se suscribe: si cambia Mis inmuebles, recalcula
     end
 ```
 
@@ -386,8 +386,8 @@ flowchart TB
     A["Señales:<br/>guardados (peso 2)<br/>últimos 6 vistos (peso 0.5 a 1.5, más reciente pesa más)"]
     B{"¿Hay alguna señal?"}
     C["Sin recomendaciones"]
-    D["Para cada depa del catálogo<br/>que NO esté guardado"]
-    E["puntaje = Σ peso × similitud(señal, depa)<br/>(se salta la señal si es el mismo depa)"]
+    D["Para cada inmueble del catálogo<br/>que NO esté guardado"]
+    E["puntaje = Σ peso × similitud(señal, inmueble)<br/>(se salta la señal si es el mismo inmueble)"]
     F{"¿Ya lo vio?"}
     G["puntaje × 0.6<br/>(lo nuevo va primero)"]
     H["Descarta puntaje 0<br/>ordena de mayor a menor<br/>toma los primeros 4"]
@@ -399,7 +399,7 @@ flowchart TB
     F -- no --> H
 ```
 
-**Similitud entre dos depas** (`similarity` en `lib/recommend.ts`), de 0 a 7 puntos:
+**Similitud entre dos inmuebles** (`similarity` en `lib/recommend.ts`), de 0 a 7 puntos:
 
 | Criterio | Puntos |
 |---|---|
@@ -408,24 +408,24 @@ flowchart TB
 | Precio cercano: `2 − 4 × diferencia relativa`, mínimo 0 | 0 a 2 |
 | Rentabilidad cercana: `1 − diferencia en puntos / 3`, mínimo 0 | 0 a 1 |
 
-Los "Depas similares" del detalle usan la misma función, pero en el build y con un solo depa
+Los "Inmuebles similares" del detalle usan la misma función, pero en el build y con un solo inmueble
 como referencia (`similarTo`).
 
 ---
 
-## 10. Mis depas
+## 10. Mis inmuebles
 
 ```mermaid
 sequenceDiagram
     autonumber
     actor V as Visitante
-    participant P as /mis-depas
+    participant P as /mis-inmuebles
     participant ST as getSavedStore()
     participant CAT as /data/properties.json
     participant T as Plantilla SavedDepa
     participant PR as lib/profile.ts
 
-    V->>P: abre Mis depas
+    V->>P: abre Mis inmuebles
     P->>PR: ¿hay nombre?
     PR-->>P: nota "Guardado para Ana" o "Guardado en este dispositivo"
     P->>CAT: loadCatalog()
@@ -445,27 +445,27 @@ sequenceDiagram
     P->>ST: remove(id) · se vuelve a pintar todo
 ```
 
-La inversión total suma por moneda. Si hay depas en soles y en dólares, muestra
+La inversión total suma por moneda. Si hay inmuebles en soles y en dólares, muestra
 "S/ 595,000 + US$ 80,000".
 
 ---
 
-## 11. Empecemos con estos: WhatsApp desde Mis depas
+## 11. Empecemos con estos: WhatsApp desde Mis inmuebles
 
-"Te acompañamos" (`/capital/empecemos`) se unió a Mis depas: la lista es el último paso y desde ahí
-se escribe por WhatsApp. `/capital/empecemos` redirige a `/mis-depas`.
+"Te acompañamos" (`/capital/empecemos`) se unió a Mis inmuebles: la lista es el último paso y desde ahí
+se escribe por WhatsApp. `/capital/empecemos` redirige a `/mis-inmuebles`.
 
 ```mermaid
 sequenceDiagram
     autonumber
     actor V as Visitante
-    participant P as /mis-depas
-    participant ST as Mis depas
+    participant P as /mis-inmuebles
+    participant ST as Mis inmuebles
     participant API as depahost-api
     participant WA as WhatsApp
 
     alt llega desde "Contactar" del detalle
-        V->>P: /mis-depas?agregar={id}
+        V->>P: /mis-inmuebles?agregar={id}
         P->>ST: add(id) · limpia la URL
     end
     P->>V: lista, resumen y "Empecemos con estos" con el mensaje armado
@@ -477,8 +477,8 @@ sequenceDiagram
     end
 ```
 
-- El mensaje incluye cada depa con distrito, dirección y precio.
-- Sin depas guardados el botón está deshabilitado y la página invita a explorar.
+- El mensaje incluye cada inmueble con distrito, dirección y precio.
+- Sin inmuebles guardados el botón está deshabilitado y la página invita a explorar.
 - El lead `cart` no lleva datos personales ni captcha. Si el API falla, WhatsApp se abre igual.
 
 ---
@@ -524,7 +524,7 @@ flowchart TB
 | Formulario | Página | Payload | Al terminar |
 |---|---|---|---|
 | Propietarios | `/propietarios` | `owner-sell` si "Vender"; `owner-rent` si "Alquilar" o "Airbnb"; `details: { district, propertyType, intent, expectedPrice }` | "Te escribimos por WhatsApp" + link |
-| Guarda tus depas | Diálogo global | `saved-list` + `propertyIds` | Saludo y paso "Listo" (flujo 7) |
+| Guarda tus inmuebles | Diálogo global | `saved-list` + `propertyIds` | Saludo y paso "Listo" (flujo 7) |
 | Libro de Reclamaciones | `/libro-de-reclamaciones` | `consumer`, `item`, `kind`, `detail`, `request`, `consent` | Constancia en pantalla e imprimible |
 
 En Propietarios, los botones "Quiero vender" y "Poner en alquiler" eligen la opción del select y
@@ -646,8 +646,8 @@ se carga si hay `PUBLIC_SENTRY_DSN`.
 | Envía demasiadas veces | 429 | "Espera un minuto" |
 | Un campo no pasa la validación del API | 400 con `issues` | El campo se marca con el mensaje del API |
 | Falla Turnstile | 400 | "No pudimos verificar que no eres un robot…" |
-| No carga `/data/properties.json` | Mis depas muestra un aviso; Para ti queda oculta | "No pudimos cargar tus depas guardados" |
-| Un depa guardado ya no existe | Se quita solo de Mis depas | No aparece |
-| `localStorage` bloqueado | Las listas funcionan en memoria en esa página | Mis depas se vacía al recargar |
+| No carga `/data/properties.json` | Mis inmuebles muestra un aviso; Para ti queda oculta | "No pudimos cargar tus inmuebles guardados" |
+| Un inmueble guardado ya no existe | Se quita solo de Mis inmuebles | No aparece |
+| `localStorage` bloqueado | Las listas funcionan en memoria en esa página | Mis inmuebles se vacía al recargar |
 | Falla el correo o el CRM | El lead o reclamo ya quedó guardado; se registra en el log | Nada |
 | Falla el deploy hook | Se registra en el log | El cambio no aparece hasta el próximo build |

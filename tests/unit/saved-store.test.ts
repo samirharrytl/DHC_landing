@@ -25,7 +25,7 @@ describe('saved-store', () => {
     expect(store.list()).toEqual([])
   })
 
-  it('touch mueve el depa al final (el más reciente)', () => {
+  it('touch mueve el inmueble al final (el más reciente)', () => {
     const store = createLocalSavedStore(memoryStorage(), new EventTarget())
     store.add('a')
     store.add('b')

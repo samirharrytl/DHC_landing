@@ -1,4 +1,4 @@
-// Perfil liviano: el nombre que la persona dejó en "Guarda tus depas", para saludarla ("Hola, Ana").
+// Perfil liviano: el nombre que la persona dejó en "Guarda tus inmuebles", para saludarla ("Hola, Ana").
 // Solo se guarda el primer nombre en el navegador: el contacto completo queda en la API (lead).
 // Cuando exista login, esto se reemplaza por la sesión (GET /v1/me).
 import { browserStorage, type StorageLike } from './saved-store'
@@ -42,7 +42,7 @@ export function createProfileStore(storage: StorageLike, events: EventTarget) {
       storage.removeItem(PROFILE_KEY)
       events.dispatchEvent(new CustomEvent(PROFILE_EVENT, { detail: null }))
     },
-    /** ¿Mostrar "Guarda tus depas"? No si ya dejó sus datos o lo cerró hace menos de 7 días. */
+    /** ¿Mostrar "Guarda tus inmuebles"? No si ya dejó sus datos o lo cerró hace menos de 7 días. */
     shouldPrompt(now = Date.now()): boolean {
       if (this.get()) return false
       const dismissed = Number(storage.getItem(PROMPT_KEY) ?? 0)

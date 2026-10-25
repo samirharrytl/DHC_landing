@@ -9,17 +9,17 @@ import Icon from './Icon.astro'
 import { waLink } from '../data/contacto'
 import { PUBLIC_PANEL_URL } from 'astro:env/client'
 
-// Menú principal: comprar (Capital y Mis depas) y vender (Propietarios).
+// Menú principal: comprar (Capital y Mis inmuebles) y vender (Propietarios).
 // `section`: páginas en las que el link queda marcado, aunque no sea la página exacta
 const links = [
   { href: '/', label: 'Inicio', section: [] },
-  { href: '/capital', label: 'Compra', section: ['/capital', '/mis-depas'] },
+  { href: '/capital', label: 'Compra', section: ['/capital', '/mis-inmuebles'] },
   { href: '/propietarios', label: 'Vende', section: ['/propietarios'] },
 ]
 
 // Quitamos la "/" final para comparar: "/capital/" → "/capital"
 const path = Astro.url.pathname.replace(/\/$/, '') || '/'
-/** "page" en la página del link; "true" en el resto de su sección (/capital/depas → Compra) */
+/** "page" en la página del link; "true" en el resto de su sección (/capital/inmuebles → Compra) */
 const current = (link: (typeof links)[number]) =>
   path === link.href
     ? 'page'
@@ -27,6 +27,8 @@ const current = (link: (typeof links)[number]) =>
       ? 'true'
       : undefined
 const panelUrl = PUBLIC_PANEL_URL?.replace(/\/$/, '')
+// "Ingresar" desactivado por ahora. Para volver a mostrarlo: true (y PUBLIC_PANEL_URL configurada)
+const loginEnabled = false
 const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
 ---
 
@@ -48,8 +50,8 @@ const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
     </nav>
 
     <div class="actions">
-      <!-- Saludo: con la cuenta (lleva al panel) o con el nombre de "Guarda tus depas" -->
-      <a class="greeting" href="/mis-depas" data-greeting data-panel-url={panelUrl} hidden>
+      <!-- Saludo: con la cuenta (lleva al panel) o con el nombre de "Guarda tus inmuebles" -->
+      <a class="greeting" href="/mis-inmuebles" data-greeting data-panel-url={panelUrl} hidden>
         <span class="avatar" aria-hidden="true" data-greeting-initial></span>
         <span class="greeting-text">
           Hola, <span data-greeting-name></span>
@@ -57,17 +59,17 @@ const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
       </a>
 
       <!-- Ingresar al panel (solo si hay panel configurado y no hay sesión) -->
-      {panelUrl && (
+      {loginEnabled && panelUrl && (
         <a class="login" href={`${panelUrl}/ingresar`} data-login>
           <Icon name="lock" size={20} />
           <span class="login-text">Ingresar</span>
         </a>
       )}
 
-      <!-- Acceso a los departamentos guardados -->
-      <a class="cart" href="/mis-depas" aria-label="Mis depas" data-cart-link>
+      <!-- Acceso a los inmuebles guardados -->
+      <a class="cart" href="/mis-inmuebles" aria-label="Mis inmuebles" data-cart-link>
         <CartIcon />
-        <span class="cart-label">Mis depas</span>
+        <span class="cart-label">Mis inmuebles</span>
         <span class="cart-count" data-cart-count aria-hidden="true" hidden>
           0
         </span>
@@ -147,7 +149,7 @@ const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
     </nav>
 
     <div class="drawer-bottom">
-      {panelUrl && (
+      {loginEnabled && panelUrl && (
         <a class="btn btn--secondary btn--block" href={`${panelUrl}/ingresar`} data-login-drawer>
           Ingresar a mi cuenta
         </a>
@@ -178,7 +180,7 @@ const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
   import { firstNameOf, getProfileStore, PROFILE_EVENT } from '../lib/profile'
   import { getAccount, syncSavedWithAccount } from '../lib/account'
 
-  // ---------- Mis depas: contador ----------
+  // ---------- Mis inmuebles: contador ----------
   // Los botones "Me interesa" viven en cada tarjeta (src/scripts/saved-buttons.ts); aquí solo el contador.
   const store = getSavedStore()
   const renderCount = (ids: string[]) => {
@@ -188,9 +190,9 @@ const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
     })
     document.querySelectorAll<HTMLElement>('[data-cart-link]').forEach((link) => {
       const count = ids.length
-        ? `, ${ids.length} ${ids.length === 1 ? 'depa guardado' : 'depas guardados'}`
+        ? `, ${ids.length} ${ids.length === 1 ? 'inmueble guardado' : 'inmuebles guardados'}`
         : ''
-      link.setAttribute('aria-label', `Mis depas${count}`)
+      link.setAttribute('aria-label', `Mis inmuebles${count}`)
     })
   }
   store.subscribe(renderCount)
@@ -198,7 +200,7 @@ const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
 
   // ---------- Saludo e "Ingresar" ----------
   // Con sesión: "Hola, {nombre de la cuenta}" lleva al panel y se oculta "Ingresar".
-  // Sin sesión: saludo con el nombre de "Guarda tus depas", si lo dejó.
+  // Sin sesión: saludo con el nombre de "Guarda tus inmuebles", si lo dejó.
   const profile = getProfileStore()
   let accountName: string | undefined
   const renderGreeting = () => {
@@ -489,7 +491,7 @@ const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
     display: none;
   }
 
-  /* Acceso a Mis depas con icono de carpeta y contador */
+  /* Acceso a Mis inmuebles con icono de carpeta y contador */
   .cart {
     position: relative;
     display: inline-flex;

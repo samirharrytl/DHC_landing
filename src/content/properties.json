@@ -31,25 +31,25 @@
     "images": [
       {
         "src": "../assets/depas/lince-av-arequipa.jpg",
-        "alt": "Departamento en Lince"
+        "alt": "Inmueble en Lince"
       },
       {
         "src": "../assets/depas/surquillo-av-angamos.jpg",
-        "alt": "Foto de referencia 2 para el depa en Lince"
+        "alt": "Foto de referencia 2 para el inmueble en Lince"
       },
       {
         "src": "../assets/depas/magdalena-av-del-ejercito.jpg",
-        "alt": "Foto de referencia 3 para el depa en Lince"
+        "alt": "Foto de referencia 3 para el inmueble en Lince"
       },
       {
         "src": "../assets/hero-home.jpg",
-        "alt": "Foto de referencia 4 para el depa en Lince"
+        "alt": "Foto de referencia 4 para el inmueble en Lince"
       }
     ],
     "videos": [
       {
         "url": "/videos/lince-av-arequipa-cuadra-12.webm",
-        "title": "Recorrido del depa"
+        "title": "Recorrido del inmueble"
       }
     ],
     "status": "published",
@@ -88,19 +88,19 @@
     "images": [
       {
         "src": "../assets/depas/surquillo-av-angamos.jpg",
-        "alt": "Departamento en Surquillo"
+        "alt": "Inmueble en Surquillo"
       },
       {
         "src": "../assets/depas/lince-av-arequipa.jpg",
-        "alt": "Foto de referencia 2 para el depa en Surquillo"
+        "alt": "Foto de referencia 2 para el inmueble en Surquillo"
       },
       {
         "src": "../assets/depas/magdalena-av-del-ejercito.jpg",
-        "alt": "Foto de referencia 3 para el depa en Surquillo"
+        "alt": "Foto de referencia 3 para el inmueble en Surquillo"
       },
       {
         "src": "../assets/hero-home.jpg",
-        "alt": "Foto de referencia 4 para el depa en Surquillo"
+        "alt": "Foto de referencia 4 para el inmueble en Surquillo"
       }
     ],
     "status": "published",
@@ -139,19 +139,19 @@
     "images": [
       {
         "src": "../assets/depas/magdalena-av-del-ejercito.jpg",
-        "alt": "Departamento en Magdalena"
+        "alt": "Inmueble en Magdalena"
       },
       {
         "src": "../assets/depas/lince-av-arequipa.jpg",
-        "alt": "Foto de referencia 2 para el depa en Magdalena"
+        "alt": "Foto de referencia 2 para el inmueble en Magdalena"
       },
       {
         "src": "../assets/depas/surquillo-av-angamos.jpg",
-        "alt": "Foto de referencia 3 para el depa en Magdalena"
+        "alt": "Foto de referencia 3 para el inmueble en Magdalena"
       },
       {
         "src": "../assets/hero-home.jpg",
-        "alt": "Foto de referencia 4 para el depa en Magdalena"
+        "alt": "Foto de referencia 4 para el inmueble en Magdalena"
       }
     ],
     "status": "published",
@@ -178,7 +178,7 @@
       "lng": -77.10318
     },
     "badge": null,
-    "description": "Departamentos de 1, 2 y 3 dormitorios. Acabados modernos y zonas comunes completas.",
+    "description": "Inmuebles de 1, 2 y 3 dormitorios. Acabados modernos y zonas comunes completas.",
     "price": {
       "amount": 595000,
       "currency": "PEN"
@@ -194,19 +194,19 @@
     "images": [
       {
         "src": "../assets/depas/magdalena-av-del-ejercito.jpg",
-        "alt": "Departamento modelo del proyecto en San Miguel"
+        "alt": "Inmueble modelo del proyecto en San Miguel"
       },
       {
         "src": "../assets/depas/lince-av-arequipa.jpg",
-        "alt": "Foto de referencia 2 para el depa en San Miguel"
+        "alt": "Foto de referencia 2 para el inmueble en San Miguel"
       },
       {
         "src": "../assets/depas/surquillo-av-angamos.jpg",
-        "alt": "Foto de referencia 3 para el depa en San Miguel"
+        "alt": "Foto de referencia 3 para el inmueble en San Miguel"
       },
       {
         "src": "../assets/hero-home.jpg",
-        "alt": "Foto de referencia 4 para el depa en San Miguel"
+        "alt": "Foto de referencia 4 para el inmueble en San Miguel"
       }
     ],
     "status": "published",
@@ -249,19 +249,19 @@
     "images": [
       {
         "src": "../assets/hero-home.jpg",
-        "alt": "Departamento modelo del proyecto en Miraflores"
+        "alt": "Inmueble modelo del proyecto en Miraflores"
       },
       {
         "src": "../assets/depas/lince-av-arequipa.jpg",
-        "alt": "Foto de referencia 2 para el depa en Miraflores"
+        "alt": "Foto de referencia 2 para el inmueble en Miraflores"
       },
       {
         "src": "../assets/depas/surquillo-av-angamos.jpg",
-        "alt": "Foto de referencia 3 para el depa en Miraflores"
+        "alt": "Foto de referencia 3 para el inmueble en Miraflores"
       },
       {
         "src": "../assets/depas/magdalena-av-del-ejercito.jpg",
-        "alt": "Foto de referencia 4 para el depa en Miraflores"
+        "alt": "Foto de referencia 4 para el inmueble en Miraflores"
       }
     ],
     "status": "published",
@@ -288,7 +288,7 @@
       "lng": -77.00275
     },
     "badge": null,
-    "description": "Departamentos de 1 y 2 dormitorios. Excelente conexión y amenidades.",
+    "description": "Inmuebles de 1 y 2 dormitorios. Excelente conexión y amenidades.",
     "price": {
       "amount": 499000,
       "currency": "PEN"
@@ -304,19 +304,19 @@
     "images": [
       {
         "src": "../assets/depas/surquillo-av-angamos.jpg",
-        "alt": "Departamento modelo del proyecto en Surquillo"
+        "alt": "Inmueble modelo del proyecto en Surquillo"
       },
       {
         "src": "../assets/depas/lince-av-arequipa.jpg",
-        "alt": "Foto de referencia 2 para el depa en Surquillo"
+        "alt": "Foto de referencia 2 para el inmueble en Surquillo"
       },
       {
         "src": "../assets/depas/magdalena-av-del-ejercito.jpg",
-        "alt": "Foto de referencia 3 para el depa en Surquillo"
+        "alt": "Foto de referencia 3 para el inmueble en Surquillo"
       },
       {
         "src": "../assets/hero-home.jpg",
-        "alt": "Foto de referencia 4 para el depa en Surquillo"
+        "alt": "Foto de referencia 4 para el inmueble en Surquillo"
       }
     ],
     "status": "published",
@@ -339,7 +339,7 @@
       "lng": -77.0445
     },
     "badge": "Súper precio",
-    "description": "Depa de 2 dormitorios frente al Campo de Marte, a pasos de la Av. Salaverry. Alquila rápido a familias y ejecutivos.",
+    "description": "Inmueble de 2 dormitorios frente al Campo de Marte, a pasos de la Av. Salaverry. Alquila rápido a familias y ejecutivos.",
     "price": {
       "amount": 355000,
       "currency": "PEN"
@@ -355,19 +355,19 @@
     "images": [
       {
         "src": "../assets/depas/ilustraciones/sala-01.jpg",
-        "alt": "Ilustración de la sala del depa en Jesús María"
+        "alt": "Ilustración de la sala del inmueble en Jesús María"
       },
       {
         "src": "../assets/depas/ilustraciones/dormitorio-01.jpg",
-        "alt": "Ilustración de un dormitorio del depa en Jesús María"
+        "alt": "Ilustración de un dormitorio del inmueble en Jesús María"
       },
       {
         "src": "../assets/depas/ilustraciones/cocina-01.jpg",
-        "alt": "Ilustración de la cocina del depa en Jesús María"
+        "alt": "Ilustración de la cocina del inmueble en Jesús María"
       },
       {
         "src": "../assets/depas/ilustraciones/fachada-01.jpg",
-        "alt": "Ilustración de la fachada del depa en Jesús María"
+        "alt": "Ilustración de la fachada del inmueble en Jesús María"
       }
     ],
     "status": "published",
@@ -406,19 +406,19 @@
     "images": [
       {
         "src": "../assets/depas/ilustraciones/sala-02.jpg",
-        "alt": "Ilustración de la sala del depa en Pueblo Libre"
+        "alt": "Ilustración de la sala del inmueble en Pueblo Libre"
       },
       {
         "src": "../assets/depas/ilustraciones/dormitorio-02.jpg",
-        "alt": "Ilustración de un dormitorio del depa en Pueblo Libre"
+        "alt": "Ilustración de un dormitorio del inmueble en Pueblo Libre"
       },
       {
         "src": "../assets/depas/ilustraciones/cocina-02.jpg",
-        "alt": "Ilustración de la cocina del depa en Pueblo Libre"
+        "alt": "Ilustración de la cocina del inmueble en Pueblo Libre"
       },
       {
         "src": "../assets/depas/ilustraciones/fachada-02.jpg",
-        "alt": "Ilustración de la fachada del depa en Pueblo Libre"
+        "alt": "Ilustración de la fachada del inmueble en Pueblo Libre"
       }
     ],
     "status": "published",
@@ -441,7 +441,7 @@
       "lng": -76.99631
     },
     "badge": "Últimos en venta",
-    "description": "Depa familiar de 3 dormitorios con cochera, a dos cuadras del Pentagonito y de la ciclovía.",
+    "description": "Inmueble familiar de 3 dormitorios con cochera, a dos cuadras del Pentagonito y de la ciclovía.",
     "price": {
       "amount": 520000,
       "currency": "PEN"
@@ -457,19 +457,19 @@
     "images": [
       {
         "src": "../assets/depas/ilustraciones/sala-03.jpg",
-        "alt": "Ilustración de la sala del depa en San Borja"
+        "alt": "Ilustración de la sala del inmueble en San Borja"
       },
       {
         "src": "../assets/depas/ilustraciones/dormitorio-03.jpg",
-        "alt": "Ilustración de un dormitorio del depa en San Borja"
+        "alt": "Ilustración de un dormitorio del inmueble en San Borja"
       },
       {
         "src": "../assets/depas/ilustraciones/cocina-03.jpg",
-        "alt": "Ilustración de la cocina del depa en San Borja"
+        "alt": "Ilustración de la cocina del inmueble en San Borja"
       },
       {
         "src": "../assets/depas/ilustraciones/fachada-03.jpg",
-        "alt": "Ilustración de la fachada del depa en San Borja"
+        "alt": "Ilustración de la fachada del inmueble en San Borja"
       }
     ],
     "status": "published",
@@ -508,19 +508,19 @@
     "images": [
       {
         "src": "../assets/depas/ilustraciones/sala-04.jpg",
-        "alt": "Ilustración de la sala del depa en Barranco"
+        "alt": "Ilustración de la sala del inmueble en Barranco"
       },
       {
         "src": "../assets/depas/ilustraciones/dormitorio-04.jpg",
-        "alt": "Ilustración de un dormitorio del depa en Barranco"
+        "alt": "Ilustración de un dormitorio del inmueble en Barranco"
       },
       {
         "src": "../assets/depas/ilustraciones/cocina-04.jpg",
-        "alt": "Ilustración de la cocina del depa en Barranco"
+        "alt": "Ilustración de la cocina del inmueble en Barranco"
       },
       {
         "src": "../assets/depas/ilustraciones/fachada-04.jpg",
-        "alt": "Ilustración de la fachada del depa en Barranco"
+        "alt": "Ilustración de la fachada del inmueble en Barranco"
       }
     ],
     "status": "published",
@@ -543,7 +543,7 @@
       "lng": -77.03425
     },
     "badge": "Súper precio",
-    "description": "Depa de 1 dormitorio a una cuadra del Parque Kennedy. Funciona muy bien en Airbnb todo el año.",
+    "description": "Inmueble de 1 dormitorio a una cuadra del Parque Kennedy. Funciona muy bien en Airbnb todo el año.",
     "price": {
       "amount": 420000,
       "currency": "PEN"
@@ -559,25 +559,25 @@
     "images": [
       {
         "src": "../assets/depas/ilustraciones/sala-05.jpg",
-        "alt": "Ilustración de la sala del depa en Miraflores"
+        "alt": "Ilustración de la sala del inmueble en Miraflores"
       },
       {
         "src": "../assets/depas/ilustraciones/dormitorio-05.jpg",
-        "alt": "Ilustración de un dormitorio del depa en Miraflores"
+        "alt": "Ilustración de un dormitorio del inmueble en Miraflores"
       },
       {
         "src": "../assets/depas/ilustraciones/cocina-05.jpg",
-        "alt": "Ilustración de la cocina del depa en Miraflores"
+        "alt": "Ilustración de la cocina del inmueble en Miraflores"
       },
       {
         "src": "../assets/depas/ilustraciones/fachada-05.jpg",
-        "alt": "Ilustración de la fachada del depa en Miraflores"
+        "alt": "Ilustración de la fachada del inmueble en Miraflores"
       }
     ],
     "videos": [
       {
         "url": "/videos/miraflores-calle-berlin-cuadra-2.webm",
-        "title": "Recorrido ilustrado del depa"
+        "title": "Recorrido ilustrado del inmueble"
       }
     ],
     "status": "published",
@@ -616,19 +616,19 @@
     "images": [
       {
         "src": "../assets/depas/ilustraciones/sala-06.jpg",
-        "alt": "Ilustración de la sala del depa en Santiago de Surco"
+        "alt": "Ilustración de la sala del inmueble en Santiago de Surco"
       },
       {
         "src": "../assets/depas/ilustraciones/dormitorio-06.jpg",
-        "alt": "Ilustración de un dormitorio del depa en Santiago de Surco"
+        "alt": "Ilustración de un dormitorio del inmueble en Santiago de Surco"
       },
       {
         "src": "../assets/depas/ilustraciones/cocina-06.jpg",
-        "alt": "Ilustración de la cocina del depa en Santiago de Surco"
+        "alt": "Ilustración de la cocina del inmueble en Santiago de Surco"
       },
       {
         "src": "../assets/depas/ilustraciones/fachada-06.jpg",
-        "alt": "Ilustración de la fachada del depa en Santiago de Surco"
+        "alt": "Ilustración de la fachada del inmueble en Santiago de Surco"
       }
     ],
     "status": "reserved",
@@ -667,19 +667,19 @@
     "images": [
       {
         "src": "../assets/depas/ilustraciones/sala-07.jpg",
-        "alt": "Ilustración de la sala del depa en San Isidro"
+        "alt": "Ilustración de la sala del inmueble en San Isidro"
       },
       {
         "src": "../assets/depas/ilustraciones/dormitorio-07.jpg",
-        "alt": "Ilustración de un dormitorio del depa en San Isidro"
+        "alt": "Ilustración de un dormitorio del inmueble en San Isidro"
       },
       {
         "src": "../assets/depas/ilustraciones/cocina-07.jpg",
-        "alt": "Ilustración de la cocina del depa en San Isidro"
+        "alt": "Ilustración de la cocina del inmueble en San Isidro"
       },
       {
         "src": "../assets/depas/ilustraciones/fachada-07.jpg",
-        "alt": "Ilustración de la fachada del depa en San Isidro"
+        "alt": "Ilustración de la fachada del inmueble en San Isidro"
       }
     ],
     "status": "published",
@@ -718,19 +718,19 @@
     "images": [
       {
         "src": "../assets/depas/ilustraciones/sala-08.jpg",
-        "alt": "Ilustración de la sala del depa en La Victoria"
+        "alt": "Ilustración de la sala del inmueble en La Victoria"
       },
       {
         "src": "../assets/depas/ilustraciones/dormitorio-08.jpg",
-        "alt": "Ilustración de un dormitorio del depa en La Victoria"
+        "alt": "Ilustración de un dormitorio del inmueble en La Victoria"
       },
       {
         "src": "../assets/depas/ilustraciones/cocina-08.jpg",
-        "alt": "Ilustración de la cocina del depa en La Victoria"
+        "alt": "Ilustración de la cocina del inmueble en La Victoria"
       },
       {
         "src": "../assets/depas/ilustraciones/fachada-08.jpg",
-        "alt": "Ilustración de la fachada del depa en La Victoria"
+        "alt": "Ilustración de la fachada del inmueble en La Victoria"
       }
     ],
     "status": "published",
@@ -753,7 +753,7 @@
       "lng": -77.03355
     },
     "badge": null,
-    "description": "Depa compacto y bien ubicado entre San Isidro y Lince, con estación del Metropolitano a 3 cuadras.",
+    "description": "Inmueble compacto y bien ubicado entre San Isidro y Lince, con estación del Metropolitano a 3 cuadras.",
     "price": {
       "amount": 265000,
       "currency": "PEN"
@@ -769,19 +769,19 @@
     "images": [
       {
         "src": "../assets/depas/ilustraciones/sala-09.jpg",
-        "alt": "Ilustración de la sala del depa en Lince"
+        "alt": "Ilustración de la sala del inmueble en Lince"
       },
       {
         "src": "../assets/depas/ilustraciones/dormitorio-01.jpg",
-        "alt": "Ilustración de un dormitorio del depa en Lince"
+        "alt": "Ilustración de un dormitorio del inmueble en Lince"
       },
       {
         "src": "../assets/depas/ilustraciones/cocina-01.jpg",
-        "alt": "Ilustración de la cocina del depa en Lince"
+        "alt": "Ilustración de la cocina del inmueble en Lince"
       },
       {
         "src": "../assets/depas/ilustraciones/fachada-09.jpg",
-        "alt": "Ilustración de la fachada del depa en Lince"
+        "alt": "Ilustración de la fachada del inmueble en Lince"
       }
     ],
     "status": "published",
@@ -808,7 +808,7 @@
       "lng": -77.06227
     },
     "badge": "Preventa",
-    "description": "Proyecto de 18 pisos con gimnasio, coworking y terraza en la azotea. Departamentos de 1, 2 y 3 dormitorios.",
+    "description": "Proyecto de 18 pisos con gimnasio, coworking y terraza en la azotea. Inmuebles de 1, 2 y 3 dormitorios.",
     "price": {
       "amount": 410000,
       "currency": "PEN"
@@ -863,7 +863,7 @@
       "lng": -77.0752
     },
     "badge": "Estreno",
-    "description": "Edificio recién entregado, con lobby amplio y zona de parrillas. Departamentos de 1 y 2 dormitorios.",
+    "description": "Edificio recién entregado, con lobby amplio y zona de parrillas. Inmuebles de 1 y 2 dormitorios.",
     "price": {
       "amount": 365000,
       "currency": "PEN"
@@ -1083,7 +1083,7 @@
       "lng": -76.9656
     },
     "badge": "Súper precio",
-    "description": "Junto a la estación del Metro y a centros comerciales. Departamentos de 2 y 3 dormitorios.",
+    "description": "Junto a la estación del Metro y a centros comerciales. Inmuebles de 2 y 3 dormitorios.",
     "price": {
       "amount": 245000,
       "currency": "PEN"
@@ -1193,7 +1193,7 @@
       "lng": -77.01674
     },
     "badge": null,
-    "description": "Departamentos de 2 dormitorios con balcón, cerca de la Escuela Militar.",
+    "description": "Inmuebles de 2 dormitorios con balcón, cerca de la Escuela Militar.",
     "price": {
       "amount": 275000,
       "currency": "PEN"
@@ -1303,7 +1303,7 @@
       "lng": -77.06989
     },
     "badge": "Súper precio",
-    "description": "Departamentos de 3 dormitorios a precio de entrada, junto a Mega Plaza.",
+    "description": "Inmuebles de 3 dormitorios a precio de entrada, junto a Mega Plaza.",
     "price": {
       "amount": 235000,
       "currency": "PEN"
@@ -1523,7 +1523,7 @@
       "lng": -77.02971
     },
     "badge": "Últimos en venta",
-    "description": "Departamentos amoblados con operación hotelera incluida, a dos cuadras del malecón.",
+    "description": "Inmuebles amoblados con operación hotelera incluida, a dos cuadras del malecón.",
     "price": {
       "amount": 980000,
       "currency": "PEN"
@@ -1749,7 +1749,7 @@
       "lng": -77.00378
     },
     "badge": "Preventa",
-    "description": "Frente a la estación La Cultura de la Línea 1. Departamentos de 2 y 3 dormitorios.",
+    "description": "Frente a la estación La Cultura de la Línea 1. Inmuebles de 2 y 3 dormitorios.",
     "price": {
       "amount": 445000,
       "currency": "PEN"
@@ -1914,7 +1914,7 @@
       "lng": -77.06913
     },
     "badge": "Entrega inmediata",
-    "description": "Departamentos listos para habitar, a 10 minutos del malecón de Magdalena.",
+    "description": "Inmuebles listos para habitar, a 10 minutos del malecón de Magdalena.",
     "price": {
       "amount": 380000,
       "currency": "PEN"

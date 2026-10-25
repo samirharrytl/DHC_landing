@@ -1,4 +1,4 @@
-// Búsqueda y filtros de depas. Funciones puras: se usan en el build y en el navegador,
+// Búsqueda y filtros de inmuebles. Funciones puras: se usan en el build y en el navegador,
 // y se prueban con Vitest (tests/unit/filters.test.ts).
 import { formatPEN, normalizeText } from './format'
 
@@ -83,9 +83,9 @@ const closestTo = (target: number, candidates: number[]) =>
 
 /**
  * Pocos filtros rápidos y relevantes, derivados de los datos (no escritos a mano):
- * - los distritos con más depas (a igualdad, los de mejor rentabilidad)
- * - un tope de precio redondeado a S/ 50,000, cerca de la mediana, que deja fuera al menos un depa
- * La rentabilidad no va como filtro rápido: está con el resto de filtros en "Todos los depas" (/capital/depas).
+ * - los distritos con más inmuebles (a igualdad, los de mejor rentabilidad)
+ * - un tope de precio redondeado a S/ 50,000, cerca de la mediana, que deja fuera al menos un inmueble
+ * La rentabilidad no va como filtro rápido: está con el resto de filtros en "Todos los inmuebles" (/capital/inmuebles).
  */
 export function buildFastFilters(properties: PropertyLike[], max = { districts: 4 }): FastFilter[] {
   if (properties.length === 0) return []

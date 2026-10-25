@@ -10,7 +10,7 @@ import { DISTRITOS_LIMA } from '../data/distritos'
 import { getDevelopers } from '../lib/properties'
 
 const steps = [
-  { title: 'Precio', text: 'Te sugerimos el valor con el que tu depa se mueve.' },
+  { title: 'Precio', text: 'Te sugerimos el valor con el que tu inmueble se mueve.' },
   { title: 'Pauta', text: 'Lo publicamos en portales, medios y redes.' },
   { title: 'Cierre', text: 'Te acompañamos hasta la firma o el primer huésped.' },
 ]
@@ -19,14 +19,14 @@ const developers = await getDevelopers()
 
 <BaseLayout
   title="Propietarios"
-  description="Vende o alquila tu departamento en Lima. Te sugerimos el precio para venderlo en máximo 2 meses, o lo operamos en Airbnb."
+  description="Vende o alquila tu inmueble en Lima. Te sugerimos el precio para venderlo en máximo 2 meses, o lo operamos en Airbnb."
 >
   <section class="container owners-hero">
     <div class="owners-copy">
       <!-- Los ids permiten llegar directo con /propietarios#vender y /propietarios#alquiler -->
       <span id="vender" class="anchor"></span>
       <span id="alquiler" class="anchor"></span>
-      <h1 class="display">Vende o alquila tu departamento en Lima</h1>
+      <h1 class="display">Vende o alquila tu inmueble en Lima</h1>
       <p class="lead">Te sugerimos el precio para venderlo en máximo 2 meses, o lo operamos en Airbnb.</p>
       <div class="btn-group owner-ctas">
         <button type="button" class="btn btn--primary" data-owner-intent="sell">
@@ -40,7 +40,7 @@ const developers = await getDevelopers()
 
     <form class="form owner-form" data-owner-form novalidate aria-labelledby="owner-form-title">
       <h2 id="owner-form-title" class="display">
-        Cuéntanos de tu depa
+        Cuéntanos de tu inmueble
       </h2>
       <div class="field">
         <label for="owner-name">Nombre</label>
@@ -209,7 +209,7 @@ const developers = await getDevelopers()
     const whatsappMessage = (fields: Record<string, unknown>) => {
       const details = (fields.details ?? {}) as Record<string, string>
       const action = INTENT_TEXT[details.intent as Intent] ?? 'vender'
-      return `Hola, soy ${fields.name ?? ''}. Quiero ${action} mi depa en ${details.district ?? 'Lima'}.`
+      return `Hola, soy ${fields.name ?? ''}. Quiero ${action} mi inmueble en ${details.district ?? 'Lima'}.`
     }
 
     enhanceForm(form, {
@@ -357,8 +357,15 @@ const developers = await getDevelopers()
     .owner-steps ol {
       grid-template-columns: repeat(3, 1fr);
     }
+    /* 3 columnas angostas: el número va arriba del texto (al lado no entra "acompañamos") */
+    .owner-steps li {
+      grid-template-columns: minmax(0, 1fr);
+    }
   }
   @media (min-width: 1024px) {
+    .owner-steps li {
+      grid-template-columns: 52px minmax(0, 1fr);
+    }
     .owners-hero {
       grid-template-columns: minmax(0, 1.15fr) minmax(400px, 0.85fr);
       align-items: center;
@@ -367,6 +374,12 @@ const developers = await getDevelopers()
     }
     .owner-form {
       padding: var(--space-8);
+    }
+  }
+  /* En laptops bajas el formulario no entra en la pantalla: el título va arriba, no centrado */
+  @media (min-width: 1024px) and (max-height: 900px) {
+    .owners-hero {
+      align-items: start;
     }
   }
 </style>

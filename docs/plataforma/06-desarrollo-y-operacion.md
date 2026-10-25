@@ -129,7 +129,7 @@ entre sitio, panel y API.
 |---|---|
 | Trabajar solo en el sitio, sin API | `PUBLIC_API_URL=` vacío en el `.env` del sitio: los formularios ofrecen WhatsApp |
 | Probar formularios sin base de datos | `pnpm api:mock` y `PUBLIC_API_URL=http://127.0.0.1:4010` en el sitio |
-| Ver en el sitio los depas de la base | `API_URL=http://localhost:3000` en el `.env` del sitio. El API debe estar encendido, y los depas de ejemplo de la base no tienen fotos |
+| Ver en el sitio los inmuebles de la base | `API_URL=http://localhost:3000` en el `.env` del sitio. El API debe estar encendido, y los inmuebles de ejemplo de la base no tienen fotos |
 | Desarrollar sin PostgreSQL instalado | `DATABASE_URL=pglite://./.data/pglite` en el `.env` del API |
 
 ### Postgres local
@@ -242,11 +242,11 @@ sequenceDiagram
 
 ### Qué revisar
 
-- [ ] El sitio muestra los depas de la base (sin fotos hasta que haya R2).
+- [ ] El sitio muestra los inmuebles de la base (sin fotos hasta que haya R2).
 - [ ] Ingresar en el panel y ver "Hola, …" en el sitio.
 - [ ] Enviar un formulario: aparece el widget de Turnstile y el lead llega a Leads del panel.
 - [ ] Un reclamo devuelve su código `LR-…`.
-- [ ] Un depa editado en el panel aparece en el sitio después de volver a correr `pnpm preprod` en
+- [ ] Un inmueble editado en el panel aparece en el sitio después de volver a correr `pnpm preprod` en
   el sitio. En local no hay deploy hook.
 
 ### Diferencias con producción
@@ -257,7 +257,7 @@ sequenceDiagram
 | Turnstile | Claves de prueba (necesita internet) | Claves reales |
 | Correos | Quedan en el log del API | Resend |
 | Fotos | Sin R2: no se pueden subir | Cloudflare R2 |
-| Cambios de depas | Volver a construir el sitio a mano | Deploy hook |
+| Cambios de inmuebles | Volver a construir el sitio a mano | Deploy hook |
 
 La cookie `Secure` funciona en `http://localhost` porque los navegadores tratan `localhost` como
 un origen seguro. Está probado en Chrome.
@@ -346,8 +346,8 @@ Construyen el sitio con `PUBLIC_API_URL=https://api.test.local` y responden esas
 
 | Archivo | Recorre |
 |---|---|
-| `capital.spec.ts` | Filtros y "Limpiar filtros", anclas, "Para ti" tras ver un depa, detalle con similares, Contactar, página de Urbana con Buscar y contador, 404 |
-| `mis-depas.spec.ts` | Recorrido completo: Me interesa → Guarda tus depas → Mis depas → Te acompañamos → WhatsApp; redirección `/carrito`; "Seguir viendo" |
+| `capital.spec.ts` | Filtros y "Limpiar filtros", anclas, "Para ti" tras ver un inmueble, detalle con similares, Contactar, página de Urbana con Buscar y contador, 404 |
+| `mis-inmuebles.spec.ts` | Recorrido completo: Me interesa → Guarda tus inmuebles → Mis inmuebles → Te acompañamos → WhatsApp; redirección `/carrito`; "Seguir viendo" |
 | `forms.spec.ts` | Formulario en inglés (éxito y errores por campo), Libro de Reclamaciones, Propietarios (vender y `#alquiler`), banner de cookies |
 
 ### API (`depahost-api/test`)
@@ -358,7 +358,7 @@ Construyen el sitio con `PUBLIC_API_URL=https://api.test.local` y responden esas
 | `developers.test.ts` | Inmobiliarias y conteo, origen y filtros, proyecto sin inmobiliaria, cambio de origen, duplicados, lead `saved-list` |
 | `leads.test.ts` | Lead completo con avisos, reglas de contacto, captcha, `cart` anónimo, honeypot, límite por minuto, CORS, health |
 | `complaints.test.ts` | Códigos correlativos y constancia, menores de edad, respuesta del admin, días hábiles en hora de Lima |
-| `accounts.test.ts` | Registro y cookie, roles permitidos, login sin revelar cuentas, cierre de sesión, CSRF, perfil, cambio y restablecimiento de contraseña, Mis depas de la cuenta, leads vinculados |
+| `accounts.test.ts` | Registro y cookie, roles permitidos, login sin revelar cuentas, cierre de sesión, CSRF, perfil, cambio y restablecimiento de contraseña, Mis inmuebles de la cuenta, leads vinculados |
 | `owner-requests.test.ts` | Solo propietarios, ciclo enviada → revisión → publicada con avisos e interés, solicitudes ajenas, subida no configurada |
 | `admin-panel.test.ts` | Acceso con sesión o clave, indicadores del resumen, usuarios y roles, embudo de leads |
 | `config.test.ts` | Producción exige claves, rechaza PGlite y una base remota sin `sslmode`; acepta Supabase con SSL y el Postgres local |
@@ -460,7 +460,7 @@ Connect to Git). Los dos se construyen desde la raíz del monorepo: ahí están 
 - **`www`:** agregar los dos dominios al proyecto del sitio y crear una regla en Rules → Redirect
   Rules que mande `www.depahostperu.com/*` a `https://depahostperu.com/${1}` con 301.
 - **Deploy hook:** en el proyecto del sitio, Settings → Builds → Deploy hooks → rama `main`. Esa URL
-  va en `DEPLOY_HOOK_URL` del API, que la llama con POST cuando cambian los depas.
+  va en `DEPLOY_HOOK_URL` del API, que la llama con POST cuando cambian los inmuebles.
 - **Vistas previas:** cada pull request genera una URL `*.pages.dev`. El `_headers` del sitio les
   pone `X-Robots-Tag: noindex` para que Google no las indexe.
 
@@ -540,7 +540,7 @@ Los valores de cada variable están en los `.env.production.example` de las tres
    de `apps/depahost-api/.env.production.example`. Lee `certs/` desde `apps/depahost-api` y al
    arrancar aplica las migraciones.
 3. **Dominio del API:** `api.depahostperu.com` en Railway y su CNAME en el DNS de Cloudflare.
-4. **Datos:** cargar inmobiliarias, distritos, depas, fotos y supuestos desde el panel o con las
+4. **Datos:** cargar inmobiliarias, distritos, inmuebles, fotos y supuestos desde el panel o con las
    rutas de admin (o `pnpm db:seed` solo para una demo).
 5. **Sitio:** el proyecto de Cloudflare Pages, como en
    [Sitio y panel en Cloudflare Pages](#sitio-y-panel-en-cloudflare-pages), con los dominios
@@ -564,7 +564,7 @@ Los valores de cada variable están en los `.env.production.example` de las tres
 |---|---|---|
 | Código del sitio o del panel | Merge a `main` | Cloudflare Pages reconstruye solo el proyecto que cambió |
 | Código del API | Merge a `main` | Railway construye y arranca la nueva versión |
-| Un depa, foto, inmobiliaria o supuesto | Panel o rutas de admin | El deploy hook reconstruye el sitio en unos 30 s + el tiempo del build |
+| Un inmueble, foto, inmobiliaria o supuesto | Panel o rutas de admin | El deploy hook reconstruye el sitio en unos 30 s + el tiempo del build |
 | El contrato del API | API primero, luego `pnpm api:sync` en el sitio y en el panel | En ese orden |
 
 Antes de publicar un cambio grande, conviene probarlo en preproducción.

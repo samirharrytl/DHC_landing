@@ -1,10 +1,12 @@
-// Buscador y filtros rápidos de depas, para cualquier bloque con data-filter-root:
+// Buscador y filtros rápidos de inmuebles, para cualquier bloque con data-filter-root:
 //   [data-filter-search]   input de búsqueda (o un form de búsqueda que lo contenga)
 //   [data-favorite-filter] chips con data-filter-kind y data-filter-value
 //   [data-property-card]   tarjetas con data-search, data-district y data-price
 //   [data-filter-empty]    mensaje sin resultados
 //   [data-results-count]   "3 proyectos encontrados" (data-singular / data-plural)
 //   [data-clear-filters]   "Limpiar filtros" (se muestra solo si hay algo activo)
+//   data-max-visible="6"   en el bloque: muestra solo las primeras N que coinciden (busca entre todas)
+//   data-filter-pending    en el bloque: el CSS oculta las que pasan del máximo hasta que corre este script
 import { matchesFilters, parseFilters, type FilterableProperty } from '../lib/filters'
 
 document.querySelectorAll<HTMLElement>('[data-filter-root]').forEach((root) => {
@@ -15,6 +17,7 @@ document.querySelectorAll<HTMLElement>('[data-filter-root]').forEach((root) => {
   const count = root.querySelector<HTMLElement>('[data-results-count]')
   const clear = root.querySelector<HTMLButtonElement>('[data-clear-filters]')
   const active = new Map<string, string>()
+  const maxVisible = Number(root.dataset.maxVisible) || Infinity
 
   const data = new Map<HTMLElement, FilterableProperty>(
     cards.map((card) => [
@@ -32,8 +35,10 @@ document.querySelectorAll<HTMLElement>('[data-filter-root]').forEach((root) => {
     const filters = parseFilters(active)
     let visible = 0
     for (const [card, property] of data) {
-      card.hidden = !matchesFilters(property, query, filters)
-      if (!card.hidden) visible += 1
+      const matches = matchesFilters(property, query, filters)
+      // Las que coinciden después de la N-ésima quedan ocultas: el resto está en "Todos los inmuebles"
+      card.hidden = !matches || visible >= maxVisible
+      if (matches) visible += 1
     }
     if (empty) empty.hidden = visible > 0
     if (count) {
@@ -75,4 +80,5 @@ document.querySelectorAll<HTMLElement>('[data-filter-root]').forEach((root) => {
   })
 
   update()
+  delete root.dataset.filterPending
 })

@@ -1,5 +1,5 @@
 ---
-// Contenedor de tarjetas de depas.
+// Contenedor de tarjetas de inmuebles.
 // Móvil: carrusel horizontal (se desliza con el dedo) · Tablet: 2 columnas · Escritorio: 3 columnas
 interface Props {
   label?: string
@@ -18,7 +18,7 @@ const { label = 'Inmuebles destacados', id } = Astro.props
     gap: var(--grid-gap);
     /* Móvil: carrusel con scroll-snap (cada tarjeta "se acomoda" al soltar) */
     grid-auto-flow: column;
-    grid-auto-columns: 85%;
+    grid-auto-columns: max(85%, 254px); /* en 320px la tarjeta no baja de 254 (si no, no entran los botones) */
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     overscroll-behavior-x: contain;

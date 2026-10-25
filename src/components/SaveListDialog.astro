@@ -1,6 +1,6 @@
 ---
-// "Guarda tus depas": pide nombre y celular para hacer seguimiento de los depas marcados.
-// Se abre solo al guardar el segundo depa (una vez cada 7 días si se cierra) o desde
+// "Guarda tus inmuebles": pide nombre y celular para hacer seguimiento de los inmuebles marcados.
+// Se abre solo al guardar el segundo inmueble (una vez cada 7 días si se cierra) o desde
 // cualquier elemento con data-open-save-dialog. Guarda un lead (source saved-list) en la API.
 import Icon from './Icon.astro'
 import Turnstile from './Turnstile.astro'
@@ -17,7 +17,7 @@ import Turnstile from './Turnstile.astro'
         <Icon name="heart" size={26} />
       </span>
       <h2 id="save-dialog-title" class="display">
-        Guarda tus depas
+        Guarda tus inmuebles
       </h2>
       <p class="sub">Te escribimos con los que marcaste.</p>
 
@@ -93,8 +93,8 @@ import Turnstile from './Turnstile.astro'
         Listo, <span data-save-name></span>
       </h2>
       <p class="sub">Guardamos tu selección. Te escribiremos por WhatsApp para darle seguimiento.</p>
-      <a class="btn btn--primary btn--block" href="/mis-depas">
-        Ver Mis depas
+      <a class="btn btn--primary btn--block" href="/mis-inmuebles">
+        Ver Mis inmuebles
       </a>
       <button type="button" class="keep-browsing" data-save-dismiss>
         Seguir viendo
@@ -133,8 +133,7 @@ import Turnstile from './Turnstile.astro'
       const names = ids
         .map((id) => catalog.find((item) => item.id === id)?.district)
         .filter(Boolean) as string[]
-      const label =
-        ids.length === 1 ? '1 departamento seleccionado' : `${ids.length} departamentos seleccionados`
+      const label = ids.length === 1 ? '1 inmueble seleccionado' : `${ids.length} inmuebles seleccionados`
       const text = summary.querySelector('span')!
       text.replaceChildren(label)
       if (names.length) {
@@ -154,7 +153,7 @@ import Turnstile from './Turnstile.astro'
       form.querySelector<HTMLInputElement>('input[name="name"]')?.focus()
     }
 
-    // Se abre solo al guardar el segundo depa
+    // Se abre solo al guardar el segundo inmueble
     let previous = saved.list().length
     saved.subscribe((ids) => {
       if (ids.length >= 2 && ids.length > previous && profile.shouldPrompt()) open()
@@ -188,7 +187,7 @@ import Turnstile from './Turnstile.astro'
           utm: getUtm(),
         }) as LeadCreate,
       send: (body) => api.POST('/v1/leads', { body }),
-      whatsappMessage: () => 'Hola, quiero que me ayuden con los depas que guardé en DepaHost Capital.',
+      whatsappMessage: () => 'Hola, quiero que me ayuden con los inmuebles que guardé en DepaHost Capital.',
       onSuccess: (_data, f) => {
         const name = String(new FormData(f).get('name') ?? '')
         profile.set(name)

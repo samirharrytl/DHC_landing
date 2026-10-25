@@ -158,7 +158,7 @@ describe('URL', () => {
 })
 
 describe('opciones de las facetas', () => {
-  it('tramos de precio solo con depas', () => {
+  it('tramos de precio solo con inmuebles', () => {
     const ranges = priceRanges([285_000, 310_000, 789_000], formatPEN)
     expect(ranges.map((r) => r.label)).toEqual([
       `Hasta ${formatPEN(300_000)}`,
@@ -166,7 +166,7 @@ describe('opciones de las facetas', () => {
       `${formatPEN(700_000)} a ${formatPEN(1_000_000)}`,
     ])
   })
-  it('escalones de rentabilidad y plazo que separan a los depas', () => {
+  it('escalones de rentabilidad y plazo que separan a los inmuebles', () => {
     expect(yieldSteps([8, 9, 7, 5.8, 6.2, 5.6])).toEqual([6, 7, 8, 9])
     expect(paybackSteps([11, 10, 12, 17, 16, 18])).toEqual([10, 12, 14, 16])
   })

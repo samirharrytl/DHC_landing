@@ -3,7 +3,7 @@
   "info": {
     "title": "Depa Host API",
     "version": "1.0.0",
-    "description": "API de Depa Host Perú: catálogo de depas, leads y Libro de Reclamaciones."
+    "description": "API de Depa Host Perú: catálogo de inmuebles, leads y Libro de Reclamaciones."
   },
   "components": {
     "securitySchemes": {
@@ -1028,7 +1028,7 @@
           },
           "paybackYears": {
             "type": "number",
-            "description": "Años en que la renta paga el depa"
+            "description": "Años en que la renta paga el inmueble"
           },
           "areaM2": {
             "type": [
@@ -1302,7 +1302,7 @@
           },
           "paybackYears": {
             "type": "number",
-            "description": "Años en que la renta paga el depa"
+            "description": "Años en que la renta paga el inmueble"
           },
           "areaM2": {
             "type": [
@@ -2071,7 +2071,7 @@
               "contact",
               "saved-list"
             ],
-            "description": "intl-form: formulario en inglés · owner-*: propietarios · cart: \"Empecemos con estos\" de Mis depas · saved-list: \"Guarda tus depas\""
+            "description": "intl-form: formulario en inglés · owner-*: propietarios · cart: \"Conversemos ahora\" o \"Programar una sesión\" de Mis inmuebles · saved-list: \"Guarda tus inmuebles\""
           },
           "name": {
             "type": "string",
@@ -2217,7 +2217,7 @@
               "contact",
               "saved-list"
             ],
-            "description": "intl-form: formulario en inglés · owner-*: propietarios · cart: \"Empecemos con estos\" de Mis depas · saved-list: \"Guarda tus depas\""
+            "description": "intl-form: formulario en inglés · owner-*: propietarios · cart: \"Conversemos ahora\" o \"Programar una sesión\" de Mis inmuebles · saved-list: \"Guarda tus inmuebles\""
           },
           "status": {
             "type": "string",
@@ -2554,7 +2554,7 @@
                 "type": "null"
               }
             ],
-            "description": "Depa publicado a partir de esta solicitud"
+            "description": "Inmueble publicado a partir de esta solicitud"
           },
           "stats": {
             "anyOf": [
@@ -2581,7 +2581,7 @@
                 "type": "null"
               }
             ],
-            "description": "Interés en el depa publicado: veces guardado y consultas"
+            "description": "Interés en el inmueble publicado: veces guardado y consultas"
           },
           "createdAt": {
             "type": "string",
@@ -2752,7 +2752,7 @@
                 "type": "null"
               }
             ],
-            "description": "Depa publicado a partir de esta solicitud"
+            "description": "Inmueble publicado a partir de esta solicitud"
           },
           "stats": {
             "anyOf": [
@@ -2779,7 +2779,7 @@
                 "type": "null"
               }
             ],
-            "description": "Interés en el depa publicado: veces guardado y consultas"
+            "description": "Interés en el inmueble publicado: veces guardado y consultas"
           },
           "createdAt": {
             "type": "string",
@@ -3092,7 +3092,7 @@
             ]
           },
           "propertyId": {
-            "description": "Depa creado a partir de la solicitud",
+            "description": "Inmueble creado a partir de la solicitud",
             "anyOf": [
               {
                 "type": "string",
@@ -4265,7 +4265,7 @@
           },
           "paybackYears": {
             "type": "number",
-            "description": "Años en que la renta paga el depa"
+            "description": "Años en que la renta paga el inmueble"
           },
           "areaM2": {
             "type": [
@@ -4547,7 +4547,7 @@
           },
           "paybackYears": {
             "type": "number",
-            "description": "Años en que la renta paga el depa"
+            "description": "Años en que la renta paga el inmueble"
           },
           "areaM2": {
             "type": [
@@ -5334,7 +5334,7 @@
               "contact",
               "saved-list"
             ],
-            "description": "intl-form: formulario en inglés · owner-*: propietarios · cart: \"Empecemos con estos\" de Mis depas · saved-list: \"Guarda tus depas\""
+            "description": "intl-form: formulario en inglés · owner-*: propietarios · cart: \"Conversemos ahora\" o \"Programar una sesión\" de Mis inmuebles · saved-list: \"Guarda tus inmuebles\""
           },
           "name": {
             "type": "string",
@@ -5485,7 +5485,7 @@
               "contact",
               "saved-list"
             ],
-            "description": "intl-form: formulario en inglés · owner-*: propietarios · cart: \"Empecemos con estos\" de Mis depas · saved-list: \"Guarda tus depas\""
+            "description": "intl-form: formulario en inglés · owner-*: propietarios · cart: \"Conversemos ahora\" o \"Programar una sesión\" de Mis inmuebles · saved-list: \"Guarda tus inmuebles\""
           },
           "status": {
             "type": "string",
@@ -5827,7 +5827,7 @@
                 "type": "null"
               }
             ],
-            "description": "Depa publicado a partir de esta solicitud"
+            "description": "Inmueble publicado a partir de esta solicitud"
           },
           "stats": {
             "anyOf": [
@@ -5855,7 +5855,7 @@
                 "type": "null"
               }
             ],
-            "description": "Interés en el depa publicado: veces guardado y consultas"
+            "description": "Interés en el inmueble publicado: veces guardado y consultas"
           },
           "createdAt": {
             "type": "string",
@@ -6029,7 +6029,7 @@
                 "type": "null"
               }
             ],
-            "description": "Depa publicado a partir de esta solicitud"
+            "description": "Inmueble publicado a partir de esta solicitud"
           },
           "stats": {
             "anyOf": [
@@ -6057,7 +6057,7 @@
                 "type": "null"
               }
             ],
-            "description": "Interés en el depa publicado: veces guardado y consultas"
+            "description": "Interés en el inmueble publicado: veces guardado y consultas"
           },
           "createdAt": {
             "type": "string",
@@ -6377,7 +6377,7 @@
             ]
           },
           "propertyId": {
-            "description": "Depa creado a partir de la solicitud",
+            "description": "Inmueble creado a partir de la solicitud",
             "anyOf": [
               {
                 "type": "string",
@@ -6578,9 +6578,9 @@
     },
     "/v1/properties": {
       "get": {
-        "summary": "Catálogo público de depas (publicados y reservados)",
+        "summary": "Catálogo público de inmuebles (publicados y reservados)",
         "tags": [
-          "Depas"
+          "Inmuebles"
         ],
         "parameters": [
           {
@@ -6697,9 +6697,9 @@
     },
     "/v1/properties/{slug}": {
       "get": {
-        "summary": "Detalle de un depa",
+        "summary": "Detalle de un inmueble",
         "tags": [
-          "Depas"
+          "Inmuebles"
         ],
         "parameters": [
           {
@@ -6739,7 +6739,7 @@
       "get": {
         "summary": "Distritos y rangos disponibles para los filtros rápidos",
         "tags": [
-          "Depas"
+          "Inmuebles"
         ],
         "responses": {
           "200": {
@@ -6821,7 +6821,7 @@
       "get": {
         "summary": "Supuestos vigentes para la nota de cuota estimada",
         "tags": [
-          "Depas"
+          "Inmuebles"
         ],
         "responses": {
           "200": {
@@ -6849,7 +6849,7 @@
     },
     "/v1/leads": {
       "post": {
-        "summary": "Registrar un lead (formularios del sitio y \"Empecemos con estos\")",
+        "summary": "Registrar un lead (formularios del sitio y \"Mis inmuebles\")",
         "tags": [
           "Leads"
         ],
@@ -7260,7 +7260,7 @@
     },
     "/v1/me/saved": {
       "get": {
-        "summary": "Mis depas guardados",
+        "summary": "Mis inmuebles guardados",
         "tags": [
           "Cuenta"
         ],
@@ -7278,7 +7278,7 @@
         }
       },
       "put": {
-        "summary": "Reemplazar Mis depas (el sitio une lo del navegador con lo de la cuenta)",
+        "summary": "Reemplazar Mis inmuebles (el sitio une lo del navegador con lo de la cuenta)",
         "tags": [
           "Cuenta"
         ],
@@ -7331,7 +7331,7 @@
     },
     "/v1/me/owner-requests": {
       "get": {
-        "summary": "Mis depas enviados para vender o alquilar",
+        "summary": "Mis inmuebles enviados para vender o alquilar",
         "tags": [
           "Propietario"
         ],
@@ -7352,7 +7352,7 @@
         }
       },
       "post": {
-        "summary": "Enviar un depa para que el equipo lo revise",
+        "summary": "Enviar un inmueble para que el equipo lo revise",
         "tags": [
           "Propietario"
         ],
@@ -7535,7 +7535,7 @@
     },
     "/v1/me/uploads": {
       "post": {
-        "summary": "URL prefirmada para subir una foto de mi depa",
+        "summary": "URL prefirmada para subir una foto de mi inmueble",
         "tags": [
           "Propietario"
         ],
@@ -7620,9 +7620,9 @@
     },
     "/v1/admin/properties": {
       "get": {
-        "summary": "Todos los depas (incluye borradores y vendidos)",
+        "summary": "Todos los inmuebles (incluye borradores y vendidos)",
         "tags": [
-          "Admin · Depas"
+          "Admin · Inmuebles"
         ],
         "parameters": [
           {
@@ -7670,9 +7670,9 @@
         }
       },
       "post": {
-        "summary": "Crear depa",
+        "summary": "Crear inmueble",
         "tags": [
-          "Admin · Depas"
+          "Admin · Inmuebles"
         ],
         "requestBody": {
           "required": true,
@@ -7719,7 +7719,7 @@
     "/v1/admin/properties/{id}": {
       "get": {
         "tags": [
-          "Admin · Depas"
+          "Admin · Inmuebles"
         ],
         "parameters": [
           {
@@ -7765,9 +7765,9 @@
         }
       },
       "patch": {
-        "summary": "Editar depa. Si se envía images, reemplaza todas las fotos.",
+        "summary": "Editar inmueble. Si se envía images, reemplaza todas las fotos.",
         "tags": [
-          "Admin · Depas"
+          "Admin · Inmuebles"
         ],
         "requestBody": {
           "required": true,
@@ -7834,7 +7834,7 @@
       },
       "delete": {
         "tags": [
-          "Admin · Depas"
+          "Admin · Inmuebles"
         ],
         "parameters": [
           {
@@ -7876,7 +7876,7 @@
     "/v1/admin/districts": {
       "get": {
         "tags": [
-          "Admin · Depas"
+          "Admin · Inmuebles"
         ],
         "security": [
           {
@@ -7904,7 +7904,7 @@
       },
       "post": {
         "tags": [
-          "Admin · Depas"
+          "Admin · Inmuebles"
         ],
         "requestBody": {
           "required": true,
@@ -8058,7 +8058,7 @@
       "post": {
         "summary": "Registrar nuevos supuestos (queda el historial; se usa el más reciente)",
         "tags": [
-          "Admin · Depas"
+          "Admin · Inmuebles"
         ],
         "requestBody": {
           "required": true,
@@ -8113,7 +8113,7 @@
             "in": "query",
             "name": "source",
             "required": false,
-            "description": "intl-form: formulario en inglés · owner-*: propietarios · cart: \"Empecemos con estos\" de Mis depas · saved-list: \"Guarda tus depas\""
+            "description": "intl-form: formulario en inglés · owner-*: propietarios · cart: \"Conversemos ahora\" o \"Programar una sesión\" de Mis inmuebles · saved-list: \"Guarda tus inmuebles\""
           },
           {
             "schema": {
@@ -8361,7 +8361,7 @@
       "post": {
         "summary": "URL prefirmada para subir una foto a Cloudflare R2",
         "tags": [
-          "Admin · Depas"
+          "Admin · Inmuebles"
         ],
         "requestBody": {
           "required": true,
@@ -8540,7 +8540,7 @@
         }
       },
       "patch": {
-        "summary": "Revisar: cambiar estado, dejar un comentario o vincular el depa publicado (avisa al propietario)",
+        "summary": "Revisar: cambiar estado, dejar un comentario o vincular el inmueble publicado (avisa al propietario)",
         "tags": [
           "Admin · Propietarios"
         ],

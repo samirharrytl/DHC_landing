@@ -92,9 +92,9 @@ Es el "diccionario" de valores reutilizables. Todo lo demás usa `var(--lo-que-s
 
 ### Tipografía
 ```css
---font-sans: var(--font-inter, ui-sans-serif, system-ui, …);
+--font-sans: var(--font-poppins, ui-sans-serif, system-ui, …);
 ```
-> `--font-inter` la genera Astro (ver `astro.config.mjs` → `fonts`). Si por algo no
+> `--font-poppins` la genera Astro (ver `astro.config.mjs` → `fonts`). Si por algo no
 > existe, caen las fuentes del sistema. Es una cadena de "fallback".
 
 ```css
@@ -242,7 +242,7 @@ html { -webkit-text-size-adjust: 100%; }
 ```css
 body {
   margin: 0;                              /* quita el margen por defecto del navegador */
-  font-family: var(--font-sans);          /* Inter (o fallback del sistema) */
+  font-family: var(--font-sans);          /* Poppins (o fallback del sistema) */
   font-size: var(--fs-body);              /* 16px */
   line-height: var(--lh-body);            /* 1.5 */
   color: var(--color-text);               /* #2B2B2B */
@@ -659,7 +659,7 @@ span[lang] { cursor: not-allowed; }     /* "EN" no es clicable todavía */
 p { max-width: 18ch; margin-inline: auto; }   /* limita el ancho del texto del paso */
 ```
 
-### `PropertyCard.astro` (tarjeta de depa)
+### `PropertyCard.astro` (tarjeta de inmueble)
 ```css
 .card { position: relative; display: flex; flex-direction: column; background: var(--color-surface);
   border: var(--border); border-radius: var(--radius-lg); overflow: hidden; container-type: inline-size;
@@ -791,7 +791,7 @@ dd { … font-variant-numeric: tabular-nums; white-space: nowrap; }
 ```
 > Las 3 tarjetas de servicio se "montan" 48px sobre el hero (`margin-top` negativo).
 
-**Franja "Depas que se pagan solos"**
+**Franja "Inmuebles que se pagan solos"**
 ```css
 .bridge { display: grid; gap: var(--space-6); grid-template-areas: 'head' 'grid' 'cta'; }
 ```

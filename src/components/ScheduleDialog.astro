@@ -1,0 +1,363 @@
+---
+// "Programar una sesión" de Mis inmuebles: pide contacto, día, horario y modalidad para conversar sobre
+// los inmuebles seleccionados. Se abre desde cualquier elemento con data-open-schedule-dialog.
+// Guarda un lead (source cart, details.contacto "Programar una sesión") que el equipo ve en el panel.
+import Icon from './Icon.astro'
+import Turnstile from './Turnstile.astro'
+
+// Franjas en hora de Lima: el equipo confirma la hora exacta por WhatsApp
+const timeSlots = ['Mañana (9:00 a 12:00)', 'Mediodía (12:00 a 15:00)', 'Tarde (15:00 a 18:00)', 'Noche (18:00 a 20:00)']
+const modes = ['Videollamada', 'Llamada', 'Presencial']
+---
+
+<dialog class="schedule-dialog" data-schedule-dialog aria-labelledby="schedule-dialog-title">
+  <div class="panel">
+    <button type="button" class="close" data-schedule-dismiss aria-label="Cerrar">
+      <Icon name="x" size={22} />
+    </button>
+
+    <div data-schedule-step="form">
+      <span class="mark">
+        <Icon name="calendar" size={26} />
+      </span>
+      <h2 id="schedule-dialog-title" class="display">
+        Programar una sesión
+      </h2>
+      <p class="sub">Elige el día y el horario. Te escribimos por WhatsApp para confirmarla.</p>
+
+      <form class="form" data-schedule-form novalidate>
+        <p class="selection" data-schedule-summary hidden>
+          <Icon name="info" size={18} />
+          <span></span>
+        </p>
+
+        <div class="field">
+          <label for="schedule-name">Nombre</label>
+          <input
+            id="schedule-name"
+            name="name"
+            autocomplete="name"
+            placeholder="Tu nombre"
+            required
+            minlength="2"
+          />
+          <p class="field-error" data-error-for="name" hidden></p>
+        </div>
+        <div class="field">
+          <label for="schedule-phone">Celular</label>
+          <input
+            id="schedule-phone"
+            name="phone"
+            type="tel"
+            autocomplete="tel"
+            inputmode="tel"
+            placeholder="9XX XXX XXX"
+            required
+            pattern="\+?[0-9 ()\-]{6,20}"
+          />
+          <p class="field-error" data-error-for="phone" hidden></p>
+        </div>
+        <div class="field">
+          <label for="schedule-email">
+            Correo <span class="hint">opcional</span>
+          </label>
+          <input id="schedule-email" name="email" type="email" autocomplete="email" placeholder="tu@correo.com" />
+          <p class="field-error" data-error-for="email" hidden></p>
+        </div>
+
+        <div class="when">
+          <div class="field">
+            <label for="schedule-date">Día</label>
+            <input id="schedule-date" name="details.fecha" type="date" required data-schedule-date />
+          </div>
+          <div class="field">
+            <label for="schedule-slot">Horario</label>
+            <select id="schedule-slot" name="details.horario" required>
+              <option value="">Elige un horario</option>
+              {timeSlots.map((slot) => <option value={slot}>{slot}</option>)}
+            </select>
+          </div>
+        </div>
+
+        <fieldset>
+          <legend class="legend">Cómo prefieres conversar</legend>
+          <div class="choices">
+            {modes.map((mode, index) => (
+              <label class="check">
+                <input type="radio" name="details.modalidad" value={mode} checked={index === 0} />
+                <span>{mode}</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        <label class="check">
+          <input type="checkbox" name="consent" required />
+          <span>
+            Acepto la <a href="/privacidad">política de privacidad</a>.
+          </span>
+        </label>
+        <div class="hp" aria-hidden="true">
+          <label>
+            Sitio web <input type="text" name="website" tabindex="-1" autocomplete="off" />
+          </label>
+        </div>
+        <Turnstile />
+
+        <button type="submit" class="btn btn--primary btn--block">
+          Programar sesión
+        </button>
+        <p class="form-status" data-form-status role="status" aria-live="polite" hidden></p>
+      </form>
+    </div>
+
+    <div data-schedule-step="done" hidden>
+      <span class="mark mark--done">
+        <Icon name="check" size={26} />
+      </span>
+      <h2 class="display">
+        Listo, <span data-schedule-name></span>
+      </h2>
+      <p class="sub">
+        Recibimos tu pedido para el <strong data-schedule-when></strong>. Te escribimos por WhatsApp para
+        confirmar la sesión.
+      </p>
+      <button type="button" class="btn btn--primary btn--block" data-schedule-dismiss>
+        Entendido
+      </button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  import { getSavedStore } from '../lib/saved-store'
+  import { firstNameOf, getProfileStore } from '../lib/profile'
+  import { api, type LeadCreate } from '../lib/api/client'
+  import { enhanceForm, getUtm } from '../scripts/forms'
+  import { loadCatalog, type CatalogItem } from '../scripts/catalog'
+
+  const dialog = document.querySelector<HTMLDialogElement>('[data-schedule-dialog]')
+  const form = dialog?.querySelector<HTMLFormElement>('[data-schedule-form]')
+
+  if (dialog && form) {
+    const saved = getSavedStore()
+    const profile = getProfileStore()
+    const steps = {
+      form: dialog.querySelector<HTMLElement>('[data-schedule-step="form"]')!,
+      done: dialog.querySelector<HTMLElement>('[data-schedule-step="done"]')!,
+    }
+    const dateInput = form.querySelector<HTMLInputElement>('[data-schedule-date]')!
+    let selection: CatalogItem[] = []
+
+    /** Fecha de hoy en Lima + n días, como "2026-10-28" (el formato de <input type="date">) */
+    const limaDate = (plusDays: number) => {
+      const [y, m, d] = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Lima' })
+        .format(new Date())
+        .split('-')
+        .map(Number)
+      return new Date(Date.UTC(y!, m! - 1, d! + plusDays)).toISOString().slice(0, 10)
+    }
+
+    /** "2026-10-28" → "miércoles 28 de octubre" */
+    const longDate = (iso: string) =>
+      new Intl.DateTimeFormat('es-PE', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC' }).format(
+        new Date(`${iso}T12:00:00Z`),
+      )
+
+    const showSummary = async () => {
+      const summary = dialog.querySelector<HTMLElement>('[data-schedule-summary]')!
+      const ids = saved.list()
+      const catalog = await loadCatalog().catch(() => [])
+      selection = ids.map((id) => catalog.find((item) => item.id === id)).filter((item) => item !== undefined)
+      if (ids.length === 0) {
+        summary.hidden = true
+        return
+      }
+      const label = ids.length === 1 ? '1 inmueble seleccionado' : `${ids.length} inmuebles seleccionados`
+      const text = summary.querySelector('span')!
+      text.replaceChildren(label)
+      const names = [...new Set(selection.map((item) => item.district))]
+      if (names.length) {
+        const strong = document.createElement('strong')
+        strong.textContent = new Intl.ListFormat('es', { type: 'conjunction' }).format(names)
+        text.append(': ', strong)
+      }
+      summary.hidden = false
+    }
+
+    const open = () => {
+      if (dialog.open) return
+      steps.form.hidden = false
+      steps.done.hidden = true
+      // Desde mañana y hasta dos meses
+      dateInput.min = limaDate(1)
+      dateInput.max = limaDate(60)
+      void showSummary()
+      dialog.showModal()
+      form.querySelector<HTMLInputElement>('input[name="name"]')?.focus()
+    }
+
+    document.addEventListener('click', (event) => {
+      const trigger = (event.target as Element | null)?.closest('[data-open-schedule-dialog]')
+      if (!trigger) return
+      event.preventDefault()
+      if (!trigger.hasAttribute('aria-disabled')) open()
+    })
+
+    dialog
+      .querySelectorAll('[data-schedule-dismiss]')
+      .forEach((button) => button.addEventListener('click', () => dialog.close()))
+    dialog.addEventListener('click', (event) => {
+      if (event.target === dialog) dialog.close()
+    })
+
+    type Details = { fecha?: string; horario?: string; modalidad?: string }
+
+    enhanceForm(form, {
+      buildPayload: (fields) =>
+        ({
+          ...fields,
+          source: 'cart',
+          locale: 'es',
+          propertyIds: saved.list(),
+          details: { contacto: 'Programar una sesión', ...(fields.details as Record<string, string>) },
+          utm: getUtm(),
+        }) as LeadCreate,
+      send: (body) => api.POST('/v1/leads', { body }),
+      whatsappMessage: (fields) => {
+        const details = (fields.details ?? {}) as Details
+        const when = [
+          details.fecha && `Día: ${longDate(details.fecha)}`,
+          details.horario && `Horario: ${details.horario}`,
+          details.modalidad && `Modalidad: ${details.modalidad}`,
+        ].filter(Boolean)
+        return [
+          `Hola, soy ${fields.name ?? ''}. Quiero programar una sesión para conversar sobre ${selection.length === 1 ? 'este inmueble' : 'estos inmuebles'}:`,
+          ...selection.map((item) => `- ${item.district} (${item.address}): ${item.price.label}`),
+          ...(when.length ? ['', ...when] : []),
+        ].join('\n')
+      },
+      onSuccess: (_data, f) => {
+        const data = new FormData(f)
+        const name = String(data.get('name') ?? '')
+        profile.set(name)
+        dialog.querySelector('[data-schedule-name]')!.textContent = firstNameOf(name)
+        dialog.querySelector('[data-schedule-when]')!.textContent =
+          `${longDate(String(data.get('details.fecha')))}, ${String(data.get('details.horario')).toLowerCase()}`
+        steps.form.hidden = true
+        steps.done.hidden = false
+        f.reset()
+      },
+    })
+  }
+</script>
+
+<style>
+  .schedule-dialog {
+    width: min(480px, calc(100vw - 2 * var(--space-4)));
+    max-height: calc(100dvh - 2 * var(--space-4));
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius-lg);
+    background: #fff;
+    color: var(--color-text);
+    box-shadow: var(--shadow-dropdown);
+  }
+  .schedule-dialog::backdrop {
+    background: var(--color-overlay);
+  }
+  .panel {
+    position: relative;
+    padding: var(--space-8) var(--space-5) var(--space-6);
+    text-align: center;
+  }
+  .close {
+    position: absolute;
+    top: var(--space-2);
+    right: var(--space-2);
+    display: grid;
+    place-items: center;
+    width: var(--control-h-sm);
+    height: var(--control-h-sm);
+    border: 0;
+    border-radius: var(--radius-pill);
+    background: transparent;
+    color: var(--color-text-muted);
+    cursor: pointer;
+  }
+  .close:hover {
+    background: var(--color-navy-50);
+  }
+  .mark {
+    display: inline-grid;
+    place-items: center;
+    color: var(--color-navy-800);
+  }
+  .mark--done {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-pill);
+    background: var(--color-navy-800);
+    color: #fff;
+  }
+  h2 {
+    margin-top: var(--space-2);
+    font-size: 1.875rem;
+    color: var(--color-navy-800);
+  }
+  .sub {
+    margin: var(--space-1) 0 var(--space-5);
+    color: var(--color-text-muted);
+  }
+  .sub strong {
+    color: var(--color-text-strong);
+  }
+  .form {
+    gap: var(--space-3);
+    padding-top: var(--space-5);
+    border-top: var(--border-subtle);
+    text-align: left;
+  }
+  .selection {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-2);
+    margin: 0;
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    background: var(--color-navy-50);
+    font-size: var(--fs-sm);
+  }
+  .selection[hidden] {
+    display: none;
+  }
+  .selection :global(svg) {
+    flex: none;
+    margin-top: 1px;
+    color: var(--color-navy-800);
+  }
+  /* Día y horario lado a lado si entran; en pantallas angostas, uno debajo del otro */
+  .when {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: var(--space-3);
+  }
+  .form .legend {
+    margin-bottom: var(--space-2);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-medium);
+    color: var(--color-text);
+  }
+  .choices .check {
+    align-items: center;
+    min-height: var(--control-h-sm);
+  }
+  .choices .check input {
+    margin: 0;
+  }
+  @media (min-width: 640px) {
+    .panel {
+      padding-inline: var(--space-6);
+    }
+  }
+</style>

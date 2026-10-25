@@ -1,4 +1,4 @@
-// Distancias para "Cerca de" en Todos los depas (/capital/depas). Cada depa usa su ubicación exacta
+// Distancias para "Cerca de" en Todos los inmuebles (/capital/inmuebles). Cada inmueble usa su ubicación exacta
 // (location) si la tiene y, si no, el centro de su distrito (src/data/lugares.ts).
 // Funciones puras: se prueban en tests/unit/geo.test.ts.
 import { DISTRITOS, LUGARES, type Lugar } from '../data/lugares'
@@ -35,7 +35,7 @@ for (const d of DISTRITOS) places.set(d.slug, d)
 /** Un lugar o distrito de la lista de "Cerca de", por su slug (el de la URL: ?cerca=larcomar) */
 export const placeBySlug = (slug: string): Lugar | undefined => places.get(slug)
 
-/** Dónde está un depa: su ubicación exacta o, si no la tiene, el centro de su distrito */
+/** Dónde está un inmueble: su ubicación exacta o, si no la tiene, el centro de su distrito */
 export function depaPosition(p: {
   location?: Point | null
   district: { slug: string }

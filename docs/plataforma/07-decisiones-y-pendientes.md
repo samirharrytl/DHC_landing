@@ -13,8 +13,8 @@ cambiar una, conviene releer el porqué.
 | 4 | Drizzle | Prisma | SQL explícito, sin paso de generación, consultas portables a `sqlc` | Las consultas se escriben más cerca del SQL |
 | 5 | OpenAPI generado desde el código, con chequeo en CI | `openapi.yaml` escrito a mano | Una sola fuente de verdad, sin duplicar esquemas | El API manda; el frontend sigue con `api:sync` |
 | 6 | PostgreSQL en todos los entornos; PGlite solo en pruebas | Docker obligatorio para desarrollar | Pruebas sin instalar nada y sin red; desarrollo contra un Postgres real | PGlite no es idéntico a Postgres: la CI corre las migraciones en Postgres real |
-| 7 | Mis depas, historial y perfil en `localStorage` | Cuentas de usuario desde el inicio | Funciona sin login y sin servidor | No se sincroniza entre dispositivos |
-| 8 | Catálogo estático `/data/properties.json` para los scripts | Pedir al API los depas guardados en cada visita | Fotos ya optimizadas y sin depender del API en vivo | Crece con el catálogo; con miles de depas convendría paginar o pedir al API |
+| 7 | Mis inmuebles, historial y perfil en `localStorage` | Cuentas de usuario desde el inicio | Funciona sin login y sin servidor | No se sincroniza entre dispositivos |
+| 8 | Catálogo estático `/data/properties.json` para los scripts | Pedir al API los inmuebles guardados en cada visita | Fotos ya optimizadas y sin depender del API en vivo | Crece con el catálogo; con miles de inmuebles convendría paginar o pedir al API |
 | 9 | Validación nativa del navegador + errores del API | Zod en el navegador | Menos JavaScript en cada página | Las reglas finas viven solo en el API |
 | 10 | Turnstile + honeypot + límite por IP | Captcha de imágenes | Sin fricción para la persona | Requiere Cloudflare |
 | 11 | Fotos en R2 con URL prefirmada | Subir archivos a través del API | El API no maneja archivos grandes | El panel sube directo a R2 |
@@ -34,19 +34,19 @@ cambiar una, conviene releer el porqué.
 
 | Problema | Dónde | Impacto | Arreglo sugerido |
 |---|---|---|---|
-| "Parecidos a los que guardaste" queda pegado al footer | `ForYouRow.astro`: `padding-block: var(--space-8) 0` | Visual, en `/mis-depas` | Agregar espacio inferior a la sección |
+| "Parecidos a los que guardaste" queda pegado al footer | `ForYouRow.astro`: `padding-block: var(--space-8) 0` | Visual, en `/mis-inmuebles` | Agregar espacio inferior a la sección |
 | El saludo "Hola, Ana" no aparece en móvil | `Header.astro`: `.greeting` desde 640 px | Visual | Mostrarlo en el menú móvil (hoy el menú solo ofrece "Ingresar a mi cuenta") |
 | Sin verificación de correo | `modules/accounts` | Alguien puede registrarse con un correo ajeno | Enviar enlace de verificación antes de vincular datos sensibles |
 | Las cuentas no se pueden borrar desde el panel | `modules/accounts` | La Ley 29733 da derecho de cancelación | Agregar "Eliminar mi cuenta" o atenderlo por correo mientras tanto |
 | "Para ti" aparece un instante después de cargar | `ForYouRow.astro` | Mueve un poco lo de abajo en Capital | Reservar altura o mostrarla después de los aliados |
-| Los depas vendidos no tienen página | `getProperties()` excluye `sold` | Un link viejo a un depa vendido da 404 | Generar su página con la etiqueta "Vendido" |
+| Los inmuebles vendidos no tienen página | `getProperties()` excluye `sold` | Un link viejo a un inmueble vendido da 404 | Generar su página con la etiqueta "Vendido" |
 | El plazo de reclamos no descuenta feriados | `lib/business-days.ts` | Plazo más corto que el legal | Agregar el calendario de feriados nacionales |
 | En el resumen de administración, "Reclamos por responder" queda unos píxeles más arriba que las otras tarjetas de su fila | Panel, vista de resumen | Visual | Alinear las tarjetas de esa fila |
-| Los depas reservados se marcan como agotados (`SoldOut`) en los datos estructurados | Ficha del depa (`capital/[slug].astro`) | Google puede mostrarlos como agotados aunque sigan a la venta | Usar otro estado para "reservado" o no marcar disponibilidad |
-| "Editar mi depa" con una solicitud ajena o inexistente se queda en "Cargando…" | Panel, `RequestFormView.vue` | La persona no recibe ningún mensaje | Mostrar el mismo aviso que el detalle |
+| Los inmuebles reservados se marcan como agotados (`SoldOut`) en los datos estructurados | Ficha del inmueble (`capital/[slug].astro`) | Google puede mostrarlos como agotados aunque sigan a la venta | Usar otro estado para "reservado" o no marcar disponibilidad |
+| "Editar mi inmueble" con una solicitud ajena o inexistente se queda en "Cargando…" | Panel, `RequestFormView.vue` | La persona no recibe ningún mensaje | Mostrar el mismo aviso que el detalle |
 | "Sin fotos. Puedes agregarlas al editar." aparece cuando la solicitud ya no se puede editar | Panel, detalle de la solicitud | Invita a algo que no se puede hacer ("En revisión", "Publicada") | Mostrar ese texto solo si la solicitud es editable |
 | El contador "Consultas" del propietario suma cada toque repetido en "Escribir por WhatsApp" | API, indicadores del propietario | Infla el interés que ve el propietario | Contar personas o consultas distintas |
-| La inversión total con solo depas en dólares se escribe distinto en el sitio ("S/ 0 + US$ …") y en el panel ("US$ …") | `/mis-depas` del sitio | Inconsistencia visual | Omitir los soles cuando son cero |
+| La inversión total con solo inmuebles en dólares se escribe distinto en el sitio ("S/ 0 + US$ …") y en el panel ("US$ …") | `/mis-inmuebles` del sitio | Inconsistencia visual | Omitir los soles cuando son cero |
 | `/docs` (Swagger) también responde en producción | `app.ts` | Muestra la lista de rutas; el contrato ya es público | Decidir si se oculta en producción |
 
 ## Deuda técnica menor
@@ -67,15 +67,15 @@ cambiar una, conviene releer el porqué.
 - [ ] Número real de WhatsApp en `PUBLIC_WHATSAPP_NUMBER`.
 - [ ] Razón social, RUC y dirección fiscal en `src/data/empresa.ts` y `COMPANY_*` del API.
 - [ ] Revisión legal de la política de privacidad y los términos (hoy son borradores).
-- [ ] Reemplazar los depas y proyectos de ejemplo, y subir sus fotos reales a R2.
+- [ ] Reemplazar los inmuebles y proyectos de ejemplo, y subir sus fotos reales a R2.
 - [ ] Inmobiliarias aliadas reales, con permiso de uso de nombre y logo.
-- [ ] Dormitorios, baños y m² de cada depa.
+- [ ] Dormitorios, baños y m² de cada inmueble.
 - [ ] Supuestos reales de financiamiento (tasa, inicial, plazo y fecha).
 - [ ] Contenido de Estadías y Nosotros.
 
 ### Producto (siguientes etapas)
 
-- [x] **Cuentas de usuario** con Mis depas sincronizado (ver capítulo 08).
+- [x] **Cuentas de usuario** con Mis inmuebles sincronizado (ver capítulo 08).
 - [x] **Panel** para comprador, propietario y administración (ver capítulo 08).
 - [ ] **Verificación de correo** y **segundo factor** para administradores.
 - [ ] **Eliminar mi cuenta** desde el panel (derecho de cancelación).
@@ -84,8 +84,11 @@ cambiar una, conviene releer el porqué.
 - [ ] **Versión en inglés** del sitio (hoy solo el formulario de Capital está en inglés).
 - [ ] **Reservas de estadías** integrando un PMS (Hostaway, Guesty o Lodgify).
 - [ ] **Logos de inmobiliarias** en `logoUrl` y en la franja de aliados.
-- [ ] **Ubicación exacta de cada depa** (`location: { lat, lng }`) en el API y el panel. Hoy solo la
-  traen los depas de ejemplo; los del API usan el centro de su distrito para "Cerca de".
+- [ ] **Ubicación exacta de cada inmueble** (`location: { lat, lng }`) en el API y el panel. Hoy solo la
+  traen los inmuebles de ejemplo; los del API usan el centro de su distrito para "Cerca de".
+- [ ] **Mosaicos del mapa** con un proveedor con clave (MapTiler, Mapbox…) cuando suba el tráfico:
+  `PUBLIC_MAP_TILE_URL` y `PUBLIC_MAP_ATTRIBUTION`. Sin ellas se usan los de OpenStreetMap, pensados
+  para poco tráfico.
 
 ### Infraestructura
 

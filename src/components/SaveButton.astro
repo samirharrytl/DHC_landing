@@ -1,5 +1,5 @@
 ---
-// Botón "Me interesa": agrega o quita un depa de Mis depas (lógica en src/scripts/saved-buttons.ts).
+// Botón "Me interesa": agrega o quita un inmueble de Mis inmuebles (lógica en src/scripts/saved-buttons.ts).
 // variant: 'cta' (dorado, como "Agregar al carrito": tarjetas y detalle) | 'outline' | 'solid' (proyectos de inmobiliarias)
 import Icon from './Icon.astro'
 
@@ -24,7 +24,7 @@ const { id, name, variant = 'cta', class: className } = Astro.props
   data-property-id={id}
   data-property-name={name}
   aria-pressed="false"
-  aria-label={`Me interesa: agregar ${name} a Mis depas`}
+  aria-label={`Me interesa: agregar ${name} a Mis inmuebles`}
 >
   <Icon name="heart" size={18} class="heart" />
   <span data-save-label>Me interesa</span>
@@ -49,7 +49,7 @@ const { id, name, variant = 'cta', class: className } = Astro.props
   .save-button--solid[aria-pressed='true'] {
     background: var(--color-navy-950);
   }
-  /* Ya está en Mis depas: dorado suave, para que se note que el clic lo quita */
+  /* Ya está en Mis inmuebles: dorado suave, para que se note que el clic lo quita */
   .save-button--cta[aria-pressed='true'] {
     background: var(--color-gold-100);
     border-color: var(--color-gold-700);

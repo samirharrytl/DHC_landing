@@ -32,7 +32,7 @@ describe('recommend', () => {
     expect(ids).toContain('surquillo')
   })
 
-  it('un depa visto no se recomienda por sí solo, y queda detrás de lo nuevo', () => {
+  it('un inmueble visto no se recomienda por sí solo, y queda detrás de lo nuevo', () => {
     expect(recommend(all, { viewed: ['lince'], saved: [] }).map((p) => p.id)[0]).toBe('lince2')
     expect(recommend(all, { viewed: ['lince'], saved: [] }).map((p) => p.id)).not.toContain('lince')
     const ids = recommend(all, { viewed: ['lince', 'surquillo'], saved: [] }).map((p) => p.id)

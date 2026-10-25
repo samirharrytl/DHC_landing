@@ -4,9 +4,9 @@ Los datos viven en tres lugares. Cada uno guarda cosas distintas a propósito.
 
 | Lugar | Qué guarda | Quién lo ve |
 |---|---|---|
-| PostgreSQL (API) | Depas, fotos, distritos, inmobiliarias, leads, reclamos, supuestos | El equipo, vía API |
+| PostgreSQL (API) | Inmuebles, fotos, distritos, inmobiliarias, leads, reclamos, supuestos | El equipo, vía API |
 | HTML y JSON estáticos (build) | Copia pública del catálogo, ya formateada | Todo el mundo |
-| Navegador del visitante | Mis depas, historial, nombre, consentimiento, UTM | Solo esa persona, en ese dispositivo |
+| Navegador del visitante | Mis inmuebles, historial, nombre, consentimiento, UTM | Solo esa persona, en ese dispositivo |
 
 ## 1. Base de datos (diagrama entidad-relación)
 
@@ -115,7 +115,7 @@ erDiagram
         jsonb photos "url y alt"
         owner_request_status status "submitted in_review approved rejected"
         text admin_note "nullable"
-        uuid property_id FK "nullable, depa publicado"
+        uuid property_id FK "nullable, inmueble publicado"
         timestamptz created_at
         timestamptz updated_at
     }
@@ -205,7 +205,7 @@ pública del proyecto. Con RLS activado y sin políticas, esa vía no devuelve n
 como dueño de las tablas, y a los dueños no se les aplica RLS. Cada tabla nueva lleva `.enableRLS()`
 en `schema.ts`; `test/database.test.ts` falla si alguna lo olvida.
 
-## 2. Ciclo de vida de un depa (UML de estados)
+## 2. Ciclo de vida de un inmueble (UML de estados)
 
 ```mermaid
 stateDiagram-v2
@@ -359,8 +359,8 @@ flowchart LR
 
 ### Catálogo liviano (`/data/properties.json`)
 
-Lo genera `src/pages/data/properties.json.ts` en el build. Lo usan Mis depas, Te acompañamos,
-"Para ti" y el diálogo "Guarda tus depas". Los textos ya vienen formateados, para que el
+Lo genera `src/pages/data/properties.json.ts` en el build. Lo usan Mis inmuebles, Te acompañamos,
+"Para ti" y el diálogo "Guarda tus inmuebles". Los textos ya vienen formateados, para que el
 navegador no tenga que calcular nada.
 
 | Campo | Ejemplo |
@@ -379,26 +379,26 @@ navegador no tenga que calcular nada.
 
 | Clave | Almacenamiento | Contenido | Escribe | Lee |
 |---|---|---|---|---|
-| `depahost:saved-depas:v2` | localStorage | IDs de Mis depas (máximo 20, el más nuevo al final) | Me interesa, Quitar | Header, Mis depas, Te acompañamos, Para ti, diálogo |
-| `depahost:viewed-depas` | localStorage | IDs de depas abiertos (máximo 12, el más reciente al final) | Detalle del depa | Para ti |
-| `depahost:profile` | localStorage | `{ firstName }` | Diálogo "Guarda tus depas" | Header, Mis depas |
+| `depahost:saved-depas:v2` | localStorage | IDs de Mis inmuebles (máximo 20, el más nuevo al final) | Me interesa, Quitar | Header, Mis inmuebles, Te acompañamos, Para ti, diálogo |
+| `depahost:viewed-depas` | localStorage | IDs de inmuebles abiertos (máximo 12, el más reciente al final) | Detalle del inmueble | Para ti |
+| `depahost:profile` | localStorage | `{ firstName }` | Diálogo "Guarda tus inmuebles" | Header, Mis inmuebles |
 | `depahost:save-prompt-dismissed` | localStorage | Fecha en que se cerró el diálogo | Diálogo | Diálogo (espera 7 días) |
 | `depahost:consent` | localStorage | `granted` o `denied` | Banner de cookies | Banner, carga de Clarity |
 | `depahost:utm` | sessionStorage | UTM de la primera página de la visita | Formularios | Todos los leads |
 | `dh_session` | Cookie `httpOnly` (la pone el API) | Token de sesión. JavaScript no puede leerla | API al ingresar | API en cada llamada con `credentials: 'include'` |
 | `dh_has_session` | Cookie legible (la pone el API) | `1` mientras hay sesión, sin secretos | API | Header del sitio: decide si preguntar quién es |
 
-Con sesión iniciada, "Mis depas" también vive en la tabla `saved_properties` y se sincroniza con
-el navegador (ver [08 · Panel y cuentas](08-panel-y-cuentas.md#mis-depas-del-navegador-a-la-cuenta)).
+Con sesión iniciada, "Mis inmuebles" también vive en la tabla `saved_properties` y se sincroniza con
+el navegador (ver [08 · Panel y cuentas](08-panel-y-cuentas.md#mis-inmuebles-del-navegador-a-la-cuenta)).
 
 Eventos del navegador (`window`):
 
 | Evento | Se dispara | Lo escuchan |
 |---|---|---|
-| `depahost:saved-depas-updated` | Al cambiar Mis depas | Header, botones Me interesa, Mis depas, Para ti, diálogo |
-| `depahost:viewed-depas-updated` | Al abrir un depa | — (disponible) |
-| `depahost:profile-updated` | Al guardar o borrar el nombre | Header, Mis depas |
-| `storage` (nativo) | Al cambiar la clave en otra pestaña | Los mismos suscriptores de Mis depas |
+| `depahost:saved-depas-updated` | Al cambiar Mis inmuebles | Header, botones Me interesa, Mis inmuebles, Para ti, diálogo |
+| `depahost:viewed-depas-updated` | Al abrir un inmueble | — (disponible) |
+| `depahost:profile-updated` | Al guardar o borrar el nombre | Header, Mis inmuebles |
+| `storage` (nativo) | Al cambiar la clave en otra pestaña | Los mismos suscriptores de Mis inmuebles |
 
 Si `localStorage` no existe o está bloqueado (modo privado), las listas funcionan en memoria
 mientras la página esté abierta.
@@ -412,9 +412,9 @@ Mientras no haya datos reales, el sitio y el seed del API usan los mismos datos 
 
 | Tipo | Contenido | Estado |
 |---|---|---|
-| Depas de propietarios | Lince, Surquillo y Magdalena con fotos | Precios, rentabilidad y plazos de ejemplo |
+| Inmuebles de propietarios | Lince, Surquillo y Magdalena con fotos | Precios, rentabilidad y plazos de ejemplo |
 | Inmobiliarias | Urbana, Lima Sur, Andes, Miraflores Hotel, Nova | Nombres provisionales, sin logos ni descripción |
-| Proyectos de Urbana | San Miguel, Miraflores y Surquillo | Precios y textos del mock. Las fotos son las de otros depas |
+| Proyectos de Urbana | San Miguel, Miraflores y Surquillo | Precios y textos del mock. Las fotos son las de otros inmuebles |
 | Supuestos de financiamiento | Vacíos | El sitio muestra `[plazo]`, `[X]` y `[fecha]` |
 
 Todo esto debe reemplazarse antes de publicar. Ver [07 · Pendientes](07-decisiones-y-pendientes.md#pendientes).

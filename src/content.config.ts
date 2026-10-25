@@ -41,7 +41,7 @@ const properties = defineCollection({
       origin: z.enum(['owner', 'developer']),
       developer: z.object({ id: z.string(), slug: z.string(), name: z.string() }).nullable(),
       address: z.string(),
-      // Ubicación exacta para "Cerca de" en Todos los depas. El API aún no la envía: sin ella se usa
+      // Ubicación exacta para "Cerca de" en Todos los inmuebles. El API aún no la envía: sin ella se usa
       // el centro del distrito (src/lib/geo.ts).
       location: z.object({ lat: z.number().min(-90).max(90), lng: z.number().min(-180).max(180) }).nullish(),
       badge: z.string().nullish(),

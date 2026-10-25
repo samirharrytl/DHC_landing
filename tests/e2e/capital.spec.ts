@@ -3,10 +3,12 @@ import { expect, test } from './fixtures'
 test.describe('Capital', () => {
   test('filtra mientras escribes y con los filtros rápidos', async ({ page }) => {
     await page.goto('/capital')
-    const cards = page.locator('#lista-depas [data-property-card]:visible')
-    await expect(cards).toHaveCount(12)
+    const cards = page.locator('#lista-inmuebles [data-property-card]:visible')
+    // Máximo 6 a la vista: los demás se ven en "Todos los inmuebles"
+    await expect(cards).toHaveCount(6)
+    await expect(page.locator('#lista-inmuebles [data-property-card]')).toHaveCount(12)
     await expect(cards.first()).toContainText('De propietario')
-    // Los filtros rápidos son distritos y precio; la rentabilidad está en "Todos los depas"
+    // Los filtros rápidos son distritos y precio; la rentabilidad está en "Todos los inmuebles"
     await expect(page.locator('[data-favorite-filter]', { hasText: 'anual' })).toHaveCount(0)
 
     await page.getByRole('searchbox').fill('surquillo')
@@ -14,7 +16,7 @@ test.describe('Capital', () => {
     await expect(cards.first()).toContainText('Surquillo')
 
     await page.getByRole('button', { name: 'Limpiar filtros' }).click()
-    await expect(cards).toHaveCount(12)
+    await expect(cards).toHaveCount(6)
     await page.getByRole('button', { name: 'Lince', exact: true }).click()
     await expect(page.getByRole('button', { name: 'Lince', exact: true })).toHaveAttribute(
       'aria-pressed',
@@ -26,19 +28,19 @@ test.describe('Capital', () => {
 
     await page.getByRole('searchbox').fill('surquillo')
     await expect(cards).toHaveCount(0)
-    await expect(page.getByText('No encontramos departamentos')).toBeVisible()
+    await expect(page.getByText('No encontramos inmuebles')).toBeVisible()
   })
 
   test('las anclas de la página existen', async ({ page }) => {
     await page.goto('/capital')
-    for (const id of ['como-funciona', 'proyectos', 'lista-depas', 'aliados']) {
+    for (const id of ['como-funciona', 'proyectos', 'lista-inmuebles', 'aliados']) {
       await expect(page.locator(`#${id}`)).toHaveCount(1)
     }
     await expect(page.locator('#top-10')).toHaveCount(0)
     // "Ver todos los proyectos" también va dentro de la lista
     await expect(
-      page.locator('#lista-depas').getByRole('link', { name: /Ver todos los proyectos/ }),
-    ).toHaveAttribute('href', '/capital/depas')
+      page.locator('#lista-inmuebles').getByRole('link', { name: /Ver todos los proyectos/ }),
+    ).toHaveAttribute('href', '/capital/inmuebles')
     // El inicio de Capital solo lleva "Ver todos los proyectos"
     await expect(page.locator('[data-hero] .ctas').getByRole('link')).toHaveText(['Ver todos los proyectos'])
   })
@@ -49,12 +51,12 @@ test.describe('Capital', () => {
     const nav = page.getByRole('navigation', { name: 'Principal', exact: true })
     await expect(nav.getByRole('link')).toHaveText(['Inicio', 'Compra', 'Vende'])
     await expect(nav.getByRole('link', { name: 'Compra' })).toHaveAttribute('aria-current', 'page')
-    await page.goto('/capital/depas')
+    await page.goto('/capital/inmuebles')
     await expect(nav.getByRole('link', { name: 'Compra' })).toHaveAttribute('aria-current', 'true')
     await expect(nav.getByRole('link', { name: 'Vende' })).toHaveAttribute('href', '/propietarios')
   })
 
-  test('"Para ti" aparece después de ver un depa', async ({ page }) => {
+  test('"Para ti" aparece después de ver un inmueble', async ({ page }) => {
     await page.goto('/capital')
     await expect(page.getByRole('heading', { name: 'Para ti, según lo que has visto' })).toBeHidden()
     await page.goto('/capital/lince-av-arequipa-cuadra-12')
@@ -65,23 +67,25 @@ test.describe('Capital', () => {
     await expect(row).not.toContainText('Lince · Av. Arequipa')
   })
 
-  test('el detalle muestra datos, aliado y depas similares', async ({ page }) => {
+  test('el detalle muestra datos, aliado y inmuebles similares', async ({ page }) => {
     await page.goto('/capital')
     await page.getByRole('link', { name: 'Ver más detalle' }).first().click()
     await expect(page).toHaveURL(/\/capital\/[a-z0-9-]+\/?$/)
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
     await expect(page.getByText('Precio de compra')).toBeVisible()
-    await expect(page.getByRole('heading', { name: 'Depas similares que te pueden interesar' })).toBeVisible()
+    await expect(
+      page.getByRole('heading', { name: 'Inmuebles similares que te pueden interesar' }),
+    ).toBeVisible()
     await expect(page.getByRole('link', { name: 'Contactar', exact: true })).toHaveAttribute(
       'href',
-      /\/mis-depas\?agregar=/,
+      /\/mis-inmuebles\?agregar=/,
     )
   })
 
-  test('Contactar agrega el depa a Mis depas y abre el carrito', async ({ page }) => {
+  test('Contactar agrega el inmueble a Mis inmuebles y abre el carrito', async ({ page }) => {
     await page.goto('/capital/miraflores-calle-schell-cuadra-3')
     await page.getByRole('link', { name: 'Contactar', exact: true }).click()
-    await expect(page).toHaveURL(/\/mis-depas\/?$/)
+    await expect(page).toHaveURL(/\/mis-inmuebles\/?$/)
     await expect(page.locator('[data-saved-list] article')).toHaveCount(1)
     await expect(page.locator('[data-saved-list]')).toContainText('Urbana')
     await expect(page.locator('[data-cart-count]')).toHaveText('1')
@@ -113,12 +117,12 @@ test.describe('Capital', () => {
   })
 })
 
-test.describe('Todos los depas', () => {
+test.describe('Todos los inmuebles', () => {
   test('"Ver todos los proyectos" abre la búsqueda con filtros, orden y URL', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 900 })
     await page.goto('/capital')
     await page.getByRole('link', { name: 'Ver todos los proyectos' }).first().click()
-    await expect(page).toHaveURL(/\/capital\/depas\/?$/)
+    await expect(page).toHaveURL(/\/capital\/inmuebles\/?$/)
     const cards = page.locator('[data-results] [data-property-card]:visible')
     await expect(cards).toHaveCount(36)
     await expect(page.locator('[data-results-count]')).toHaveText('36 resultados')
@@ -149,7 +153,7 @@ test.describe('Todos los depas', () => {
 
   test('"Cerca de" ordena por distancia a un lugar y filtra por km', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 900 })
-    await page.goto('/capital/depas')
+    await page.goto('/capital/inmuebles')
     const cards = page.locator('[data-results] [data-property-card]:visible')
     await page.getByLabel('O elige un lugar').selectOption('larcomar')
     await expect(page.getByLabel('Ordenar por')).toHaveValue('cercania')
@@ -176,7 +180,7 @@ test.describe('Todos los depas', () => {
   test('"Más cercanos" usa la ubicación del navegador sin ponerla en la URL', async ({ page, context }) => {
     await context.grantPermissions(['geolocation'])
     await context.setGeolocation({ latitude: -12.0853, longitude: -77.037 }) // Lince
-    await page.goto('/capital/depas')
+    await page.goto('/capital/inmuebles')
     await page.getByLabel('Ordenar por').selectOption('cercania')
     const cards = page.locator('[data-results] [data-property-card]:visible')
     await expect(cards.first()).toContainText('Av. Petit Thouars cuadra 27')
@@ -190,7 +194,7 @@ test.describe('Todos los depas', () => {
       navigator.geolocation.getCurrentPosition = (_ok, fail) =>
         fail?.({ code: 1, PERMISSION_DENIED: 1, POSITION_UNAVAILABLE: 2, TIMEOUT: 3, message: '' })
     })
-    await page.goto('/capital/depas')
+    await page.goto('/capital/inmuebles')
     await page.getByLabel('Ordenar por').selectOption('cercania')
     await expect(page.getByText('No tenemos permiso para usar tu ubicación.')).toBeVisible()
     await expect(page.getByLabel('Ordenar por')).toHaveValue('destacados')
@@ -198,10 +202,10 @@ test.describe('Todos los depas', () => {
     await expect(page.getByLabel('O elige un lugar')).toBeFocused()
   })
 
-  test('la vista de mapa muestra un pin por depa y su mini tarjeta', async ({ page }) => {
+  test('la vista de mapa muestra un pin por inmueble y su mini tarjeta', async ({ page }) => {
     // Sin descargar mosaicos de OpenStreetMap en las pruebas
     await page.route('https://tile.openstreetmap.org/**', (route) => route.abort())
-    await page.goto('/capital/depas?distrito=miraflores')
+    await page.goto('/capital/inmuebles?distrito=miraflores')
     const cards = page.locator('[data-results] [data-property-card]:visible')
     const count = await cards.count()
     expect(count).toBeGreaterThan(1)
@@ -237,7 +241,7 @@ test.describe('Todos los depas', () => {
 
   test('en móvil los filtros se abren en un panel', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 })
-    await page.goto('/capital/depas?distrito=brena')
+    await page.goto('/capital/inmuebles?distrito=brena')
     await expect(page.locator('[data-results] [data-property-card]:visible')).toHaveCount(1)
     await page.getByRole('button', { name: /Filtros/ }).click()
     await expect(page.getByRole('checkbox', { name: /Breña/ })).toBeChecked()

@@ -13,13 +13,13 @@ interface Props {
   title: string
   description?: string
   lang?: 'es' | 'en'
-  /** Páginas que no deben salir en Google (p. ej. Mis depas) */
+  /** Páginas que no deben salir en Google (p. ej. Mis inmuebles) */
   noindex?: boolean
 }
 
 const {
   title,
-  description = 'Depa Host Perú: reserva, vende, alquila o compra tu depa en Lima.',
+  description = 'Depa Host Perú: reserva, vende, alquila o compra tu inmueble en Lima.',
   lang = 'es',
   noindex = false,
 } = Astro.props
@@ -55,13 +55,12 @@ const ogImage = new URL('/og-default.png', Astro.site)
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Depa Host Perú: el depa en Lima, con la decisión correcta." />
+    <meta property="og:image:alt" content="Depa Host Perú: el inmueble en Lima, con la decisión correcta." />
     <meta name="twitter:card" content="summary_large_image" />
 
-    <!-- Fuentes autoalojadas (configuradas en astro.config.mjs). preload = se descargan antes:
-         Newsreader es la de los títulos principales, lo primero que se ve -->
-    <Font cssVariable="--font-inter" preload />
-    <Font cssVariable="--font-newsreader" preload />
+    <!-- Fuente autoalojada (configurada en astro.config.mjs). preload = se descarga antes:
+         solo los pesos del texto (400) y de los títulos (700), lo primero que se ve -->
+    <Font cssVariable="--font-poppins" preload={[{ weight: 400 }, { weight: 700 }]} />
   </head>
   <body>
     <!-- Marca invisible arriba de todo: cuando sale de pantalla, el header muestra su sombra -->

@@ -1,6 +1,6 @@
 // Recomendaciones simples y explicables, sin servidor:
-// - "Depas similares" en el detalle (en el build)
-// - "Para ti, según lo que has visto" en Capital (en el navegador, con el historial y Mis depas)
+// - "Inmuebles similares" en el detalle (en el build)
+// - "Para ti, según lo que has visto" en Capital (en el navegador, con el historial y Mis inmuebles)
 // Más adelante la API puede devolver recomendaciones según el perfil; la forma de los datos es la misma.
 
 export interface Recommendable {
@@ -12,7 +12,7 @@ export interface Recommendable {
   yieldMax: number
 }
 
-/** Qué tan parecidos son dos depas: mismo distrito pesa más; luego precio, origen y rentabilidad. */
+/** Qué tan parecidos son dos inmuebles: mismo distrito pesa más; luego precio, origen y rentabilidad. */
 export function similarity(a: Recommendable, b: Recommendable): number {
   const sameDistrict = a.districtSlug === b.districtSlug ? 3 : 0
   const sameOrigin = a.origin === b.origin ? 1 : 0
@@ -23,7 +23,7 @@ export function similarity(a: Recommendable, b: Recommendable): number {
   return sameDistrict + sameOrigin + priceScore + yieldScore
 }
 
-/** Los más parecidos a un depa, sin incluirlo. */
+/** Los más parecidos a un inmueble, sin incluirlo. */
 export function similarTo<T extends Recommendable>(target: Recommendable, candidates: T[], limit = 4): T[] {
   return candidates
     .filter((c) => c.id !== target.id)
@@ -35,7 +35,7 @@ export function similarTo<T extends Recommendable>(target: Recommendable, candid
 
 /**
  * Recomienda según lo guardado (pesa doble) y lo visto (lo más reciente pesa más).
- * No repite depas ya guardados. Sin historial no recomienda nada.
+ * No repite inmuebles ya guardados. Sin historial no recomienda nada.
  */
 export function recommend<T extends Recommendable>(
   candidates: T[],
