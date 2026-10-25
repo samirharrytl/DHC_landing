@@ -117,7 +117,7 @@
   --container-max: 75rem; /* 1200 */
   --gutter: 1rem; /* 16 móvil; sube en media queries */
   --grid-gap: 1rem; /* 16 móvil; 24 desde 1024 */
-  --header-h: 4rem; /* 64 móvil; 72 tablet; 80 desktop (el sitio lo ajusta en Header.astro) */
+  --header-h: 4rem; /* 64 móvil; 72 tablet; 80 desktop; el sitio sube a 88 desde 1280px (Header.astro) */
 
   /* ---------- Radios ---------- */
   --radius-sm: 4px; /* chips */

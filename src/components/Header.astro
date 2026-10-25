@@ -594,6 +594,14 @@ const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
       margin-inline: var(--space-4);
     }
   }
+  /* Pantallas grandes: el header crece a 88px para que el logo tenga presencia sin quedar apretado
+     (ver Logo.astro). Es una variable global: los elementos fijos bajo el header se acomodan solos */
+  @media (min-width: 1280px) {
+    /* html:root pesa más que el :root de tokens.css, que se carga después */
+    :global(html:root) {
+      --header-h: 5.5rem;
+    }
+  }
 
   /* ---------- Drawer ---------- */
   .drawer {

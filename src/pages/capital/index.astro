@@ -41,7 +41,7 @@ const disclaimer = buildDisclaimer(await getFinancingAssumptions())
     <div class="hero-text">
       <!-- Siempre en 2 líneas (ver .hero h1) -->
       <h1 class="display">
-        <span>Los mejores departamentos</span>
+        <span>Los mejores inmuebles</span>
         <span>para invertir en Lima.</span>
       </h1>
       <p class="hero-sub">Depas de propietarios, elegidos por ubicación, rentabilidad y plusvalía.</p>
@@ -109,9 +109,10 @@ const disclaimer = buildDisclaimer(await getFinancingAssumptions())
     container-type: inline-size;
   }
   .hero h1 {
-    /* 2 líneas en cualquier pantalla: la más larga ("Los mejores departamentos") mide ~11.7em,
-       así que el tamaño sale del ancho disponible (8.3cqi deja un margen), con tope de 60px */
-    font-size: min(3.75rem, 8.3cqi);
+    /* 2 líneas en cualquier pantalla: la más larga ("Los mejores inmuebles") mide ~9.7em,
+       así que el tamaño sale del ancho disponible (10cqi deja un margen), con tope de 60px.
+       Si cambia el texto, hay que volver a medir la línea más larga */
+    font-size: min(3.75rem, 10cqi);
     line-height: 1.05;
     color: var(--color-navy-800);
   }

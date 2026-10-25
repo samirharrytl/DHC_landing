@@ -6,6 +6,8 @@ test.describe('Capital', () => {
     const cards = page.locator('#lista-depas [data-property-card]:visible')
     await expect(cards).toHaveCount(12)
     await expect(cards.first()).toContainText('De propietario')
+    // Los filtros rápidos son distritos y precio; la rentabilidad está en "Todos los depas"
+    await expect(page.locator('[data-favorite-filter]', { hasText: 'anual' })).toHaveCount(0)
 
     await page.getByRole('searchbox').fill('surquillo')
     await expect(cards).toHaveCount(1)
@@ -194,6 +196,43 @@ test.describe('Todos los depas', () => {
     await expect(page.getByLabel('Ordenar por')).toHaveValue('destacados')
     await page.getByRole('button', { name: 'Elegir un lugar' }).click()
     await expect(page.getByLabel('O elige un lugar')).toBeFocused()
+  })
+
+  test('la vista de mapa muestra un pin por depa y su mini tarjeta', async ({ page }) => {
+    // Sin descargar mosaicos de OpenStreetMap en las pruebas
+    await page.route('https://tile.openstreetmap.org/**', (route) => route.abort())
+    await page.goto('/capital/depas?distrito=miraflores')
+    const cards = page.locator('[data-results] [data-property-card]:visible')
+    const count = await cards.count()
+    expect(count).toBeGreaterThan(1)
+
+    await page.getByRole('button', { name: 'Mapa', exact: true }).click()
+    await expect(page).toHaveURL(/distrito=miraflores.*vista=mapa/)
+    await expect(page.getByRole('button', { name: 'Mapa', exact: true })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    )
+    await expect(page.locator('[data-results]')).toBeHidden()
+    const pins = page.locator('.map-pin')
+    await expect(pins).toHaveCount(count)
+
+    await pins.first().click()
+    const popup = page.locator('.leaflet-popup')
+    await expect(popup).toContainText('Miraflores')
+    await expect(popup.getByRole('link', { name: 'Ver más detalle' })).toHaveAttribute(
+      'href',
+      /\/capital\/miraflores-/,
+    )
+
+    // Los filtros también cambian el mapa, y al recargar sigue en el mapa
+    await page.reload()
+    await expect(pins).toHaveCount(count)
+    await page.getByRole('button', { name: 'Quitar filtro: Miraflores' }).click()
+    await expect(pins).toHaveCount(36)
+
+    await page.getByRole('button', { name: 'Lista', exact: true }).click()
+    await expect(cards).toHaveCount(36)
+    expect(page.url()).not.toContain('vista=')
   })
 
   test('en móvil los filtros se abren en un panel', async ({ page }) => {

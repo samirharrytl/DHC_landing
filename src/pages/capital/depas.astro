@@ -4,6 +4,7 @@
 // el buscador y el orden se aplican en el navegador (lógica en src/lib/catalog-search.ts) y quedan
 // en la URL (?distrito=lince&orden=precio-asc), así la búsqueda se puede compartir.
 // "Cerca de" ordena por distancia a la ubicación de la persona o a un lugar de la lista (src/lib/geo.ts).
+// "Mapa" muestra los mismos resultados como pines (src/scripts/depas-map.ts, se carga al elegirlo).
 import BaseLayout from '../../layouts/BaseLayout.astro'
 import Icon from '../../components/Icon.astro'
 import PropertyCard from '../../components/PropertyCard.astro'
@@ -67,6 +68,16 @@ const origins = [
         {depas.length} resultados
       </p>
       <div class="results-tools">
+        <div class="view-toggle" role="group" aria-label="Ver resultados como">
+          <button type="button" aria-pressed="true" data-view="lista">
+            <Icon name="list" size={18} />
+            Lista
+          </button>
+          <button type="button" aria-pressed="false" data-view="mapa">
+            <Icon name="map" size={18} />
+            Mapa
+          </button>
+        </div>
         <button
           type="button"
           class="btn btn--secondary btn--sm filters-open"
@@ -274,6 +285,12 @@ const origins = [
         <h2 id="results-title" class="sr-only">
           Resultados
         </h2>
+        <div class="results-map" data-results-map hidden>
+          <div class="map-canvas" data-map-canvas></div>
+          <p class="map-message" data-map-message>
+            Cargando mapa…
+          </p>
+        </div>
         <div class="results-grid" data-results>
           {depas.map((d, index) => (
             <PropertyCard property={d} priority={index < 3} />
@@ -304,6 +321,7 @@ const origins = [
     type SortKey,
   } from '../../lib/catalog-search'
   import { formatPEN } from '../../lib/format'
+  import type { DepasMap, MapDepa } from '../../scripts/depas-map'
   import {
     districtCenter,
     distanceKm,
@@ -335,12 +353,20 @@ const origins = [
     const nearStatus = $<HTMLElement>('[data-near-status]')
     const locateButton = $<HTMLButtonElement>('[data-near-locate]')
     const locateLabel = $<HTMLElement>('[data-near-locate-label]')
+    const mapBox = $<HTMLElement>('[data-results-map]')
+    const mapCanvas = $<HTMLElement>('[data-map-canvas]')
+    const mapMessage = $<HTMLElement>('[data-map-message]')
+    const viewButtons = [...root.querySelectorAll<HTMLButtonElement>('[data-view]')]
 
     type Item = SearchableDepa & {
       card: HTMLElement
       position?: Point & { exact: boolean }
       distance: HTMLElement
       distanceText: HTMLElement
+      /** Para la mini tarjeta del mapa */
+      district: string
+      address: string
+      href: string
     }
     const items: Item[] = [...grid.querySelectorAll<HTMLElement>('[data-property-card]')].map(
       (card, order) => ({
@@ -362,6 +388,9 @@ const origins = [
             : undefined,
         distance: card.querySelector<HTMLElement>('[data-distance]')!,
         distanceText: card.querySelector<HTMLElement>('[data-distance-text]')!,
+        district: card.querySelector('.title a')?.textContent?.trim() ?? '',
+        address: card.querySelector('.address')?.textContent?.trim() ?? '',
+        href: card.querySelector<HTMLAnchorElement>('.title a')?.href ?? '',
       }),
     )
 
@@ -391,6 +420,78 @@ const origins = [
 
     let query: DepaQuery = queryFromParams(new URLSearchParams(location.search))
     normalizeNear()
+
+    // ---------- Vista: lista o mapa ----------
+    let view: 'lista' | 'mapa' =
+      new URLSearchParams(location.search).get('vista') === 'mapa' ? 'mapa' : 'lista'
+    let visibleItems: Item[] = []
+    let depasMap: DepasMap | undefined
+    let mapLoading: Promise<void> | undefined
+
+    /** Foto chica de la tarjeta para la mini tarjeta del mapa (la primera del srcset) */
+    const thumbnail = (card: HTMLElement) => {
+      const source = card.querySelector<HTMLSourceElement>('picture source')
+      return source?.srcset.split(',')[0]?.trim().split(' ')[0] || card.querySelector('img')?.src
+    }
+
+    const syncMap = () => {
+      if (view !== 'mapa' || !depasMap) return
+      const origin = originOf(query.near)
+      const depas: MapDepa[] = visibleItems.flatMap((item) =>
+        item.position
+          ? [
+              {
+                id: item.id,
+                lat: item.position.lat,
+                lng: item.position.lng,
+                exact: item.position.exact,
+                price: item.price,
+                district: item.district,
+                address: item.address,
+                href: item.href,
+                image: thumbnail(item.card),
+                distance:
+                  item.distanceKm === undefined ? undefined : (item.distanceText.textContent ?? undefined),
+              },
+            ]
+          : [],
+      )
+      depasMap.update(
+        depas,
+        origin && { lat: origin.lat, lng: origin.lng, name: origin.name, radiusKm: query.maxKm },
+      )
+    }
+
+    /** Leaflet se descarga la primera vez que se abre el mapa */
+    const showMap = async () => {
+      mapLoading ??= import('../../scripts/depas-map')
+        .then(async ({ createDepasMap }) => {
+          depasMap = await createDepasMap(mapCanvas)
+          mapMessage.hidden = true
+        })
+        .catch(() => {
+          mapMessage.textContent = 'No pudimos cargar el mapa. Revisa tu conexión y vuelve a intentarlo.'
+          mapLoading = undefined
+        })
+      await mapLoading
+      depasMap?.resize()
+      syncMap()
+    }
+
+    const setView = (next: typeof view) => {
+      view = next
+      for (const button of viewButtons)
+        button.setAttribute('aria-pressed', String(button.dataset.view === view))
+      grid.hidden = view === 'mapa'
+      mapBox.hidden = view !== 'mapa'
+    }
+    for (const button of viewButtons) {
+      button.addEventListener('click', () => {
+        setView(button.dataset.view === 'mapa' ? 'mapa' : 'lista')
+        render()
+        if (view === 'mapa') void showMap()
+      })
+    }
 
     const listKey = { origin: 'origins', district: 'districts', developer: 'developers' } as const
     const n = (value: string | undefined) => (value === undefined || value === '' ? undefined : Number(value))
@@ -486,6 +587,7 @@ const origins = [
         items.filter((d) => matchesQuery(d, query)),
         query.sort,
       )
+      visibleItems = visible
       const shown = new Set(visible)
       for (const item of items) item.card.hidden = !shown.has(item)
       grid.append(
@@ -548,9 +650,13 @@ const origins = [
       badge.hidden = filterCount === 0
       badge.textContent = String(filterCount)
 
-      // La URL guarda la búsqueda (para compartirla o volver con "Atrás")
-      const params = queryToParams(query).toString()
-      history.replaceState(null, '', params ? `${location.pathname}?${params}` : location.pathname)
+      syncMap()
+
+      // La URL guarda la búsqueda y la vista (para compartirla o volver con "Atrás")
+      const params = queryToParams(query)
+      if (view === 'mapa') params.set('vista', 'mapa')
+      const search = params.toString()
+      history.replaceState(null, '', search ? `${location.pathname}?${search}` : location.pathname)
     }
     const apply = render
 
@@ -754,7 +860,9 @@ const origins = [
       if (event.matches) close()
     })
 
+    setView(view)
     render()
+    if (view === 'mapa') void showMap()
   }
 </script>
 
@@ -864,7 +972,7 @@ const origins = [
     white-space: nowrap;
   }
   /* Móvil y tablet: "Filtros" y "Ordenar" quedan a mano bajo el header mientras se baja por los depas.
-     Mitad y mitad, con la cantidad de resultados arriba. */
+     Mitad y mitad; arriba, la cantidad de resultados y "Lista | Mapa". */
   @media (max-width: 1023px) {
     .results-bar {
       position: sticky;
@@ -882,11 +990,13 @@ const origins = [
         0 8px 12px -10px rgb(3 26 57 / 0.25);
     }
     .results-count {
-      grid-column: 1 / -1;
       font-size: var(--fs-sm);
     }
     .results-tools {
       display: contents;
+    }
+    .view-toggle {
+      justify-self: end;
     }
     .filters-open {
       width: 100%;
@@ -912,6 +1022,34 @@ const origins = [
     background: var(--color-surface-alt);
     color: var(--color-text);
     font-size: var(--fs-sm);
+  }
+
+  /* ---------- Lista | Mapa ---------- */
+  .view-toggle {
+    display: inline-flex;
+    padding: 3px;
+    border: 1px solid var(--color-border-input);
+    border-radius: var(--radius-pill);
+    background: var(--color-surface-alt);
+  }
+  .view-toggle button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 36px;
+    padding: 0 var(--space-3);
+    border: 0;
+    border-radius: var(--radius-pill);
+    background: transparent;
+    color: var(--color-text-muted);
+    font: inherit;
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-semibold);
+    cursor: pointer;
+  }
+  .view-toggle button[aria-pressed='true'] {
+    background: var(--color-navy-800);
+    color: #fff;
   }
 
   /* ---------- Chips de filtros activos ---------- */
@@ -970,6 +1108,166 @@ const origins = [
   .results-grid {
     display: grid;
     gap: var(--grid-gap);
+  }
+  .results-grid[hidden] {
+    display: none;
+  }
+
+  /* ---------- Mapa ---------- */
+  .results-map {
+    position: relative;
+    height: max(420px, calc(100dvh - var(--header-h) - 200px));
+    margin-bottom: var(--space-4);
+    overflow: hidden;
+    border: var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface-muted);
+  }
+  .results-map[hidden] {
+    display: none;
+  }
+  .map-canvas {
+    position: absolute;
+    inset: 0;
+    z-index: 0; /* los controles de Leaflet no tapan el header ni el panel de filtros */
+  }
+  /* Leaflet trae su propia fuente y color de links: usamos los del sitio */
+  .map-canvas:global(.leaflet-container) {
+    font: inherit;
+  }
+  .map-canvas :global(.map-card a.btn) {
+    color: var(--color-navy-800);
+  }
+  /* Mosaicos con menos color: los pines de precio resaltan */
+  .map-canvas :global(.leaflet-tile-pane) {
+    filter: saturate(0.45) contrast(0.95);
+  }
+  .map-message {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    margin: 0;
+    padding: var(--space-6);
+    color: var(--color-text-muted);
+    text-align: center;
+  }
+  .map-message[hidden] {
+    display: none;
+  }
+
+  /* Pin con el precio; con poco zoom (.is-far) es un punto */
+  .map-canvas :global(.map-pin-anchor) {
+    background: none;
+    border: 0;
+  }
+  .map-canvas :global(.map-pin) {
+    position: absolute;
+    left: 0;
+    bottom: 8px;
+    transform: translateX(-50%);
+    padding: 4px 10px;
+    border: 1px solid var(--color-navy-800);
+    border-radius: var(--radius-pill);
+    background: #fff;
+    box-shadow: 0 2px 6px rgb(3 26 57 / 0.25);
+    color: var(--color-navy-800);
+    font: 700 13px/1.2 var(--font-sans);
+    white-space: nowrap;
+    cursor: pointer;
+    transition:
+      background var(--dur-fast) var(--ease-out),
+      color var(--dur-fast) var(--ease-out);
+  }
+  .map-canvas :global(.map-pin::after) {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: -6px;
+    width: 10px;
+    height: 10px;
+    margin-left: -5px;
+    border-right: 1px solid var(--color-navy-800);
+    border-bottom: 1px solid var(--color-navy-800);
+    background: inherit;
+    transform: rotate(45deg);
+  }
+  .map-canvas :global(.map-pin.is-active),
+  .map-canvas :global(.leaflet-marker-icon:hover .map-pin),
+  .map-canvas :global(.leaflet-marker-icon:focus-visible .map-pin) {
+    background: var(--color-navy-800);
+    color: #fff;
+  }
+  .map-canvas:global(.is-far) :global(.map-pin) {
+    bottom: -7px;
+    width: 14px;
+    height: 14px;
+    padding: 0;
+    border: 2px solid #fff;
+    background: var(--color-navy-800);
+    color: transparent;
+    font-size: 0;
+  }
+  .map-canvas:global(.is-far) :global(.map-pin::after) {
+    display: none;
+  }
+  .map-canvas:global(.is-far) :global(.map-pin.is-active) {
+    background: var(--color-gold-500);
+  }
+  /* Punto de "Cerca de" */
+  .map-canvas :global(.map-origin) {
+    border: 3px solid #fff;
+    border-radius: 50%;
+    background: var(--color-gold-500);
+    box-shadow: 0 0 0 2px var(--color-navy-800);
+  }
+
+  /* Mini tarjeta del pin */
+  .map-canvas :global(.leaflet-popup-content-wrapper) {
+    padding: 0;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+  }
+  .map-canvas :global(.leaflet-popup-content) {
+    width: 240px !important;
+    margin: 0;
+    font: inherit;
+  }
+  .map-canvas :global(.map-card img) {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+  }
+  .map-canvas :global(.map-card-body) {
+    display: grid;
+    gap: 2px;
+    padding: var(--space-3);
+  }
+  .map-canvas :global(.map-card-title) {
+    color: var(--color-navy-800);
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 500;
+  }
+  .map-canvas :global(.map-card-address),
+  .map-canvas :global(.map-card-note) {
+    color: var(--color-text-muted);
+    font-size: var(--fs-13);
+  }
+  .map-canvas :global(.map-card-distance) {
+    color: var(--color-navy-800);
+    font-size: var(--fs-13);
+    font-weight: var(--fw-semibold);
+  }
+  .map-canvas :global(.map-card-price) {
+    margin: var(--space-1) 0 var(--space-2);
+    color: var(--color-text-strong);
+    font-size: var(--fs-18);
+    font-weight: var(--fw-bold);
+  }
+  .map-canvas :global(.map-card .btn) {
+    width: 100%;
   }
   .empty {
     display: grid;
