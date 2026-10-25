@@ -98,11 +98,11 @@ sesión también en el sitio, y sus depas guardados se sincronizan entre los dos
 | Ruta | Qué muestra |
 |---|---|
 | `/` | Home de Depa Host Perú con los tres servicios |
-| `/capital` | Portada de Capital: depas de propietarios, "Para ti", aliados, top 10 y formulario en inglés |
-| `/capital/{slug}` | Detalle de un depa: datos, aliado y depas similares |
+| `/capital` | Portada de Capital: depas de propietarios, "Para ti" y aliados |
+| `/capital/depas` | Todos los depas con filtros por tipo, distrito, inmobiliaria, precio, rentabilidad y plazo, y orden |
+| `/capital/{slug}` | Detalle de un depa: galería, datos, caja de compra, aliado y depas similares |
 | `/capital/aliados/{slug}` | Proyectos de una inmobiliaria aliada |
-| `/capital/empecemos` | "Te acompañamos": los depas elegidos y el paso a WhatsApp |
-| `/mis-depas` | Depas guardados, resumen e inversión total. `/carrito` redirige aquí |
+| `/mis-depas` | Depas guardados, resumen, inversión total y paso a WhatsApp. `/carrito` y `/capital/empecemos` redirigen aquí |
 | `/propietarios` | Formulario para vender o alquilar |
 | `/libro-de-reclamaciones` | Libro de Reclamaciones virtual |
 | `/privacidad`, `/terminos` | Textos legales (borradores pendientes de revisión legal) |

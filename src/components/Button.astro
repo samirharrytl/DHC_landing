@@ -1,13 +1,13 @@
 ---
 // Botón-link reutilizable.
-// variant: 'primary' (navy) | 'secondary' u 'outline' (con borde) | 'whatsapp'
+// variant: 'primary' (navy) | 'cta' (dorado, compra) | 'secondary' u 'outline' (con borde) | 'whatsapp'
 // size: 'sm' | 'md'   ·   block: ancho completo
 // Regla de diseño: si el link abre WhatsApp (wa.me) SIEMPRE es verde, aunque pidan otra variante.
 import WhatsAppIcon from './WhatsAppIcon.astro'
 
 interface Props {
   href: string
-  variant?: 'primary' | 'secondary' | 'outline' | 'whatsapp'
+  variant?: 'primary' | 'cta' | 'secondary' | 'outline' | 'whatsapp'
   size?: 'sm' | 'md'
   block?: boolean
   class?: string

@@ -1,21 +1,21 @@
 ---
 // Botón "Me interesa": agrega o quita un depa de Mis depas (lógica en src/scripts/saved-buttons.ts).
-// variant: 'outline' (tarjetas) | 'solid' (detalle y proyectos de inmobiliarias)
+// variant: 'cta' (dorado, como "Agregar al carrito": tarjetas y detalle) | 'outline' | 'solid' (proyectos de inmobiliarias)
 import Icon from './Icon.astro'
 
 interface Props {
   id: string
   name: string
-  variant?: 'outline' | 'solid'
+  variant?: 'cta' | 'outline' | 'solid'
   class?: string
 }
-const { id, name, variant = 'outline', class: className } = Astro.props
+const { id, name, variant = 'cta', class: className } = Astro.props
 ---
 
 <button
   class:list={[
     'btn btn--sm save-button',
-    variant === 'solid' ? 'btn--primary' : 'btn--secondary',
+    { solid: 'btn--primary', outline: 'btn--secondary', cta: 'btn--cta' }[variant],
     `save-button--${variant}`,
     className,
   ]}
@@ -48,6 +48,11 @@ const { id, name, variant = 'outline', class: className } = Astro.props
   }
   .save-button--solid[aria-pressed='true'] {
     background: var(--color-navy-950);
+  }
+  /* Ya está en Mis depas: dorado suave, para que se note que el clic lo quita */
+  .save-button--cta[aria-pressed='true'] {
+    background: var(--color-gold-100);
+    border-color: var(--color-gold-700);
   }
   @media (prefers-reduced-motion: no-preference) {
     .save-button[aria-pressed='true'] :global(.heart) {

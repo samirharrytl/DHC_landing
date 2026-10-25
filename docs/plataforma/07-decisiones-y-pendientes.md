@@ -38,7 +38,7 @@ cambiar una, conviene releer el porqué.
 | El saludo "Hola, Ana" no aparece en móvil | `Header.astro`: `.greeting` desde 640 px | Visual | Mostrarlo en el menú móvil (hoy el menú solo ofrece "Ingresar a mi cuenta") |
 | Sin verificación de correo | `modules/accounts` | Alguien puede registrarse con un correo ajeno | Enviar enlace de verificación antes de vincular datos sensibles |
 | Las cuentas no se pueden borrar desde el panel | `modules/accounts` | La Ley 29733 da derecho de cancelación | Agregar "Eliminar mi cuenta" o atenderlo por correo mientras tanto |
-| "Para ti" aparece un instante después de cargar | `ForYouRow.astro` | Mueve un poco lo de abajo en Capital | Reservar altura o mostrarla tras el top 10 |
+| "Para ti" aparece un instante después de cargar | `ForYouRow.astro` | Mueve un poco lo de abajo en Capital | Reservar altura o mostrarla después de los aliados |
 | Los depas vendidos no tienen página | `getProperties()` excluye `sold` | Un link viejo a un depa vendido da 404 | Generar su página con la etiqueta "Vendido" |
 | El plazo de reclamos no descuenta feriados | `lib/business-days.ts` | Plazo más corto que el legal | Agregar el calendario de feriados nacionales |
 | En el resumen de administración, "Reclamos por responder" queda unos píxeles más arriba que las otras tarjetas de su fila | Panel, vista de resumen | Visual | Alinear las tarjetas de esa fila |
@@ -46,7 +46,6 @@ cambiar una, conviene releer el porqué.
 | "Editar mi depa" con una solicitud ajena o inexistente se queda en "Cargando…" | Panel, `RequestFormView.vue` | La persona no recibe ningún mensaje | Mostrar el mismo aviso que el detalle |
 | "Sin fotos. Puedes agregarlas al editar." aparece cuando la solicitud ya no se puede editar | Panel, detalle de la solicitud | Invita a algo que no se puede hacer ("En revisión", "Publicada") | Mostrar ese texto solo si la solicitud es editable |
 | El contador "Consultas" del propietario suma cada toque repetido en "Escribir por WhatsApp" | API, indicadores del propietario | Infla el interés que ve el propietario | Contar personas o consultas distintas |
-| "Te acompañamos" sin depas elegidos mezcla el título en singular con el aviso de selección vacía | `capital/empecemos.astro` | Visual y confuso | Ocultar la tarjeta del depa cuando no hay selección |
 | La inversión total con solo depas en dólares se escribe distinto en el sitio ("S/ 0 + US$ …") y en el panel ("US$ …") | `/mis-depas` del sitio | Inconsistencia visual | Omitir los soles cuando son cero |
 | `/docs` (Swagger) también responde en producción | `app.ts` | Muestra la lista de rutas; el contrato ya es público | Decidir si se oculta en producción |
 

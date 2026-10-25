@@ -27,14 +27,22 @@ interface PropertyLike {
   district: { name: string; slug: string }
   address: string
   badge?: string | null
+  developer?: { name: string } | null
   price: { amount: number }
   yield: { min: number; max: number }
 }
 
-/** Texto por el que se busca una tarjeta: distrito, dirección, badge y precio en varios formatos. */
+/** Texto por el que se busca una tarjeta: distrito, dirección, inmobiliaria, badge y precio en varios formatos. */
 export function buildSearchText(p: PropertyLike): string {
   return normalizeText(
-    [p.district.name, p.address, p.badge ?? '', p.price.amount, formatPEN(p.price.amount)].join(' '),
+    [
+      p.district.name,
+      p.address,
+      p.developer?.name ?? '',
+      p.badge ?? '',
+      p.price.amount,
+      formatPEN(p.price.amount),
+    ].join(' '),
   )
 }
 
@@ -69,43 +77,63 @@ export function parseFilters(active: Iterable<[string, string]>): PropertyFilter
 
 const PRICE_STEP = 50_000
 
+const median = (values: number[]) => {
+  const sorted = [...values].sort((a, b) => a - b)
+  const mid = Math.floor(sorted.length / 2)
+  return sorted.length % 2 ? sorted[mid]! : (sorted[mid - 1]! + sorted[mid]!) / 2
+}
+/** El candidato más cercano a la mediana; a igual distancia, el mayor. */
+const closestTo = (target: number, candidates: number[]) =>
+  [...candidates].sort((a, b) => Math.abs(a - target) - Math.abs(b - target) || b - a)[0]
+
 /**
- * Filtros rápidos derivados de los datos (no escritos a mano):
- * - un chip por distrito presente
- * - topes de precio redondeados a S/ 50,000 que dejan fuera al menos un depa
- * - rentabilidades mínimas que dejan fuera al menos un depa
+ * Pocos filtros rápidos y relevantes, derivados de los datos (no escritos a mano):
+ * - los distritos con más depas (a igualdad, los de mejor rentabilidad)
+ * - un tope de precio redondeado a S/ 50,000, cerca de la mediana, que deja fuera al menos un depa
+ * - una rentabilidad mínima, cerca de la mediana, que deja fuera al menos un depa
+ * El resto de filtros está en "Todos los depas" (/capital/depas).
  */
-export function buildFastFilters(properties: PropertyLike[], max = { prices: 2, yields: 2 }): FastFilter[] {
+export function buildFastFilters(properties: PropertyLike[], max = { districts: 4 }): FastFilter[] {
   if (properties.length === 0) return []
 
-  const districts = new Map<string, string>()
-  for (const p of properties) districts.set(p.district.slug, p.district.name)
+  const districts = new Map<string, { name: string; count: number; yieldSum: number }>()
+  for (const p of properties) {
+    const d = districts.get(p.district.slug) ?? { name: p.district.name, count: 0, yieldSum: 0 }
+    d.count += 1
+    d.yieldSum += (p.yield.min + p.yield.max) / 2
+    districts.set(p.district.slug, d)
+  }
   const districtFilters = [...districts]
-    .sort((a, b) => a[1].localeCompare(b[1], 'es'))
-    .map(([slug, name]) => ({ label: name, kind: 'district' as const, value: slug }))
+    .sort(
+      ([, a], [, b]) =>
+        b.count - a.count ||
+        b.yieldSum / b.count - a.yieldSum / a.count ||
+        a.name.localeCompare(b.name, 'es'),
+    )
+    .slice(0, max.districts)
+    .map(([slug, d]) => ({ label: d.name, kind: 'district' as const, value: slug }))
 
   const prices = properties.map((p) => p.price.amount)
   const highest = Math.max(...prices)
-  const ceilings = [...new Set(prices.map((n) => Math.ceil(n / PRICE_STEP) * PRICE_STEP))]
-    .filter((ceiling) => ceiling < highest)
-    .sort((a, b) => a - b)
-    .slice(-max.prices)
-  const priceFilters = ceilings.map((ceiling) => ({
-    label: `Hasta ${formatPEN(ceiling)}`,
-    kind: 'maxPrice' as const,
-    value: String(ceiling),
-  }))
+  const ceilings = [...new Set(prices.map((n) => Math.ceil(n / PRICE_STEP) * PRICE_STEP))].filter(
+    (ceiling) => ceiling < highest,
+  )
+  const ceiling = closestTo(median(prices), ceilings)
+  const priceFilters =
+    ceiling === undefined
+      ? []
+      : [{ label: `Hasta ${formatPEN(ceiling)}`, kind: 'maxPrice' as const, value: String(ceiling) }]
 
-  const lowestYield = Math.min(...properties.map((p) => p.yield.min))
-  const yields = [...new Set(properties.map((p) => p.yield.min))]
-    .filter((y) => y > lowestYield)
-    .sort((a, b) => a - b)
-    .slice(0, max.yields)
-  const yieldFilters = yields.map((y) => ({
-    label: `Desde ${y}% anual`,
-    kind: 'minYield' as const,
-    value: String(y),
-  }))
+  const yieldMins = properties.map((p) => p.yield.min)
+  const lowestYield = Math.min(...yieldMins)
+  const minYield = closestTo(
+    median(yieldMins),
+    [...new Set(yieldMins)].filter((y) => y > lowestYield),
+  )
+  const yieldFilters =
+    minYield === undefined
+      ? []
+      : [{ label: `Desde ${minYield}% anual`, kind: 'minYield' as const, value: String(minYield) }]
 
   return [...districtFilters, ...priceFilters, ...yieldFilters]
 }

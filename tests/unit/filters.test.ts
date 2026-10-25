@@ -44,17 +44,36 @@ describe('matchesFilters', () => {
 })
 
 describe('buildFastFilters', () => {
-  it('arma chips de distrito ordenados y topes útiles', () => {
+  it('arma pocos chips: distritos con más depas y un tope útil de precio y de rentabilidad', () => {
     const filters = buildFastFilters([lince, surquillo, magdalena])
+    // A igual cantidad de depas, primero los de mejor rentabilidad
     expect(filters.filter((f) => f.kind === 'district').map((f) => f.label)).toEqual([
+      'Surquillo',
       'Lince',
       'Magdalena',
-      'Surquillo',
     ])
     // 350,000 incluiría a todos: no se ofrece
     expect(filters.filter((f) => f.kind === 'maxPrice').map((f) => f.value)).toEqual(['300000'])
-    // 7% es el mínimo: no se ofrece
-    expect(filters.filter((f) => f.kind === 'minYield').map((f) => f.value)).toEqual(['8', '9'])
+    // 7% es el mínimo: no se ofrece; 8% es el más cercano a la mediana
+    expect(filters.filter((f) => f.kind === 'minYield').map((f) => f.value)).toEqual(['8'])
+  })
+
+  it('muestra solo los distritos con más depas', () => {
+    const many = [
+      make('Lince', 300000, 8),
+      make('Lince', 320000, 8),
+      make('Barranco', 400000, 9),
+      make('Barranco', 410000, 9),
+      make('Barranco', 420000, 9),
+      make('Miraflores', 500000, 7),
+      make('Surquillo', 280000, 10),
+      make('Breña', 250000, 6),
+      make('Rímac', 230000, 5),
+    ]
+    const districts = buildFastFilters(many)
+      .filter((f) => f.kind === 'district')
+      .map((f) => f.label)
+    expect(districts).toEqual(['Barranco', 'Lince', 'Surquillo', 'Miraflores'])
   })
 
   it('no devuelve nada sin depas', () => {

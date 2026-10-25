@@ -1,6 +1,6 @@
 import { expect, mockApi, test } from './fixtures'
 
-test('Me interesa → Guarda tus depas → Mis depas → Te acompañamos → WhatsApp', async ({ page }) => {
+test('Me interesa → Guarda tus depas → Mis depas → WhatsApp', async ({ page }) => {
   const leads = await mockApi(page, '/v1/leads', 201, {
     id: crypto.randomUUID(),
     createdAt: new Date().toISOString(),
@@ -42,15 +42,12 @@ test('Me interesa → Guarda tus depas → Mis depas → Te acompañamos → Wha
   await expect(page.locator('[data-summary-count]')).toHaveText('2')
   await expect(page.getByText('Guardado para Ana')).toBeVisible()
 
-  await page.getByRole('link', { name: /Empecemos con estos/ }).click()
-  await expect(page).toHaveURL(/\/capital\/empecemos\/?$/)
-  await expect(page.getByText('2 departamentos seleccionados')).toBeVisible()
-  const whatsapp = page.locator('#contenido').getByRole('link', { name: /Escribir por WhatsApp/ })
+  // "Empecemos con estos" abre WhatsApp con la lista y registra el lead del carrito
+  const whatsapp = page.getByRole('link', { name: /Empecemos con estos/ })
   await expect(whatsapp).toHaveAttribute(
     'href',
     new RegExp(`wa\\.me/51900000000.*${encodeURIComponent(first)}`),
   )
-
   const popup = page.waitForEvent('popup')
   await whatsapp.click()
   await (await popup).close()
@@ -64,9 +61,11 @@ test('Me interesa → Guarda tus depas → Mis depas → Te acompañamos → Wha
   await expect(page.locator('[data-cart-count]')).toBeHidden()
 })
 
-test('/carrito redirige a /mis-depas', async ({ page }) => {
-  await page.goto('/carrito')
-  await expect(page).toHaveURL(/\/mis-depas\/?$/)
+test('/carrito y /capital/empecemos redirigen a /mis-depas', async ({ page }) => {
+  for (const path of ['/carrito', '/capital/empecemos']) {
+    await page.goto(path)
+    await expect(page).toHaveURL(/\/mis-depas\/?$/)
+  }
 })
 
 test('"Seguir viendo" cierra el aviso y no vuelve a aparecer enseguida', async ({ page }) => {

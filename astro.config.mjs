@@ -25,6 +25,8 @@ export default defineConfig({
   // "Mis depas" vivía en /carrito: los links viejos siguen funcionando
   redirects: {
     '/carrito': '/mis-depas',
+    // "Te acompañamos" se unió a Mis depas: ahí se arma la lista y se escribe por WhatsApp
+    '/capital/empecemos': '/mis-depas',
   },
 
   integrations: [
@@ -47,7 +49,7 @@ export default defineConfig({
       PUBLIC_WHATSAPP_NUMBER: envField.string({
         context: 'client',
         access: 'public',
-        default: '51XXXXXXXXX',
+        default: '51981352247',
       }),
       PUBLIC_CLARITY_ID: envField.string({ context: 'client', access: 'public', optional: true }),
       PUBLIC_API_URL: envField.string({ context: 'client', access: 'public', optional: true }),

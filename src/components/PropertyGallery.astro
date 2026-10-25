@@ -1,0 +1,664 @@
+---
+// Galería del detalle, como la de un producto en una tienda en línea:
+// - Escritorio: miniaturas en columna a la izquierda; pasar el mouse o hacer clic cambia la foto grande.
+// - Móvil: se desliza con el dedo y debajo van puntos y "1 / 5".
+// - Tocar la foto (o "Ampliar") abre la vista a pantalla completa, con flechas, teclado y miniaturas.
+// - Los videos (YouTube, Vimeo o archivo) van después de las fotos, con su miniatura de "play".
+// Todas las fotos están en pistas con scroll-snap: sin JavaScript igual se pueden deslizar.
+import { getImage } from 'astro:assets'
+import type { Property, PropertyImage as Image } from '../types/property'
+import HouseIcon from './HouseIcon.astro'
+import Icon from './Icon.astro'
+import PropertyImage from './PropertyImage.astro'
+import VideoPlayer from './VideoPlayer.astro'
+
+interface Props {
+  images: Image[]
+  videos?: Property['videos']
+  /** Nombre del depa, para los textos de accesibilidad */
+  title: string
+  /** Etiqueta encima de la foto ("De propietario", "De proyecto") */
+  tag?: string
+}
+const { images, videos = [], title, tag } = Astro.props
+
+type Item = { kind: 'image'; image: Image } | { kind: 'video'; url: string; title: string }
+const items: Item[] = [
+  ...images.map((image) => ({ kind: 'image' as const, image })),
+  ...videos.map((video, index) => ({
+    kind: 'video' as const,
+    url: video.url,
+    title: video.title ?? (videos.length > 1 ? `Video ${index + 1} de ${title}` : `Video de ${title}`),
+  })),
+]
+const total = items.length
+const photoCount = images.length
+
+// Portada de los videos: la primera foto, optimizada
+const cover = images[0]
+const poster = cover
+  ? (
+      await getImage({
+        src: cover.src,
+        format: 'webp',
+        ...(typeof cover.src === 'string'
+          ? cover.width && cover.height
+            ? { width: cover.width, height: cover.height }
+            : { inferSize: true }
+          : { width: 1280 }),
+      })
+    ).src
+  : undefined
+
+const label = (item: Item, index: number) =>
+  item.kind === 'image' ? `foto ${index + 1} de ${photoCount}` : `video: ${item.title}`
+---
+
+<div class="gallery" data-gallery>
+  {total > 1 && (
+    <ul class="thumbs" aria-label="Fotos y videos">
+      {items.map((item, index) => (
+        <li>
+          <button
+            type="button"
+            class="thumb"
+            data-gallery-thumb={index}
+            aria-label={`Ver ${label(item, index)}`}
+            aria-current={index === 0 ? 'true' : undefined}
+          >
+            {item.kind === 'image' ? (
+              <PropertyImage image={item.image} widths={[96, 160]} sizes="80px" />
+            ) : (
+              <>
+                {cover && <PropertyImage image={cover} widths={[96, 160]} sizes="80px" />}
+                <span class="thumb-play">
+                  <Icon name="play" size={18} strokeWidth={2} />
+                </span>
+              </>
+            )}
+          </button>
+        </li>
+      ))}
+    </ul>
+  )}
+
+  <div class="stage">
+    {total > 0 ? (
+      <div
+        class="track"
+        data-gallery-track
+        tabindex="0"
+        aria-label={`Fotos de ${title}, desliza para ver más`}
+      >
+        {items.map((item, index) => (
+          <div class="slide" data-gallery-slide>
+            {item.kind === 'image' ? (
+              <button
+                type="button"
+                class="zoom"
+                data-gallery-zoom={index}
+                aria-label={`Ampliar ${label(item, index)}`}
+              >
+                <PropertyImage
+                  image={item.image}
+                  widths={[640, 960, 1280, 1600]}
+                  sizes="(max-width: 1024px) 100vw, 45vw"
+                  priority={index === 0}
+                />
+              </button>
+            ) : (
+              <VideoPlayer url={item.url} title={item.title} poster={poster} />
+            )}
+          </div>
+        ))}
+      </div>
+    ) : (
+      <div class="placeholder" aria-hidden="true">
+        <HouseIcon />
+      </div>
+    )}
+    {tag && <span class="stage-tag">{tag}</span>}
+    {photoCount > 0 && (
+      <button type="button" class="expand" data-gallery-expand aria-label="Ver en pantalla completa">
+        <Icon name="expand" size={20} strokeWidth={2} />
+        <span class="expand-label">Ampliar</span>
+      </button>
+    )}
+    {total > 1 && (
+      <p class="counter" aria-hidden="true">
+        <span data-gallery-current>1</span> / {total}
+      </p>
+    )}
+  </div>
+
+  {total > 1 && (
+    <div class="dots" aria-hidden="true">
+      {items.map((item, index) => (
+        <span
+          class:list={['dot', { 'is-active': index === 0, 'is-video': item.kind === 'video' }]}
+          data-gallery-dot
+        />
+      ))}
+    </div>
+  )}
+
+  <!-- ---------- Vista ampliada ---------- -->
+  {total > 0 && (
+    <dialog class="lightbox" data-lightbox aria-label={`Fotos y videos de ${title}`}>
+      <div class="lb">
+        <div class="lb-top">
+          <p class="lb-title">{title}</p>
+          <p class="lb-counter" aria-live="polite">
+            <span data-lb-current>1</span> / {total}
+          </p>
+          <button type="button" class="lb-close" data-lb-close aria-label="Cerrar">
+            <Icon name="x" size={26} strokeWidth={2} />
+          </button>
+        </div>
+
+        <div class="lb-stage">
+          <div class="lb-track" data-lb-track>
+            {items.map((item) => (
+              <div class="lb-slide" data-lb-slide>
+                {item.kind === 'image' ? (
+                  <PropertyImage image={item.image} widths={[1280, 1920, 2560]} sizes="100vw" />
+                ) : (
+                  <VideoPlayer url={item.url} title={item.title} poster={poster} />
+                )}
+              </div>
+            ))}
+          </div>
+          {total > 1 && (
+            <>
+              <button type="button" class="lb-nav lb-prev" data-lb-prev aria-label="Anterior">
+                <Icon name="arrow-left" size={26} strokeWidth={2} />
+              </button>
+              <button type="button" class="lb-nav lb-next" data-lb-next aria-label="Siguiente">
+                <Icon name="arrow-right" size={26} strokeWidth={2} />
+              </button>
+            </>
+          )}
+        </div>
+
+        {total > 1 && (
+          <ul class="lb-thumbs" aria-label="Fotos y videos">
+            {items.map((item, index) => (
+              <li>
+                <button
+                  type="button"
+                  class="lb-thumb"
+                  data-lb-thumb={index}
+                  aria-label={`Ver ${label(item, index)}`}
+                >
+                  {item.kind === 'image' ? (
+                    <PropertyImage image={item.image} widths={[96, 160]} sizes="80px" />
+                  ) : (
+                    <>
+                      {cover && <PropertyImage image={cover} widths={[96, 160]} sizes="80px" />}
+                      <span class="thumb-play">
+                        <Icon name="play" size={18} strokeWidth={2} />
+                      </span>
+                    </>
+                  )}
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </dialog>
+  )}
+</div>
+
+<script>
+  import { stopVideos } from '../scripts/video'
+
+  /** Pista con scroll-snap: va a una diapositiva y avisa cuando cambia al deslizar. */
+  function track(el: HTMLElement, onChange: (index: number) => void) {
+    let active = 0
+    const count = el.children.length
+    const go = (index: number, behavior: ScrollBehavior = 'auto') => {
+      active = Math.max(0, Math.min(count - 1, index))
+      el.scrollTo({ left: active * el.clientWidth, behavior })
+      onChange(active)
+    }
+    let frame = 0
+    el.addEventListener('scroll', () => {
+      cancelAnimationFrame(frame)
+      frame = requestAnimationFrame(() => {
+        if (!el.clientWidth) return
+        const index = Math.round(el.scrollLeft / el.clientWidth)
+        if (index !== active) {
+          active = index
+          onChange(index)
+        }
+      })
+    })
+    // Si cambia el ancho (girar el celular, abrir la vista ampliada), la diapositiva sigue en su lugar
+    new ResizeObserver(() => go(active)).observe(el)
+    return { go, current: () => active }
+  }
+
+  const markCurrent = (buttons: HTMLElement[], index: number) =>
+    buttons.forEach((button, i) => {
+      if (i === index) button.setAttribute('aria-current', 'true')
+      else button.removeAttribute('aria-current')
+    })
+
+  document.querySelectorAll<HTMLElement>('[data-gallery]').forEach((gallery) => {
+    const stageTrack = gallery.querySelector<HTMLElement>('[data-gallery-track]')
+    if (!stageTrack) return
+    const thumbs = [...gallery.querySelectorAll<HTMLButtonElement>('[data-gallery-thumb]')]
+    const dots = [...gallery.querySelectorAll<HTMLElement>('[data-gallery-dot]')]
+    const current = gallery.querySelector('[data-gallery-current]')
+    const slides = [...stageTrack.querySelectorAll<HTMLElement>('[data-gallery-slide]')]
+
+    const stage = track(stageTrack, (index) => {
+      markCurrent(thumbs, index)
+      dots.forEach((dot, i) => dot.classList.toggle('is-active', i === index))
+      if (current) current.textContent = String(index + 1)
+      stopVideos(stageTrack, slides[index])
+    })
+
+    thumbs.forEach((thumb, index) => {
+      thumb.addEventListener('click', () => stage.go(index))
+      // Como en las tiendas: basta con pasar el mouse por la miniatura
+      thumb.addEventListener('mouseenter', () => stage.go(index))
+    })
+    stageTrack.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowRight') stage.go(stage.current() + 1, 'smooth')
+      else if (event.key === 'ArrowLeft') stage.go(stage.current() - 1, 'smooth')
+      else return
+      event.preventDefault()
+    })
+
+    // ---------- Vista ampliada ----------
+    const dialog = gallery.querySelector<HTMLDialogElement>('[data-lightbox]')
+    const lbTrack = dialog?.querySelector<HTMLElement>('[data-lb-track]')
+    if (!dialog || !lbTrack) return
+    const lbSlides = [...lbTrack.querySelectorAll<HTMLElement>('[data-lb-slide]')]
+    const lbThumbs = [...dialog.querySelectorAll<HTMLButtonElement>('[data-lb-thumb]')]
+    const lbCurrent = dialog.querySelector('[data-lb-current]')
+    const lb = track(lbTrack, (index) => {
+      markCurrent(lbThumbs, index)
+      if (lbCurrent) lbCurrent.textContent = String(index + 1)
+      lbThumbs[index]?.scrollIntoView({ block: 'nearest', inline: 'center' })
+      stopVideos(lbTrack, lbSlides[index])
+    })
+
+    const open = (index: number) => {
+      stopVideos(stageTrack)
+      dialog.showModal()
+      document.documentElement.classList.add('menu-open') // la página de atrás no se desplaza
+      requestAnimationFrame(() => lb.go(index))
+    }
+    gallery.querySelectorAll<HTMLButtonElement>('[data-gallery-zoom]').forEach((button) => {
+      button.addEventListener('click', () => open(Number(button.dataset.galleryZoom)))
+    })
+    gallery.querySelector('[data-gallery-expand]')?.addEventListener('click', () => open(stage.current()))
+
+    dialog.querySelector('[data-lb-close]')?.addEventListener('click', () => dialog.close())
+    dialog.querySelector('[data-lb-prev]')?.addEventListener('click', () => lb.go(lb.current() - 1, 'smooth'))
+    dialog.querySelector('[data-lb-next]')?.addEventListener('click', () => lb.go(lb.current() + 1, 'smooth'))
+    lbThumbs.forEach((thumb, index) => thumb.addEventListener('click', () => lb.go(index, 'smooth')))
+    dialog.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowRight') lb.go(lb.current() + 1, 'smooth')
+      else if (event.key === 'ArrowLeft') lb.go(lb.current() - 1, 'smooth')
+    })
+    // Clic fuera de la foto (en el fondo negro) también cierra
+    lbTrack.addEventListener('click', (event) => {
+      if ((event.target as Element).matches('[data-lb-slide]')) dialog.close()
+    })
+    // Al cerrar: se detienen los videos y la galería queda en la última foto vista
+    dialog.addEventListener('close', () => {
+      stopVideos(lbTrack)
+      document.documentElement.classList.remove('menu-open')
+      stage.go(lb.current())
+    })
+  })
+</script>
+
+<style>
+  .gallery {
+    display: grid;
+    gap: var(--space-2);
+    min-width: 0;
+  }
+  .stage {
+    position: relative;
+    min-width: 0;
+  }
+  .track {
+    display: flex;
+    overflow-x: auto;
+    border-radius: var(--radius-lg);
+    background: var(--color-navy-50);
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+  .track::-webkit-scrollbar,
+  .lb-track::-webkit-scrollbar {
+    display: none;
+  }
+  .slide {
+    flex: 0 0 100%;
+    aspect-ratio: 4 / 3;
+    scroll-snap-align: start;
+  }
+  .zoom {
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: zoom-in;
+  }
+  .zoom :global(picture) {
+    display: block;
+    height: 100%;
+  }
+  .zoom :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .placeholder {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(135deg, var(--color-navy-50), var(--color-navy-100));
+    color: var(--color-navy-800);
+  }
+  .placeholder :global(svg) {
+    width: 64px;
+    height: 64px;
+    opacity: 0.35;
+  }
+  .stage-tag {
+    position: absolute;
+    top: var(--space-3);
+    left: var(--space-3);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+    background: var(--color-navy-800);
+    color: #fff;
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-bold);
+    letter-spacing: var(--ls-caps);
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+  .expand {
+    position: absolute;
+    top: var(--space-3);
+    right: var(--space-3);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    min-height: 40px;
+    padding: 0 var(--space-3);
+    border: 0;
+    border-radius: var(--radius-pill);
+    background: rgb(255 255 255 / 0.92);
+    color: var(--color-navy-900);
+    font: var(--fw-semibold) var(--fs-13) / 1 var(--font-sans);
+    box-shadow: var(--shadow-md);
+    cursor: pointer;
+  }
+  .expand:hover {
+    background: #fff;
+  }
+  .counter {
+    position: absolute;
+    right: var(--space-3);
+    bottom: var(--space-3);
+    margin: 0;
+    padding: 2px var(--space-2);
+    border-radius: var(--radius-pill);
+    background: rgb(3 26 57 / 0.72);
+    color: #fff;
+    font-size: var(--fs-13);
+    font-variant-numeric: tabular-nums;
+    pointer-events: none;
+  }
+
+  /* Miniaturas: ocultas en móvil (ahí se desliza), en columna desde 1024px */
+  .thumbs {
+    display: none;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .thumb,
+  .lb-thumb {
+    position: relative;
+    display: block;
+    width: 64px;
+    height: 64px;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-navy-50);
+    cursor: pointer;
+  }
+  .thumb :global(picture),
+  .thumb :global(img),
+  .lb-thumb :global(picture),
+  .lb-thumb :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .thumb:hover {
+    border-color: var(--color-gold-700);
+  }
+  .thumb[aria-current] {
+    border: 2px solid var(--color-gold-500);
+    box-shadow: 0 0 0 2px var(--color-gold-100);
+  }
+  .thumb-play {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: rgb(3 26 57 / 0.45);
+    color: #fff;
+  }
+  .thumb-play :global(svg) {
+    fill: currentColor;
+  }
+
+  .dots {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+  }
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: var(--radius-pill);
+    background: var(--color-border);
+    transition: background-color var(--dur-fast) var(--ease-out);
+  }
+  .dot.is-video {
+    border-radius: 2px;
+  }
+  .dot.is-active {
+    background: var(--color-navy-800);
+  }
+
+  @media (max-width: 639px) {
+    .expand-label {
+      display: none;
+    }
+    .expand {
+      width: 40px;
+      justify-content: center;
+      padding: 0;
+    }
+  }
+  @media (min-width: 1024px) {
+    .gallery:has(.thumbs) {
+      grid-template-columns: 64px minmax(0, 1fr);
+      align-items: start;
+      gap: var(--space-3);
+    }
+    .thumbs {
+      display: grid;
+      gap: var(--space-2);
+    }
+    .dots {
+      display: none;
+    }
+  }
+
+  /* ---------- Vista ampliada ---------- */
+  .lightbox {
+    width: 100vw;
+    max-width: none;
+    height: 100dvh;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: #0b0f17;
+    color: #fff;
+  }
+  .lightbox::backdrop {
+    background: #0b0f17;
+  }
+  .lb {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    height: 100%;
+  }
+  .lb-top {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: var(--space-4);
+    padding: var(--space-2) var(--space-2) var(--space-2) var(--space-4);
+  }
+  .lb-title {
+    margin: 0;
+    overflow: hidden;
+    font-weight: var(--fw-semibold);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .lb-counter {
+    margin: 0;
+    color: rgb(255 255 255 / 0.75);
+    font-variant-numeric: tabular-nums;
+  }
+  .lb-close {
+    display: grid;
+    place-items: center;
+    width: var(--control-h-sm);
+    height: var(--control-h-sm);
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius-pill);
+    background: rgb(255 255 255 / 0.12);
+    color: #fff;
+    cursor: pointer;
+  }
+  .lb-close:hover {
+    background: rgb(255 255 255 / 0.22);
+  }
+  .lb-stage {
+    position: relative;
+    min-height: 0;
+  }
+  .lb-track {
+    display: flex;
+    height: 100%;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+  .lb-slide {
+    display: grid;
+    flex: 0 0 100%;
+    place-items: center;
+    height: 100%;
+    padding: var(--space-2);
+    scroll-snap-align: start;
+  }
+  .lb-slide :global(picture) {
+    display: contents;
+  }
+  .lb-slide :global(img) {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+  }
+  .lb-slide > :global(.video-file),
+  .lb-slide > :global(.video-embed) {
+    width: min(100%, calc((100dvh - 200px) * 16 / 9));
+    height: auto;
+    aspect-ratio: 16 / 9;
+  }
+  .lb-nav {
+    position: absolute;
+    top: 50%;
+    display: none;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius-pill);
+    background: rgb(255 255 255 / 0.9);
+    color: var(--color-navy-900);
+    transform: translateY(-50%);
+    cursor: pointer;
+  }
+  .lb-nav:hover {
+    background: #fff;
+  }
+  .lb-prev {
+    left: var(--space-4);
+  }
+  .lb-next {
+    right: var(--space-4);
+  }
+  .lb-thumbs {
+    display: flex;
+    justify-content: safe center;
+    gap: var(--space-2);
+    margin: 0;
+    padding: var(--space-3) var(--space-4) calc(var(--space-3) + env(safe-area-inset-bottom));
+    overflow-x: auto;
+    list-style: none;
+  }
+  .lb-thumb {
+    flex: none;
+    border-color: transparent;
+    opacity: 0.6;
+  }
+  .lb-thumb:hover {
+    opacity: 1;
+  }
+  .lb-thumb[aria-current] {
+    border: 2px solid var(--color-gold-500);
+    opacity: 1;
+  }
+  .lightbox :global(:focus-visible) {
+    box-shadow: 0 0 0 3px var(--color-gold-500);
+  }
+  @media (min-width: 640px) {
+    .lb-nav {
+      display: grid;
+    }
+    .lb-slide {
+      padding: var(--space-2) 88px;
+    }
+  }
+</style>

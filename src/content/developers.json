@@ -6,7 +6,7 @@
     "description": null,
     "logoUrl": null,
     "website": null,
-    "projectCount": 3
+    "projectCount": 6
   },
   {
     "id": "7a1c0e10-0000-4a00-8000-000000000002",
@@ -15,7 +15,7 @@
     "description": null,
     "logoUrl": null,
     "website": null,
-    "projectCount": 0
+    "projectCount": 5
   },
   {
     "id": "7a1c0e10-0000-4a00-8000-000000000003",
@@ -24,7 +24,7 @@
     "description": null,
     "logoUrl": null,
     "website": null,
-    "projectCount": 0
+    "projectCount": 5
   },
   {
     "id": "7a1c0e10-0000-4a00-8000-000000000004",
@@ -33,7 +33,7 @@
     "description": null,
     "logoUrl": null,
     "website": null,
-    "projectCount": 0
+    "projectCount": 4
   },
   {
     "id": "7a1c0e10-0000-4a00-8000-000000000005",
@@ -42,6 +42,6 @@
     "description": null,
     "logoUrl": null,
     "website": null,
-    "projectCount": 0
+    "projectCount": 4
   }
 ]

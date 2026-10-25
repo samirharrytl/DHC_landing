@@ -21,13 +21,31 @@
       "max": 10
     },
     "paybackYears": 11,
-    "areaM2": null,
-    "bedrooms": null,
-    "bathrooms": null,
+    "areaM2": 70,
+    "bedrooms": 2,
+    "bathrooms": 2,
     "images": [
       {
         "src": "../assets/depas/lince-av-arequipa.jpg",
         "alt": "Departamento en Lince"
+      },
+      {
+        "src": "../assets/depas/surquillo-av-angamos.jpg",
+        "alt": "Foto de referencia 2 para el depa en Lince"
+      },
+      {
+        "src": "../assets/depas/magdalena-av-del-ejercito.jpg",
+        "alt": "Foto de referencia 3 para el depa en Lince"
+      },
+      {
+        "src": "../assets/hero-home.jpg",
+        "alt": "Foto de referencia 4 para el depa en Lince"
+      }
+    ],
+    "videos": [
+      {
+        "url": "/videos/lince-av-arequipa-cuadra-12.webm",
+        "title": "Recorrido del depa"
       }
     ],
     "status": "published",
@@ -56,13 +74,25 @@
       "max": 11
     },
     "paybackYears": 10,
-    "areaM2": null,
-    "bedrooms": null,
-    "bathrooms": null,
+    "areaM2": 62,
+    "bedrooms": 2,
+    "bathrooms": 1,
     "images": [
       {
         "src": "../assets/depas/surquillo-av-angamos.jpg",
         "alt": "Departamento en Surquillo"
+      },
+      {
+        "src": "../assets/depas/lince-av-arequipa.jpg",
+        "alt": "Foto de referencia 2 para el depa en Surquillo"
+      },
+      {
+        "src": "../assets/depas/magdalena-av-del-ejercito.jpg",
+        "alt": "Foto de referencia 3 para el depa en Surquillo"
+      },
+      {
+        "src": "../assets/hero-home.jpg",
+        "alt": "Foto de referencia 4 para el depa en Surquillo"
       }
     ],
     "status": "published",
@@ -91,13 +121,25 @@
       "max": 9
     },
     "paybackYears": 12,
-    "areaM2": null,
-    "bedrooms": null,
-    "bathrooms": null,
+    "areaM2": 85,
+    "bedrooms": 3,
+    "bathrooms": 2,
     "images": [
       {
         "src": "../assets/depas/magdalena-av-del-ejercito.jpg",
         "alt": "Departamento en Magdalena"
+      },
+      {
+        "src": "../assets/depas/lince-av-arequipa.jpg",
+        "alt": "Foto de referencia 2 para el depa en Magdalena"
+      },
+      {
+        "src": "../assets/depas/surquillo-av-angamos.jpg",
+        "alt": "Foto de referencia 3 para el depa en Magdalena"
+      },
+      {
+        "src": "../assets/hero-home.jpg",
+        "alt": "Foto de referencia 4 para el depa en Magdalena"
       }
     ],
     "status": "published",
@@ -130,13 +172,25 @@
       "max": 5.8
     },
     "paybackYears": 17,
-    "areaM2": null,
-    "bedrooms": null,
-    "bathrooms": null,
+    "areaM2": 88,
+    "bedrooms": 3,
+    "bathrooms": 2,
     "images": [
       {
         "src": "../assets/depas/magdalena-av-del-ejercito.jpg",
         "alt": "Departamento modelo del proyecto en San Miguel"
+      },
+      {
+        "src": "../assets/depas/lince-av-arequipa.jpg",
+        "alt": "Foto de referencia 2 para el depa en San Miguel"
+      },
+      {
+        "src": "../assets/depas/surquillo-av-angamos.jpg",
+        "alt": "Foto de referencia 3 para el depa en San Miguel"
+      },
+      {
+        "src": "../assets/hero-home.jpg",
+        "alt": "Foto de referencia 4 para el depa en San Miguel"
       }
     ],
     "status": "published",
@@ -169,13 +223,25 @@
       "max": 6.2
     },
     "paybackYears": 16,
-    "areaM2": null,
-    "bedrooms": null,
-    "bathrooms": null,
+    "areaM2": 92,
+    "bedrooms": 2,
+    "bathrooms": 2,
     "images": [
       {
         "src": "../assets/hero-home.jpg",
         "alt": "Departamento modelo del proyecto en Miraflores"
+      },
+      {
+        "src": "../assets/depas/lince-av-arequipa.jpg",
+        "alt": "Foto de referencia 2 para el depa en Miraflores"
+      },
+      {
+        "src": "../assets/depas/surquillo-av-angamos.jpg",
+        "alt": "Foto de referencia 3 para el depa en Miraflores"
+      },
+      {
+        "src": "../assets/depas/magdalena-av-del-ejercito.jpg",
+        "alt": "Foto de referencia 4 para el depa en Miraflores"
       }
     ],
     "status": "published",
@@ -208,17 +274,1535 @@
       "max": 5.6
     },
     "paybackYears": 18,
-    "areaM2": null,
-    "bedrooms": null,
-    "bathrooms": null,
+    "areaM2": 68,
+    "bedrooms": 2,
+    "bathrooms": 2,
     "images": [
       {
         "src": "../assets/depas/surquillo-av-angamos.jpg",
         "alt": "Departamento modelo del proyecto en Surquillo"
+      },
+      {
+        "src": "../assets/depas/lince-av-arequipa.jpg",
+        "alt": "Foto de referencia 2 para el depa en Surquillo"
+      },
+      {
+        "src": "../assets/depas/magdalena-av-del-ejercito.jpg",
+        "alt": "Foto de referencia 3 para el depa en Surquillo"
+      },
+      {
+        "src": "../assets/hero-home.jpg",
+        "alt": "Foto de referencia 4 para el depa en Surquillo"
       }
     ],
     "status": "published",
     "featured": false,
     "publishedAt": "2026-10-08T00:00:00.000Z"
+  },
+  {
+    "id": "0457bcc6-0069-40be-8e2f-44cde651f0f0",
+    "slug": "jesus-maria-av-salaverry-cuadra-18",
+    "district": {
+      "id": "9c4e2b11-0000-4b00-8000-000000000003",
+      "name": "Jesús María",
+      "slug": "jesus-maria"
+    },
+    "origin": "owner",
+    "developer": null,
+    "address": "Av. Salaverry cuadra 18",
+    "badge": "Súper precio",
+    "description": "Depa de 2 dormitorios frente al Campo de Marte, a pasos de la Av. Salaverry. Alquila rápido a familias y ejecutivos.",
+    "price": {
+      "amount": 355000,
+      "currency": "PEN"
+    },
+    "yield": {
+      "min": 7,
+      "max": 9
+    },
+    "paybackYears": 13,
+    "areaM2": 68,
+    "bedrooms": 2,
+    "bathrooms": 2,
+    "images": [
+      {
+        "src": "../assets/depas/ilustraciones/sala-01.jpg",
+        "alt": "Ilustración de la sala del depa en Jesús María"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/dormitorio-01.jpg",
+        "alt": "Ilustración de un dormitorio del depa en Jesús María"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/cocina-01.jpg",
+        "alt": "Ilustración de la cocina del depa en Jesús María"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/fachada-01.jpg",
+        "alt": "Ilustración de la fachada del depa en Jesús María"
+      }
+    ],
+    "status": "published",
+    "featured": false,
+    "publishedAt": "2026-10-20T00:00:00.000Z"
+  },
+  {
+    "id": "988a0791-62d9-4b3b-b608-e90d179264f8",
+    "slug": "pueblo-libre-av-bolivar-cuadra-9",
+    "district": {
+      "id": "9c4e2b11-0000-4b00-8000-000000000004",
+      "name": "Pueblo Libre",
+      "slug": "pueblo-libre"
+    },
+    "origin": "owner",
+    "developer": null,
+    "address": "Av. Bolívar cuadra 9",
+    "badge": null,
+    "description": "Zona tranquila y residencial, cerca de universidades y del Parque de la Cruz. Ideal para alquiler tradicional.",
+    "price": {
+      "amount": 315000,
+      "currency": "PEN"
+    },
+    "yield": {
+      "min": 7.5,
+      "max": 9
+    },
+    "paybackYears": 12,
+    "areaM2": 62,
+    "bedrooms": 2,
+    "bathrooms": 1,
+    "images": [
+      {
+        "src": "../assets/depas/ilustraciones/sala-02.jpg",
+        "alt": "Ilustración de la sala del depa en Pueblo Libre"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/dormitorio-02.jpg",
+        "alt": "Ilustración de un dormitorio del depa en Pueblo Libre"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/cocina-02.jpg",
+        "alt": "Ilustración de la cocina del depa en Pueblo Libre"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/fachada-02.jpg",
+        "alt": "Ilustración de la fachada del depa en Pueblo Libre"
+      }
+    ],
+    "status": "published",
+    "featured": false,
+    "publishedAt": "2026-10-15T00:00:00.000Z"
+  },
+  {
+    "id": "ecacd5d7-378d-4745-be93-f59b806c8848",
+    "slug": "san-borja-av-san-luis-cuadra-25",
+    "district": {
+      "id": "9c4e2b11-0000-4b00-8000-000000000005",
+      "name": "San Borja",
+      "slug": "san-borja"
+    },
+    "origin": "owner",
+    "developer": null,
+    "address": "Av. San Luis cuadra 25",
+    "badge": "Últimos en venta",
+    "description": "Depa familiar de 3 dormitorios con cochera, a dos cuadras del Pentagonito y de la ciclovía.",
+    "price": {
+      "amount": 520000,
+      "currency": "PEN"
+    },
+    "yield": {
+      "min": 6,
+      "max": 7.5
+    },
+    "paybackYears": 15,
+    "areaM2": 95,
+    "bedrooms": 3,
+    "bathrooms": 2,
+    "images": [
+      {
+        "src": "../assets/depas/ilustraciones/sala-03.jpg",
+        "alt": "Ilustración de la sala del depa en San Borja"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/dormitorio-03.jpg",
+        "alt": "Ilustración de un dormitorio del depa en San Borja"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/cocina-03.jpg",
+        "alt": "Ilustración de la cocina del depa en San Borja"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/fachada-03.jpg",
+        "alt": "Ilustración de la fachada del depa en San Borja"
+      }
+    ],
+    "status": "published",
+    "featured": false,
+    "publishedAt": "2026-10-11T00:00:00.000Z"
+  },
+  {
+    "id": "f2b32f16-d580-4060-9886-70cc18d370b6",
+    "slug": "barranco-av-grau-cuadra-3",
+    "district": {
+      "id": "9c4e2b11-0000-4b00-8000-000000000006",
+      "name": "Barranco",
+      "slug": "barranco"
+    },
+    "origin": "owner",
+    "developer": null,
+    "address": "Av. Grau cuadra 3",
+    "badge": "Súper oportunidad",
+    "description": "Loft a pasos del Puente de los Suspiros. Con alta demanda de alquiler temporal para turistas.",
+    "price": {
+      "amount": 390000,
+      "currency": "PEN"
+    },
+    "yield": {
+      "min": 8,
+      "max": 10
+    },
+    "paybackYears": 11,
+    "areaM2": 45,
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "images": [
+      {
+        "src": "../assets/depas/ilustraciones/sala-04.jpg",
+        "alt": "Ilustración de la sala del depa en Barranco"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/dormitorio-04.jpg",
+        "alt": "Ilustración de un dormitorio del depa en Barranco"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/cocina-04.jpg",
+        "alt": "Ilustración de la cocina del depa en Barranco"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/fachada-04.jpg",
+        "alt": "Ilustración de la fachada del depa en Barranco"
+      }
+    ],
+    "status": "published",
+    "featured": false,
+    "publishedAt": "2026-10-07T00:00:00.000Z"
+  },
+  {
+    "id": "72bd4399-3f41-4009-89e8-0d0d7f3aa014",
+    "slug": "miraflores-calle-berlin-cuadra-2",
+    "district": {
+      "id": "9c4e2b11-0000-4b00-8000-000000000002",
+      "name": "Miraflores",
+      "slug": "miraflores"
+    },
+    "origin": "owner",
+    "developer": null,
+    "address": "Calle Berlín cuadra 2",
+    "badge": "Súper precio",
+    "description": "Depa de 1 dormitorio a una cuadra del Parque Kennedy. Funciona muy bien en Airbnb todo el año.",
+    "price": {
+      "amount": 420000,
+      "currency": "PEN"
+    },
+    "yield": {
+      "min": 9,
+      "max": 11
+    },
+    "paybackYears": 10,
+    "areaM2": 42,
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "images": [
+      {
+        "src": "../assets/depas/ilustraciones/sala-05.jpg",
+        "alt": "Ilustración de la sala del depa en Miraflores"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/dormitorio-05.jpg",
+        "alt": "Ilustración de un dormitorio del depa en Miraflores"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/cocina-05.jpg",
+        "alt": "Ilustración de la cocina del depa en Miraflores"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/fachada-05.jpg",
+        "alt": "Ilustración de la fachada del depa en Miraflores"
+      }
+    ],
+    "videos": [
+      {
+        "url": "/videos/miraflores-calle-berlin-cuadra-2.webm",
+        "title": "Recorrido ilustrado del depa"
+      }
+    ],
+    "status": "published",
+    "featured": true,
+    "publishedAt": "2026-10-02T00:00:00.000Z"
+  },
+  {
+    "id": "04ab3576-f938-44e7-a194-e8d06ac4f9f2",
+    "slug": "santiago-de-surco-av-caminos-del-inca-cuadra-15",
+    "district": {
+      "id": "9c4e2b11-0000-4b00-8000-000000000007",
+      "name": "Santiago de Surco",
+      "slug": "santiago-de-surco"
+    },
+    "origin": "owner",
+    "developer": null,
+    "address": "Av. Caminos del Inca cuadra 15",
+    "badge": null,
+    "description": "Amplio, con terraza y vista a parque. Cerca de colegios y del Jockey Plaza.",
+    "price": {
+      "amount": 560000,
+      "currency": "PEN"
+    },
+    "yield": {
+      "min": 5.5,
+      "max": 7
+    },
+    "paybackYears": 16,
+    "areaM2": 105,
+    "bedrooms": 3,
+    "bathrooms": 2,
+    "images": [
+      {
+        "src": "../assets/depas/ilustraciones/sala-06.jpg",
+        "alt": "Ilustración de la sala del depa en Santiago de Surco"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/dormitorio-06.jpg",
+        "alt": "Ilustración de un dormitorio del depa en Santiago de Surco"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/cocina-06.jpg",
+        "alt": "Ilustración de la cocina del depa en Santiago de Surco"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/fachada-06.jpg",
+        "alt": "Ilustración de la fachada del depa en Santiago de Surco"
+      }
+    ],
+    "status": "reserved",
+    "featured": false,
+    "publishedAt": "2026-09-28T00:00:00.000Z"
+  },
+  {
+    "id": "039d5c23-3a84-4a8e-af78-61141f7a84ed",
+    "slug": "san-isidro-calle-los-laureles-cuadra-4",
+    "district": {
+      "id": "9c4e2b11-0000-4b00-8000-000000000008",
+      "name": "San Isidro",
+      "slug": "san-isidro"
+    },
+    "origin": "owner",
+    "developer": null,
+    "address": "Calle Los Laureles cuadra 4",
+    "badge": null,
+    "description": "En el corazón financiero, a pasos del Olivar. Buscado por ejecutivos en alquiler corporativo.",
+    "price": {
+      "amount": 690000,
+      "currency": "PEN"
+    },
+    "yield": {
+      "min": 6,
+      "max": 7
+    },
+    "paybackYears": 15,
+    "areaM2": 80,
+    "bedrooms": 2,
+    "bathrooms": 2,
+    "images": [
+      {
+        "src": "../assets/depas/ilustraciones/sala-07.jpg",
+        "alt": "Ilustración de la sala del depa en San Isidro"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/dormitorio-07.jpg",
+        "alt": "Ilustración de un dormitorio del depa en San Isidro"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/cocina-07.jpg",
+        "alt": "Ilustración de la cocina del depa en San Isidro"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/fachada-07.jpg",
+        "alt": "Ilustración de la fachada del depa en San Isidro"
+      }
+    ],
+    "status": "published",
+    "featured": false,
+    "publishedAt": "2026-09-24T00:00:00.000Z"
+  },
+  {
+    "id": "436602de-caa6-4a1d-a3e5-33bece2936b2",
+    "slug": "la-victoria-av-canada-cuadra-5",
+    "district": {
+      "id": "9c4e2b11-0000-4b00-8000-000000000009",
+      "name": "La Victoria",
+      "slug": "la-victoria"
+    },
+    "origin": "owner",
+    "developer": null,
+    "address": "Av. Canadá cuadra 5",
+    "badge": "Súper precio",
+    "description": "Urbanización Santa Catalina, cerca de la Vía Expresa y del Estadio Nacional.",
+    "price": {
+      "amount": 280000,
+      "currency": "PEN"
+    },
+    "yield": {
+      "min": 8,
+      "max": 9.5
+    },
+    "paybackYears": 11,
+    "areaM2": 64,
+    "bedrooms": 2,
+    "bathrooms": 1,
+    "images": [
+      {
+        "src": "../assets/depas/ilustraciones/sala-08.jpg",
+        "alt": "Ilustración de la sala del depa en La Victoria"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/dormitorio-08.jpg",
+        "alt": "Ilustración de un dormitorio del depa en La Victoria"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/cocina-08.jpg",
+        "alt": "Ilustración de la cocina del depa en La Victoria"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/fachada-08.jpg",
+        "alt": "Ilustración de la fachada del depa en La Victoria"
+      }
+    ],
+    "status": "published",
+    "featured": false,
+    "publishedAt": "2026-09-19T00:00:00.000Z"
+  },
+  {
+    "id": "bc44b09c-9cc2-42ba-8c08-b5bc58dada78",
+    "slug": "lince-av-petit-thouars-cuadra-27",
+    "district": {
+      "id": "e5826158-cf2b-4c6e-ae08-71f43c9ddfb5",
+      "name": "Lince",
+      "slug": "lince"
+    },
+    "origin": "owner",
+    "developer": null,
+    "address": "Av. Petit Thouars cuadra 27",
+    "badge": null,
+    "description": "Depa compacto y bien ubicado entre San Isidro y Lince, con estación del Metropolitano a 3 cuadras.",
+    "price": {
+      "amount": 265000,
+      "currency": "PEN"
+    },
+    "yield": {
+      "min": 9,
+      "max": 10.5
+    },
+    "paybackYears": 10,
+    "areaM2": 48,
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "images": [
+      {
+        "src": "../assets/depas/ilustraciones/sala-09.jpg",
+        "alt": "Ilustración de la sala del depa en Lince"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/dormitorio-01.jpg",
+        "alt": "Ilustración de un dormitorio del depa en Lince"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/cocina-01.jpg",
+        "alt": "Ilustración de la cocina del depa en Lince"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/fachada-09.jpg",
+        "alt": "Ilustración de la fachada del depa en Lince"
+      }
+    ],
+    "status": "published",
+    "featured": true,
+    "publishedAt": "2026-09-15T00:00:00.000Z"
+  },
+  {
+    "id": "ae6fb0c5-7580-45a6-aeb7-6bb8e2b59bdb",
+    "slug": "jesus-maria-av-brasil-cuadra-22",
+    "district": {
+      "id": "9c4e2b11-0000-4b00-8000-000000000003",
+      "name": "Jesús María",
+      "slug": "jesus-maria"
+    },
+    "origin": "developer",
+    "developer": {
+      "id": "7a1c0e10-0000-4a00-8000-000000000001",
+      "slug": "urbana",
+      "name": "Urbana"
+    },
+    "address": "Av. Brasil cuadra 22",
+    "badge": "Preventa",
+    "description": "Proyecto de 18 pisos con gimnasio, coworking y terraza en la azotea. Departamentos de 1, 2 y 3 dormitorios.",
+    "price": {
+      "amount": 410000,
+      "currency": "PEN"
+    },
+    "yield": {
+      "min": 6.5,
+      "max": 6.5
+    },
+    "paybackYears": 15,
+    "areaM2": 70,
+    "bedrooms": 2,
+    "bathrooms": 2,
+    "images": [
+      {
+        "src": "../assets/depas/ilustraciones/fachada-10.jpg",
+        "alt": "Ilustración de la fachada del proyecto en Jesús María"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/sala-10.jpg",
+        "alt": "Ilustración de la sala del proyecto en Jesús María"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/dormitorio-02.jpg",
+        "alt": "Ilustración de un dormitorio del proyecto en Jesús María"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/cocina-02.jpg",
+        "alt": "Ilustración de la cocina del proyecto en Jesús María"
+      }
+    ],
+    "status": "published",
+    "featured": false,
+    "publishedAt": "2026-09-11T00:00:00.000Z"
+  },
+  {
+    "id": "2c1f10f5-2e4a-43e3-b07c-5c528ccfa713",
+    "slug": "pueblo-libre-av-la-mar-cuadra-12",
+    "district": {
+      "id": "9c4e2b11-0000-4b00-8000-000000000004",
+      "name": "Pueblo Libre",
+      "slug": "pueblo-libre"
+    },
+    "origin": "developer",
+    "developer": {
+      "id": "7a1c0e10-0000-4a00-8000-000000000001",
+      "slug": "urbana",
+      "name": "Urbana"
+    },
+    "address": "Av. La Mar cuadra 12",
+    "badge": "Estreno",
+    "description": "Edificio recién entregado, con lobby amplio y zona de parrillas. Departamentos de 1 y 2 dormitorios.",
+    "price": {
+      "amount": 365000,
+      "currency": "PEN"
+    },
+    "yield": {
+      "min": 6.8,
+      "max": 6.8
+    },
+    "paybackYears": 15,
+    "areaM2": 58,
+    "bedrooms": 2,
+    "bathrooms": 1,
+    "images": [
+      {
+        "src": "../assets/depas/ilustraciones/fachada-11.jpg",
+        "alt": "Ilustración de la fachada del proyecto en Pueblo Libre"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/sala-11.jpg",
+        "alt": "Ilustración de la sala del proyecto en Pueblo Libre"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/dormitorio-03.jpg",
+        "alt": "Ilustración de un dormitorio del proyecto en Pueblo Libre"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/cocina-03.jpg",
+        "alt": "Ilustración de la cocina del proyecto en Pueblo Libre"
+      }
+    ],
+    "status": "published",
+    "featured": false,
+    "publishedAt": "2026-09-07T00:00:00.000Z"
+  },
+  {
+    "id": "0c822612-dd58-4fea-97a4-dcc35522b50f",
+    "slug": "lince-av-arenales-cuadra-21",
+    "district": {
+      "id": "e5826158-cf2b-4c6e-ae08-71f43c9ddfb5",
+      "name": "Lince",
+      "slug": "lince"
+    },
+    "origin": "developer",
+    "developer": {
+      "id": "7a1c0e10-0000-4a00-8000-000000000001",
+      "slug": "urbana",
+      "name": "Urbana"
+    },
+    "address": "Av. Arenales cuadra 21",
+    "badge": "Entrega inmediata",
+    "description": "Flats de 1 y 2 dormitorios listos para alquilar, a pasos del Parque Mariscal Castilla.",
+    "price": {
+      "amount": 330000,
+      "currency": "PEN"
+    },
+    "yield": {
+      "min": 7.2,
+      "max": 7.2
+    },
+    "paybackYears": 14,
+    "areaM2": 50,
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "images": [
+      {
+        "src": "../assets/depas/ilustraciones/fachada-12.jpg",
+        "alt": "Ilustración de la fachada del proyecto en Lince"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/sala-12.jpg",
+        "alt": "Ilustración de la sala del proyecto en Lince"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/dormitorio-04.jpg",
+        "alt": "Ilustración de un dormitorio del proyecto en Lince"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/cocina-04.jpg",
+        "alt": "Ilustración de la cocina del proyecto en Lince"
+      }
+    ],
+    "status": "published",
+    "featured": false,
+    "publishedAt": "2026-09-02T00:00:00.000Z"
+  },
+  {
+    "id": "f26e2249-6c75-4507-a2b4-e3d5a29e6654",
+    "slug": "chorrillos-av-huaylas-cuadra-3",
+    "district": {
+      "id": "9c4e2b11-0000-4b00-8000-000000000010",
+      "name": "Chorrillos",
+      "slug": "chorrillos"
+    },
+    "origin": "developer",
+    "developer": {
+      "id": "7a1c0e10-0000-4a00-8000-000000000002",
+      "slug": "lima-sur",
+      "name": "Lima Sur"
+    },
+    "address": "Av. Huaylas cuadra 3",
+    "badge": "Preventa",
+    "description": "A minutos de las playas de Chorrillos. Piscina, sala de niños y áreas verdes.",
+    "price": {
+      "amount": 299000,
+      "currency": "PEN"
+    },
+    "yield": {
+      "min": 6.6,
+      "max": 6.6
+    },
+    "paybackYears": 15,
+    "areaM2": 60,
+    "bedrooms": 2,
+    "bathrooms": 2,
+    "images": [
+      {
+        "src": "../assets/depas/ilustraciones/fachada-13.jpg",
+        "alt": "Ilustración de la fachada del proyecto en Chorrillos"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/sala-01.jpg",
+        "alt": "Ilustración de la sala del proyecto en Chorrillos"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/dormitorio-05.jpg",
+        "alt": "Ilustración de un dormitorio del proyecto en Chorrillos"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/cocina-05.jpg",
+        "alt": "Ilustración de la cocina del proyecto en Chorrillos"
+      }
+    ],
+    "status": "published",
+    "featured": false,
+    "publishedAt": "2026-08-29T00:00:00.000Z"
+  },
+  {
+    "id": "d145e91f-3114-4b18-97a9-4a0ffa1a02a8",
+    "slug": "santiago-de-surco-av-benavides-cuadra-45",
+    "district": {
+      "id": "9c4e2b11-0000-4b00-8000-000000000007",
+      "name": "Santiago de Surco",
+      "slug": "santiago-de-surco"
+    },
+    "origin": "developer",
+    "developer": {
+      "id": "7a1c0e10-0000-4a00-8000-000000000002",
+      "slug": "lima-sur",
+      "name": "Lima Sur"
+    },
+    "address": "Av. Benavides cuadra 45",
+    "badge": null,
+    "description": "Proyecto con dos torres y club house, cerca del Óvalo Higuereta.",
+    "price": {
+      "amount": 455000,
+      "currency": "PEN"
+    },
+    "yield": {
+      "min": 6.1,
+      "max": 6.1
+    },
+    "paybackYears": 16,
+    "areaM2": 74,
+    "bedrooms": 2,
+    "bathrooms": 2,
+    "images": [
+      {
+        "src": "../assets/depas/ilustraciones/fachada-14.jpg",
+        "alt": "Ilustración de la fachada del proyecto en Santiago de Surco"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/sala-02.jpg",
+        "alt": "Ilustración de la sala del proyecto en Santiago de Surco"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/dormitorio-06.jpg",
+        "alt": "Ilustración de un dormitorio del proyecto en Santiago de Surco"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/cocina-06.jpg",
+        "alt": "Ilustración de la cocina del proyecto en Santiago de Surco"
+      }
+    ],
+    "status": "published",
+    "featured": false,
+    "publishedAt": "2026-08-25T00:00:00.000Z"
+  },
+  {
+    "id": "3c526c1c-81e7-473f-976d-5225b26cac7e",
+    "slug": "san-juan-de-miraflores-av-los-heroes-cuadra-7",
+    "district": {
+      "id": "9c4e2b11-0000-4b00-8000-000000000011",
+      "name": "San Juan de Miraflores",
+      "slug": "san-juan-de-miraflores"
+    },
+    "origin": "developer",
+    "developer": {
+      "id": "7a1c0e10-0000-4a00-8000-000000000002",
+      "slug": "lima-sur",
+      "name": "Lima Sur"
+    },
+    "address": "Av. Los Héroes cuadra 7",
+    "badge": "Súper precio",
+    "description": "Junto a la estación del Metro y a centros comerciales. Departamentos de 2 y 3 dormitorios.",
+    "price": {
+      "amount": 245000,
+      "currency": "PEN"
+    },
+    "yield": {
+      "min": 7.5,
+      "max": 7.5
+    },
+    "paybackYears": 13,
+    "areaM2": 55,
+    "bedrooms": 2,
+    "bathrooms": 1,
+    "images": [
+      {
+        "src": "../assets/depas/ilustraciones/fachada-01.jpg",
+        "alt": "Ilustración de la fachada del proyecto en San Juan de Miraflores"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/sala-03.jpg",
+        "alt": "Ilustración de la sala del proyecto en San Juan de Miraflores"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/dormitorio-07.jpg",
+        "alt": "Ilustración de un dormitorio del proyecto en San Juan de Miraflores"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/cocina-07.jpg",
+        "alt": "Ilustración de la cocina del proyecto en San Juan de Miraflores"
+      }
+    ],
+    "status": "published",
+    "featured": false,
+    "publishedAt": "2026-08-20T00:00:00.000Z"
+  },
+  {
+    "id": "e3d9d525-ac29-4e83-9293-149c79ac2e05",
+    "slug": "barranco-av-pedro-de-osma-cuadra-2",
+    "district": {
+      "id": "9c4e2b11-0000-4b00-8000-000000000006",
+      "name": "Barranco",
+      "slug": "barranco"
+    },
+    "origin": "developer",
+    "developer": {
+      "id": "7a1c0e10-0000-4a00-8000-000000000002",
+      "slug": "lima-sur",
+      "name": "Lima Sur"
+    },
+    "address": "Av. Pedro de Osma cuadra 2",
+    "badge": "Últimos en venta",
+    "description": "Edificio boutique con vista al mar, en la avenida más tradicional de Barranco.",
+    "price": {
+      "amount": 640000,
+      "currency": "PEN"
+    },
+    "yield": {
+      "min": 5.9,
+      "max": 5.9
+    },
+    "paybackYears": 17,
+    "areaM2": 82,
+    "bedrooms": 2,
+    "bathrooms": 2,
+    "images": [
+      {
+        "src": "../assets/depas/ilustraciones/fachada-02.jpg",
+        "alt": "Ilustración de la fachada del proyecto en Barranco"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/sala-04.jpg",
+        "alt": "Ilustración de la sala del proyecto en Barranco"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/dormitorio-08.jpg",
+        "alt": "Ilustración de un dormitorio del proyecto en Barranco"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/cocina-08.jpg",
+        "alt": "Ilustración de la cocina del proyecto en Barranco"
+      }
+    ],
+    "status": "published",
+    "featured": false,
+    "publishedAt": "2026-08-16T00:00:00.000Z"
+  },
+  {
+    "id": "5cdf78eb-2e13-43a0-886b-039bc6b94a70",
+    "slug": "chorrillos-av-defensores-del-morro-cuadra-10",
+    "district": {
+      "id": "9c4e2b11-0000-4b00-8000-000000000010",
+      "name": "Chorrillos",
+      "slug": "chorrillos"
+    },
+    "origin": "developer",
+    "developer": {
+      "id": "7a1c0e10-0000-4a00-8000-000000000002",
+      "slug": "lima-sur",
+      "name": "Lima Sur"
+    },
+    "address": "Av. Defensores del Morro cuadra 10",
+    "badge": null,
+    "description": "Departamentos de 2 dormitorios con balcón, cerca de la Escuela Militar.",
+    "price": {
+      "amount": 275000,
+      "currency": "PEN"
+    },
+    "yield": {
+      "min": 7,
+      "max": 7
+    },
+    "paybackYears": 14,
+    "areaM2": 57,
+    "bedrooms": 2,
+    "bathrooms": 1,
+    "images": [
+      {
+        "src": "../assets/depas/ilustraciones/fachada-03.jpg",
+        "alt": "Ilustración de la fachada del proyecto en Chorrillos"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/sala-05.jpg",
+        "alt": "Ilustración de la sala del proyecto en Chorrillos"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/dormitorio-01.jpg",
+        "alt": "Ilustración de un dormitorio del proyecto en Chorrillos"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/cocina-01.jpg",
+        "alt": "Ilustración de la cocina del proyecto en Chorrillos"
+      }
+    ],
+    "status": "published",
+    "featured": false,
+    "publishedAt": "2026-08-12T00:00:00.000Z"
+  },
+  {
+    "id": "72fc35dd-678f-4273-b172-9c0298b82917",
+    "slug": "san-miguel-av-universitaria-cuadra-15",
+    "district": {
+      "id": "9c4e2b11-0000-4b00-8000-000000000001",
+      "name": "San Miguel",
+      "slug": "san-miguel"
+    },
+    "origin": "developer",
+    "developer": {
+      "id": "7a1c0e10-0000-4a00-8000-000000000003",
+      "slug": "andes",
+      "name": "Andes"
+    },
+    "address": "Av. Universitaria cuadra 15",
+    "badge": "Preventa",
+    "description": "Cerca de la PUCP y de Plaza San Miguel. Alta demanda de alquiler de estudiantes y docentes.",
+    "price": {
+      "amount": 310000,
+      "currency": "PEN"
+    },
+    "yield": {
+      "min": 6.9,
+      "max": 6.9
+    },
+    "paybackYears": 14,
+    "areaM2": 63,
+    "bedrooms": 2,
+    "bathrooms": 2,
+    "images": [
+      {
+        "src": "../assets/depas/ilustraciones/fachada-04.jpg",
+        "alt": "Ilustración de la fachada del proyecto en San Miguel"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/sala-06.jpg",
+        "alt": "Ilustración de la sala del proyecto en San Miguel"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/dormitorio-02.jpg",
+        "alt": "Ilustración de un dormitorio del proyecto en San Miguel"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/cocina-02.jpg",
+        "alt": "Ilustración de la cocina del proyecto en San Miguel"
+      }
+    ],
+    "status": "published",
+    "featured": false,
+    "publishedAt": "2026-08-07T00:00:00.000Z"
+  },
+  {
+    "id": "09d776d8-15a5-4520-85ab-afacfe1b9da2",
+    "slug": "los-olivos-av-carlos-izaguirre-cuadra-4",
+    "district": {
+      "id": "9c4e2b11-0000-4b00-8000-000000000012",
+      "name": "Los Olivos",
+      "slug": "los-olivos"
+    },
+    "origin": "developer",
+    "developer": {
+      "id": "7a1c0e10-0000-4a00-8000-000000000003",
+      "slug": "andes",
+      "name": "Andes"
+    },
+    "address": "Av. Carlos Izaguirre cuadra 4",
+    "badge": "Súper precio",
+    "description": "Departamentos de 3 dormitorios a precio de entrada, junto a Mega Plaza.",
+    "price": {
+      "amount": 235000,
+      "currency": "PEN"
+    },
+    "yield": {
+      "min": 7.8,
+      "max": 7.8
+    },
+    "paybackYears": 13,
+    "areaM2": 60,
+    "bedrooms": 3,
+    "bathrooms": 2,
+    "images": [
+      {
+        "src": "../assets/depas/ilustraciones/fachada-05.jpg",
+        "alt": "Ilustración de la fachada del proyecto en Los Olivos"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/sala-07.jpg",
+        "alt": "Ilustración de la sala del proyecto en Los Olivos"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/dormitorio-03.jpg",
+        "alt": "Ilustración de un dormitorio del proyecto en Los Olivos"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/cocina-03.jpg",
+        "alt": "Ilustración de la cocina del proyecto en Los Olivos"
+      }
+    ],
+    "status": "published",
+    "featured": false,
+    "publishedAt": "2026-08-03T00:00:00.000Z"
+  },
+  {
+    "id": "f6ea22ad-aa0b-48dc-918c-06f4f42360e7",
+    "slug": "san-martin-de-porres-av-tomas-valle-cuadra-8",
+    "district": {
+      "id": "9c4e2b11-0000-4b00-8000-000000000013",
+      "name": "San Martín de Porres",
+      "slug": "san-martin-de-porres"
+    },
+    "origin": "developer",
+    "developer": {
+      "id": "7a1c0e10-0000-4a00-8000-000000000003",
+      "slug": "andes",
+      "name": "Andes"
+    },
+    "address": "Av. Tomás Valle cuadra 8",
+    "badge": null,
+    "description": "A pasos de la Panamericana Norte, con acceso rápido al aeropuerto.",
+    "price": {
+      "amount": 255000,
+      "currency": "PEN"
+    },
+    "yield": {
+      "min": 7.4,
+      "max": 7.4
+    },
+    "paybackYears": 14,
+    "areaM2": 62,
+    "bedrooms": 2,
+    "bathrooms": 2,
+    "images": [
+      {
+        "src": "../assets/depas/ilustraciones/fachada-06.jpg",
+        "alt": "Ilustración de la fachada del proyecto en San Martín de Porres"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/sala-08.jpg",
+        "alt": "Ilustración de la sala del proyecto en San Martín de Porres"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/dormitorio-04.jpg",
+        "alt": "Ilustración de un dormitorio del proyecto en San Martín de Porres"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/cocina-04.jpg",
+        "alt": "Ilustración de la cocina del proyecto en San Martín de Porres"
+      }
+    ],
+    "status": "published",
+    "featured": false,
+    "publishedAt": "2026-07-30T00:00:00.000Z"
+  },
+  {
+    "id": "b945d1f1-197b-42d7-92ff-2a4fbd1a9c48",
+    "slug": "brena-av-arica-cuadra-6",
+    "district": {
+      "id": "9c4e2b11-0000-4b00-8000-000000000014",
+      "name": "Breña",
+      "slug": "brena"
+    },
+    "origin": "developer",
+    "developer": {
+      "id": "7a1c0e10-0000-4a00-8000-000000000003",
+      "slug": "andes",
+      "name": "Andes"
+    },
+    "address": "Av. Arica cuadra 6",
+    "badge": "Estreno",
+    "description": "Edificio nuevo cerca del Centro de Lima y de la Av. Brasil.",
+    "price": {
+      "amount": 270000,
+      "currency": "PEN"
+    },
+    "yield": {
+      "min": 7.1,
+      "max": 7.1
+    },
+    "paybackYears": 14,
+    "areaM2": 56,
+    "bedrooms": 2,
+    "bathrooms": 1,
+    "images": [
+      {
+        "src": "../assets/depas/ilustraciones/fachada-07.jpg",
+        "alt": "Ilustración de la fachada del proyecto en Breña"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/sala-09.jpg",
+        "alt": "Ilustración de la sala del proyecto en Breña"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/dormitorio-05.jpg",
+        "alt": "Ilustración de un dormitorio del proyecto en Breña"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/cocina-05.jpg",
+        "alt": "Ilustración de la cocina del proyecto en Breña"
+      }
+    ],
+    "status": "published",
+    "featured": false,
+    "publishedAt": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "d0bc94f9-7736-4d82-b871-a4abe19f503e",
+    "slug": "lima-cercado-jr-washington-cuadra-12",
+    "district": {
+      "id": "9c4e2b11-0000-4b00-8000-000000000015",
+      "name": "Lima Cercado",
+      "slug": "lima-cercado"
+    },
+    "origin": "developer",
+    "developer": {
+      "id": "7a1c0e10-0000-4a00-8000-000000000003",
+      "slug": "andes",
+      "name": "Andes"
+    },
+    "address": "Jr. Washington cuadra 12",
+    "badge": null,
+    "description": "Flats en el Centro de Lima, cerca del Parque de la Exposición. Buenos para alquiler temporal.",
+    "price": {
+      "amount": 285000,
+      "currency": "PEN"
+    },
+    "yield": {
+      "min": 7.6,
+      "max": 7.6
+    },
+    "paybackYears": 13,
+    "areaM2": 48,
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "images": [
+      {
+        "src": "../assets/depas/ilustraciones/fachada-08.jpg",
+        "alt": "Ilustración de la fachada del proyecto en Lima Cercado"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/sala-10.jpg",
+        "alt": "Ilustración de la sala del proyecto en Lima Cercado"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/dormitorio-06.jpg",
+        "alt": "Ilustración de un dormitorio del proyecto en Lima Cercado"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/cocina-06.jpg",
+        "alt": "Ilustración de la cocina del proyecto en Lima Cercado"
+      }
+    ],
+    "status": "reserved",
+    "featured": false,
+    "publishedAt": "2026-07-21T00:00:00.000Z"
+  },
+  {
+    "id": "95bf894a-908a-4110-9358-82dc01470010",
+    "slug": "miraflores-av-jose-larco-cuadra-8",
+    "district": {
+      "id": "9c4e2b11-0000-4b00-8000-000000000002",
+      "name": "Miraflores",
+      "slug": "miraflores"
+    },
+    "origin": "developer",
+    "developer": {
+      "id": "7a1c0e10-0000-4a00-8000-000000000004",
+      "slug": "miraflores-hotel",
+      "name": "Miraflores Hotel"
+    },
+    "address": "Av. José Larco cuadra 8",
+    "badge": "Últimos en venta",
+    "description": "Departamentos amoblados con operación hotelera incluida, a dos cuadras del malecón.",
+    "price": {
+      "amount": 980000,
+      "currency": "PEN"
+    },
+    "yield": {
+      "min": 6.4,
+      "max": 6.4
+    },
+    "paybackYears": 16,
+    "areaM2": 98,
+    "bedrooms": 3,
+    "bathrooms": 3,
+    "images": [
+      {
+        "src": "../assets/depas/ilustraciones/fachada-09.jpg",
+        "alt": "Ilustración de la fachada del proyecto en Miraflores"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/sala-11.jpg",
+        "alt": "Ilustración de la sala del proyecto en Miraflores"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/dormitorio-07.jpg",
+        "alt": "Ilustración de un dormitorio del proyecto en Miraflores"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/cocina-07.jpg",
+        "alt": "Ilustración de la cocina del proyecto en Miraflores"
+      }
+    ],
+    "status": "published",
+    "featured": false,
+    "publishedAt": "2026-07-17T00:00:00.000Z"
+  },
+  {
+    "id": "845f29a4-64a2-45a9-afd9-d52ff7953460",
+    "slug": "miraflores-calle-alcanfores-cuadra-4",
+    "district": {
+      "id": "9c4e2b11-0000-4b00-8000-000000000002",
+      "name": "Miraflores",
+      "slug": "miraflores"
+    },
+    "origin": "developer",
+    "developer": {
+      "id": "7a1c0e10-0000-4a00-8000-000000000004",
+      "slug": "miraflores-hotel",
+      "name": "Miraflores Hotel"
+    },
+    "address": "Calle Alcanfores cuadra 4",
+    "badge": "Preventa",
+    "description": "Estudios y flats pensados para Airbnb, con recepción 24 horas y lavandería.",
+    "price": {
+      "amount": 520000,
+      "currency": "PEN"
+    },
+    "yield": {
+      "min": 7.8,
+      "max": 7.8
+    },
+    "paybackYears": 13,
+    "areaM2": 46,
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "images": [
+      {
+        "src": "../assets/depas/ilustraciones/fachada-10.jpg",
+        "alt": "Ilustración de la fachada del proyecto en Miraflores"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/sala-12.jpg",
+        "alt": "Ilustración de la sala del proyecto en Miraflores"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/dormitorio-08.jpg",
+        "alt": "Ilustración de un dormitorio del proyecto en Miraflores"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/cocina-08.jpg",
+        "alt": "Ilustración de la cocina del proyecto en Miraflores"
+      }
+    ],
+    "videos": [
+      {
+        "url": "/videos/miraflores-calle-alcanfores-cuadra-4.webm",
+        "title": "Recorrido ilustrado del proyecto"
+      }
+    ],
+    "status": "published",
+    "featured": true,
+    "publishedAt": "2026-07-13T00:00:00.000Z"
+  },
+  {
+    "id": "70a53749-9230-44a7-bb9d-85c3c65e75d0",
+    "slug": "san-isidro-av-camino-real-cuadra-3",
+    "district": {
+      "id": "9c4e2b11-0000-4b00-8000-000000000008",
+      "name": "San Isidro",
+      "slug": "san-isidro"
+    },
+    "origin": "developer",
+    "developer": {
+      "id": "7a1c0e10-0000-4a00-8000-000000000004",
+      "slug": "miraflores-hotel",
+      "name": "Miraflores Hotel"
+    },
+    "address": "Av. Camino Real cuadra 3",
+    "badge": null,
+    "description": "Residencias de lujo frente al Golf de San Isidro, con concierge y spa.",
+    "price": {
+      "amount": 1150000,
+      "currency": "PEN"
+    },
+    "yield": {
+      "min": 5.4,
+      "max": 5.4
+    },
+    "paybackYears": 19,
+    "areaM2": 120,
+    "bedrooms": 3,
+    "bathrooms": 3,
+    "images": [
+      {
+        "src": "../assets/depas/ilustraciones/fachada-11.jpg",
+        "alt": "Ilustración de la fachada del proyecto en San Isidro"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/sala-01.jpg",
+        "alt": "Ilustración de la sala del proyecto en San Isidro"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/dormitorio-01.jpg",
+        "alt": "Ilustración de un dormitorio del proyecto en San Isidro"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/cocina-01.jpg",
+        "alt": "Ilustración de la cocina del proyecto en San Isidro"
+      }
+    ],
+    "status": "published",
+    "featured": false,
+    "publishedAt": "2026-07-08T00:00:00.000Z"
+  },
+  {
+    "id": "edad5e8e-47be-4337-8ddd-25a221c07f7c",
+    "slug": "barranco-jr-union-cuadra-1",
+    "district": {
+      "id": "9c4e2b11-0000-4b00-8000-000000000006",
+      "name": "Barranco",
+      "slug": "barranco"
+    },
+    "origin": "developer",
+    "developer": {
+      "id": "7a1c0e10-0000-4a00-8000-000000000004",
+      "slug": "miraflores-hotel",
+      "name": "Miraflores Hotel"
+    },
+    "address": "Jr. Unión cuadra 1",
+    "badge": "Estreno",
+    "description": "Lofts junto a la Plaza de Barranco, a pasos de bares, galerías y la bajada a la playa.",
+    "price": {
+      "amount": 475000,
+      "currency": "PEN"
+    },
+    "yield": {
+      "min": 7.4,
+      "max": 7.4
+    },
+    "paybackYears": 14,
+    "areaM2": 52,
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "images": [
+      {
+        "src": "../assets/depas/ilustraciones/fachada-12.jpg",
+        "alt": "Ilustración de la fachada del proyecto en Barranco"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/sala-02.jpg",
+        "alt": "Ilustración de la sala del proyecto en Barranco"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/dormitorio-02.jpg",
+        "alt": "Ilustración de un dormitorio del proyecto en Barranco"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/cocina-02.jpg",
+        "alt": "Ilustración de la cocina del proyecto en Barranco"
+      }
+    ],
+    "status": "published",
+    "featured": false,
+    "publishedAt": "2026-07-04T00:00:00.000Z"
+  },
+  {
+    "id": "ad6e3c03-fba7-47a3-994a-fc6ea62582da",
+    "slug": "san-borja-av-aviacion-cuadra-30",
+    "district": {
+      "id": "9c4e2b11-0000-4b00-8000-000000000005",
+      "name": "San Borja",
+      "slug": "san-borja"
+    },
+    "origin": "developer",
+    "developer": {
+      "id": "7a1c0e10-0000-4a00-8000-000000000005",
+      "slug": "nova",
+      "name": "Nova"
+    },
+    "address": "Av. Aviación cuadra 30",
+    "badge": "Preventa",
+    "description": "Frente a la estación La Cultura de la Línea 1. Departamentos de 2 y 3 dormitorios.",
+    "price": {
+      "amount": 445000,
+      "currency": "PEN"
+    },
+    "yield": {
+      "min": 6.3,
+      "max": 6.3
+    },
+    "paybackYears": 16,
+    "areaM2": 72,
+    "bedrooms": 2,
+    "bathrooms": 2,
+    "images": [
+      {
+        "src": "../assets/depas/ilustraciones/fachada-13.jpg",
+        "alt": "Ilustración de la fachada del proyecto en San Borja"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/sala-03.jpg",
+        "alt": "Ilustración de la sala del proyecto en San Borja"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/dormitorio-03.jpg",
+        "alt": "Ilustración de un dormitorio del proyecto en San Borja"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/cocina-03.jpg",
+        "alt": "Ilustración de la cocina del proyecto en San Borja"
+      }
+    ],
+    "status": "published",
+    "featured": false,
+    "publishedAt": "2026-06-30T00:00:00.000Z"
+  },
+  {
+    "id": "37600fd0-8c32-4c46-9bbe-9253a8396be3",
+    "slug": "surquillo-av-republica-de-panama-cuadra-46",
+    "district": {
+      "id": "8fc4b505-438d-4ea5-bf68-cd6563eca77a",
+      "name": "Surquillo",
+      "slug": "surquillo"
+    },
+    "origin": "developer",
+    "developer": {
+      "id": "7a1c0e10-0000-4a00-8000-000000000005",
+      "slug": "nova",
+      "name": "Nova"
+    },
+    "address": "Av. República de Panamá cuadra 46",
+    "badge": null,
+    "description": "Límite con Miraflores, cerca del Mercado de Surquillo y de la Vía Expresa.",
+    "price": {
+      "amount": 365000,
+      "currency": "PEN"
+    },
+    "yield": {
+      "min": 6.9,
+      "max": 6.9
+    },
+    "paybackYears": 14,
+    "areaM2": 54,
+    "bedrooms": 2,
+    "bathrooms": 1,
+    "images": [
+      {
+        "src": "../assets/depas/ilustraciones/fachada-14.jpg",
+        "alt": "Ilustración de la fachada del proyecto en Surquillo"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/sala-04.jpg",
+        "alt": "Ilustración de la sala del proyecto en Surquillo"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/dormitorio-04.jpg",
+        "alt": "Ilustración de un dormitorio del proyecto en Surquillo"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/cocina-04.jpg",
+        "alt": "Ilustración de la cocina del proyecto en Surquillo"
+      }
+    ],
+    "status": "published",
+    "featured": false,
+    "publishedAt": "2026-06-25T00:00:00.000Z"
+  },
+  {
+    "id": "4949d16f-b167-4f36-a0d4-bd40dfe0d7b6",
+    "slug": "la-molina-av-la-molina-cuadra-9",
+    "district": {
+      "id": "9c4e2b11-0000-4b00-8000-000000000016",
+      "name": "La Molina",
+      "slug": "la-molina"
+    },
+    "origin": "developer",
+    "developer": {
+      "id": "7a1c0e10-0000-4a00-8000-000000000005",
+      "slug": "nova",
+      "name": "Nova"
+    },
+    "address": "Av. La Molina cuadra 9",
+    "badge": null,
+    "description": "Condominio con áreas verdes y piscina, ideal para familias.",
+    "price": {
+      "amount": 610000,
+      "currency": "PEN"
+    },
+    "yield": {
+      "min": 5.6,
+      "max": 5.6
+    },
+    "paybackYears": 18,
+    "areaM2": 110,
+    "bedrooms": 3,
+    "bathrooms": 2,
+    "images": [
+      {
+        "src": "../assets/depas/ilustraciones/fachada-01.jpg",
+        "alt": "Ilustración de la fachada del proyecto en La Molina"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/sala-05.jpg",
+        "alt": "Ilustración de la sala del proyecto en La Molina"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/dormitorio-05.jpg",
+        "alt": "Ilustración de un dormitorio del proyecto en La Molina"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/cocina-05.jpg",
+        "alt": "Ilustración de la cocina del proyecto en La Molina"
+      }
+    ],
+    "status": "reserved",
+    "featured": false,
+    "publishedAt": "2026-06-21T00:00:00.000Z"
+  },
+  {
+    "id": "77017973-43f2-49e6-bba9-ac75b1cffb58",
+    "slug": "magdalena-av-brasil-cuadra-38",
+    "district": {
+      "id": "7148036f-d8c8-4812-8338-8fa9a6b593b3",
+      "name": "Magdalena",
+      "slug": "magdalena"
+    },
+    "origin": "developer",
+    "developer": {
+      "id": "7a1c0e10-0000-4a00-8000-000000000005",
+      "slug": "nova",
+      "name": "Nova"
+    },
+    "address": "Av. Brasil cuadra 38",
+    "badge": "Entrega inmediata",
+    "description": "Departamentos listos para habitar, a 10 minutos del malecón de Magdalena.",
+    "price": {
+      "amount": 380000,
+      "currency": "PEN"
+    },
+    "yield": {
+      "min": 6.7,
+      "max": 6.7
+    },
+    "paybackYears": 15,
+    "areaM2": 61,
+    "bedrooms": 2,
+    "bathrooms": 2,
+    "images": [
+      {
+        "src": "../assets/depas/ilustraciones/fachada-02.jpg",
+        "alt": "Ilustración de la fachada del proyecto en Magdalena"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/sala-06.jpg",
+        "alt": "Ilustración de la sala del proyecto en Magdalena"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/dormitorio-06.jpg",
+        "alt": "Ilustración de un dormitorio del proyecto en Magdalena"
+      },
+      {
+        "src": "../assets/depas/ilustraciones/cocina-06.jpg",
+        "alt": "Ilustración de la cocina del proyecto en Magdalena"
+      }
+    ],
+    "status": "published",
+    "featured": false,
+    "publishedAt": "2026-06-17T00:00:00.000Z"
   }
 ]

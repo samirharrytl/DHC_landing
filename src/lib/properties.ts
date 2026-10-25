@@ -23,14 +23,6 @@ export async function getPropertyBySlug(slug: string): Promise<Property | undefi
   return (await getProperties()).find((p) => p.slug === slug)
 }
 
-/** Ranking "Los 10 depas para invertir ahora": mayor rentabilidad, luego menor precio. */
-export async function getTopProperties(limit = 10): Promise<Property[]> {
-  return (await getProperties())
-    .filter((p) => p.status === 'published')
-    .sort((a, b) => b.yield.max - a.yield.max || b.yield.min - a.yield.min || a.price.amount - b.price.amount)
-    .slice(0, limit)
-}
-
 export async function getFastFilters(properties?: Property[]) {
   return buildFastFilters(properties ?? (await getOwnerProperties()))
 }

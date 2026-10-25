@@ -4,7 +4,7 @@ test.describe('Capital', () => {
   test('filtra mientras escribes y con los filtros rápidos', async ({ page }) => {
     await page.goto('/capital')
     const cards = page.locator('#lista-depas [data-property-card]:visible')
-    await expect(cards).toHaveCount(3)
+    await expect(cards).toHaveCount(12)
     await expect(cards.first()).toContainText('De propietario')
 
     await page.getByRole('searchbox').fill('surquillo')
@@ -12,25 +12,31 @@ test.describe('Capital', () => {
     await expect(cards.first()).toContainText('Surquillo')
 
     await page.getByRole('button', { name: 'Limpiar filtros' }).click()
-    await expect(cards).toHaveCount(3)
+    await expect(cards).toHaveCount(12)
     await page.getByRole('button', { name: 'Lince', exact: true }).click()
     await expect(page.getByRole('button', { name: 'Lince', exact: true })).toHaveAttribute(
       'aria-pressed',
       'true',
     )
+    await expect(cards).toHaveCount(2)
+    await page.getByRole('searchbox').fill('arequipa')
     await expect(cards).toHaveCount(1)
 
-    await page.getByRole('button', { name: 'Hasta S/ 300,000' }).click()
+    await page.getByRole('searchbox').fill('surquillo')
     await expect(cards).toHaveCount(0)
     await expect(page.getByText('No encontramos departamentos')).toBeVisible()
   })
 
   test('las anclas de la página existen', async ({ page }) => {
     await page.goto('/capital')
-    for (const id of ['como-funciona', 'proyectos', 'lista-depas', 'aliados', 'top-10']) {
+    for (const id of ['como-funciona', 'proyectos', 'lista-depas', 'aliados']) {
       await expect(page.locator(`#${id}`)).toHaveCount(1)
     }
-    await expect(page.locator('#top-10 li')).toHaveCount(6)
+    await expect(page.locator('#top-10')).toHaveCount(0)
+    // "Ver todos los proyectos" también va dentro de la lista
+    await expect(
+      page.locator('#lista-depas').getByRole('link', { name: /Ver todos los proyectos/ }),
+    ).toHaveAttribute('href', '/capital/depas')
   })
 
   test('"Para ti" aparece después de ver un depa', async ({ page }) => {
@@ -53,15 +59,87 @@ test.describe('Capital', () => {
     await expect(page.getByRole('heading', { name: 'Depas similares que te pueden interesar' })).toBeVisible()
     await expect(page.getByRole('link', { name: 'Contactar', exact: true })).toHaveAttribute(
       'href',
-      /\/capital\/empecemos\?depa=/,
+      /\/mis-depas\?agregar=/,
     )
   })
 
-  test('Contactar lleva a "Te acompañamos" con ese depa', async ({ page }) => {
+  test('Contactar agrega el depa a Mis depas y abre el carrito', async ({ page }) => {
     await page.goto('/capital/miraflores-calle-schell-cuadra-3')
     await page.getByRole('link', { name: 'Contactar', exact: true }).click()
-    await expect(page.getByText('Departamento seleccionado')).toBeVisible()
-    await expect(page.getByText('Proyecto de Urbana')).toBeVisible()
+    await expect(page).toHaveURL(/\/mis-depas\/?$/)
+    await expect(page.locator('[data-saved-list] article')).toHaveCount(1)
+    await expect(page.locator('[data-saved-list]')).toContainText('Urbana')
+    await expect(page.locator('[data-cart-count]')).toHaveText('1')
+  })
+
+  test('la galería del detalle cambia de foto con las miniaturas', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 })
+    await page.goto('/capital/lince-av-arequipa-cuadra-12')
+    const thumbs = page.locator('.thumbs').getByRole('button', { name: /^Ver (foto|video)/ })
+    // 4 fotos y 1 video
+    await expect(thumbs).toHaveCount(5)
+    await thumbs.nth(2).click()
+    await expect(thumbs.nth(2)).toHaveAttribute('aria-current', 'true')
+    await expect(thumbs.nth(0)).not.toHaveAttribute('aria-current', 'true')
+    await thumbs.nth(4).click()
+    await expect(page.locator('[data-gallery-track] video')).toBeVisible()
+  })
+
+  test('las fotos se amplían a pantalla completa y se recorren con el teclado', async ({ page }) => {
+    await page.goto('/capital/lince-av-arequipa-cuadra-12')
+    await page.getByRole('button', { name: 'Ampliar foto 1 de 4' }).click()
+    const viewer = page.getByRole('dialog', { name: /Fotos y videos de Lince/ })
+    await expect(viewer).toBeVisible()
+    await expect(viewer.locator('[data-lb-current]')).toHaveText('1')
+    await page.keyboard.press('ArrowRight')
+    await expect(viewer.locator('[data-lb-current]')).toHaveText('2')
+    await page.keyboard.press('Escape')
+    await expect(viewer).toBeHidden()
+  })
+})
+
+test.describe('Todos los depas', () => {
+  test('"Ver todos los proyectos" abre la búsqueda con filtros, orden y URL', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 })
+    await page.goto('/capital')
+    await page.getByRole('link', { name: 'Ver todos los proyectos' }).first().click()
+    await expect(page).toHaveURL(/\/capital\/depas\/?$/)
+    const cards = page.locator('[data-results] [data-property-card]:visible')
+    await expect(cards).toHaveCount(36)
+    await expect(page.locator('[data-results-count]')).toHaveText('36 resultados')
+
+    await page.getByRole('checkbox', { name: /^De proyecto/ }).check()
+    await expect(cards).toHaveCount(24)
+    await page.getByRole('checkbox', { name: /^Urbana/ }).check()
+    await expect(cards).toHaveCount(6)
+    await page.getByRole('checkbox', { name: /^Miraflores \(/ }).check()
+    await expect(cards).toHaveCount(1)
+    await expect(cards.first()).toContainText('Calle Schell')
+    await expect(page).toHaveURL(/tipo=developer.*distrito=miraflores.*inmobiliaria=urbana/)
+
+    await page.getByRole('button', { name: 'Quitar filtro: Miraflores' }).click()
+    await expect(cards).toHaveCount(6)
+    await page.getByLabel('Ordenar por').selectOption('precio-asc')
+    await expect(cards.first()).toContainText('Lince')
+    await expect(cards.last()).toContainText('Miraflores')
+
+    // La búsqueda se puede compartir: al recargar sigue igual
+    await page.reload()
+    await expect(cards).toHaveCount(6)
+    await expect(page.getByRole('checkbox', { name: /^Urbana/ })).toBeChecked()
+
+    await page.getByRole('button', { name: 'Limpiar todo' }).click()
+    await expect(cards).toHaveCount(36)
+  })
+
+  test('en móvil los filtros se abren en un panel', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.goto('/capital/depas?distrito=brena')
+    await expect(page.locator('[data-results] [data-property-card]:visible')).toHaveCount(1)
+    await page.getByRole('button', { name: /Filtros/ }).click()
+    await expect(page.getByRole('checkbox', { name: /Breña/ })).toBeChecked()
+    await page.getByRole('button', { name: 'Ver 1 resultado' }).click()
+    await expect(page.getByRole('checkbox', { name: /Breña/ })).toBeHidden()
   })
 })
 
@@ -73,14 +151,14 @@ test.describe('Inmobiliarias aliadas', () => {
       .getByRole('link', { name: /Urbana/ })
       .click()
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Proyectos de Urbana')
-    await expect(page.getByText('3 proyectos encontrados')).toBeVisible()
+    await expect(page.getByText('6 proyectos encontrados')).toBeVisible()
     await expect(page.locator('[data-property-card]').first()).toContainText('Precio desde')
 
     await page.getByRole('searchbox').fill('miraflores')
     await page.getByRole('button', { name: 'Buscar' }).click()
     await expect(page.getByText('1 proyecto encontrado')).toBeVisible()
     await page.getByRole('button', { name: 'Limpiar filtros' }).click()
-    await expect(page.getByText('3 proyectos encontrados')).toBeVisible()
+    await expect(page.getByText('6 proyectos encontrados')).toBeVisible()
   })
 })
 

@@ -19,7 +19,8 @@ import Icon from './Icon.astro'
           <a data-slot="link"></a>
         </h3>
         <button class="remove-depa" type="button" data-slot="remove">
-          <Icon name="x" size={20} />
+          <Icon name="x" size={16} />
+          Eliminar
         </button>
       </div>
       <p class="saved-place">
@@ -118,12 +119,13 @@ import Icon from './Icon.astro'
     text-underline-offset: 4px;
   }
   .remove-depa {
-    display: grid;
+    display: inline-flex;
     flex: none;
-    place-items: center;
-    width: var(--control-h-sm);
-    height: var(--control-h-sm);
-    padding: 0;
+    align-items: center;
+    gap: 4px;
+    min-height: var(--control-h-sm);
+    padding: 0 var(--space-3);
+    font-size: var(--fs-sm);
     border: 0;
     border-radius: var(--radius-pill);
     background: transparent;

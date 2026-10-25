@@ -58,6 +58,8 @@ const properties = defineCollection({
           height: z.number().int().nullish(),
         }),
       ),
+      // Videos: link de YouTube o Vimeo, o archivo .mp4/.webm (ver src/lib/media.ts). El API aún no los envía.
+      videos: z.array(z.object({ url: z.string().min(1), title: z.string().nullish() })).default([]),
       status: z.enum(['published', 'reserved', 'sold']),
       featured: z.boolean(),
       publishedAt: z.string(),

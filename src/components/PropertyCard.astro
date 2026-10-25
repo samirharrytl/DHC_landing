@@ -25,6 +25,12 @@ const image = p.images[0]
   data-district={p.district.slug}
   data-price={p.price.amount}
   data-yield-min={p.yield.min}
+  data-yield-max={p.yield.max}
+  data-origin={p.origin}
+  data-developer={p.developer?.slug}
+  data-payback={p.paybackYears}
+  data-status={p.status}
+  data-id={p.id}
 >
   <!-- Imagen 16:9. Mientras no hay foto, se muestra un bloque con una casita -->
   <div class="media">
@@ -45,7 +51,7 @@ const image = p.images[0]
       {p.status === 'reserved' ? (
         <span class="tag tag--light">Reservado</span>
       ) : (
-        p.badge && <span class="tag tag--light">{p.badge}</span>
+        p.badge && <span class="tag tag--deal">{p.badge}</span>
       )}
     </div>
   </div>
@@ -168,6 +174,10 @@ const image = p.images[0]
   .tag--light {
     background: rgb(255 255 255 / 0.92);
     color: var(--color-navy-800);
+  }
+  /* "Súper precio", "Últimos en venta": insignia de oferta */
+  .tag--deal {
+    background: var(--color-deal);
   }
 
   /* ---------- Cuerpo ---------- */

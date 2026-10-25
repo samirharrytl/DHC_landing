@@ -1,90 +1,67 @@
 ---
-// Identidad de Depahost Capital. inverse adapta el texto a fondos oscuros.
+// Identidad de DepaHost Capital: los dos techos arriba y el nombre en versalitas debajo.
+// Vectorizado de src/assets/logo depa.svg (dorado sobre navy) y logo depa blanco.svg (navy sobre blanco).
+// inverse: techos dorados y texto claro, para fondos navy.
 interface Props {
   inverse?: boolean
 }
 const { inverse = false } = Astro.props
+// Cada logo de la página necesita su propio id de degradado
+const gradientId = `logo-gold-${Math.random().toString(36).slice(2, 8)}`
 ---
 
-<a href="/" class:list={['logo', { inverse }]} aria-label="Depahost Capital, Depahost Perú, ir al inicio">
-  <svg class="logo-mark" viewBox="0 0 54 60" fill="none" aria-hidden="true">
-    <path class="mark-base" d="M27 1.5 52 16v28L27 58.5 2 44V16L27 1.5Z" />
-    <path class="mark-cutout" d="M8.5 19.5 27 8.8l18.5 10.7v21L27 51.2 8.5 40.5v-21Z" />
-    <path
-      class="mark-base"
-      d="m10.5 21 14-8.1v16.4l-14 8.1V21Zm18-7.2 15 8.7v17.2l-15 8.7V31.1l8.6-5-8.6-5v-7.3Z"
-    />
+<a href="/" class:list={['logo', { inverse }]} aria-label="DepaHost Capital, ir al inicio">
+  <svg class="logo-mark" viewBox="396 300 496 244" aria-hidden="true">
+    {inverse && (
+      <defs>
+        <linearGradient id={gradientId} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#a87528" />
+          <stop offset="0.45" stop-color="#e0b158" />
+          <stop offset="1" stop-color="#b07d2c" />
+        </linearGradient>
+      </defs>
+    )}
+    <g fill={inverse ? `url(#${gradientId})` : 'currentColor'}>
+      <path d="M400 540V435l189-129 87 61-45 30-47-32-138 92v83Z" />
+      <path d="M557 540v-83l187-120 144 98v105h-47v-83l-101-68-136 88v63Z" />
+    </g>
   </svg>
-  <span class="logo-copy">
-    <span class="logo-name">Depahost Capital</span>
-    <span class="logo-tagline">DEPAHOST PERÚ</span>
-  </span>
+  <span class="logo-name">DepaHost Capital</span>
 </a>
 
 <style>
   .logo {
     display: inline-flex;
+    flex-direction: column;
     align-items: center;
-    gap: 10px;
+    justify-content: center;
+    gap: 4px;
     min-height: var(--control-h-sm);
-    color: var(--color-text-strong);
+    color: var(--color-navy-800);
     text-decoration: none;
     white-space: nowrap;
   }
   .logo-mark {
-    --mark-base: var(--color-navy-800);
-    --mark-cutout: #fff;
-    width: 48px;
-    height: 54px;
+    width: 64px;
+    height: auto;
     flex: none;
   }
-  .mark-base {
-    fill: var(--mark-base);
-  }
-  .mark-cutout {
-    fill: var(--mark-cutout);
-  }
-  .logo-copy {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
   .logo-name {
-    color: var(--color-text-strong);
-    font:
-      400 23px/1 Georgia,
-      'Times New Roman',
-      serif;
-    letter-spacing: -0.035em;
-  }
-  .logo-tagline {
     color: var(--color-navy-800);
-    font: 600 9px/1.2 var(--font-sans);
-    letter-spacing: 0.28em;
-    padding-left: 2px;
+    font: 600 16px/1 var(--font-sans);
+    font-variant-caps: small-caps;
+    letter-spacing: 0.06em;
   }
-  .logo.inverse .logo-mark {
-    --mark-base: #fff;
-    --mark-cutout: var(--color-navy-900);
-  }
-  .logo.inverse .logo-name,
-  .logo.inverse .logo-tagline {
-    color: #fff;
+  .logo.inverse .logo-name {
+    color: #f4efe6;
   }
 
   @media (max-width: 420px) {
-    .logo {
-      gap: 8px;
-    }
     .logo-mark {
-      width: 42px;
-      height: 48px;
+      width: 52px;
     }
     .logo-name {
-      font-size: 20px;
-    }
-    .logo-tagline {
-      font-size: 8px;
+      font-size: 14px;
     }
   }
 </style>

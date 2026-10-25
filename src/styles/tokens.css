@@ -15,6 +15,13 @@
   --color-navy-50: #f0f3f8; /* hover de botón outline / fondos suaves */
   --color-navy-100: #e1e7f0; /* active de botón outline */
 
+  /* ---------- Color · dorado (techos del logo) ---------- */
+  --color-gold-500: #e0b158; /* botón de compra: "Me interesa", "Empecemos" (navy encima: 8.9:1) */
+  --color-gold-600: #d29f42; /* hover */
+  --color-gold-700: #b8862d; /* active, bordes */
+  --color-gold-100: #fbf3e2; /* fondos suaves: aviso "Agregado", insignias */
+  --color-deal: #b12704; /* insignias de oferta ("Súper precio") */
+
   /* ---------- Color · WhatsApp ---------- */
   --color-wa-700: #094835; /* fondo botón WhatsApp (muestreado #094835) */
   --color-wa-800: #063626; /* hover */
@@ -32,6 +39,7 @@
   --color-bg: #ffffff;
   --color-surface: #ffffff;
   --color-surface-alt: #fbfbfb; /* barra formulario inglés (muestreado #FBFBFB) */
+  --color-surface-muted: #eef1f5; /* fondo de página detrás de las filas de tarjetas */
   --color-border: #dbdbdb; /* tarjetas (muestreado #DBDBDB / #CACACA) */
   --color-border-subtle: #e4e4e4; /* divisores internos, línea stepper (muestreado #E4E4E4) */
   --color-border-input: #8a8f98; /* inputs: 3.25:1 sobre blanco (WCAG 1.4.11) */
@@ -109,7 +117,7 @@
   --container-max: 75rem; /* 1200 */
   --gutter: 1rem; /* 16 móvil; sube en media queries */
   --grid-gap: 1rem; /* 16 móvil; 24 desde 1024 */
-  --header-h: 4rem; /* 64 móvil; 72 tablet; 80 desktop */
+  --header-h: 4rem; /* 64 móvil; 72 tablet; 80 desktop (el sitio lo ajusta en Header.astro) */
 
   /* ---------- Radios ---------- */
   --radius-sm: 4px; /* chips */

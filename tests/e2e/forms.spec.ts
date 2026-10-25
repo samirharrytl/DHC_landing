@@ -1,47 +1,24 @@
 import { expect, mockApi, test } from './fixtures'
 
-test.describe('Formulario en inglés (Capital)', () => {
-  test('envía el lead y ofrece seguir por WhatsApp', async ({ page }) => {
-    const received = await mockApi(page, '/v1/leads', 201, {
-      id: crypto.randomUUID(),
-      createdAt: new Date().toISOString(),
-    })
-    await page.goto('/capital')
-    const form = page.locator('[data-intl-form]')
-    await form.getByLabel('Full name').fill('Jane Smith')
-    await form.getByLabel('Email').fill('jane@example.com')
-    await form.getByLabel('Initial amount (USD)').fill('50,000')
-    await form.getByRole('checkbox').check()
-    await form.getByRole('button', { name: /Talk to us/ }).click()
-
-    await expect(form.getByRole('status')).toContainText('Thanks!')
-    await expect(form.getByRole('link', { name: 'Message us on WhatsApp' })).toHaveAttribute('href', /wa\.me/)
-    expect(received[0]).toEqual({
-      name: 'Jane Smith',
-      email: 'jane@example.com',
-      amountUsd: 50000,
-      consent: true,
-      source: 'intl-form',
-      locale: 'en',
-    })
+test('Propietarios: muestra los errores por campo que devuelve la API', async ({ page }) => {
+  await mockApi(page, '/v1/leads', 400, {
+    statusCode: 400,
+    error: 'Bad Request',
+    message: 'Revisa los datos enviados',
+    issues: [{ path: 'email', message: 'Correo inválido según la API' }],
   })
-
-  test('muestra los errores por campo que devuelve la API', async ({ page }) => {
-    await mockApi(page, '/v1/leads', 400, {
-      statusCode: 400,
-      error: 'Bad Request',
-      message: 'Revisa los datos enviados',
-      issues: [{ path: 'email', message: 'Correo inválido según la API' }],
-    })
-    await page.goto('/capital')
-    const form = page.locator('[data-intl-form]')
-    await form.getByLabel('Full name').fill('Jane')
-    await form.getByLabel('Email').fill('jane@example.com')
-    await form.getByRole('checkbox').check()
-    await form.getByRole('button', { name: /Talk to us/ }).click()
-    await expect(form.getByText('Correo inválido según la API')).toBeVisible()
-    await expect(form.getByLabel('Email')).toHaveAttribute('aria-invalid', 'true')
-  })
+  await page.goto('/propietarios')
+  const form = page.locator('[data-owner-form]')
+  await form.getByLabel('Nombre').fill('Luis')
+  await form.getByLabel('Celular').fill('987 654 321')
+  await form.getByLabel(/Correo/).fill('luis@example.com')
+  await form.getByLabel('Distrito').selectOption('Lince')
+  await form.getByLabel('Tipo').selectOption('Departamento')
+  await form.getByLabel('Qué quieres hacer').selectOption('sell')
+  await form.getByRole('checkbox').check()
+  await form.getByRole('button', { name: /Recibir propuesta/ }).click()
+  await expect(form.getByText('Correo inválido según la API')).toBeVisible()
+  await expect(form.getByLabel(/Correo/)).toHaveAttribute('aria-invalid', 'true')
 })
 
 test('Libro de Reclamaciones: registra y muestra el código', async ({ page }) => {

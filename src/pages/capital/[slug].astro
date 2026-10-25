@@ -2,10 +2,9 @@
 // Detalle de un depa. Una página estática por depa, generada en el build desde getProperties().
 import type { GetStaticPaths } from 'astro'
 import BaseLayout from '../../layouts/BaseLayout.astro'
-import HouseIcon from '../../components/HouseIcon.astro'
 import Icon from '../../components/Icon.astro'
 import MiniCard from '../../components/MiniCard.astro'
-import PropertyImage from '../../components/PropertyImage.astro'
+import PropertyGallery from '../../components/PropertyGallery.astro'
 import SaveButton from '../../components/SaveButton.astro'
 import {
   getDevelopers,
@@ -26,10 +25,10 @@ interface Props {
 }
 
 const { property: p } = Astro.props
-const [cover, ...gallery] = p.images
 const street = p.address.replace(/ cuadra \d+$/i, '')
 const title = `${p.district.name} · ${street}`
 const isProject = p.origin === 'developer'
+const statusLabel = { published: 'Disponible', reserved: 'Reservado', sold: 'Vendido' }[p.status]
 const price = formatMoney(p.price.amount, p.price.currency)
 const facts = formatFacts(p)
 const disclaimer = buildDisclaimer(await getFinancingAssumptions())
@@ -92,41 +91,28 @@ const jsonLd = {
     </nav>
 
     <div class="detail-top">
-      <div class="detail-media">
-        {cover ? (
-          <PropertyImage
-            image={cover}
-            widths={[640, 960, 1280, 1600]}
-            sizes="(max-width: 1024px) 100vw, 55vw"
-            priority
-          />
-        ) : (
-          <div class="placeholder" aria-hidden="true">
-            <HouseIcon />
-          </div>
-        )}
-        {gallery.length > 0 && (
-          <ul class="gallery" aria-label="Más fotos">
-            {gallery.map((image) => (
-              <li>
-                <PropertyImage image={image} widths={[320, 480]} sizes="(max-width: 640px) 50vw, 20vw" />
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+      <PropertyGallery
+        images={p.images}
+        videos={p.videos}
+        title={title}
+        tag={isProject ? 'De proyecto' : 'De propietario'}
+      />
 
       <div class="detail-info">
         <p class="eyebrow">
-          {p.status === 'reserved' ? 'Reservado · ' : p.status === 'sold' ? 'Vendido · ' : ''}
           {isProject ? `De proyecto${p.developer ? ` · ${p.developer.name}` : ''}` : 'De propietario'}
-          {p.badge && p.status === 'published' && ` · ${p.badge}`}
+          {p.badge && p.status === 'published' && <span class="deal">{p.badge}</span>}
         </p>
         <h1 class="display">{title}</h1>
         <p class="address">
           <Icon name="pin" size={18} />
           {p.address}, {p.district.name}
         </p>
+        {developer && (
+          <a class="store-link" href={`/capital/aliados/${developer.slug}`}>
+            Ver todos los proyectos de {developer.name}
+          </a>
+        )}
 
         <dl class="stats">
           {stats.map((stat) => (
@@ -159,17 +145,50 @@ const jsonLd = {
           Renta estimada. No constituye una garantía de rentabilidad futura.
         </p>
 
-        <div class="detail-actions">
-          <SaveButton id={p.id} name={p.district.name} variant="solid" />
-          <a class="btn btn--secondary btn--sm" href={`/capital/empecemos?depa=${p.slug}`}>
+        {p.description && (
+          <section class="about" aria-labelledby="about-title">
+            <h2 id="about-title">Sobre este depa</h2>
+            <p class="description">{p.description}</p>
+          </section>
+        )}
+      </div>
+
+      <!-- ---------- Caja de compra: como el recuadro de "Agregar al carrito" ---------- -->
+      <aside class="buybox" aria-labelledby="buybox-price">
+        <p class="buy-price" id="buybox-price">
+          <span class="sr-only">Valor:</span>
+          {price}
+        </p>
+        <p class="buy-line">
+          Rentabilidad estimada <strong class="buy-yield">{formatYield(p.yield)}</strong>
+        </p>
+        <p class="buy-line">Se recupera en {formatYears(p.paybackYears)}</p>
+        <p class:list={['buy-status', `is-${p.status}`]}>{statusLabel}</p>
+
+        <div class="buy-actions">
+          {p.status !== 'sold' && <SaveButton id={p.id} name={p.district.name} class="btn--block" />}
+          <a class="btn btn--primary btn--sm btn--block" href={`/mis-depas?agregar=${p.id}`}>
             <Icon name="mail" size={18} />
             Contactar
           </a>
         </div>
-      </div>
-    </div>
 
-    {p.description && <p class="description">{p.description}</p>}
+        <ul class="buy-trust">
+          <li>
+            <Icon name="handshake" size={18} />
+            Te acompañamos hasta la firma
+          </li>
+          <li>
+            <Icon name="calendar" size={18} />
+            Coordinamos la visita contigo
+          </li>
+          <li>
+            <Icon name="shield" size={18} />
+            Cierras directo con {isProject ? 'la inmobiliaria' : 'el propietario'}
+          </li>
+        </ul>
+      </aside>
+    </div>
 
     <!-- ---------- Aliado del proyecto ---------- -->
     <section class="ally" aria-labelledby="ally-title">
@@ -224,7 +243,7 @@ const jsonLd = {
 
 <style>
   .detail {
-    padding-block: var(--space-6) var(--space-12);
+    padding-block: var(--space-4) var(--space-12);
   }
   .breadcrumb {
     display: flex;
@@ -241,59 +260,46 @@ const jsonLd = {
     display: grid;
     gap: var(--space-6);
   }
-  .detail-media :global(picture) {
-    display: block;
+  .detail-info {
+    min-width: 0;
   }
-  .detail-media > :global(picture img) {
-    width: 100%;
-    aspect-ratio: 4 / 3;
-    object-fit: cover;
-    border-radius: var(--radius-lg);
-  }
-  .placeholder {
-    display: grid;
-    place-items: center;
-    aspect-ratio: 4 / 3;
-    border-radius: var(--radius-lg);
-    background: linear-gradient(135deg, var(--color-navy-50), var(--color-navy-100));
-    color: var(--color-navy-800);
-  }
-  .placeholder :global(svg) {
-    width: 64px;
-    height: 64px;
-    opacity: 0.35;
-  }
-  .gallery {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  .eyebrow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
     gap: var(--space-2);
-    margin: var(--space-2) 0 0;
-    padding: 0;
-    list-style: none;
   }
-  .gallery :global(img) {
-    width: 100%;
-    aspect-ratio: 4 / 3;
-    object-fit: cover;
-    border-radius: var(--radius-md);
+  /* "Súper precio": insignia roja de oferta */
+  .deal {
+    padding: 2px var(--space-2);
+    border-radius: var(--radius-sm);
+    background: var(--color-deal);
+    color: #fff;
+    letter-spacing: var(--ls-caps);
   }
   h1 {
     margin-top: var(--space-2);
-    padding-bottom: var(--space-3);
-    border-bottom: var(--border-subtle);
-    font-size: clamp(1.875rem, 1.4rem + 1.6vw, 2.625rem);
+    font-size: clamp(1.75rem, 1.3rem + 1.4vw, 2.375rem);
     color: var(--color-navy-800);
   }
   .address {
     display: flex;
     align-items: center;
     gap: var(--space-1);
-    margin: var(--space-3) 0 0;
+    margin: var(--space-2) 0 0;
     font-size: var(--fs-sm);
     color: var(--color-text-muted);
   }
+  .store-link {
+    display: inline-block;
+    margin-top: var(--space-1);
+    color: var(--color-navy-800);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-medium);
+  }
   .stats {
-    margin: var(--space-2) 0 0;
+    margin: var(--space-3) 0 0;
+    border-top: var(--border-subtle);
   }
   .stat {
     display: grid;
@@ -324,7 +330,7 @@ const jsonLd = {
     text-align: right;
   }
   .stat-value {
-    font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.625rem);
+    font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
     font-weight: var(--fw-bold);
     line-height: 1.2;
     color: var(--color-text-strong);
@@ -362,20 +368,89 @@ const jsonLd = {
     font-size: var(--fs-13);
     color: var(--color-text-muted);
   }
-  .detail-actions {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-3);
-    margin-top: var(--space-5);
+  .about {
+    margin-top: var(--space-6);
+    padding-top: var(--space-4);
+    border-top: var(--border-subtle);
   }
-  .detail-actions > :global(*) {
-    min-height: var(--control-h-md);
+  .about h2 {
+    font-size: var(--fs-18);
+    letter-spacing: 0;
   }
   .description {
     max-width: 70ch;
-    margin: var(--space-8) 0 0;
-    font-size: var(--fs-lead);
+    margin: var(--space-2) 0 0;
     white-space: pre-line;
+  }
+
+  /* ---------- Caja de compra ---------- */
+  .buybox {
+    display: grid;
+    gap: var(--space-2);
+    align-content: start;
+    padding: var(--space-5);
+    border: var(--border);
+    border-radius: var(--radius-lg);
+    background: #fff;
+    box-shadow: var(--shadow-sm);
+  }
+  .buybox p {
+    margin: 0;
+  }
+  .buy-price {
+    color: var(--color-text-strong);
+    font-size: 1.875rem;
+    font-weight: var(--fw-bold);
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+  }
+  .buy-line {
+    font-size: var(--fs-sm);
+    color: var(--color-text-muted);
+  }
+  .buy-yield {
+    color: var(--color-success);
+  }
+  .buy-status {
+    font-size: var(--fs-18);
+    font-weight: var(--fw-semibold);
+  }
+  .buy-status.is-published {
+    color: var(--color-success);
+  }
+  .buy-status.is-reserved {
+    color: #b25e09;
+  }
+  .buy-status.is-sold {
+    color: var(--color-error);
+  }
+  .buy-actions {
+    display: grid;
+    gap: var(--space-2);
+    margin-top: var(--space-2);
+  }
+  .buy-actions > :global(*) {
+    min-height: var(--control-h-md);
+    border-radius: var(--radius-pill);
+  }
+  .buy-trust {
+    display: grid;
+    gap: var(--space-2);
+    margin: var(--space-3) 0 0;
+    padding: var(--space-3) 0 0;
+    border-top: var(--border-subtle);
+    list-style: none;
+    font-size: var(--fs-13);
+    color: var(--color-text);
+  }
+  .buy-trust li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+  .buy-trust :global(svg) {
+    flex: none;
+    color: var(--color-navy-800);
   }
 
   /* ---------- Aliado ---------- */
@@ -453,13 +528,12 @@ const jsonLd = {
   }
   @media (min-width: 1024px) {
     .detail-top {
-      grid-template-columns: minmax(0, 11fr) minmax(360px, 9fr);
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
       align-items: start;
-      gap: var(--space-10);
+      gap: var(--space-8);
     }
-    .detail-info {
-      position: sticky;
-      top: calc(var(--header-h) + var(--space-4));
+    .buybox {
+      grid-column: 2;
     }
     .ally-card {
       grid-template-columns: 56px minmax(0, 1fr) auto;
@@ -469,6 +543,18 @@ const jsonLd = {
     }
     .similar-list {
       grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  /* Pantallas anchas: galería, datos y caja de compra en tres columnas; la caja acompaña al bajar */
+  @media (min-width: 1280px) {
+    .detail-top {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 4fr) 280px;
+      gap: var(--space-6);
+    }
+    .buybox {
+      grid-column: auto;
+      position: sticky;
+      top: calc(var(--header-h) + var(--space-4));
     }
   }
 </style>

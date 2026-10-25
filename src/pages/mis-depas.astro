@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro'
 import ForYouRow from '../components/ForYouRow.astro'
 import Icon from '../components/Icon.astro'
 import SavedDepa from '../components/SavedDepa.astro'
+import WhatsAppIcon from '../components/WhatsAppIcon.astro'
 ---
 
 <BaseLayout
@@ -13,7 +14,7 @@ import SavedDepa from '../components/SavedDepa.astro'
   <section class="container cart-page" data-cart-page>
     <header class="cart-heading">
       <h1 class="display">Mis depas</h1>
-      <p>Revisa los departamentos que seleccionaste.</p>
+      <p>Revisa los depas que seleccionaste y escríbenos para empezar.</p>
     </header>
 
     <div class="cart-layout">
@@ -30,7 +31,7 @@ import SavedDepa from '../components/SavedDepa.astro'
           <p>
             Aún no guardaste departamentos. Toca <strong>Me interesa</strong> en los que te gusten.
           </p>
-          <a class="btn btn--secondary btn--sm" href="/capital">
+          <a class="btn btn--cta btn--sm" href="/capital">
             Explorar departamentos
           </a>
         </div>
@@ -53,15 +54,22 @@ import SavedDepa from '../components/SavedDepa.astro'
           <span>Inversión total</span>
           <strong data-investment-total>S/ 0</strong>
         </div>
+        <!-- WhatsApp con la lista armada: es el "finalizar compra" de Mis depas -->
         <a
-          class="btn btn--primary start-button is-disabled"
+          class="btn btn--whatsapp start-button is-disabled"
           data-contact-selection
-          href="/capital/empecemos"
+          href="#"
+          target="_blank"
+          rel="noopener noreferrer"
           aria-disabled="true"
         >
+          <WhatsAppIcon size={22} />
           Empecemos con estos
           <Icon name="arrow-right" size={22} />
         </a>
+        <p class="start-note">
+          Te escribimos por WhatsApp, coordinamos las visitas y te acompañamos hasta la firma.
+        </p>
         <span hidden data-summary-icon>
           <Icon name="building" size={20} />
         </span>
@@ -90,7 +98,19 @@ import SavedDepa from '../components/SavedDepa.astro'
   import { getSavedStore } from '../lib/saved-store'
   import { getProfileStore, PROFILE_EVENT } from '../lib/profile'
   import { formatMoney } from '../lib/format'
+  import { api, apiConfigured } from '../lib/api/client'
+  import { waLink } from '../data/contacto'
+  import { getUtm } from '../scripts/forms'
   import { loadCatalog, type CatalogItem } from '../scripts/catalog'
+
+  // "Contactar" en el detalle llega con ?agregar={id}: ese depa entra a la lista y se limpia la URL
+  const params = new URLSearchParams(location.search)
+  const toAdd = params.get('agregar')
+  if (toAdd) {
+    getSavedStore().add(toAdd)
+    params.delete('agregar')
+    history.replaceState(null, '', location.pathname + (params.size ? `?${params}` : ''))
+  }
 
   const page = document.querySelector<HTMLElement>('[data-cart-page]')
   const template = document.querySelector<HTMLTemplateElement>('[data-saved-template]')
@@ -107,6 +127,12 @@ import SavedDepa from '../components/SavedDepa.astro'
     const investmentTotal = page.querySelector<HTMLElement>('[data-investment-total]')
     const contactButton = page.querySelector<HTMLAnchorElement>('[data-contact-selection]')
     let catalog: CatalogItem[] = []
+    let selected: CatalogItem[] = []
+
+    const whatsappMessage = () => {
+      const lines = selected.map((item) => `- ${item.district} (${item.address}): ${item.price.label}`)
+      return `Hola, quiero que me acompañen con ${selected.length === 1 ? 'este depa' : 'estos depas'}:\n${lines.join('\n')}`
+    }
 
     const icon = (name: string) =>
       factIcons.querySelector(`[data-fact-icon="${name}"] svg`)?.cloneNode(true) ??
@@ -173,9 +199,7 @@ import SavedDepa from '../components/SavedDepa.astro'
     }
 
     const render = (ids: string[]) => {
-      const selected = ids
-        .map((id) => catalog.find((item) => item.id === id))
-        .filter((item) => item !== undefined)
+      selected = ids.map((id) => catalog.find((item) => item.id === id)).filter((item) => item !== undefined)
       list.replaceChildren(...selected.map(renderItem))
       list.removeAttribute('aria-busy')
 
@@ -200,10 +224,28 @@ import SavedDepa from '../components/SavedDepa.astro'
       if (selected.length === 0) contactButton.setAttribute('aria-disabled', 'true')
       else contactButton.removeAttribute('aria-disabled')
       contactButton.classList.toggle('is-disabled', selected.length === 0)
+      contactButton.href = selected.length ? waLink(whatsappMessage()) : '#'
     }
 
+    // Registra el interés (sin datos personales) para que el equipo sepa qué depas pidió.
+    // WhatsApp se abre igual aunque la API falle.
     contactButton?.addEventListener('click', (event) => {
-      if (contactButton.hasAttribute('aria-disabled')) event.preventDefault()
+      if (contactButton.hasAttribute('aria-disabled')) {
+        event.preventDefault()
+        return
+      }
+      if (!apiConfigured) return
+      api
+        .POST('/v1/leads', {
+          body: {
+            source: 'cart',
+            propertyIds: selected.map((item) => item.id),
+            locale: 'es',
+            consent: false,
+            utm: getUtm(),
+          },
+        })
+        .catch(() => {})
     })
 
     // Nota de guardado: anónima o con el nombre que dejó en "Guarda tus depas"
@@ -242,7 +284,6 @@ import SavedDepa from '../components/SavedDepa.astro'
   }
   .cart-heading {
     margin-bottom: var(--space-6);
-    text-align: center;
   }
   .cart-heading h1 {
     font-size: clamp(2.25rem, 1.6rem + 2vw, 3.25rem);
@@ -398,6 +439,11 @@ import SavedDepa from '../components/SavedDepa.astro'
   .start-button.is-disabled {
     opacity: 0.55;
     cursor: not-allowed;
+  }
+  .start-note {
+    margin: var(--space-3) 0 0;
+    font-size: var(--fs-13);
+    color: var(--color-text-muted);
   }
   .saved-note {
     display: flex;

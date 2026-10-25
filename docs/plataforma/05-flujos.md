@@ -34,7 +34,7 @@ Este es el recorrido que diseñaste en el mock 5, con las páginas que lo implem
 flowchart TB
     START(("Llega a Capital"))
     HOME["/capital<br/>depas de propietarios"]
-    BUSCA["Busca o filtra<br/>SearchFilters"]
+    BUSCA["Busca o filtra<br/>SearchFilters · /capital/depas"]
     FICHA["Abre la ficha<br/>/capital/{slug}"]
     MARCA["Marca Me interesa<br/>SaveButton"]
     ALIADO["Clic en un aliado<br/>/capital/aliados/{slug}"]
@@ -44,8 +44,7 @@ flowchart TB
     REG["Deja nombre y celular<br/>lead saved-list en el API"]
     PERS["Capital personalizada<br/>Para ti, según lo que has visto · Hola, Ana"]
     ELIGE["Elige uno o varios<br/>/mis-depas"]
-    EMP["Empecemos con estos<br/>/capital/empecemos"]
-    WA["Escribir por WhatsApp<br/>lead cart en el API"]
+    WA["Empecemos con estos<br/>abre WhatsApp · lead cart en el API"]
     CIERRE(("Te acompañamos y cierras<br/>con la inmobiliaria o el propietario"))
 
     START --> HOME
@@ -59,8 +58,8 @@ flowchart TB
     DEC -- "sí" --> REG
     NAV --> PERS
     REG --> PERS
-    PERS --> ELIGE --> EMP --> WA --> CIERRE
-    FICHA -- "Contactar" --> EMP
+    PERS --> ELIGE --> WA --> CIERRE
+    FICHA -- "Contactar" --> ELIGE
 ```
 
 Puntos de registro en el API durante el recorrido:
@@ -68,8 +67,7 @@ Puntos de registro en el API durante el recorrido:
 | Momento | Lead | Datos personales |
 |---|---|---|
 | Deja sus datos en "Guarda tus depas" | `saved-list` | Nombre, celular, correo opcional |
-| Hace clic en "Escribir por WhatsApp" en Te acompañamos | `cart` | Ninguno: solo los IDs de los depas |
-| Envía el formulario en inglés | `intl-form` | Nombre, correo, monto |
+| Hace clic en "Empecemos con estos" en Mis depas | `cart` | Ninguno: solo los IDs de los depas |
 | Envía el formulario de propietarios | `owner-sell` u `owner-rent` | Nombre, celular, datos del depa |
 
 ---
@@ -337,7 +335,7 @@ sequenceDiagram
     HS->>LS: mueve el id al final de depahost:viewed-depas (máximo 12)
     V->>PG: Me interesa (flujo 6)
     V->>PG: Contactar
-    PG-->>V: /capital/empecemos?depa={slug} (flujo 11)
+    PG-->>V: /mis-depas?agregar={id}: el depa entra a Mis depas (flujo 11)
 ```
 
 Qué muestra el detalle:
@@ -441,7 +439,7 @@ sequenceDiagram
     alt 0 guardados
         P->>V: mensaje vacío · botón deshabilitado
     else
-        P->>V: "Empecemos con estos" → /capital/empecemos
+        P->>V: "Empecemos con estos" con el link de WhatsApp armado (flujo 11)
     end
     V->>P: Quitar (X)
     P->>ST: remove(id) · se vuelve a pintar todo
@@ -452,27 +450,26 @@ La inversión total suma por moneda. Si hay depas en soles y en dólares, muestr
 
 ---
 
-## 11. Te acompañamos y WhatsApp
+## 11. Empecemos con estos: WhatsApp desde Mis depas
+
+"Te acompañamos" (`/capital/empecemos`) se unió a Mis depas: la lista es el último paso y desde ahí
+se escribe por WhatsApp. `/capital/empecemos` redirige a `/mis-depas`.
 
 ```mermaid
 sequenceDiagram
     autonumber
     actor V as Visitante
-    participant P as /capital/empecemos
-    participant CAT as /data/properties.json
+    participant P as /mis-depas
     participant ST as Mis depas
     participant API as depahost-api
     participant WA as WhatsApp
 
-    V->>P: llega desde Mis depas, Capital o "Contactar"
-    P->>CAT: loadCatalog()
-    alt la URL trae ?depa={slug}
-        P->>P: seleccionado = ese depa
-    else
-        P->>ST: seleccionados = Mis depas
+    alt llega desde "Contactar" del detalle
+        V->>P: /mis-depas?agregar={id}
+        P->>ST: add(id) · limpia la URL
     end
-    P->>V: tarjeta(s), 3 pasos y botón de WhatsApp con el mensaje armado
-    V->>P: Escribir por WhatsApp
+    P->>V: lista, resumen y "Empecemos con estos" con el mensaje armado
+    V->>P: Empecemos con estos
     par
         P-)API: POST /v1/leads { source: cart, propertyIds } (sin esperar)
     and
@@ -481,7 +478,7 @@ sequenceDiagram
 ```
 
 - El mensaje incluye cada depa con distrito, dirección y precio.
-- Si no hay nada seleccionado, la página invita a ver depas y el mensaje de WhatsApp es genérico.
+- Sin depas guardados el botón está deshabilitado y la página invita a explorar.
 - El lead `cart` no lleva datos personales ni captcha. Si el API falla, WhatsApp se abre igual.
 
 ---
@@ -526,7 +523,6 @@ flowchart TB
 
 | Formulario | Página | Payload | Al terminar |
 |---|---|---|---|
-| Inglés | `/capital` | `source: intl-form`, `locale: en`, `name`, `email`, `amountUsd` | "Thanks!" + link de WhatsApp en inglés |
 | Propietarios | `/propietarios` | `owner-sell` si "Vender"; `owner-rent` si "Alquilar" o "Airbnb"; `details: { district, propertyType, intent, expectedPrice }` | "Te escribimos por WhatsApp" + link |
 | Guarda tus depas | Diálogo global | `saved-list` + `propertyIds` | Saludo y paso "Listo" (flujo 7) |
 | Libro de Reclamaciones | `/libro-de-reclamaciones` | `consumer`, `item`, `kind`, `detail`, `request`, `consent` | Constancia en pantalla e imprimible |

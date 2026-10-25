@@ -50,7 +50,6 @@ classDiagram
         <<module>>
         getProperties(filters?) Property[]
         getOwnerProperties() Property[]
-        getTopProperties(limit) Property[]
         getSimilarProperties(p, limit) Property[]
         getFastFilters(list?) FastFilter[]
         getDevelopers() Developer[]
@@ -127,37 +126,35 @@ Para cada página: de dónde salen sus datos en el build y qué scripts corren e
 | Ruta | Archivo | Datos del build | Scripts en el navegador |
 |---|---|---|---|
 | `/` | `pages/index.astro` | Ninguno (texto fijo y foto del hero) | Dropdown "Soy propietario" |
-| `/capital` | `pages/capital/index.astro` | `getOwnerProperties`, `getTopProperties(10)`, `getFastFilters`, `getDevelopers`, supuestos | Filtros, Me interesa, Para ti, formulario en inglés |
-| `/capital/{slug}` | `pages/capital/[slug].astro` | Una página por depa de `getProperties`; `getSimilarProperties(p, 4)`; inmobiliaria | Me interesa; guarda la visita en el historial |
+| `/capital` | `pages/capital/index.astro` | `getOwnerProperties`, `getFastFilters`, `getDevelopers`, supuestos | Filtros, Me interesa, Para ti |
+| `/capital/depas` | `pages/capital/depas.astro` | `getProperties` (todos), `getDevelopers`, supuestos | Búsqueda con facetas, orden y conteos (`lib/catalog-search.ts`); los filtros quedan en la URL |
+| `/capital/{slug}` | `pages/capital/[slug].astro` | Una página por depa de `getProperties`; `getSimilarProperties(p, 4)`; inmobiliaria | Galería (`PropertyGallery`), Me interesa; guarda la visita en el historial. "Contactar" lleva a `/mis-depas?agregar={id}` |
 | `/capital/aliados/{slug}` | `pages/capital/aliados/[slug].astro` | Inmobiliarias con proyectos; `getDeveloperProjects` | Filtros con botón Buscar y contador |
-| `/capital/empecemos` | `pages/capital/empecemos.astro` | Ninguno | Lee Mis depas o `?depa=`, arma WhatsApp, registra lead `cart` |
-| `/mis-depas` | `pages/mis-depas.astro` | Ninguno | Pinta los guardados, resumen, total, Para ti |
+| `/mis-depas` | `pages/mis-depas.astro` | Ninguno | Pinta los guardados, resumen y total; agrega `?agregar={id}`; "Empecemos con estos" abre WhatsApp y registra el lead `cart`; Para ti |
 | `/propietarios` | `pages/propietarios.astro` | `getDevelopers` (franja de aliados) | Formulario con intención vender, alquilar o Airbnb |
 | `/libro-de-reclamaciones` | `pages/libro-de-reclamaciones.astro` | Datos de la empresa | Formulario de reclamo y constancia |
 | `/privacidad`, `/terminos` | `pages/*.astro` con `LegalLayout` | Datos de la empresa | — |
 | `/estadias`, `/nosotros` | `PlaceholderLayout` | — | — |
 | `/404` | `pages/404.astro` | — | — |
 | `/data/properties.json` | `pages/data/properties.json.ts` | `getProperties` + `getImage` | — (lo consumen los scripts) |
-| `/carrito` | redirección en `astro.config.mjs` | — | Redirige a `/mis-depas` |
+| `/carrito`, `/capital/empecemos` | redirecciones en `astro.config.mjs` | — | Redirigen a `/mis-depas` |
 
 Páginas sin indexar (`<meta name="robots" content="noindex">` y fuera del sitemap):
-`/mis-depas`, `/capital/empecemos`, `/404`. `robots.txt` además bloquea `/carrito`, `/mis-depas`,
-`/capital/empecemos` y `/data/`.
+`/mis-depas`, `/404`. `robots.txt` además bloquea `/carrito`, `/mis-depas`, `/capital/empecemos`
+(hoy una redirección) y `/data/`.
 
 ### Detalle de la portada de Capital
 
 ```mermaid
 flowchart TB
-    A["Hero<br/>título serif · subtítulo · Ver todos los proyectos → #aliados · Empecemos → /capital/empecemos"]
+    A["Hero<br/>título serif · subtítulo · Ver todos los proyectos → /capital/depas · Empecemos → /mis-depas"]
     B["Cómo funciona<br/>Comparas · Consultas · Te acompañamos · Cierras"]
     C["Buscador + chips<br/>SearchFilters"]
-    D["Grilla de depas de propietarios<br/>PropertyCard × N · #lista-depas"]
+    D["Grilla de depas de propietarios<br/>PropertyCard × N · #lista-depas · al final, tarjeta Ver todos los proyectos"]
     E["Nota de cuota estimada<br/>buildDisclaimer"]
     F["Para ti, según lo que has visto<br/>ForYouRow · oculta sin historial"]
     G["Proyectos de aliados<br/>AlliesStrip · #aliados"]
-    H["Barra y ranking Top 10<br/>#top-10 · propietarios y proyectos"]
-    I["Formulario en inglés<br/>lead intl-form"]
-    A --> B --> C --> D --> E --> F --> G --> H --> I
+    A --> B --> C --> D --> E --> F --> G
 ```
 
 ## 4. Layouts
@@ -202,7 +199,7 @@ Se usan en el build y en el navegador. No tocan el DOM, salvo `getSavedStore`,
 
 | Módulo | Funciones principales | Para qué |
 |---|---|---|
-| `properties.ts` | `getProperties`, `getOwnerProperties`, `getTopProperties`, `getSimilarProperties`, `getDevelopers`, `getDeveloperProjects`, `getFastFilters`, `getFinancingAssumptions` | Única puerta a los datos en el build |
+| `properties.ts` | `getProperties`, `getOwnerProperties`, `getSimilarProperties`, `getDevelopers`, `getDeveloperProjects`, `getFastFilters`, `getFinancingAssumptions` | Única puerta a los datos en el build |
 | `filters.ts` | `buildSearchText`, `toFilterable`, `matchesFilters`, `parseFilters`, `buildFastFilters` | Búsqueda y filtros (funciones puras) |
 | `recommend.ts` | `similarity`, `similarTo`, `recommend` | Similares y "Para ti" |
 | `format.ts` | `formatMoney`, `formatPEN`, `formatYield`, `formatYears`, `formatFacts`, `formatDate`, `normalizeText`, `slugify`, `buildDisclaimer` | Textos consistentes en todo el sitio |

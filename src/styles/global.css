@@ -190,6 +190,20 @@ html.menu-open {
   background: var(--color-navy-100);
 }
 
+/* Comprar: dorado de la marca, como el botón del carrito de una tienda.
+   Solo para la acción principal de compra: "Me interesa" y "Empecemos". */
+.btn--cta {
+  background: var(--color-gold-500);
+  border-color: var(--color-gold-600);
+  color: var(--color-navy-900);
+}
+.btn--cta:hover {
+  background: var(--color-gold-600);
+}
+.btn--cta:active {
+  background: var(--color-gold-700);
+}
+
 /* Abrir WhatsApp: SIEMPRE verde oscuro */
 .btn--whatsapp {
   background: var(--color-wa-700);
