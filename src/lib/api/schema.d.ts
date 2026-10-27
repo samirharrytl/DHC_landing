@@ -2102,8 +2102,8 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Match entre depas disponibles y personas interesadas
-         * @description Para cada persona con interés (cuentas y leads), los depas que pidió y las mejores sugerencias, con puntaje y motivos.
+         * Match entre inmuebles disponibles y personas interesadas
+         * @description Para cada persona con interés (cuentas y leads), los inmuebles que pidió y las mejores sugerencias, con puntaje y motivos.
          */
         get: {
             parameters: {
@@ -2141,7 +2141,7 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Precio sugerido de cada depa y solicitud
+         * Precio sugerido de cada inmueble y solicitud
          * @description Valor estimado con su rango, la diferencia con el precio actual (o el esperado por el propietario), los factores y los comparables usados.
          */
         get: {
@@ -2937,9 +2937,9 @@ export interface components {
                 bedrooms: number[];
             };
             signals: {
-                /** @description Depas en su Mis depas */
+                /** @description Inmuebles guardados en Mis inmuebles */
                 saved: number;
-                /** @description Depas que pidió en "Empecemos con estos" o "Guarda tus depas" */
+                /** @description Inmuebles que pidió con "Conversemos ahora", "Programar una sesión" o "Guarda tus inmuebles" */
                 requested: number;
             };
         };
@@ -2974,7 +2974,7 @@ export interface components {
              * @enum {string}
              */
             level: "high" | "medium" | "low";
-            /** @description true: la persona mostró interés en este depa · false: sugerencia del motor */
+            /** @description true: la persona mostró interés en este inmueble · false: sugerencia del motor */
             explicit: boolean;
             reasons: components["schemas"]["MatchReasonInput"][];
         };
@@ -2988,7 +2988,7 @@ export interface components {
             /** Format: date-time */
             generatedAt: string;
             people: components["schemas"]["MatchPersonInput"][];
-            /** @description Solo depas publicados o reservados */
+            /** @description Solo inmuebles publicados o reservados */
             properties: components["schemas"]["MatchPropertyInput"][];
             matches: components["schemas"]["MatchInput"][];
         };
@@ -3126,7 +3126,7 @@ export interface components {
             exchangeRate: number;
             /** @description Diferencia, en %, desde la que un precio queda fuera de rango */
             fairBandPct: number;
-            /** @description Depas publicados, reservados y borradores */
+            /** @description Inmuebles publicados, reservados y borradores */
             properties: components["schemas"]["PricedPropertyInput"][];
             /** @description Solicitudes de propietarios enviadas o en revisión */
             requests: components["schemas"]["PricedRequestInput"][];
@@ -3912,9 +3912,9 @@ export interface components {
                 bedrooms: number[];
             };
             signals: {
-                /** @description Depas en su Mis depas */
+                /** @description Inmuebles guardados en Mis inmuebles */
                 saved: number;
-                /** @description Depas que pidió en "Empecemos con estos" o "Guarda tus depas" */
+                /** @description Inmuebles que pidió con "Conversemos ahora", "Programar una sesión" o "Guarda tus inmuebles" */
                 requested: number;
             };
         };
@@ -3949,7 +3949,7 @@ export interface components {
              * @enum {string}
              */
             level: "high" | "medium" | "low";
-            /** @description true: la persona mostró interés en este depa · false: sugerencia del motor */
+            /** @description true: la persona mostró interés en este inmueble · false: sugerencia del motor */
             explicit: boolean;
             reasons: components["schemas"]["MatchReason"][];
         };
@@ -3963,7 +3963,7 @@ export interface components {
             /** Format: date-time */
             generatedAt: string;
             people: components["schemas"]["MatchPerson"][];
-            /** @description Solo depas publicados o reservados */
+            /** @description Solo inmuebles publicados o reservados */
             properties: components["schemas"]["MatchProperty"][];
             matches: components["schemas"]["Match"][];
         };
@@ -4101,7 +4101,7 @@ export interface components {
             exchangeRate: number;
             /** @description Diferencia, en %, desde la que un precio queda fuera de rango */
             fairBandPct: number;
-            /** @description Depas publicados, reservados y borradores */
+            /** @description Inmuebles publicados, reservados y borradores */
             properties: components["schemas"]["PricedProperty"][];
             /** @description Solicitudes de propietarios enviadas o en revisión */
             requests: components["schemas"]["PricedRequest"][];

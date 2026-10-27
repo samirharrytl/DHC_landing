@@ -102,7 +102,7 @@ pnpm user:create --email tu@correo.com --name "Tu nombre" --role admin
 `db:up` crea el Postgres local y la base `depahost_dev`. `db:seed` aplica las migraciones y carga
 los datos de ejemplo. `user:create` muestra una vez una contraseña temporal.
 
-Para probar el panel con datos, `pnpm db:seed:demo` carga depas en todos los estados, cuentas de
+Para probar el panel con datos, `pnpm db:seed:demo` carga inmuebles en todos los estados, cuentas de
 cada rol, solicitudes, leads, reclamos y supuestos de financiamiento. Las cuentas son
 `admin@demo.test`, `propietario@demo.test` y `comprador@demo.test`, con la contraseña
 `DemoDepa2026` (o la de `DEMO_PASSWORD`). Se puede repetir: borra y recrea lo suyo (correos

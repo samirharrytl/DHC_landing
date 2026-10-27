@@ -3274,7 +3274,7 @@
                 "contact",
                 "saved-list"
               ],
-              "description": "intl-form: formulario en inglés · owner-*: propietarios · cart: \"Empecemos con estos\" de Mis depas · saved-list: \"Guarda tus depas\""
+              "description": "intl-form: formulario en inglés · owner-*: propietarios · cart: \"Conversemos ahora\" o \"Programar una sesión\" de Mis inmuebles · saved-list: \"Guarda tus inmuebles\""
             }
           },
           "lastActivityAt": {
@@ -3368,13 +3368,13 @@
                 "type": "integer",
                 "minimum": -9007199254740991,
                 "maximum": 9007199254740991,
-                "description": "Depas en su Mis depas"
+                "description": "Inmuebles guardados en Mis inmuebles"
               },
               "requested": {
                 "type": "integer",
                 "minimum": -9007199254740991,
                 "maximum": 9007199254740991,
-                "description": "Depas que pidió en \"Empecemos con estos\" o \"Guarda tus depas\""
+                "description": "Inmuebles que pidió con \"Conversemos ahora\", \"Programar una sesión\" o \"Guarda tus inmuebles\""
               }
             },
             "required": [
@@ -3523,7 +3523,7 @@
           },
           "explicit": {
             "type": "boolean",
-            "description": "true: la persona mostró interés en este depa · false: sugerencia del motor"
+            "description": "true: la persona mostró interés en este inmueble · false: sugerencia del motor"
           },
           "reasons": {
             "type": "array",
@@ -3568,7 +3568,7 @@
             "items": {
               "$ref": "#/components/schemas/MatchPropertyInput"
             },
-            "description": "Solo depas publicados o reservados"
+            "description": "Solo inmuebles publicados o reservados"
           },
           "matches": {
             "type": "array",
@@ -4092,7 +4092,7 @@
             "items": {
               "$ref": "#/components/schemas/PricedPropertyInput"
             },
-            "description": "Depas publicados, reservados y borradores"
+            "description": "Inmuebles publicados, reservados y borradores"
           },
           "requests": {
             "type": "array",
@@ -7509,7 +7509,7 @@
                 "contact",
                 "saved-list"
               ],
-              "description": "intl-form: formulario en inglés · owner-*: propietarios · cart: \"Empecemos con estos\" de Mis depas · saved-list: \"Guarda tus depas\""
+              "description": "intl-form: formulario en inglés · owner-*: propietarios · cart: \"Conversemos ahora\" o \"Programar una sesión\" de Mis inmuebles · saved-list: \"Guarda tus inmuebles\""
             }
           },
           "lastActivityAt": {
@@ -7605,13 +7605,13 @@
                 "type": "integer",
                 "minimum": -9007199254740991,
                 "maximum": 9007199254740991,
-                "description": "Depas en su Mis depas"
+                "description": "Inmuebles guardados en Mis inmuebles"
               },
               "requested": {
                 "type": "integer",
                 "minimum": -9007199254740991,
                 "maximum": 9007199254740991,
-                "description": "Depas que pidió en \"Empecemos con estos\" o \"Guarda tus depas\""
+                "description": "Inmuebles que pidió con \"Conversemos ahora\", \"Programar una sesión\" o \"Guarda tus inmuebles\""
               }
             },
             "required": [
@@ -7765,7 +7765,7 @@
           },
           "explicit": {
             "type": "boolean",
-            "description": "true: la persona mostró interés en este depa · false: sugerencia del motor"
+            "description": "true: la persona mostró interés en este inmueble · false: sugerencia del motor"
           },
           "reasons": {
             "type": "array",
@@ -7811,7 +7811,7 @@
             "items": {
               "$ref": "#/components/schemas/MatchProperty"
             },
-            "description": "Solo depas publicados o reservados"
+            "description": "Solo inmuebles publicados o reservados"
           },
           "matches": {
             "type": "array",
@@ -8345,7 +8345,7 @@
             "items": {
               "$ref": "#/components/schemas/PricedProperty"
             },
-            "description": "Depas publicados, reservados y borradores"
+            "description": "Inmuebles publicados, reservados y borradores"
           },
           "requests": {
             "type": "array",
@@ -10695,11 +10695,11 @@
     },
     "/v1/admin/engine/matches": {
       "get": {
-        "summary": "Match entre depas disponibles y personas interesadas",
+        "summary": "Match entre inmuebles disponibles y personas interesadas",
         "tags": [
           "Admin · Motor (simulado)"
         ],
-        "description": "Para cada persona con interés (cuentas y leads), los depas que pidió y las mejores sugerencias, con puntaje y motivos.",
+        "description": "Para cada persona con interés (cuentas y leads), los inmuebles que pidió y las mejores sugerencias, con puntaje y motivos.",
         "security": [
           {
             "cookieAuth": []
@@ -10724,7 +10724,7 @@
     },
     "/v1/admin/engine/prices": {
       "get": {
-        "summary": "Precio sugerido de cada depa y solicitud",
+        "summary": "Precio sugerido de cada inmueble y solicitud",
         "tags": [
           "Admin · Motor (simulado)"
         ],
