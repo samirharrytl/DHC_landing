@@ -20,7 +20,7 @@ depahost-api/
 │   ├── plugins/admin-auth.ts   protección de /v1/admin/* (sesión de admin o clave)
 │   ├── modules/<módulo>/   schema.ts · repository.ts · service.ts · routes.ts
 │   │                       (properties, developers, leads, complaints, financing, districts,
-│   │                        uploads, accounts, owner-requests, admin, health)
+│   │                        uploads, accounts, owner-requests, admin, engine, health)
 │   └── scripts/            export de OpenAPI, migrate, seed, create-user
 ├── drizzle/                migraciones SQL versionadas (0000_init … 0003_rls)
 ├── scripts/pg-local.mjs    Postgres local de desarrollo y preproducción (pnpm db:up)
@@ -218,6 +218,8 @@ Detalles del servidor:
 | GET | `/v1/admin/users` | Cuentas, con búsqueda `q` y filtro `role` |
 | PATCH | `/v1/admin/users/{id}` | Cambia el rol (nunca el propio) |
 | GET | `/v1/admin/stats` | Indicadores del resumen del panel |
+| GET | `/v1/admin/engine/matches` | Motor simulado: cruza los depas disponibles con las personas interesadas, con puntaje y motivos |
+| GET | `/v1/admin/engine/prices` | Motor simulado: precio sugerido de cada depa y de cada solicitud enviada o en revisión |
 | GET | `/v1/admin/complaints` | Reclamos, filtrables por `status` |
 | POST | `/v1/admin/complaints/{id}/response` | Responde un reclamo y avisa por correo |
 | POST | `/v1/admin/uploads` | URL prefirmada de R2 para subir una foto |
@@ -296,6 +298,26 @@ Reglas comunes:
 
 - Cada registro guarda tasa, inicial, plazo y fecha. Nunca se edita: se agrega uno nuevo.
 - El público ve el de `asOf` más reciente. Sin registros, el sitio muestra `[plazo]`, `[X]` y `[fecha]`.
+
+### Motor simulado (`modules/engine`)
+
+Match y precio sugerido para el panel. Hoy son reglas fijas, no un modelo entrenado: cada respuesta
+lleva `simulated: true` y una `version`. Calcula en cada consulta con todo el catálogo en memoria.
+Para cambiarlo por un motor real basta con reemplazar `matching.ts`, `pricing.ts` y `market.ts`
+manteniendo el contrato: el panel no cambia.
+
+| Pieza | Regla |
+|---|---|
+| Personas | Una por cuenta (comprador o propietario) y una por correo o celular para los leads sin cuenta. No cuentan los leads de propietarios ni los anónimos |
+| Interés declarado | Lo eligió en "Empecemos con estos" (35), lo guardó en Mis depas (30), lo envió en "Guarda tus depas" (25); +5 por cada señal extra |
+| Perfil | Sale de todo lo que guardó o pidió: hasta 3 distritos, rango de precio (±15%), rentabilidad mínima y dormitorios |
+| Afinidad | Distrito (20), precio en su rango (15), rentabilidad (10), dormitorios (5). Sin depas de referencia, presupuesto en USD (25) |
+| Actividad | +10 esta semana, +5 este mes, −5 sin actividad en 90 días, −15 si todas sus consultas están cerradas. Un depa reservado resta 10 |
+| Sugerencias | Hasta 6 depas por persona con 45 puntos o más. Nivel: alto desde 75, medio desde 50 |
+| Precio base | Tabla de soles por m² por distrito (`market.ts`, inventada, al 1 de octubre de 2026) mezclada con la mediana de hasta 5 comparables del catálogo en el mismo distrito (15% de peso cada uno, máximo 50%) |
+| Ajustes | Área (−6% a +6%), 2 baños o más (+3%), estreno de inmobiliaria (+6%), demanda por guardados y consultas (−3% a +4%) |
+| Resultado | Rango de ±4%, ±7% o ±12% según la confianza. Fuera de rango si se aleja más de 7% del precio publicado o esperado. Sin área no estima |
+| Alquiler y Airbnb | Valor × rentabilidad bruta del distrito / 12. Airbnb: 60% más con 70% de ocupación, y tarifa por noche |
 
 ### Subida de fotos (`modules/uploads`)
 

@@ -102,6 +102,14 @@ pnpm user:create --email tu@correo.com --name "Tu nombre" --role admin
 `db:up` crea el Postgres local y la base `depahost_dev`. `db:seed` aplica las migraciones y carga
 los datos de ejemplo. `user:create` muestra una vez una contraseña temporal.
 
+Para probar el panel con datos, `pnpm db:seed:demo` carga depas en todos los estados, cuentas de
+cada rol, solicitudes, leads, reclamos y supuestos de financiamiento. Las cuentas son
+`admin@demo.test`, `propietario@demo.test` y `comprador@demo.test`, con la contraseña
+`DemoDepa2026` (o la de `DEMO_PASSWORD`). Se puede repetir: borra y recrea lo suyo (correos
+`@demo.test` y slugs `demo-*`). Se niega a correr si `DATABASE_URL` no es local. Los precios siguen
+la tabla de mercado del motor simulado y cada persona busca en dos distritos, para que Match y
+Precio sugerido tengan qué mostrar.
+
 En `depahostcapital` y en `depahost-panel`:
 
 ```bash
