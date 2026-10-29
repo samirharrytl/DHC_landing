@@ -451,7 +451,7 @@ Connect to Git). Los dos se construyen desde la raíz del monorepo: ahí están 
 | Ajuste | Sitio | Panel |
 |---|---|---|
 | Nombre del proyecto | `depahostcapital` | `depahost-panel` |
-| Rama de producción | `main` | `main` |
+| Rama de producción | `deploy/sitio` | `deploy/panel` |
 | Framework preset | None | None |
 | Root directory | vacío (raíz del repo) | vacío (raíz del repo) |
 | Build command | `pnpm --filter depahostcapital build` | `pnpm --filter depahost-panel build` |
@@ -459,6 +459,10 @@ Connect to Git). Los dos se construyen desde la raíz del monorepo: ahí están 
 | Build watch paths, include | `apps/depahostcapital/*`, `pnpm-lock.yaml`, `pnpm-workspace.yaml` | `apps/depahost-panel/*`, `pnpm-lock.yaml`, `pnpm-workspace.yaml` |
 | Variables | `PNPM_VERSION=11.24.0` y las de `apps/depahostcapital/.env.production.example` | `PNPM_VERSION=11.24.0` y las de `apps/depahost-panel/.env.production.example` |
 
+- **Se publica después de las validaciones.** La rama de producción no es `main`: es
+  `deploy/sitio` o `deploy/panel`, y solo la mueve GitHub Actions (job `deploy` de `web.yml` y
+  `panel.yml`) cuando formato, lint, tipos, pruebas, e2e y build pasaron en ese commit de `main`.
+  Nadie hace push a mano a esas ramas.
 - **`PNPM_VERSION` es obligatoria.** Sin ella, Pages usa pnpm 10, que no lee `allowBuilds` de
   `pnpm-workspace.yaml`.
 - **Cabeceras:** cada app trae `public/_headers` (seguridad y caché larga para los archivos con
@@ -467,7 +471,7 @@ Connect to Git). Los dos se construyen desde la raíz del monorepo: ahí están 
   ruta y Vue Router la resuelve. No hace falta `_redirects`.
 - **`www`:** agregar los dos dominios al proyecto del sitio y crear una regla en Rules → Redirect
   Rules que mande `www.depahostperu.com/*` a `https://depahostperu.com/${1}` con 301.
-- **Deploy hook:** en el proyecto del sitio, Settings → Builds → Deploy hooks → rama `main`. Esa URL
+- **Deploy hook:** en el proyecto del sitio, Settings → Builds → Deploy hooks → rama `deploy/sitio`. Esa URL
   va en `DEPLOY_HOOK_URL` del API, que la llama con POST cuando cambian los inmuebles.
 - **Vistas previas:** cada pull request genera una URL `*.pages.dev`. El `_headers` del sitio les
   pone `X-Robots-Tag: noindex` para que Google no las indexe.
@@ -481,6 +485,7 @@ van en Cloudflare.
 | Ajuste (Settings del servicio) | Valor |
 |---|---|
 | Root directory | vacío (raíz del repo) |
+| Branch (Source → Branch connected to production) | `deploy/api` |
 | Build command | `pnpm --filter depahost-api build` |
 | Start command | `pnpm --filter depahost-api start` |
 | Watch paths | `/apps/depahost-api/**`, `/pnpm-lock.yaml`, `/pnpm-workspace.yaml` |
@@ -488,6 +493,8 @@ van en Cloudflare.
 | Región | US East (Virginia) |
 | Variables | `RAILPACK_NODE_VERSION=24` y las de `apps/depahost-api/.env.production.example` |
 
+- **Se publica después de las validaciones.** Railway sigue la rama `deploy/api`, que solo mueve el
+  job `deploy` de `api.yml` cuando pasaron formato, lint, tipos, pruebas, migraciones y build.
 - **`RAILPACK_NODE_VERSION=24` es obligatoria.** Railway toma la versión de `engines`
   (`>=22.12.0`) antes que la del `.nvmrc`, así que sin ella podría elegir otra versión.
 - **Instalación:** Railway corre `pnpm install` en la raíz con el pnpm de `packageManager`. Luego

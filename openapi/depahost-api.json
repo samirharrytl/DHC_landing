@@ -940,6 +940,44 @@
           "height"
         ]
       },
+      "LocationInput": {
+        "type": "object",
+        "properties": {
+          "lat": {
+            "type": "number",
+            "minimum": -90,
+            "maximum": 90
+          },
+          "lng": {
+            "type": "number",
+            "minimum": -180,
+            "maximum": 180
+          }
+        },
+        "required": [
+          "lat",
+          "lng"
+        ]
+      },
+      "VideoInput": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "title": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "url",
+          "title"
+        ]
+      },
       "PropertyInput": {
         "type": "object",
         "properties": {
@@ -985,6 +1023,16 @@
             "type": [
               "string",
               "null"
+            ]
+          },
+          "location": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/LocationInput"
+              },
+              {
+                "type": "null"
+              }
             ]
           },
           "price": {
@@ -1060,6 +1108,12 @@
               "$ref": "#/components/schemas/PropertyImageInput"
             }
           },
+          "videos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VideoInput"
+            }
+          },
           "featured": {
             "type": "boolean"
           },
@@ -1086,6 +1140,7 @@
           "address",
           "badge",
           "description",
+          "location",
           "price",
           "yield",
           "paybackYears",
@@ -1093,6 +1148,7 @@
           "bedrooms",
           "bathrooms",
           "images",
+          "videos",
           "featured",
           "status",
           "publishedAt"
@@ -1261,6 +1317,16 @@
               "null"
             ]
           },
+          "location": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/LocationInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "price": {
             "type": "object",
             "properties": {
@@ -1334,6 +1400,12 @@
               "$ref": "#/components/schemas/PropertyImageInput"
             }
           },
+          "videos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VideoInput"
+            }
+          },
           "featured": {
             "type": "boolean"
           },
@@ -1378,6 +1450,7 @@
           "address",
           "badge",
           "description",
+          "location",
           "price",
           "yield",
           "paybackYears",
@@ -1385,6 +1458,7 @@
           "bedrooms",
           "bathrooms",
           "images",
+          "videos",
           "featured",
           "status",
           "publishedAt",
@@ -1449,6 +1523,16 @@
               {
                 "type": "string",
                 "maxLength": 5000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "location": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/LocationInput"
               },
               {
                 "type": "null"
@@ -1580,6 +1664,34 @@
               ]
             }
           },
+          "videos": {
+            "default": [],
+            "maxItems": 30,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "url": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "title": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "maxLength": 200
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "url"
+              ]
+            }
+          },
           "status": {
             "default": "draft",
             "type": "string",
@@ -1660,6 +1772,16 @@
               {
                 "type": "string",
                 "maxLength": 5000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "location": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/LocationInput"
               },
               {
                 "type": "null"
@@ -1788,6 +1910,34 @@
               "required": [
                 "url",
                 "alt"
+              ]
+            }
+          },
+          "videos": {
+            "default": [],
+            "maxItems": 30,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "url": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "title": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "maxLength": 200
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "url"
               ]
             }
           },
@@ -5121,6 +5271,46 @@
         ],
         "additionalProperties": false
       },
+      "Location": {
+        "type": "object",
+        "properties": {
+          "lat": {
+            "type": "number",
+            "minimum": -90,
+            "maximum": 90
+          },
+          "lng": {
+            "type": "number",
+            "minimum": -180,
+            "maximum": 180
+          }
+        },
+        "required": [
+          "lat",
+          "lng"
+        ],
+        "additionalProperties": false
+      },
+      "Video": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "title": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "url",
+          "title"
+        ],
+        "additionalProperties": false
+      },
       "Property": {
         "type": "object",
         "properties": {
@@ -5166,6 +5356,16 @@
             "type": [
               "string",
               "null"
+            ]
+          },
+          "location": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Location"
+              },
+              {
+                "type": "null"
+              }
             ]
           },
           "price": {
@@ -5243,6 +5443,12 @@
               "$ref": "#/components/schemas/PropertyImage"
             }
           },
+          "videos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Video"
+            }
+          },
           "featured": {
             "type": "boolean"
           },
@@ -5269,6 +5475,7 @@
           "address",
           "badge",
           "description",
+          "location",
           "price",
           "yield",
           "paybackYears",
@@ -5276,6 +5483,7 @@
           "bedrooms",
           "bathrooms",
           "images",
+          "videos",
           "featured",
           "status",
           "publishedAt"
@@ -5450,6 +5658,16 @@
               "null"
             ]
           },
+          "location": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Location"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "price": {
             "type": "object",
             "properties": {
@@ -5525,6 +5743,12 @@
               "$ref": "#/components/schemas/PropertyImage"
             }
           },
+          "videos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Video"
+            }
+          },
           "featured": {
             "type": "boolean"
           },
@@ -5569,6 +5793,7 @@
           "address",
           "badge",
           "description",
+          "location",
           "price",
           "yield",
           "paybackYears",
@@ -5576,6 +5801,7 @@
           "bedrooms",
           "bathrooms",
           "images",
+          "videos",
           "featured",
           "status",
           "publishedAt",
@@ -5641,6 +5867,16 @@
               {
                 "type": "string",
                 "maxLength": 5000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "location": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Location"
               },
               {
                 "type": "null"
@@ -5775,6 +6011,35 @@
               "additionalProperties": false
             }
           },
+          "videos": {
+            "default": [],
+            "maxItems": 30,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "url": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "title": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "maxLength": 200
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "url"
+              ],
+              "additionalProperties": false
+            }
+          },
           "status": {
             "default": "draft",
             "type": "string",
@@ -5798,6 +6063,7 @@
           "yield",
           "paybackYears",
           "images",
+          "videos",
           "status",
           "featured"
         ],
@@ -5860,6 +6126,16 @@
               {
                 "type": "string",
                 "maxLength": 5000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "location": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Location"
               },
               {
                 "type": "null"
@@ -5990,6 +6266,35 @@
               "required": [
                 "url",
                 "alt"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "videos": {
+            "default": [],
+            "maxItems": 30,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "url": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "title": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "maxLength": 200
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "url"
               ],
               "additionalProperties": false
             }

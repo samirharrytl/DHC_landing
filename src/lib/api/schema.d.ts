@@ -2406,6 +2406,15 @@ export interface components {
             width: number | null;
             height: number | null;
         };
+        LocationInput: {
+            lat: number;
+            lng: number;
+        };
+        VideoInput: {
+            /** Format: uri */
+            url: string;
+            title: string | null;
+        };
         PropertyInput: {
             /** Format: uuid */
             id: string;
@@ -2420,6 +2429,7 @@ export interface components {
             address: string;
             badge: string | null;
             description: string | null;
+            location: components["schemas"]["LocationInput"] | null;
             price: {
                 /** @description Monto sin decimales */
                 amount: number;
@@ -2438,6 +2448,7 @@ export interface components {
             bedrooms: number | null;
             bathrooms: number | null;
             images: components["schemas"]["PropertyImageInput"][];
+            videos: components["schemas"]["VideoInput"][];
             featured: boolean;
             /** @enum {string} */
             status: "published" | "reserved" | "sold";
@@ -2481,6 +2492,7 @@ export interface components {
             address: string;
             badge: string | null;
             description: string | null;
+            location: components["schemas"]["LocationInput"] | null;
             price: {
                 /** @description Monto sin decimales */
                 amount: number;
@@ -2499,6 +2511,7 @@ export interface components {
             bedrooms: number | null;
             bathrooms: number | null;
             images: components["schemas"]["PropertyImageInput"][];
+            videos: components["schemas"]["VideoInput"][];
             featured: boolean;
             /** @enum {string} */
             status: "draft" | "published" | "reserved" | "sold";
@@ -2524,6 +2537,7 @@ export interface components {
             address: string;
             badge?: string | null;
             description?: string | null;
+            location?: components["schemas"]["LocationInput"] | null;
             price: {
                 /** @description Monto sin decimales */
                 amount: number;
@@ -2547,6 +2561,12 @@ export interface components {
                 alt: string;
                 width?: number | null;
                 height?: number | null;
+            }[];
+            /** @default [] */
+            videos: {
+                /** Format: uri */
+                url: string;
+                title?: string | null;
             }[];
             /**
              * @default draft
@@ -2572,6 +2592,7 @@ export interface components {
             address?: string;
             badge?: string | null;
             description?: string | null;
+            location?: components["schemas"]["LocationInput"] | null;
             price?: {
                 /** @description Monto sin decimales */
                 amount: number;
@@ -2595,6 +2616,12 @@ export interface components {
                 alt: string;
                 width?: number | null;
                 height?: number | null;
+            }[];
+            /** @default [] */
+            videos: {
+                /** Format: uri */
+                url: string;
+                title?: string | null;
             }[];
             /**
              * @default draft
@@ -3381,6 +3408,15 @@ export interface components {
             width: number | null;
             height: number | null;
         };
+        Location: {
+            lat: number;
+            lng: number;
+        };
+        Video: {
+            /** Format: uri */
+            url: string;
+            title: string | null;
+        };
         Property: {
             /** Format: uuid */
             id: string;
@@ -3395,6 +3431,7 @@ export interface components {
             address: string;
             badge: string | null;
             description: string | null;
+            location: components["schemas"]["Location"] | null;
             price: {
                 /** @description Monto sin decimales */
                 amount: number;
@@ -3413,6 +3450,7 @@ export interface components {
             bedrooms: number | null;
             bathrooms: number | null;
             images: components["schemas"]["PropertyImage"][];
+            videos: components["schemas"]["Video"][];
             featured: boolean;
             /** @enum {string} */
             status: "published" | "reserved" | "sold";
@@ -3456,6 +3494,7 @@ export interface components {
             address: string;
             badge: string | null;
             description: string | null;
+            location: components["schemas"]["Location"] | null;
             price: {
                 /** @description Monto sin decimales */
                 amount: number;
@@ -3474,6 +3513,7 @@ export interface components {
             bedrooms: number | null;
             bathrooms: number | null;
             images: components["schemas"]["PropertyImage"][];
+            videos: components["schemas"]["Video"][];
             featured: boolean;
             /** @enum {string} */
             status: "draft" | "published" | "reserved" | "sold";
@@ -3499,6 +3539,7 @@ export interface components {
             address: string;
             badge?: string | null;
             description?: string | null;
+            location?: components["schemas"]["Location"] | null;
             price: {
                 /** @description Monto sin decimales */
                 amount: number;
@@ -3522,6 +3563,12 @@ export interface components {
                 alt: string;
                 width?: number | null;
                 height?: number | null;
+            }[];
+            /** @default [] */
+            videos: {
+                /** Format: uri */
+                url: string;
+                title?: string | null;
             }[];
             /**
              * @default draft
@@ -3547,6 +3594,7 @@ export interface components {
             address?: string;
             badge?: string | null;
             description?: string | null;
+            location?: components["schemas"]["Location"] | null;
             price?: {
                 /** @description Monto sin decimales */
                 amount: number;
@@ -3570,6 +3618,12 @@ export interface components {
                 alt: string;
                 width?: number | null;
                 height?: number | null;
+            }[];
+            /** @default [] */
+            videos: {
+                /** Format: uri */
+                url: string;
+                title?: string | null;
             }[];
             /**
              * @default draft
