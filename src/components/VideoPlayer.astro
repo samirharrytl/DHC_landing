@@ -1,5 +1,7 @@
 ---
-// Video de un inmueble dentro de la galería. Archivo (.mp4/.webm): <video> nativo.
+// Video de un inmueble dentro de la galería. Archivo (.mp4/.webm): <video> nativo y sin sonido,
+// para recorridos sin narración (no hay nada que subtitular). Un video con narración va en YouTube o
+// Vimeo, que muestran sus propios subtítulos.
 // YouTube o Vimeo: primero una portada con botón de reproducir; el reproductor se inserta al tocarla
 // (lógica en src/scripts/video.ts), así no se cargan sus scripts ni cookies antes de tiempo.
 import Icon from './Icon.astro'
@@ -16,7 +18,7 @@ const source = parseVideo(url)
 ---
 
 {source.kind === 'file' ? (
-  <video class="video-file" controls playsinline preload="none" poster={poster} aria-label={title}>
+  <video class="video-file" controls muted playsinline preload="none" poster={poster} aria-label={title}>
     <source src={url} type={url.endsWith('.webm') ? 'video/webm' : 'video/mp4'} />
     Tu navegador no puede reproducir este video.
   </video>
