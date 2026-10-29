@@ -28,7 +28,8 @@ export function loadAnalytics() {
   if (loaded || !PUBLIC_CLARITY_ID) return
   loaded = true
   const w = window as unknown as { clarity?: ((...args: unknown[]) => void) & { q?: unknown[] } }
-  w.clarity ??= Object.assign((...args: unknown[]) => (w.clarity!.q ??= []).push(args), { q: [] })
+  const queue: unknown[] = []
+  w.clarity ??= Object.assign((...args: unknown[]) => queue.push(args), { q: queue })
   const script = document.createElement('script')
   script.async = true
   script.src = `https://www.clarity.ms/tag/${encodeURIComponent(PUBLIC_CLARITY_ID)}`

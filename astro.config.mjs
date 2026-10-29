@@ -62,6 +62,8 @@ export default defineConfig({
       PUBLIC_MEDIA_HOST: envField.string({ context: 'client', access: 'public', optional: true }),
       // Panel de cuentas (repo depahost-panel). Vacío = no se muestra "Ingresar"
       PUBLIC_PANEL_URL: envField.string({ context: 'client', access: 'public', optional: true }),
+      // "Ingresar" en el header. Apagado por ahora; necesita además PUBLIC_PANEL_URL
+      PUBLIC_LOGIN_ENABLED: envField.boolean({ context: 'client', access: 'public', default: false }),
       // Mapa de Todos los depas. Vacío = mosaicos de OpenStreetMap. Con mucho tráfico conviene un
       // proveedor con clave (MapTiler, Mapbox…): su URL {z}/{x}/{y} y el texto de atribución que pide
       PUBLIC_MAP_TILE_URL: envField.string({ context: 'client', access: 'public', optional: true }),

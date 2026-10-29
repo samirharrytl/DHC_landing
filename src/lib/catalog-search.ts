@@ -109,6 +109,7 @@ export function sortDepas<T extends SearchableDepa>(list: T[], sort: SortKey): T
 // ---------- URL ----------
 
 const list = (value: string | null) => (value ? value.split(',').filter(Boolean) : [])
+const text = (value: string | null) => (value === null || value === '' ? undefined : value)
 const num = (value: string | null) => {
   if (value === null || value.trim() === '') return undefined
   const n = Number(value)
@@ -116,7 +117,7 @@ const num = (value: string | null) => {
 }
 
 export function queryFromParams(params: URLSearchParams): DepaQuery {
-  const sort = params.get('orden') as SortKey | null
+  const sort = params.get('orden')
   return {
     q: params.get('q') ?? '',
     origins: list(params.get('tipo')),
@@ -127,9 +128,9 @@ export function queryFromParams(params: URLSearchParams): DepaQuery {
     minYield: num(params.get('rentabilidad')),
     maxPayback: num(params.get('plazo')),
     available: params.get('disponibles') === '1',
-    near: params.get('cerca') || undefined,
+    near: text(params.get('cerca')),
     maxKm: num(params.get('km')),
-    sort: SORT_OPTIONS.some((o) => o.value === sort) ? sort! : 'destacados',
+    sort: SORT_OPTIONS.find((o) => o.value === sort)?.value ?? 'destacados',
   }
 }
 
@@ -208,21 +209,17 @@ const PRICE_EDGES = [300_000, 400_000, 500_000, 700_000, 1_000_000]
 
 /** Tramos de precio con al menos un inmueble: "Hasta S/ 300,000", "S/ 300,000 a S/ 400,000"… */
 export function priceRanges(prices: number[], format: (n: number) => string): RangeOption[] {
-  const ranges: RangeOption[] = []
-  let previous: number | undefined
-  for (const edge of [...PRICE_EDGES, undefined]) {
-    const range: RangeOption =
-      previous === undefined
-        ? { label: `Hasta ${format(edge!)}`, max: edge }
-        : edge === undefined
-          ? { label: `Más de ${format(previous)}`, min: previous }
-          : { label: `${format(previous)} a ${format(edge)}`, min: previous, max: edge }
-    if (prices.some((p) => (range.min == null || p >= range.min) && (range.max == null || p <= range.max)))
-      ranges.push(range)
-    if (edge === undefined) break
-    previous = edge
-  }
-  return ranges
+  const ranges = PRICE_EDGES.map((max, i): RangeOption => {
+    const min = PRICE_EDGES[i - 1]
+    return min === undefined
+      ? { label: `Hasta ${format(max)}`, max }
+      : { label: `${format(min)} a ${format(max)}`, min, max }
+  })
+  const top = Math.max(...PRICE_EDGES)
+  ranges.push({ label: `Más de ${format(top)}`, min: top })
+  return ranges.filter((range) =>
+    prices.some((p) => (range.min == null || p >= range.min) && (range.max == null || p <= range.max)),
+  )
 }
 
 /** "Desde 8% anual": un escalón por cada entero que deja fuera al menos un inmueble (mira el mínimo del rango). */

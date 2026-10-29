@@ -80,7 +80,9 @@ export function createIdListStore(
       write([])
     },
     subscribe(fn) {
-      const onLocal = () => fn(read())
+      const onLocal = () => {
+        fn(read())
+      }
       const onStorage = (e: Event) => {
         if ((e as StorageEvent).key === key) fn(read())
       }

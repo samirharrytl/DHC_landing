@@ -5,7 +5,7 @@ export const API = 'https://api.test.local'
 // El sitio llama al API con credentials: 'include' (cookie de sesión). Con credenciales, el navegador
 // exige el origen exacto (no "*") y allow-credentials, igual que responde el API real.
 const cors = (route: Route) => ({
-  'access-control-allow-origin': route.request().headers()['origin'] ?? '*',
+  'access-control-allow-origin': route.request().headers().origin ?? '*',
   'access-control-allow-credentials': 'true',
   'access-control-allow-headers': 'content-type',
   'access-control-allow-methods': 'GET, POST, PUT, PATCH, DELETE',
@@ -29,7 +29,9 @@ export async function mockApi(page: Page, path: string, status: number, body: un
 export const test = base.extend({
   page: async ({ page }, use) => {
     // Sin banner de cookies tapando la pantalla (se prueba aparte)
-    await page.addInitScript(() => localStorage.setItem('depahost:consent', 'denied'))
+    await page.addInitScript(() => {
+      localStorage.setItem('depahost:consent', 'denied')
+    })
     await use(page)
   },
 })

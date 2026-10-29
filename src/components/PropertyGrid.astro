@@ -8,7 +8,7 @@ interface Props {
 const { label = 'Inmuebles destacados', id } = Astro.props
 ---
 
-<div class="property-grid" id={id} role="region" aria-label={label} tabindex="0">
+<div class="property-grid" id={id} role="region" aria-label={label}>
   <slot />
 </div>
 

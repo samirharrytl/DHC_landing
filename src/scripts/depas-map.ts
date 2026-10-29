@@ -90,7 +90,9 @@ function loadLeafletCss(): Promise<void> {
     const link = document.createElement('link')
     link.rel = 'stylesheet'
     link.href = leafletCss
-    link.onload = () => resolve()
+    link.onload = () => {
+      resolve()
+    }
     link.onerror = reject
     document.head.append(link)
   })
@@ -99,10 +101,10 @@ function loadLeafletCss(): Promise<void> {
 export async function createDepasMap(container: HTMLElement) {
   await loadLeafletCss()
   const map = L.map(container, { center: LIMA, zoom: 12, scrollWheelZoom: false })
-  L.tileLayer(PUBLIC_MAP_TILE_URL || 'https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  L.tileLayer(PUBLIC_MAP_TILE_URL ?? 'https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution:
-      PUBLIC_MAP_ATTRIBUTION || '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      PUBLIC_MAP_ATTRIBUTION ?? '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
   }).addTo(map)
 
   // La rueda del mouse acerca el mapa solo después de hacer clic en él (si no, la página no baja)
@@ -130,8 +132,12 @@ export async function createDepasMap(container: HTMLElement) {
           riseOnHover: true,
         })
         marker.bindPopup(() => popupFor(depa), { maxWidth: 260, minWidth: 220, offset: [0, -30] })
-        marker.on('popupopen', () => label.classList.add('is-active'))
-        marker.on('popupclose', () => label.classList.remove('is-active'))
+        marker.on('popupopen', () => {
+          label.classList.add('is-active')
+        })
+        marker.on('popupclose', () => {
+          label.classList.remove('is-active')
+        })
         pins.addLayer(marker)
       }
 

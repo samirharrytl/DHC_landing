@@ -40,7 +40,9 @@ export const toRecommendable = (p: Property): Recommendable => ({
 export async function getSimilarProperties(property: Property, limit = 4): Promise<Property[]> {
   const all = await getProperties()
   const byId = new Map(all.map((p) => [p.id, p]))
-  return similarTo(toRecommendable(property), all.map(toRecommendable), limit).map((r) => byId.get(r.id)!)
+  return similarTo(toRecommendable(property), all.map(toRecommendable), limit).flatMap(
+    (r) => byId.get(r.id) ?? [],
+  )
 }
 
 // ---------- Inmobiliarias aliadas ----------

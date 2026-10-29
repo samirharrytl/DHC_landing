@@ -11,7 +11,7 @@ type ApiFinancing = components['schemas']['FinancingAssumptions']
 type ApiDeveloper = components['schemas']['Developer']
 
 // Se lee en el build. Ver .env.example
-const API_URL: string | undefined = import.meta.env.API_URL || undefined
+const API_URL = import.meta.env.API_URL
 
 const properties = defineCollection({
   loader: hybridLoader({

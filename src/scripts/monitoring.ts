@@ -3,7 +3,9 @@
 import { PUBLIC_SENTRY_DSN } from 'astro:env/client'
 
 if (PUBLIC_SENTRY_DSN) {
-  import('@sentry/browser').then((Sentry) => {
-    Sentry.init({ dsn: PUBLIC_SENTRY_DSN, environment: import.meta.env.MODE, sampleRate: 1 })
-  })
+  import('@sentry/browser')
+    .then((Sentry) => {
+      Sentry.init({ dsn: PUBLIC_SENTRY_DSN, environment: import.meta.env.MODE, sampleRate: 1 })
+    })
+    .catch(reportError)
 }

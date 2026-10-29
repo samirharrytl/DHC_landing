@@ -15,7 +15,7 @@ interface HybridLoaderOptions {
   localFile: string
   apiUrl?: string
   /** Trae los items desde la API y los devuelve ya con la forma del esquema de la colección. */
-  fetchRemote: (apiUrl: string) => Promise<Array<Record<string, unknown> & { id: string }>>
+  fetchRemote: (apiUrl: string) => Promise<(Record<string, unknown> & { id: string })[]>
 }
 
 export function hybridLoader(options: HybridLoaderOptions): Loader {
@@ -32,22 +32,30 @@ export function hybridLoader(options: HybridLoaderOptions): Loader {
       const root = fileURLToPath(context.config.root)
       const absolute = path.join(root, options.localFile)
       const loadLocal = async () => {
-        const items = JSON.parse(await readFile(absolute, 'utf8'))
-        if (!Array.isArray(items)) throw new Error(`${options.localFile} debe ser un arreglo`)
+        const items: unknown = JSON.parse(await readFile(absolute, 'utf8'))
+        if (!isObjectList(items)) throw new Error(`${options.localFile} debe ser un arreglo de objetos`)
         await fill(context, items, options.localFile)
       }
       await loadLocal()
 
       // En desarrollo, recarga al editar el JSON
       context.watcher?.add(absolute)
-      context.watcher?.on('change', async (changed) => {
-        if (changed === absolute) await loadLocal()
+      // Un JSON inválido a medio editar se reporta en consola sin tumbar el servidor
+      context.watcher?.on('change', (changed) => {
+        if (changed !== absolute) return
+        loadLocal().catch((error: unknown) => {
+          context.logger.error(String(error))
+        })
       })
     },
   }
 }
 
-async function fill(context: LoaderContext, items: Array<Record<string, unknown>>, filePath?: string) {
+function isObjectList(value: unknown): value is Record<string, unknown>[] {
+  return Array.isArray(value) && value.every((item) => typeof item === 'object' && item !== null)
+}
+
+async function fill(context: LoaderContext, items: Record<string, unknown>[], filePath?: string) {
   context.store.clear()
   for (const item of items) {
     const id = String(item.id)

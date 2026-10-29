@@ -1,3 +1,4 @@
+import assert from 'node:assert/strict'
 import { expect, test } from './fixtures'
 
 test.describe('Capital', () => {
@@ -250,20 +251,21 @@ test.describe('Todos los inmuebles', () => {
     await expect(cards).toHaveCount(12)
     await expect(pages).toContainText('Mostrando 1–12 de 36 inmuebles')
     await expect(pages.getByRole('link', { name: 'Página 1' })).toHaveAttribute('aria-current', 'page')
-    await expect(pages.locator('[rel="prev"]')).toHaveAttribute('aria-disabled', 'true')
+    await expect(pages.locator('[data-page-step="-1"]')).toHaveAttribute('aria-disabled', 'true')
     const first = await cards.first().getAttribute('data-id')
+    assert.ok(first)
 
     await pages.getByRole('link', { name: 'Siguiente' }).click()
     await expect(page).toHaveURL(/pagina=2/)
     await expect(pages).toContainText('Mostrando 13–24 de 36 inmuebles')
     await expect(cards).toHaveCount(12)
-    await expect(cards.first()).not.toHaveAttribute('data-id', first!)
+    await expect(cards.first()).not.toHaveAttribute('data-id', first)
     // El lector de pantalla sigue en la página nueva
     await expect(page.getByRole('heading', { name: 'Resultados, página 2 de 3' })).toBeFocused()
 
     await pages.getByRole('link', { name: 'Página 3' }).click()
     await expect(pages).toContainText('Mostrando 25–36 de 36 inmuebles')
-    await expect(pages.locator('[rel="next"]')).toHaveAttribute('aria-disabled', 'true')
+    await expect(pages.locator('[data-page-step="1"]')).toHaveAttribute('aria-disabled', 'true')
 
     // "Atrás" vuelve a la página anterior y al recargar sigue en ella
     await page.goBack()

@@ -11,19 +11,19 @@ const YOUTUBE = /(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/)|youtu\.
 const VIMEO = /vimeo\.com\/(?:video\/)?(\d+)/
 
 export function parseVideo(url: string): VideoSource {
-  const youtube = url.match(YOUTUBE)
+  const youtube = YOUTUBE.exec(url)?.[1]
   if (youtube)
     return {
       kind: 'youtube',
-      id: youtube[1]!,
-      embedUrl: `https://www.youtube-nocookie.com/embed/${youtube[1]}?autoplay=1&rel=0&playsinline=1`,
+      id: youtube,
+      embedUrl: `https://www.youtube-nocookie.com/embed/${youtube}?autoplay=1&rel=0&playsinline=1`,
     }
-  const vimeo = url.match(VIMEO)
+  const vimeo = VIMEO.exec(url)?.[1]
   if (vimeo)
     return {
       kind: 'vimeo',
-      id: vimeo[1]!,
-      embedUrl: `https://player.vimeo.com/video/${vimeo[1]}?autoplay=1&dnt=1`,
+      id: vimeo,
+      embedUrl: `https://player.vimeo.com/video/${vimeo}?autoplay=1&dnt=1`,
     }
   return { kind: 'file', url }
 }

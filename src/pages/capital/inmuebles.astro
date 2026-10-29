@@ -301,15 +301,16 @@ const origins = [
         <nav class="pagination" aria-label="Páginas de resultados" data-pagination hidden>
           <p class="pagination-info" data-pagination-info></p>
           <div class="pagination-pages">
-            <a class="pagination-step" rel="prev" data-page-step="-1">
+            <!-- Sin página vecina es un texto gris; con página, el script lo cambia por un link -->
+            <span class="pagination-step" data-page-step="-1" aria-disabled="true">
               <Icon name="arrow-left" size={18} />
               <span class="pagination-step-label">Anterior</span>
-            </a>
+            </span>
             <ul class="pagination-list" data-page-list></ul>
-            <a class="pagination-step" rel="next" data-page-step="1">
+            <span class="pagination-step" data-page-step="1" aria-disabled="true">
               <span class="pagination-step-label">Siguiente</span>
               <Icon name="arrow-right" size={18} />
-            </a>
+            </span>
           </div>
         </nav>
         <div class="empty" data-results-empty hidden>
@@ -381,7 +382,7 @@ const origins = [
     const pagination = $<HTMLElement>('[data-pagination]')
     const paginationInfo = $<HTMLElement>('[data-pagination-info]')
     const pageList = $<HTMLUListElement>('[data-page-list]')
-    const pageSteps = [...root.querySelectorAll<HTMLAnchorElement>('[data-page-step]')]
+    let pageSteps = [...root.querySelectorAll<HTMLElement>('[data-page-step]')]
 
     type Item = SearchableDepa & {
       card: HTMLElement
@@ -636,18 +637,26 @@ const origins = [
         }),
       )
       // En la primera no hay "Anterior" ni en la última "Siguiente": quedan grises, sin link
-      for (const step of pageSteps) {
-        const target = slice.page + Number(step.dataset.pageStep)
+      pageSteps = pageSteps.map((step) => {
+        const offset = Number(step.dataset.pageStep)
+        const target = slice.page + offset
+        let next: HTMLElement
         if (target >= 1 && target <= slice.pages) {
-          step.href = urlFor(target)
-          step.dataset.page = String(target)
-          step.removeAttribute('aria-disabled')
+          const link = document.createElement('a')
+          link.href = urlFor(target)
+          link.rel = offset < 0 ? 'prev' : 'next'
+          link.dataset.page = String(target)
+          next = link
         } else {
-          step.removeAttribute('href')
-          delete step.dataset.page
-          step.setAttribute('aria-disabled', 'true')
+          next = document.createElement('span')
+          next.setAttribute('aria-disabled', 'true')
         }
-      }
+        next.className = step.className
+        next.dataset.pageStep = step.dataset.pageStep
+        next.append(...step.childNodes)
+        step.replaceWith(next)
+        return next
+      })
     }
 
     const render = () => {
@@ -1327,10 +1336,10 @@ const origins = [
       grid-column: 1 / -1;
       justify-content: center;
     }
-    .pagination-step[rel='prev'] {
+    .pagination-step[data-page-step='-1'] {
       grid-area: 2 / 1;
     }
-    .pagination-step[rel='next'] {
+    .pagination-step[data-page-step='1'] {
       grid-area: 2 / 2;
     }
   }
