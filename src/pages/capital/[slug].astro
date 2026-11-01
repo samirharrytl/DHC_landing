@@ -32,7 +32,9 @@ const statusLabel = { published: 'Disponible', reserved: 'Reservado', sold: 'Ven
 const price = formatMoney(p.price.amount, p.price.currency)
 const facts = formatFacts(p)
 const similar = await getSimilarProperties(p, 4)
-const developer = p.developer ? (await getDevelopers()).find((d) => d.id === p.developer!.id) : undefined
+const developerId = p.developer?.id
+const developer =
+  developerId === undefined ? undefined : (await getDevelopers()).find((d) => d.id === developerId)
 
 const stats = [
   {

@@ -57,12 +57,13 @@ export function formToObject(form: HTMLFormElement): Json {
 
     const name = element.name === 'cf-turnstile-response' ? 'turnstileToken' : element.name
     const keys = name.split('.')
+    const last = keys.pop() ?? name
     let target = result
-    keys.slice(0, -1).forEach((key) => {
+    keys.forEach((key) => {
       target[key] ??= {}
       target = target[key] as Json
     })
-    target[keys.at(-1)!] = value
+    target[last] = value
   }
   return result
 }
@@ -79,7 +80,12 @@ export function getUtm(): Record<string, string> | undefined {
     )
     if (Object.keys(fromUrl).length) sessionStorage.setItem(KEY, JSON.stringify(fromUrl))
     const stored = sessionStorage.getItem(KEY)
-    return stored ? JSON.parse(stored) : undefined
+    if (!stored) return undefined
+    const parsed: unknown = JSON.parse(stored)
+    if (typeof parsed !== 'object' || parsed === null) return undefined
+    return Object.fromEntries(
+      Object.entries(parsed).filter((entry): entry is [string, string] => typeof entry[1] === 'string'),
+    )
   } catch {
     return undefined
   }
@@ -90,7 +96,9 @@ function clearErrors(form: HTMLFormElement) {
     el.textContent = ''
     el.hidden = true
   })
-  form.querySelectorAll('[aria-invalid="true"]').forEach((el) => el.removeAttribute('aria-invalid'))
+  form.querySelectorAll('[aria-invalid="true"]').forEach((el) => {
+    el.removeAttribute('aria-invalid')
+  })
 }
 
 function showFieldErrors(form: HTMLFormElement, issues: NonNullable<ApiError['issues']>) {
@@ -142,8 +150,13 @@ export function enhanceForm<P extends Json, T>(form: HTMLFormElement, options: E
   const messages = { ...DEFAULT_MESSAGES, ...options.messages }
   const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]')
 
-  form.addEventListener('submit', async (event) => {
+  // Un error inesperado llega al manejador global (y a Sentry si está activo)
+  form.addEventListener('submit', (event) => {
     event.preventDefault()
+    submitForm().catch(reportError)
+  })
+
+  async function submitForm() {
     clearErrors(form)
     if (!form.reportValidity()) return
 
@@ -182,7 +195,7 @@ export function enhanceForm<P extends Json, T>(form: HTMLFormElement, options: E
       submit?.removeAttribute('aria-busy')
       if (submit) submit.disabled = false
     }
-  })
+  }
 }
 
 export { setStatus as showFormStatus }

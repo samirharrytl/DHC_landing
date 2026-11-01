@@ -57,7 +57,16 @@ export async function syncSavedWithAccount() {
   store.subscribe((ids) => {
     clearTimeout(timer)
     timer = setTimeout(() => {
-      api.PUT('/v1/me/saved', { body: { propertyIds: ids } }).catch(() => {})
+      api.PUT('/v1/me/saved', { body: { propertyIds: ids } }).catch(() => {
+        // Sin red: se reenvía la lista completa apenas vuelva la conexión
+        addEventListener(
+          'online',
+          () => {
+            store.set(store.list())
+          },
+          { once: true },
+        )
+      })
     }, 600)
   })
 }

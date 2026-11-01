@@ -1,5 +1,5 @@
 // @vitest-environment happy-dom
-import { describe, expect, it } from 'vitest'
+import { assert, describe, expect, it } from 'vitest'
 import { formToObject } from '../../src/scripts/forms'
 
 describe('formToObject', () => {
@@ -18,7 +18,9 @@ describe('formToObject', () => {
         <textarea name="detail">Detalle</textarea>
         <input name="cf-turnstile-response" type="hidden" value="tok">
       </form>`
-    expect(formToObject(document.querySelector('form')!)).toEqual({
+    const form = document.querySelector('form')
+    assert(form)
+    expect(formToObject(form)).toEqual({
       consumer: { firstName: 'Ana', isMinor: false },
       item: { amount: 450.5 },
       amountUsd: 50000,

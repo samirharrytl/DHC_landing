@@ -6,7 +6,12 @@ import Icon from './Icon.astro'
 import Turnstile from './Turnstile.astro'
 
 // Franjas en hora de Lima: el equipo confirma la hora exacta por WhatsApp
-const timeSlots = ['Mañana (9:00 a 12:00)', 'Mediodía (12:00 a 15:00)', 'Tarde (15:00 a 18:00)', 'Noche (18:00 a 20:00)']
+const timeSlots = [
+  'Mañana (9:00 a 12:00)',
+  'Mediodía (12:00 a 15:00)',
+  'Tarde (15:00 a 18:00)',
+  'Noche (18:00 a 20:00)',
+]
 const modes = ['Videollamada', 'Llamada', 'Presencial']
 ---
 
@@ -61,15 +66,27 @@ const modes = ['Videollamada', 'Llamada', 'Presencial']
           <label for="schedule-email">
             Correo <span class="hint">opcional</span>
           </label>
-          <input id="schedule-email" name="email" type="email" autocomplete="email" placeholder="tu@correo.com" />
+          <input
+            id="schedule-email"
+            name="email"
+            type="email"
+            autocomplete="email"
+            placeholder="tu@correo.com"
+          />
           <p class="field-error" data-error-for="email" hidden></p>
         </div>
         <div class="field">
-          <label for="comment-email">
+          <label for="schedule-comment">
             Comentario <span class="hint">opcional</span>
           </label>
-          <input id="comment-email" name="comment" type="text" autocomplete="comment" placeholder="Algun detalle adicional" />
-          <p class="field-error" data-error-for="email" hidden></p>
+          <input
+            id="schedule-comment"
+            name="comment"
+            type="text"
+            autocomplete="off"
+            placeholder="Algún detalle adicional"
+          />
+          <p class="field-error" data-error-for="comment" hidden></p>
         </div>
 
         <div class="when">
@@ -81,7 +98,9 @@ const modes = ['Videollamada', 'Llamada', 'Presencial']
             <label for="schedule-slot">Horario</label>
             <select id="schedule-slot" name="details.horario" required>
               <option value="">Elige un horario</option>
-              {timeSlots.map((slot) => <option value={slot}>{slot}</option>)}
+              {timeSlots.map((slot) => (
+                <option value={slot}>{slot}</option>
+              ))}
             </select>
           </div>
         </div>
@@ -167,9 +186,12 @@ const modes = ['Videollamada', 'Llamada', 'Presencial']
 
     /** "2026-10-28" → "miércoles 28 de octubre" */
     const longDate = (iso: string) =>
-      new Intl.DateTimeFormat('es-PE', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC' }).format(
-        new Date(`${iso}T12:00:00Z`),
-      )
+      new Intl.DateTimeFormat('es-PE', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        timeZone: 'UTC',
+      }).format(new Date(`${iso}T12:00:00Z`))
 
     const showSummary = async () => {
       const summary = dialog.querySelector<HTMLElement>('[data-schedule-summary]')!

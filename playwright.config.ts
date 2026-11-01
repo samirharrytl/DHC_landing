@@ -22,7 +22,8 @@ export default defineConfig({
     command: `pnpm build && pnpm astro preview --port ${PORT} --host 127.0.0.1 --ignore-lock`,
     url: `http://127.0.0.1:${PORT}`,
     reuseExistingServer: !process.env.CI,
-    timeout: 180_000,
+    // Sin la caché de fotos optimizadas (primera vez o fotos nuevas), el build en CI pasa de 3 minutos
+    timeout: 10 * 60_000,
     // Pisan las del .env local: las pruebas no dependen de la configuración de cada máquina
     env: {
       PUBLIC_API_URL: 'https://api.test.local',

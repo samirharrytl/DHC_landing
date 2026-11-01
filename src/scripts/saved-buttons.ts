@@ -30,4 +30,6 @@ document.addEventListener('click', (event) => {
 store.subscribe(render)
 render(store.list())
 
-export const renderSaveButtons = () => render(store.list())
+export const renderSaveButtons = () => {
+  render(store.list())
+}

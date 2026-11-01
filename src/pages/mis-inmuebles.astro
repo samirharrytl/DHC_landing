@@ -5,6 +5,7 @@ import Icon from '../components/Icon.astro'
 import SavedDepa from '../components/SavedDepa.astro'
 import ScheduleDialog from '../components/ScheduleDialog.astro'
 import WhatsAppIcon from '../components/WhatsAppIcon.astro'
+import { waLink } from '../data/contacto'
 ---
 
 <BaseLayout
@@ -60,7 +61,7 @@ import WhatsAppIcon from '../components/WhatsAppIcon.astro'
         <a
           class="btn btn--whatsapp start-button is-disabled"
           data-contact-selection="now"
-          href="#"
+          href={waLink('Hola, quiero conversar sobre los inmuebles que guardé en Depa Host Perú.')}
           target="_blank"
           rel="noopener noreferrer"
           aria-disabled="true"
@@ -248,9 +249,11 @@ import WhatsAppIcon from '../components/WhatsAppIcon.astro'
         else button.removeAttribute('aria-disabled')
         button.classList.toggle('is-disabled', selected.length === 0)
       }
-      contactButtons.forEach((button) => {
-        button.href = selected.length ? waLink(whatsappMessage(button.dataset.contactSelection!)) : '#'
-      })
+      // Sin selección el botón está deshabilitado (el clic no hace nada): el link se actualiza al elegir
+      if (selected.length)
+        contactButtons.forEach((button) => {
+          button.href = waLink(whatsappMessage(button.dataset.contactSelection!))
+        })
     }
 
     // Registra el interés (sin datos personales) para que el equipo sepa qué inmuebles pidió

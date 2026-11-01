@@ -8,7 +8,7 @@ interface Props {
 const { label = 'Inmuebles destacados', id } = Astro.props
 ---
 
-<div class="property-grid" id={id} role="region" aria-label={label} tabindex="0">
+<div class="property-grid" id={id} role="region" aria-label={label}>
   <slot />
 </div>
 
@@ -18,7 +18,8 @@ const { label = 'Inmuebles destacados', id } = Astro.props
     gap: var(--grid-gap);
     /* Móvil: carrusel con scroll-snap (cada tarjeta "se acomoda" al soltar) */
     grid-auto-flow: column;
-    grid-auto-columns: max(85%, 254px); /* en 320px la tarjeta no baja de 254 (si no, no entran los botones) */
+    /* En 320px la tarjeta no baja de 254 (si no, no entran los botones) */
+    grid-auto-columns: max(85%, 254px);
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     overscroll-behavior-x: contain;

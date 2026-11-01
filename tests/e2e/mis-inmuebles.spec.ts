@@ -1,3 +1,4 @@
+import assert from 'node:assert/strict'
 import { expect, mockApi, test } from './fixtures'
 
 test('Me interesa → Guarda tus inmuebles → Mis inmuebles → WhatsApp', async ({ page }) => {
@@ -8,8 +9,8 @@ test('Me interesa → Guarda tus inmuebles → Mis inmuebles → WhatsApp', asyn
   await page.goto('/capital')
 
   const cards = page.locator('[data-property-card]')
-  const first = (await cards.nth(0).locator('h3').textContent())!.trim()
-  const second = (await cards.nth(1).locator('h3').textContent())!.trim()
+  const first = (await cards.nth(0).locator('h3').innerText()).trim()
+  const second = (await cards.nth(1).locator('h3').innerText()).trim()
   await cards
     .nth(0)
     .getByRole('button', { name: /Me interesa/ })
@@ -65,7 +66,8 @@ test('Me interesa → Guarda tus inmuebles → Mis inmuebles → WhatsApp', asyn
   await schedule.getByLabel('Nombre').fill('ana lucía')
   await schedule.getByLabel('Celular').fill('987654321')
   const day = await schedule.getByLabel('Día').getAttribute('min')
-  await schedule.getByLabel('Día').fill(day!)
+  assert.ok(day)
+  await schedule.getByLabel('Día').fill(day)
   await schedule.getByLabel('Horario').selectOption('Tarde (15:00 a 18:00)')
   await schedule.getByRole('radio', { name: 'Llamada', exact: true }).check()
   await schedule.getByRole('checkbox').check()
@@ -108,9 +110,9 @@ test('las direcciones anteriores conservan los filtros y el inmueble a agregar',
   await expect(page.locator('[data-results] [data-property-card]:visible')).toHaveCount(1)
 
   await page.goto('/capital/miraflores-calle-schell-cuadra-3')
-  const id = (await page.getByRole('link', { name: 'Contactar', exact: true }).getAttribute('href'))!.split(
-    '=',
-  )[1]
+  const href = await page.getByRole('link', { name: 'Contactar', exact: true }).getAttribute('href')
+  const [, id] = href?.split('=') ?? []
+  assert.ok(id)
   await page.goto(`/mis-depas?agregar=${id}`)
   await expect(page).toHaveURL(/\/mis-inmuebles\/?$/)
   await expect(page.locator('[data-saved-list] article')).toHaveCount(1)

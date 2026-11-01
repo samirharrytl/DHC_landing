@@ -2094,6 +2094,84 @@ export interface paths {
         };
         trace?: never;
     };
+    "/v1/admin/engine/matches": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Match entre inmuebles disponibles y personas interesadas
+         * @description Para cada persona con interés (cuentas y leads), los inmuebles que pidió y las mejores sugerencias, con puntaje y motivos.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["MatchReport"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/engine/prices": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Precio sugerido de cada inmueble y solicitud
+         * @description Valor estimado con su rango, la diferencia con el precio actual (o el esperado por el propietario), los factores y los comparables usados.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["PriceReport"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -2328,6 +2406,15 @@ export interface components {
             width: number | null;
             height: number | null;
         };
+        LocationInput: {
+            lat: number;
+            lng: number;
+        };
+        VideoInput: {
+            /** Format: uri */
+            url: string;
+            title: string | null;
+        };
         PropertyInput: {
             /** Format: uuid */
             id: string;
@@ -2342,6 +2429,7 @@ export interface components {
             address: string;
             badge: string | null;
             description: string | null;
+            location: components["schemas"]["LocationInput"] | null;
             price: {
                 /** @description Monto sin decimales */
                 amount: number;
@@ -2360,6 +2448,7 @@ export interface components {
             bedrooms: number | null;
             bathrooms: number | null;
             images: components["schemas"]["PropertyImageInput"][];
+            videos: components["schemas"]["VideoInput"][];
             featured: boolean;
             /** @enum {string} */
             status: "published" | "reserved" | "sold";
@@ -2403,6 +2492,7 @@ export interface components {
             address: string;
             badge: string | null;
             description: string | null;
+            location: components["schemas"]["LocationInput"] | null;
             price: {
                 /** @description Monto sin decimales */
                 amount: number;
@@ -2421,6 +2511,7 @@ export interface components {
             bedrooms: number | null;
             bathrooms: number | null;
             images: components["schemas"]["PropertyImageInput"][];
+            videos: components["schemas"]["VideoInput"][];
             featured: boolean;
             /** @enum {string} */
             status: "draft" | "published" | "reserved" | "sold";
@@ -2446,6 +2537,7 @@ export interface components {
             address: string;
             badge?: string | null;
             description?: string | null;
+            location?: components["schemas"]["LocationInput"] | null;
             price: {
                 /** @description Monto sin decimales */
                 amount: number;
@@ -2469,6 +2561,12 @@ export interface components {
                 alt: string;
                 width?: number | null;
                 height?: number | null;
+            }[];
+            /** @default [] */
+            videos: {
+                /** Format: uri */
+                url: string;
+                title?: string | null;
             }[];
             /**
              * @default draft
@@ -2494,6 +2592,7 @@ export interface components {
             address?: string;
             badge?: string | null;
             description?: string | null;
+            location?: components["schemas"]["LocationInput"] | null;
             price?: {
                 /** @description Monto sin decimales */
                 amount: number;
@@ -2517,6 +2616,12 @@ export interface components {
                 alt: string;
                 width?: number | null;
                 height?: number | null;
+            }[];
+            /** @default [] */
+            videos: {
+                /** Format: uri */
+                url: string;
+                title?: string | null;
             }[];
             /**
              * @default draft
@@ -2825,6 +2930,234 @@ export interface components {
             publicUrl: string;
             expiresIn: number;
         };
+        MatchReasonInput: {
+            /** @description Regla: cart, saved, saved-list, district, price, budget, yield, bedrooms… */
+            code: string;
+            label: string;
+            /** @description Puntos que suma (o resta, si es negativo) */
+            points: number;
+        };
+        MatchPersonInput: {
+            /** @description user:<id> para cuentas · lead:<correo o celular> para leads sin cuenta */
+            id: string;
+            /** @enum {string} */
+            kind: "account" | "lead";
+            userId: string | null;
+            name: string;
+            email: string | null;
+            phone: string | null;
+            role: ("buyer" | "seller") | null;
+            /** @description Estado de su consulta más reciente */
+            leadStatus: ("new" | "contacted" | "closed") | null;
+            sources: ("intl-form" | "owner-sell" | "owner-rent" | "cart" | "contact" | "saved-list")[];
+            lastActivityAt: string | null;
+            profile: {
+                /** @description Distritos de lo que le interesó, del más frecuente al menos */
+                districts: string[];
+                /** @description En soles */
+                priceRange: {
+                    min: number;
+                    max: number;
+                } | null;
+                budgetUsd: number | null;
+                minYield: number | null;
+                bedrooms: number[];
+            };
+            signals: {
+                /** @description Inmuebles guardados en Mis inmuebles */
+                saved: number;
+                /** @description Inmuebles que pidió con "Conversemos ahora", "Programar una sesión" o "Guarda tus inmuebles" */
+                requested: number;
+            };
+        };
+        MatchPropertyInput: {
+            /** Format: uuid */
+            id: string;
+            slug: string;
+            district: string;
+            address: string;
+            /** @enum {string} */
+            status: "published" | "reserved";
+            price: {
+                amount: number;
+                /** @enum {string} */
+                currency: "PEN" | "USD";
+            };
+            yield: {
+                min: number;
+                max: number;
+            };
+            bedrooms: number | null;
+            areaM2: number | null;
+            image: string | null;
+        };
+        MatchInput: {
+            personId: string;
+            /** Format: uuid */
+            propertyId: string;
+            score: number;
+            /**
+             * @description high: 75 o más · medium: 50 a 74 · low: menos de 50
+             * @enum {string}
+             */
+            level: "high" | "medium" | "low";
+            /** @description true: la persona mostró interés en este inmueble · false: sugerencia del motor */
+            explicit: boolean;
+            reasons: components["schemas"]["MatchReasonInput"][];
+        };
+        MatchReportInput: {
+            /**
+             * @description Resultados de reglas fijas, no de un modelo entrenado
+             * @constant
+             */
+            simulated: true;
+            version: string;
+            /** Format: date-time */
+            generatedAt: string;
+            people: components["schemas"]["MatchPersonInput"][];
+            /** @description Solo inmuebles publicados o reservados */
+            properties: components["schemas"]["MatchPropertyInput"][];
+            matches: components["schemas"]["MatchInput"][];
+        };
+        PriceFactorInput: {
+            code: string;
+            label: string;
+            /** @description Cuánto mueve el precio por m², en % */
+            impactPct: number;
+        };
+        PriceEstimateInput: {
+            amount: number;
+            low: number;
+            high: number;
+            /** @enum {string} */
+            currency: "PEN" | "USD";
+            /**
+             * @description total: precio de venta · month: ingreso por mes
+             * @enum {string}
+             */
+            unit: "total" | "month";
+            /** @description Valor de venta estimado por m², en soles */
+            pricePerM2: number;
+            /** @description Referencia del distrito, en soles por m² */
+            marketPricePerM2: number;
+            /** @description Solo Airbnb: tarifa por noche en soles */
+            nightlyRate: number | null;
+        };
+        PriceComparableInput: {
+            /** Format: uuid */
+            id: string;
+            slug: string;
+            district: string;
+            address: string;
+            /** @enum {string} */
+            status: "draft" | "published" | "reserved" | "sold";
+            areaM2: number;
+            /** @description En soles */
+            pricePerM2: number;
+        };
+        PricedPropertyInput: {
+            property: {
+                /** Format: uuid */
+                id: string;
+                slug: string;
+                district: string;
+                address: string;
+                /** @enum {string} */
+                status: "draft" | "published" | "reserved" | "sold";
+                /**
+                 * @description owner: lo publica un propietario · developer: proyecto de una inmobiliaria aliada
+                 * @enum {string}
+                 */
+                origin: "owner" | "developer";
+                price: {
+                    amount: number;
+                    /** @enum {string} */
+                    currency: "PEN" | "USD";
+                };
+                areaM2: number | null;
+                bedrooms: number | null;
+                bathrooms: number | null;
+                image: string | null;
+            };
+            /** @description null si falta el área */
+            estimate: components["schemas"]["PriceEstimateInput"] | null;
+            /** @description Precio actual (o esperado) contra lo estimado, en % */
+            deltaPct: number | null;
+            /**
+             * @description above: sobre el rango · fair: dentro · below: debajo · unknown: sin estimación o sin precio
+             * @enum {string}
+             */
+            verdict: "above" | "fair" | "below" | "unknown";
+            /** @enum {string} */
+            confidence: "high" | "medium" | "low";
+            factors: components["schemas"]["PriceFactorInput"][];
+            comparables: components["schemas"]["PriceComparableInput"][];
+            demand: {
+                saves: number;
+                leads: number;
+            };
+        };
+        PricedRequestInput: {
+            request: {
+                /** Format: uuid */
+                id: string;
+                district: string;
+                address: string;
+                propertyType: string;
+                /**
+                 * @description Vender, alquilar a largo plazo u operar en Airbnb
+                 * @enum {string}
+                 */
+                intent: "sell" | "rent" | "airbnb";
+                /**
+                 * @description submitted: enviada · in_review: en revisión · approved: publicada · rejected: rechazada
+                 * @enum {string}
+                 */
+                status: "submitted" | "in_review" | "approved" | "rejected";
+                /** @description Venta: precio total · alquiler y Airbnb: por mes */
+                expectedPrice: number | null;
+                areaM2: number | null;
+                bedrooms: number | null;
+                bathrooms: number | null;
+                owner: string;
+            };
+            /** @description null si falta el área */
+            estimate: components["schemas"]["PriceEstimateInput"] | null;
+            /** @description Precio actual (o esperado) contra lo estimado, en % */
+            deltaPct: number | null;
+            /**
+             * @description above: sobre el rango · fair: dentro · below: debajo · unknown: sin estimación o sin precio
+             * @enum {string}
+             */
+            verdict: "above" | "fair" | "below" | "unknown";
+            /** @enum {string} */
+            confidence: "high" | "medium" | "low";
+            factors: components["schemas"]["PriceFactorInput"][];
+            comparables: components["schemas"]["PriceComparableInput"][];
+        };
+        PriceReportInput: {
+            /**
+             * @description Resultados de reglas fijas, no de un modelo entrenado
+             * @constant
+             */
+            simulated: true;
+            version: string;
+            /** Format: date-time */
+            generatedAt: string;
+            /**
+             * Format: date
+             * @description Fecha de la tabla de precios por distrito
+             */
+            marketAsOf: string;
+            /** @description Soles por dólar */
+            exchangeRate: number;
+            /** @description Diferencia, en %, desde la que un precio queda fuera de rango */
+            fairBandPct: number;
+            /** @description Inmuebles publicados, reservados y borradores */
+            properties: components["schemas"]["PricedPropertyInput"][];
+            /** @description Solicitudes de propietarios enviadas o en revisión */
+            requests: components["schemas"]["PricedRequestInput"][];
+        };
         DistrictCreateInput: {
             name: string;
         };
@@ -3075,6 +3408,15 @@ export interface components {
             width: number | null;
             height: number | null;
         };
+        Location: {
+            lat: number;
+            lng: number;
+        };
+        Video: {
+            /** Format: uri */
+            url: string;
+            title: string | null;
+        };
         Property: {
             /** Format: uuid */
             id: string;
@@ -3089,6 +3431,7 @@ export interface components {
             address: string;
             badge: string | null;
             description: string | null;
+            location: components["schemas"]["Location"] | null;
             price: {
                 /** @description Monto sin decimales */
                 amount: number;
@@ -3107,6 +3450,7 @@ export interface components {
             bedrooms: number | null;
             bathrooms: number | null;
             images: components["schemas"]["PropertyImage"][];
+            videos: components["schemas"]["Video"][];
             featured: boolean;
             /** @enum {string} */
             status: "published" | "reserved" | "sold";
@@ -3150,6 +3494,7 @@ export interface components {
             address: string;
             badge: string | null;
             description: string | null;
+            location: components["schemas"]["Location"] | null;
             price: {
                 /** @description Monto sin decimales */
                 amount: number;
@@ -3168,6 +3513,7 @@ export interface components {
             bedrooms: number | null;
             bathrooms: number | null;
             images: components["schemas"]["PropertyImage"][];
+            videos: components["schemas"]["Video"][];
             featured: boolean;
             /** @enum {string} */
             status: "draft" | "published" | "reserved" | "sold";
@@ -3193,6 +3539,7 @@ export interface components {
             address: string;
             badge?: string | null;
             description?: string | null;
+            location?: components["schemas"]["Location"] | null;
             price: {
                 /** @description Monto sin decimales */
                 amount: number;
@@ -3216,6 +3563,12 @@ export interface components {
                 alt: string;
                 width?: number | null;
                 height?: number | null;
+            }[];
+            /** @default [] */
+            videos: {
+                /** Format: uri */
+                url: string;
+                title?: string | null;
             }[];
             /**
              * @default draft
@@ -3241,6 +3594,7 @@ export interface components {
             address?: string;
             badge?: string | null;
             description?: string | null;
+            location?: components["schemas"]["Location"] | null;
             price?: {
                 /** @description Monto sin decimales */
                 amount: number;
@@ -3264,6 +3618,12 @@ export interface components {
                 alt: string;
                 width?: number | null;
                 height?: number | null;
+            }[];
+            /** @default [] */
+            videos: {
+                /** Format: uri */
+                url: string;
+                title?: string | null;
             }[];
             /**
              * @default draft
@@ -3571,6 +3931,234 @@ export interface components {
              */
             publicUrl: string;
             expiresIn: number;
+        };
+        MatchReason: {
+            /** @description Regla: cart, saved, saved-list, district, price, budget, yield, bedrooms… */
+            code: string;
+            label: string;
+            /** @description Puntos que suma (o resta, si es negativo) */
+            points: number;
+        };
+        MatchPerson: {
+            /** @description user:<id> para cuentas · lead:<correo o celular> para leads sin cuenta */
+            id: string;
+            /** @enum {string} */
+            kind: "account" | "lead";
+            userId: string | null;
+            name: string;
+            email: string | null;
+            phone: string | null;
+            role: ("buyer" | "seller") | null;
+            /** @description Estado de su consulta más reciente */
+            leadStatus: ("new" | "contacted" | "closed") | null;
+            sources: ("intl-form" | "owner-sell" | "owner-rent" | "cart" | "contact" | "saved-list")[];
+            lastActivityAt: string | null;
+            profile: {
+                /** @description Distritos de lo que le interesó, del más frecuente al menos */
+                districts: string[];
+                /** @description En soles */
+                priceRange: {
+                    min: number;
+                    max: number;
+                } | null;
+                budgetUsd: number | null;
+                minYield: number | null;
+                bedrooms: number[];
+            };
+            signals: {
+                /** @description Inmuebles guardados en Mis inmuebles */
+                saved: number;
+                /** @description Inmuebles que pidió con "Conversemos ahora", "Programar una sesión" o "Guarda tus inmuebles" */
+                requested: number;
+            };
+        };
+        MatchProperty: {
+            /** Format: uuid */
+            id: string;
+            slug: string;
+            district: string;
+            address: string;
+            /** @enum {string} */
+            status: "published" | "reserved";
+            price: {
+                amount: number;
+                /** @enum {string} */
+                currency: "PEN" | "USD";
+            };
+            yield: {
+                min: number;
+                max: number;
+            };
+            bedrooms: number | null;
+            areaM2: number | null;
+            image: string | null;
+        };
+        Match: {
+            personId: string;
+            /** Format: uuid */
+            propertyId: string;
+            score: number;
+            /**
+             * @description high: 75 o más · medium: 50 a 74 · low: menos de 50
+             * @enum {string}
+             */
+            level: "high" | "medium" | "low";
+            /** @description true: la persona mostró interés en este inmueble · false: sugerencia del motor */
+            explicit: boolean;
+            reasons: components["schemas"]["MatchReason"][];
+        };
+        MatchReport: {
+            /**
+             * @description Resultados de reglas fijas, no de un modelo entrenado
+             * @constant
+             */
+            simulated: true;
+            version: string;
+            /** Format: date-time */
+            generatedAt: string;
+            people: components["schemas"]["MatchPerson"][];
+            /** @description Solo inmuebles publicados o reservados */
+            properties: components["schemas"]["MatchProperty"][];
+            matches: components["schemas"]["Match"][];
+        };
+        PriceFactor: {
+            code: string;
+            label: string;
+            /** @description Cuánto mueve el precio por m², en % */
+            impactPct: number;
+        };
+        PriceEstimate: {
+            amount: number;
+            low: number;
+            high: number;
+            /** @enum {string} */
+            currency: "PEN" | "USD";
+            /**
+             * @description total: precio de venta · month: ingreso por mes
+             * @enum {string}
+             */
+            unit: "total" | "month";
+            /** @description Valor de venta estimado por m², en soles */
+            pricePerM2: number;
+            /** @description Referencia del distrito, en soles por m² */
+            marketPricePerM2: number;
+            /** @description Solo Airbnb: tarifa por noche en soles */
+            nightlyRate: number | null;
+        };
+        PriceComparable: {
+            /** Format: uuid */
+            id: string;
+            slug: string;
+            district: string;
+            address: string;
+            /** @enum {string} */
+            status: "draft" | "published" | "reserved" | "sold";
+            areaM2: number;
+            /** @description En soles */
+            pricePerM2: number;
+        };
+        PricedProperty: {
+            property: {
+                /** Format: uuid */
+                id: string;
+                slug: string;
+                district: string;
+                address: string;
+                /** @enum {string} */
+                status: "draft" | "published" | "reserved" | "sold";
+                /**
+                 * @description owner: lo publica un propietario · developer: proyecto de una inmobiliaria aliada
+                 * @enum {string}
+                 */
+                origin: "owner" | "developer";
+                price: {
+                    amount: number;
+                    /** @enum {string} */
+                    currency: "PEN" | "USD";
+                };
+                areaM2: number | null;
+                bedrooms: number | null;
+                bathrooms: number | null;
+                image: string | null;
+            };
+            /** @description null si falta el área */
+            estimate: components["schemas"]["PriceEstimate"] | null;
+            /** @description Precio actual (o esperado) contra lo estimado, en % */
+            deltaPct: number | null;
+            /**
+             * @description above: sobre el rango · fair: dentro · below: debajo · unknown: sin estimación o sin precio
+             * @enum {string}
+             */
+            verdict: "above" | "fair" | "below" | "unknown";
+            /** @enum {string} */
+            confidence: "high" | "medium" | "low";
+            factors: components["schemas"]["PriceFactor"][];
+            comparables: components["schemas"]["PriceComparable"][];
+            demand: {
+                saves: number;
+                leads: number;
+            };
+        };
+        PricedRequest: {
+            request: {
+                /** Format: uuid */
+                id: string;
+                district: string;
+                address: string;
+                propertyType: string;
+                /**
+                 * @description Vender, alquilar a largo plazo u operar en Airbnb
+                 * @enum {string}
+                 */
+                intent: "sell" | "rent" | "airbnb";
+                /**
+                 * @description submitted: enviada · in_review: en revisión · approved: publicada · rejected: rechazada
+                 * @enum {string}
+                 */
+                status: "submitted" | "in_review" | "approved" | "rejected";
+                /** @description Venta: precio total · alquiler y Airbnb: por mes */
+                expectedPrice: number | null;
+                areaM2: number | null;
+                bedrooms: number | null;
+                bathrooms: number | null;
+                owner: string;
+            };
+            /** @description null si falta el área */
+            estimate: components["schemas"]["PriceEstimate"] | null;
+            /** @description Precio actual (o esperado) contra lo estimado, en % */
+            deltaPct: number | null;
+            /**
+             * @description above: sobre el rango · fair: dentro · below: debajo · unknown: sin estimación o sin precio
+             * @enum {string}
+             */
+            verdict: "above" | "fair" | "below" | "unknown";
+            /** @enum {string} */
+            confidence: "high" | "medium" | "low";
+            factors: components["schemas"]["PriceFactor"][];
+            comparables: components["schemas"]["PriceComparable"][];
+        };
+        PriceReport: {
+            /**
+             * @description Resultados de reglas fijas, no de un modelo entrenado
+             * @constant
+             */
+            simulated: true;
+            version: string;
+            /** Format: date-time */
+            generatedAt: string;
+            /**
+             * Format: date
+             * @description Fecha de la tabla de precios por distrito
+             */
+            marketAsOf: string;
+            /** @description Soles por dólar */
+            exchangeRate: number;
+            /** @description Diferencia, en %, desde la que un precio queda fuera de rango */
+            fairBandPct: number;
+            /** @description Inmuebles publicados, reservados y borradores */
+            properties: components["schemas"]["PricedProperty"][];
+            /** @description Solicitudes de propietarios enviadas o en revisión */
+            requests: components["schemas"]["PricedRequest"][];
         };
         DistrictCreate: {
             name: string;

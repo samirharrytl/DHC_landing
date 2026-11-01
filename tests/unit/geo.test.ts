@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { assert, describe, expect, it } from 'vitest'
 import {
   depaPosition,
   distanceKm,
@@ -10,8 +10,9 @@ import {
 
 describe('geo', () => {
   it('mide la distancia en línea recta', () => {
-    const kennedy = placeBySlug('parque-kennedy')!
-    const larcomar = placeBySlug('larcomar')!
+    const kennedy = placeBySlug('parque-kennedy')
+    const larcomar = placeBySlug('larcomar')
+    assert(kennedy && larcomar)
     expect(distanceKm(kennedy, larcomar)).toBeCloseTo(1.16, 1)
     expect(distanceKm(kennedy, kennedy)).toBe(0)
   })

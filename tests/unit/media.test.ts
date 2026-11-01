@@ -13,7 +13,7 @@ describe('parseVideo', () => {
       expect(parseVideo(url)).toMatchObject({ kind: 'youtube', id: 'dQw4w9WgXcQ' })
     }
     expect(parseVideo('https://youtu.be/dQw4w9WgXcQ')).toMatchObject({
-      embedUrl: expect.stringContaining('youtube-nocookie.com/embed/dQw4w9WgXcQ'),
+      embedUrl: 'https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?autoplay=1&rel=0&playsinline=1',
     })
   })
 

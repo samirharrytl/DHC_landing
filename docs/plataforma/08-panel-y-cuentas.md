@@ -119,6 +119,7 @@ classDiagram
 | `/admin`, `/admin/depas`, `/admin/depas/nuevo`, `/admin/depas/:id` | Admin | Resumen y catálogo |
 | `/admin/solicitudes`, `/admin/solicitudes/:id` | Admin | Revisión de propietarios |
 | `/admin/leads`, `/admin/reclamos`, `/admin/inmobiliarias`, `/admin/usuarios`, `/admin/configuracion` | Admin | Gestión |
+| `/admin/match`, `/admin/precios` (`?solicitud=` abre una) | Admin | Motor simulado |
 
 ```mermaid
 flowchart TB
@@ -303,15 +304,17 @@ sequenceDiagram
 
 | Pantalla | Qué muestra | Acciones |
 |---|---|---|
-| Resumen | Leads sin contactar, reclamos pendientes y por vencer, solicitudes por revisar, inmuebles publicados, cuentas por rol | Ir a cada lista |
-| Inmuebles | Todo el catálogo con búsqueda y filtros por estado y origen | Crear, editar, borrar, ver en el sitio |
-| Formulario de inmueble | Ubicación y origen, números, presentación y fotos (con orden y portada) | Guardar como borrador o publicar |
-| Solicitudes | Por estado, con datos del propietario | Pasar a revisión, publicar como inmueble, no aprobar con comentario, escribir por WhatsApp |
+| Resumen | Leads sin contactar, reclamos pendientes y por vencer, solicitudes por revisar, depas publicados, cuentas por rol | Ir a cada lista |
+| Depas | Todo el catálogo con búsqueda y filtros por estado y origen | Crear, editar, borrar, ver en el sitio |
+| Formulario de depa | Ubicación y origen, números, presentación y fotos (con orden y portada) | Guardar como borrador o publicar |
+| Solicitudes | Por estado, con datos del propietario | Pasar a revisión, publicar como depa, no aprobar con comentario, escribir por WhatsApp, ver el precio sugerido |
 | Leads | Por estado y origen, con contacto y detalle desplegable | Mover por el embudo: sin contactar, en conversación, cerrado |
 | Reclamos | Pendientes primero, con plazo y alerta de vencidos | Leer la hoja completa y responder por correo |
 | Inmobiliarias | Nombre, descripción y proyectos | Crear y editar |
 | Usuarios | Búsqueda por nombre o correo y filtro por rol | Cambiar el rol (nunca el propio) |
 | Configuración | Supuestos de financiamiento con vista previa del texto del sitio, y distritos | Agregar supuestos y distritos |
+| Match (simulado) | Por inmueble o por persona: interesados y sugerencias del motor, con puntaje, motivos y perfil de búsqueda | Filtrar por tipo y afinidad, escribir por WhatsApp o correo, ofrecer las sugerencias |
+| Precio sugerido (simulado) | Inmuebles del catálogo y solicitudes por tasar: valor estimado, rango, diferencia, confianza, cómo se calculó y comparables | Filtrar por resultado y estado, ir a editar el precio o a la solicitud |
 
 ## 7. Identidad visual
 

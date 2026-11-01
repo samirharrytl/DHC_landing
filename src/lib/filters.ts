@@ -72,10 +72,12 @@ export function parseFilters(active: Iterable<[string, string]>): PropertyFilter
 
 const PRICE_STEP = 50_000
 
+// Con largo impar, lower y upper son el mismo elemento
 const median = (values: number[]) => {
   const sorted = [...values].sort((a, b) => a - b)
-  const mid = Math.floor(sorted.length / 2)
-  return sorted.length % 2 ? sorted[mid]! : (sorted[mid - 1]! + sorted[mid]!) / 2
+  const lower = sorted[Math.ceil(sorted.length / 2) - 1] ?? 0
+  const upper = sorted[Math.floor(sorted.length / 2)] ?? 0
+  return (lower + upper) / 2
 }
 /** El candidato más cercano a la mediana; a igual distancia, el mayor. */
 const closestTo = (target: number, candidates: number[]) =>

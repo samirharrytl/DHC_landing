@@ -940,6 +940,44 @@
           "height"
         ]
       },
+      "LocationInput": {
+        "type": "object",
+        "properties": {
+          "lat": {
+            "type": "number",
+            "minimum": -90,
+            "maximum": 90
+          },
+          "lng": {
+            "type": "number",
+            "minimum": -180,
+            "maximum": 180
+          }
+        },
+        "required": [
+          "lat",
+          "lng"
+        ]
+      },
+      "VideoInput": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "title": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "url",
+          "title"
+        ]
+      },
       "PropertyInput": {
         "type": "object",
         "properties": {
@@ -985,6 +1023,16 @@
             "type": [
               "string",
               "null"
+            ]
+          },
+          "location": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/LocationInput"
+              },
+              {
+                "type": "null"
+              }
             ]
           },
           "price": {
@@ -1060,6 +1108,12 @@
               "$ref": "#/components/schemas/PropertyImageInput"
             }
           },
+          "videos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VideoInput"
+            }
+          },
           "featured": {
             "type": "boolean"
           },
@@ -1086,6 +1140,7 @@
           "address",
           "badge",
           "description",
+          "location",
           "price",
           "yield",
           "paybackYears",
@@ -1093,6 +1148,7 @@
           "bedrooms",
           "bathrooms",
           "images",
+          "videos",
           "featured",
           "status",
           "publishedAt"
@@ -1261,6 +1317,16 @@
               "null"
             ]
           },
+          "location": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/LocationInput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "price": {
             "type": "object",
             "properties": {
@@ -1334,6 +1400,12 @@
               "$ref": "#/components/schemas/PropertyImageInput"
             }
           },
+          "videos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VideoInput"
+            }
+          },
           "featured": {
             "type": "boolean"
           },
@@ -1378,6 +1450,7 @@
           "address",
           "badge",
           "description",
+          "location",
           "price",
           "yield",
           "paybackYears",
@@ -1385,6 +1458,7 @@
           "bedrooms",
           "bathrooms",
           "images",
+          "videos",
           "featured",
           "status",
           "publishedAt",
@@ -1449,6 +1523,16 @@
               {
                 "type": "string",
                 "maxLength": 5000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "location": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/LocationInput"
               },
               {
                 "type": "null"
@@ -1580,6 +1664,34 @@
               ]
             }
           },
+          "videos": {
+            "default": [],
+            "maxItems": 30,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "url": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "title": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "maxLength": 200
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "url"
+              ]
+            }
+          },
           "status": {
             "default": "draft",
             "type": "string",
@@ -1660,6 +1772,16 @@
               {
                 "type": "string",
                 "maxLength": 5000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "location": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/LocationInput"
               },
               {
                 "type": "null"
@@ -1788,6 +1910,34 @@
               "required": [
                 "url",
                 "alt"
+              ]
+            }
+          },
+          "videos": {
+            "default": [],
+            "maxItems": 30,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "url": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "title": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "maxLength": 200
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "url"
               ]
             }
           },
@@ -3167,6 +3317,952 @@
           "expiresIn"
         ]
       },
+      "MatchReasonInput": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Regla: cart, saved, saved-list, district, price, budget, yield, bedrooms…"
+          },
+          "label": {
+            "type": "string"
+          },
+          "points": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991,
+            "description": "Puntos que suma (o resta, si es negativo)"
+          }
+        },
+        "required": [
+          "code",
+          "label",
+          "points"
+        ]
+      },
+      "MatchPersonInput": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "user:<id> para cuentas · lead:<correo o celular> para leads sin cuenta"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "account",
+              "lead"
+            ]
+          },
+          "userId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "phone": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "role": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "buyer",
+                  "seller"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "leadStatus": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "new",
+                  "contacted",
+                  "closed"
+                ],
+                "description": "new: sin contactar · contacted: en conversación · closed: cerrado"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Estado de su consulta más reciente"
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "intl-form",
+                "owner-sell",
+                "owner-rent",
+                "cart",
+                "contact",
+                "saved-list"
+              ],
+              "description": "intl-form: formulario en inglés · owner-*: propietarios · cart: \"Conversemos ahora\" o \"Programar una sesión\" de Mis inmuebles · saved-list: \"Guarda tus inmuebles\""
+            }
+          },
+          "lastActivityAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "profile": {
+            "type": "object",
+            "properties": {
+              "districts": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Distritos de lo que le interesó, del más frecuente al menos"
+              },
+              "priceRange": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "min": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "max": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      }
+                    },
+                    "required": [
+                      "min",
+                      "max"
+                    ]
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "En soles"
+              },
+              "budgetUsd": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": -9007199254740991,
+                    "maximum": 9007199254740991
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "minYield": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "bedrooms": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                }
+              }
+            },
+            "required": [
+              "districts",
+              "priceRange",
+              "budgetUsd",
+              "minYield",
+              "bedrooms"
+            ]
+          },
+          "signals": {
+            "type": "object",
+            "properties": {
+              "saved": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991,
+                "description": "Inmuebles guardados en Mis inmuebles"
+              },
+              "requested": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991,
+                "description": "Inmuebles que pidió con \"Conversemos ahora\", \"Programar una sesión\" o \"Guarda tus inmuebles\""
+              }
+            },
+            "required": [
+              "saved",
+              "requested"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "kind",
+          "userId",
+          "name",
+          "email",
+          "phone",
+          "role",
+          "leadStatus",
+          "sources",
+          "lastActivityAt",
+          "profile",
+          "signals"
+        ]
+      },
+      "MatchPropertyInput": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "district": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "published",
+              "reserved"
+            ]
+          },
+          "price": {
+            "type": "object",
+            "properties": {
+              "amount": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "currency": {
+                "type": "string",
+                "enum": [
+                  "PEN",
+                  "USD"
+                ]
+              }
+            },
+            "required": [
+              "amount",
+              "currency"
+            ]
+          },
+          "yield": {
+            "type": "object",
+            "properties": {
+              "min": {
+                "type": "number"
+              },
+              "max": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "min",
+              "max"
+            ]
+          },
+          "bedrooms": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "areaM2": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "image": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "district",
+          "address",
+          "status",
+          "price",
+          "yield",
+          "bedrooms",
+          "areaM2",
+          "image"
+        ]
+      },
+      "MatchInput": {
+        "type": "object",
+        "properties": {
+          "personId": {
+            "type": "string"
+          },
+          "propertyId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "score": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 99
+          },
+          "level": {
+            "type": "string",
+            "enum": [
+              "high",
+              "medium",
+              "low"
+            ],
+            "description": "high: 75 o más · medium: 50 a 74 · low: menos de 50"
+          },
+          "explicit": {
+            "type": "boolean",
+            "description": "true: la persona mostró interés en este inmueble · false: sugerencia del motor"
+          },
+          "reasons": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MatchReasonInput"
+            }
+          }
+        },
+        "required": [
+          "personId",
+          "propertyId",
+          "score",
+          "level",
+          "explicit",
+          "reasons"
+        ]
+      },
+      "MatchReportInput": {
+        "type": "object",
+        "properties": {
+          "simulated": {
+            "type": "boolean",
+            "const": true,
+            "description": "Resultados de reglas fijas, no de un modelo entrenado"
+          },
+          "version": {
+            "type": "string"
+          },
+          "generatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+          },
+          "people": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MatchPersonInput"
+            }
+          },
+          "properties": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MatchPropertyInput"
+            },
+            "description": "Solo inmuebles publicados o reservados"
+          },
+          "matches": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MatchInput"
+            }
+          }
+        },
+        "required": [
+          "simulated",
+          "version",
+          "generatedAt",
+          "people",
+          "properties",
+          "matches"
+        ]
+      },
+      "PriceFactorInput": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "impactPct": {
+            "type": "number",
+            "description": "Cuánto mueve el precio por m², en %"
+          }
+        },
+        "required": [
+          "code",
+          "label",
+          "impactPct"
+        ]
+      },
+      "PriceEstimateInput": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "low": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "high": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "currency": {
+            "type": "string",
+            "enum": [
+              "PEN",
+              "USD"
+            ]
+          },
+          "unit": {
+            "type": "string",
+            "enum": [
+              "total",
+              "month"
+            ],
+            "description": "total: precio de venta · month: ingreso por mes"
+          },
+          "pricePerM2": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991,
+            "description": "Valor de venta estimado por m², en soles"
+          },
+          "marketPricePerM2": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991,
+            "description": "Referencia del distrito, en soles por m²"
+          },
+          "nightlyRate": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Solo Airbnb: tarifa por noche en soles"
+          }
+        },
+        "required": [
+          "amount",
+          "low",
+          "high",
+          "currency",
+          "unit",
+          "pricePerM2",
+          "marketPricePerM2",
+          "nightlyRate"
+        ]
+      },
+      "PriceComparableInput": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "district": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "published",
+              "reserved",
+              "sold"
+            ]
+          },
+          "areaM2": {
+            "type": "number"
+          },
+          "pricePerM2": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991,
+            "description": "En soles"
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "district",
+          "address",
+          "status",
+          "areaM2",
+          "pricePerM2"
+        ]
+      },
+      "PricedPropertyInput": {
+        "type": "object",
+        "properties": {
+          "property": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              },
+              "slug": {
+                "type": "string"
+              },
+              "district": {
+                "type": "string"
+              },
+              "address": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "draft",
+                  "published",
+                  "reserved",
+                  "sold"
+                ]
+              },
+              "origin": {
+                "type": "string",
+                "enum": [
+                  "owner",
+                  "developer"
+                ],
+                "description": "owner: lo publica un propietario · developer: proyecto de una inmobiliaria aliada"
+              },
+              "price": {
+                "type": "object",
+                "properties": {
+                  "amount": {
+                    "type": "integer",
+                    "minimum": -9007199254740991,
+                    "maximum": 9007199254740991
+                  },
+                  "currency": {
+                    "type": "string",
+                    "enum": [
+                      "PEN",
+                      "USD"
+                    ]
+                  }
+                },
+                "required": [
+                  "amount",
+                  "currency"
+                ]
+              },
+              "areaM2": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "bedrooms": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": -9007199254740991,
+                    "maximum": 9007199254740991
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "bathrooms": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "image": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "slug",
+              "district",
+              "address",
+              "status",
+              "origin",
+              "price",
+              "areaM2",
+              "bedrooms",
+              "bathrooms",
+              "image"
+            ]
+          },
+          "estimate": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PriceEstimateInput"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "null si falta el área"
+          },
+          "deltaPct": {
+            "description": "Precio actual (o esperado) contra lo estimado, en %",
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "verdict": {
+            "type": "string",
+            "enum": [
+              "above",
+              "fair",
+              "below",
+              "unknown"
+            ],
+            "description": "above: sobre el rango · fair: dentro · below: debajo · unknown: sin estimación o sin precio"
+          },
+          "confidence": {
+            "type": "string",
+            "enum": [
+              "high",
+              "medium",
+              "low"
+            ]
+          },
+          "factors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PriceFactorInput"
+            }
+          },
+          "comparables": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PriceComparableInput"
+            }
+          },
+          "demand": {
+            "type": "object",
+            "properties": {
+              "saves": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "leads": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "saves",
+              "leads"
+            ]
+          }
+        },
+        "required": [
+          "property",
+          "estimate",
+          "deltaPct",
+          "verdict",
+          "confidence",
+          "factors",
+          "comparables",
+          "demand"
+        ]
+      },
+      "PricedRequestInput": {
+        "type": "object",
+        "properties": {
+          "request": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              },
+              "district": {
+                "type": "string"
+              },
+              "address": {
+                "type": "string"
+              },
+              "propertyType": {
+                "type": "string"
+              },
+              "intent": {
+                "type": "string",
+                "enum": [
+                  "sell",
+                  "rent",
+                  "airbnb"
+                ],
+                "description": "Vender, alquilar a largo plazo u operar en Airbnb"
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "submitted",
+                  "in_review",
+                  "approved",
+                  "rejected"
+                ],
+                "description": "submitted: enviada · in_review: en revisión · approved: publicada · rejected: rechazada"
+              },
+              "expectedPrice": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": -9007199254740991,
+                    "maximum": 9007199254740991
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Venta: precio total · alquiler y Airbnb: por mes"
+              },
+              "areaM2": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "bedrooms": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": -9007199254740991,
+                    "maximum": 9007199254740991
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "bathrooms": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "owner": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "district",
+              "address",
+              "propertyType",
+              "intent",
+              "status",
+              "expectedPrice",
+              "areaM2",
+              "bedrooms",
+              "bathrooms",
+              "owner"
+            ]
+          },
+          "estimate": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PriceEstimateInput"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "null si falta el área"
+          },
+          "deltaPct": {
+            "description": "Precio actual (o esperado) contra lo estimado, en %",
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "verdict": {
+            "type": "string",
+            "enum": [
+              "above",
+              "fair",
+              "below",
+              "unknown"
+            ],
+            "description": "above: sobre el rango · fair: dentro · below: debajo · unknown: sin estimación o sin precio"
+          },
+          "confidence": {
+            "type": "string",
+            "enum": [
+              "high",
+              "medium",
+              "low"
+            ]
+          },
+          "factors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PriceFactorInput"
+            }
+          },
+          "comparables": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PriceComparableInput"
+            }
+          }
+        },
+        "required": [
+          "request",
+          "estimate",
+          "deltaPct",
+          "verdict",
+          "confidence",
+          "factors",
+          "comparables"
+        ]
+      },
+      "PriceReportInput": {
+        "type": "object",
+        "properties": {
+          "simulated": {
+            "type": "boolean",
+            "const": true,
+            "description": "Resultados de reglas fijas, no de un modelo entrenado"
+          },
+          "version": {
+            "type": "string"
+          },
+          "generatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+          },
+          "marketAsOf": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+            "description": "Fecha de la tabla de precios por distrito"
+          },
+          "exchangeRate": {
+            "type": "number",
+            "description": "Soles por dólar"
+          },
+          "fairBandPct": {
+            "type": "number",
+            "description": "Diferencia, en %, desde la que un precio queda fuera de rango"
+          },
+          "properties": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PricedPropertyInput"
+            },
+            "description": "Inmuebles publicados, reservados y borradores"
+          },
+          "requests": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PricedRequestInput"
+            },
+            "description": "Solicitudes de propietarios enviadas o en revisión"
+          }
+        },
+        "required": [
+          "simulated",
+          "version",
+          "generatedAt",
+          "marketAsOf",
+          "exchangeRate",
+          "fairBandPct",
+          "properties",
+          "requests"
+        ]
+      },
       "DistrictCreateInput": {
         "type": "object",
         "properties": {
@@ -4175,6 +5271,46 @@
         ],
         "additionalProperties": false
       },
+      "Location": {
+        "type": "object",
+        "properties": {
+          "lat": {
+            "type": "number",
+            "minimum": -90,
+            "maximum": 90
+          },
+          "lng": {
+            "type": "number",
+            "minimum": -180,
+            "maximum": 180
+          }
+        },
+        "required": [
+          "lat",
+          "lng"
+        ],
+        "additionalProperties": false
+      },
+      "Video": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "title": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "url",
+          "title"
+        ],
+        "additionalProperties": false
+      },
       "Property": {
         "type": "object",
         "properties": {
@@ -4220,6 +5356,16 @@
             "type": [
               "string",
               "null"
+            ]
+          },
+          "location": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Location"
+              },
+              {
+                "type": "null"
+              }
             ]
           },
           "price": {
@@ -4297,6 +5443,12 @@
               "$ref": "#/components/schemas/PropertyImage"
             }
           },
+          "videos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Video"
+            }
+          },
           "featured": {
             "type": "boolean"
           },
@@ -4323,6 +5475,7 @@
           "address",
           "badge",
           "description",
+          "location",
           "price",
           "yield",
           "paybackYears",
@@ -4330,6 +5483,7 @@
           "bedrooms",
           "bathrooms",
           "images",
+          "videos",
           "featured",
           "status",
           "publishedAt"
@@ -4504,6 +5658,16 @@
               "null"
             ]
           },
+          "location": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Location"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "price": {
             "type": "object",
             "properties": {
@@ -4579,6 +5743,12 @@
               "$ref": "#/components/schemas/PropertyImage"
             }
           },
+          "videos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Video"
+            }
+          },
           "featured": {
             "type": "boolean"
           },
@@ -4623,6 +5793,7 @@
           "address",
           "badge",
           "description",
+          "location",
           "price",
           "yield",
           "paybackYears",
@@ -4630,6 +5801,7 @@
           "bedrooms",
           "bathrooms",
           "images",
+          "videos",
           "featured",
           "status",
           "publishedAt",
@@ -4695,6 +5867,16 @@
               {
                 "type": "string",
                 "maxLength": 5000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "location": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Location"
               },
               {
                 "type": "null"
@@ -4829,6 +6011,35 @@
               "additionalProperties": false
             }
           },
+          "videos": {
+            "default": [],
+            "maxItems": 30,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "url": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "title": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "maxLength": 200
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "url"
+              ],
+              "additionalProperties": false
+            }
+          },
           "status": {
             "default": "draft",
             "type": "string",
@@ -4852,6 +6063,7 @@
           "yield",
           "paybackYears",
           "images",
+          "videos",
           "status",
           "featured"
         ],
@@ -4914,6 +6126,16 @@
               {
                 "type": "string",
                 "maxLength": 5000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "location": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Location"
               },
               {
                 "type": "null"
@@ -5044,6 +6266,35 @@
               "required": [
                 "url",
                 "alt"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "videos": {
+            "default": [],
+            "maxItems": 30,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "url": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "title": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "maxLength": 200
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "url"
               ],
               "additionalProperties": false
             }
@@ -6452,6 +7703,972 @@
           "uploadUrl",
           "publicUrl",
           "expiresIn"
+        ],
+        "additionalProperties": false
+      },
+      "MatchReason": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Regla: cart, saved, saved-list, district, price, budget, yield, bedrooms…"
+          },
+          "label": {
+            "type": "string"
+          },
+          "points": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991,
+            "description": "Puntos que suma (o resta, si es negativo)"
+          }
+        },
+        "required": [
+          "code",
+          "label",
+          "points"
+        ],
+        "additionalProperties": false
+      },
+      "MatchPerson": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "user:<id> para cuentas · lead:<correo o celular> para leads sin cuenta"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "account",
+              "lead"
+            ]
+          },
+          "userId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "phone": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "role": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "buyer",
+                  "seller"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "leadStatus": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "new",
+                  "contacted",
+                  "closed"
+                ],
+                "description": "new: sin contactar · contacted: en conversación · closed: cerrado"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Estado de su consulta más reciente"
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "intl-form",
+                "owner-sell",
+                "owner-rent",
+                "cart",
+                "contact",
+                "saved-list"
+              ],
+              "description": "intl-form: formulario en inglés · owner-*: propietarios · cart: \"Conversemos ahora\" o \"Programar una sesión\" de Mis inmuebles · saved-list: \"Guarda tus inmuebles\""
+            }
+          },
+          "lastActivityAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "profile": {
+            "type": "object",
+            "properties": {
+              "districts": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Distritos de lo que le interesó, del más frecuente al menos"
+              },
+              "priceRange": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "min": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "max": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      }
+                    },
+                    "required": [
+                      "min",
+                      "max"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "En soles"
+              },
+              "budgetUsd": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": -9007199254740991,
+                    "maximum": 9007199254740991
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "minYield": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "bedrooms": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                }
+              }
+            },
+            "required": [
+              "districts",
+              "priceRange",
+              "budgetUsd",
+              "minYield",
+              "bedrooms"
+            ],
+            "additionalProperties": false
+          },
+          "signals": {
+            "type": "object",
+            "properties": {
+              "saved": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991,
+                "description": "Inmuebles guardados en Mis inmuebles"
+              },
+              "requested": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991,
+                "description": "Inmuebles que pidió con \"Conversemos ahora\", \"Programar una sesión\" o \"Guarda tus inmuebles\""
+              }
+            },
+            "required": [
+              "saved",
+              "requested"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "id",
+          "kind",
+          "userId",
+          "name",
+          "email",
+          "phone",
+          "role",
+          "leadStatus",
+          "sources",
+          "lastActivityAt",
+          "profile",
+          "signals"
+        ],
+        "additionalProperties": false
+      },
+      "MatchProperty": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "district": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "published",
+              "reserved"
+            ]
+          },
+          "price": {
+            "type": "object",
+            "properties": {
+              "amount": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "currency": {
+                "type": "string",
+                "enum": [
+                  "PEN",
+                  "USD"
+                ]
+              }
+            },
+            "required": [
+              "amount",
+              "currency"
+            ],
+            "additionalProperties": false
+          },
+          "yield": {
+            "type": "object",
+            "properties": {
+              "min": {
+                "type": "number"
+              },
+              "max": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "min",
+              "max"
+            ],
+            "additionalProperties": false
+          },
+          "bedrooms": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "areaM2": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "image": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "district",
+          "address",
+          "status",
+          "price",
+          "yield",
+          "bedrooms",
+          "areaM2",
+          "image"
+        ],
+        "additionalProperties": false
+      },
+      "Match": {
+        "type": "object",
+        "properties": {
+          "personId": {
+            "type": "string"
+          },
+          "propertyId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "score": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 99
+          },
+          "level": {
+            "type": "string",
+            "enum": [
+              "high",
+              "medium",
+              "low"
+            ],
+            "description": "high: 75 o más · medium: 50 a 74 · low: menos de 50"
+          },
+          "explicit": {
+            "type": "boolean",
+            "description": "true: la persona mostró interés en este inmueble · false: sugerencia del motor"
+          },
+          "reasons": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MatchReason"
+            }
+          }
+        },
+        "required": [
+          "personId",
+          "propertyId",
+          "score",
+          "level",
+          "explicit",
+          "reasons"
+        ],
+        "additionalProperties": false
+      },
+      "MatchReport": {
+        "type": "object",
+        "properties": {
+          "simulated": {
+            "type": "boolean",
+            "const": true,
+            "description": "Resultados de reglas fijas, no de un modelo entrenado"
+          },
+          "version": {
+            "type": "string"
+          },
+          "generatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+          },
+          "people": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MatchPerson"
+            }
+          },
+          "properties": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MatchProperty"
+            },
+            "description": "Solo inmuebles publicados o reservados"
+          },
+          "matches": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Match"
+            }
+          }
+        },
+        "required": [
+          "simulated",
+          "version",
+          "generatedAt",
+          "people",
+          "properties",
+          "matches"
+        ],
+        "additionalProperties": false
+      },
+      "PriceFactor": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "impactPct": {
+            "type": "number",
+            "description": "Cuánto mueve el precio por m², en %"
+          }
+        },
+        "required": [
+          "code",
+          "label",
+          "impactPct"
+        ],
+        "additionalProperties": false
+      },
+      "PriceEstimate": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "low": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "high": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "currency": {
+            "type": "string",
+            "enum": [
+              "PEN",
+              "USD"
+            ]
+          },
+          "unit": {
+            "type": "string",
+            "enum": [
+              "total",
+              "month"
+            ],
+            "description": "total: precio de venta · month: ingreso por mes"
+          },
+          "pricePerM2": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991,
+            "description": "Valor de venta estimado por m², en soles"
+          },
+          "marketPricePerM2": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991,
+            "description": "Referencia del distrito, en soles por m²"
+          },
+          "nightlyRate": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Solo Airbnb: tarifa por noche en soles"
+          }
+        },
+        "required": [
+          "amount",
+          "low",
+          "high",
+          "currency",
+          "unit",
+          "pricePerM2",
+          "marketPricePerM2",
+          "nightlyRate"
+        ],
+        "additionalProperties": false
+      },
+      "PriceComparable": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "district": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "published",
+              "reserved",
+              "sold"
+            ]
+          },
+          "areaM2": {
+            "type": "number"
+          },
+          "pricePerM2": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991,
+            "description": "En soles"
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "district",
+          "address",
+          "status",
+          "areaM2",
+          "pricePerM2"
+        ],
+        "additionalProperties": false
+      },
+      "PricedProperty": {
+        "type": "object",
+        "properties": {
+          "property": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              },
+              "slug": {
+                "type": "string"
+              },
+              "district": {
+                "type": "string"
+              },
+              "address": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "draft",
+                  "published",
+                  "reserved",
+                  "sold"
+                ]
+              },
+              "origin": {
+                "type": "string",
+                "enum": [
+                  "owner",
+                  "developer"
+                ],
+                "description": "owner: lo publica un propietario · developer: proyecto de una inmobiliaria aliada"
+              },
+              "price": {
+                "type": "object",
+                "properties": {
+                  "amount": {
+                    "type": "integer",
+                    "minimum": -9007199254740991,
+                    "maximum": 9007199254740991
+                  },
+                  "currency": {
+                    "type": "string",
+                    "enum": [
+                      "PEN",
+                      "USD"
+                    ]
+                  }
+                },
+                "required": [
+                  "amount",
+                  "currency"
+                ],
+                "additionalProperties": false
+              },
+              "areaM2": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "bedrooms": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": -9007199254740991,
+                    "maximum": 9007199254740991
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "bathrooms": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "image": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "slug",
+              "district",
+              "address",
+              "status",
+              "origin",
+              "price",
+              "areaM2",
+              "bedrooms",
+              "bathrooms",
+              "image"
+            ],
+            "additionalProperties": false
+          },
+          "estimate": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PriceEstimate"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "null si falta el área"
+          },
+          "deltaPct": {
+            "description": "Precio actual (o esperado) contra lo estimado, en %",
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "verdict": {
+            "type": "string",
+            "enum": [
+              "above",
+              "fair",
+              "below",
+              "unknown"
+            ],
+            "description": "above: sobre el rango · fair: dentro · below: debajo · unknown: sin estimación o sin precio"
+          },
+          "confidence": {
+            "type": "string",
+            "enum": [
+              "high",
+              "medium",
+              "low"
+            ]
+          },
+          "factors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PriceFactor"
+            }
+          },
+          "comparables": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PriceComparable"
+            }
+          },
+          "demand": {
+            "type": "object",
+            "properties": {
+              "saves": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "leads": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "saves",
+              "leads"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "property",
+          "estimate",
+          "deltaPct",
+          "verdict",
+          "confidence",
+          "factors",
+          "comparables",
+          "demand"
+        ],
+        "additionalProperties": false
+      },
+      "PricedRequest": {
+        "type": "object",
+        "properties": {
+          "request": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              },
+              "district": {
+                "type": "string"
+              },
+              "address": {
+                "type": "string"
+              },
+              "propertyType": {
+                "type": "string"
+              },
+              "intent": {
+                "type": "string",
+                "enum": [
+                  "sell",
+                  "rent",
+                  "airbnb"
+                ],
+                "description": "Vender, alquilar a largo plazo u operar en Airbnb"
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "submitted",
+                  "in_review",
+                  "approved",
+                  "rejected"
+                ],
+                "description": "submitted: enviada · in_review: en revisión · approved: publicada · rejected: rechazada"
+              },
+              "expectedPrice": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": -9007199254740991,
+                    "maximum": 9007199254740991
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Venta: precio total · alquiler y Airbnb: por mes"
+              },
+              "areaM2": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "bedrooms": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": -9007199254740991,
+                    "maximum": 9007199254740991
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "bathrooms": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "owner": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "district",
+              "address",
+              "propertyType",
+              "intent",
+              "status",
+              "expectedPrice",
+              "areaM2",
+              "bedrooms",
+              "bathrooms",
+              "owner"
+            ],
+            "additionalProperties": false
+          },
+          "estimate": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PriceEstimate"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "null si falta el área"
+          },
+          "deltaPct": {
+            "description": "Precio actual (o esperado) contra lo estimado, en %",
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "verdict": {
+            "type": "string",
+            "enum": [
+              "above",
+              "fair",
+              "below",
+              "unknown"
+            ],
+            "description": "above: sobre el rango · fair: dentro · below: debajo · unknown: sin estimación o sin precio"
+          },
+          "confidence": {
+            "type": "string",
+            "enum": [
+              "high",
+              "medium",
+              "low"
+            ]
+          },
+          "factors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PriceFactor"
+            }
+          },
+          "comparables": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PriceComparable"
+            }
+          }
+        },
+        "required": [
+          "request",
+          "estimate",
+          "deltaPct",
+          "verdict",
+          "confidence",
+          "factors",
+          "comparables"
+        ],
+        "additionalProperties": false
+      },
+      "PriceReport": {
+        "type": "object",
+        "properties": {
+          "simulated": {
+            "type": "boolean",
+            "const": true,
+            "description": "Resultados de reglas fijas, no de un modelo entrenado"
+          },
+          "version": {
+            "type": "string"
+          },
+          "generatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+          },
+          "marketAsOf": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+            "description": "Fecha de la tabla de precios por distrito"
+          },
+          "exchangeRate": {
+            "type": "number",
+            "description": "Soles por dólar"
+          },
+          "fairBandPct": {
+            "type": "number",
+            "description": "Diferencia, en %, desde la que un precio queda fuera de rango"
+          },
+          "properties": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PricedProperty"
+            },
+            "description": "Inmuebles publicados, reservados y borradores"
+          },
+          "requests": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PricedRequest"
+            },
+            "description": "Solicitudes de propietarios enviadas o en revisión"
+          }
+        },
+        "required": [
+          "simulated",
+          "version",
+          "generatedAt",
+          "marketAsOf",
+          "exchangeRate",
+          "fairBandPct",
+          "properties",
+          "requests"
         ],
         "additionalProperties": false
       },
@@ -8774,6 +10991,64 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/engine/matches": {
+      "get": {
+        "summary": "Match entre inmuebles disponibles y personas interesadas",
+        "tags": [
+          "Admin · Motor (simulado)"
+        ],
+        "description": "Para cada persona con interés (cuentas y leads), los inmuebles que pidió y las mejores sugerencias, con puntaje y motivos.",
+        "security": [
+          {
+            "cookieAuth": []
+          },
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MatchReport"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/engine/prices": {
+      "get": {
+        "summary": "Precio sugerido de cada inmueble y solicitud",
+        "tags": [
+          "Admin · Motor (simulado)"
+        ],
+        "description": "Valor estimado con su rango, la diferencia con el precio actual (o el esperado por el propietario), los factores y los comparables usados.",
+        "security": [
+          {
+            "cookieAuth": []
+          },
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PriceReport"
                 }
               }
             }

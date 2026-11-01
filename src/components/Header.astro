@@ -7,7 +7,7 @@ import WhatsAppIcon from './WhatsAppIcon.astro'
 import CartIcon from './CartIcon.astro'
 import Icon from './Icon.astro'
 import { waLink } from '../data/contacto'
-import { PUBLIC_PANEL_URL } from 'astro:env/client'
+import { PUBLIC_LOGIN_ENABLED, PUBLIC_PANEL_URL } from 'astro:env/client'
 
 // Menú principal: comprar (Capital y Mis inmuebles) y vender (Propietarios).
 // `section`: páginas en las que el link queda marcado, aunque no sea la página exacta
@@ -27,8 +27,6 @@ const current = (link: (typeof links)[number]) =>
       ? 'true'
       : undefined
 const panelUrl = PUBLIC_PANEL_URL?.replace(/\/$/, '')
-// "Ingresar" desactivado por ahora. Para volver a mostrarlo: true (y PUBLIC_PANEL_URL configurada)
-const loginEnabled = false
 const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
 ---
 
@@ -59,7 +57,7 @@ const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
       </a>
 
       <!-- Ingresar al panel (solo si hay panel configurado y no hay sesión) -->
-      {loginEnabled && panelUrl && (
+      {PUBLIC_LOGIN_ENABLED && panelUrl && (
         <a class="login" href={`${panelUrl}/ingresar`} data-login>
           <Icon name="lock" size={20} />
           <span class="login-text">Ingresar</span>
@@ -149,7 +147,7 @@ const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
     </nav>
 
     <div class="drawer-bottom">
-      {loginEnabled && panelUrl && (
+      {PUBLIC_LOGIN_ENABLED && panelUrl && (
         <a class="btn btn--secondary btn--block" href={`${panelUrl}/ingresar`} data-login-drawer>
           Ingresar a mi cuenta
         </a>
@@ -232,7 +230,7 @@ const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
   const sentinel = document.querySelector('[data-scroll-sentinel]')
   if (header && sentinel) {
     new IntersectionObserver(([entry]) => {
-      header.classList.toggle('is-scrolled', !entry.isIntersecting)
+      if (entry) header.classList.toggle('is-scrolled', !entry.isIntersecting)
     }).observe(sentinel)
   }
 
