@@ -15,7 +15,6 @@ import {
   getOwnerProperties,
   getProperties,
 } from '../../lib/properties'
-import { buildDisclaimer } from '../../lib/format'
 
 const steps = [
   { number: 1, title: 'Comparas' },
@@ -29,7 +28,6 @@ const depas = await getOwnerProperties()
 const total = (await getProperties()).length
 const fastFilters = await getFastFilters(depas)
 const developers = await getDevelopers()
-const disclaimer = buildDisclaimer(await getFinancingAssumptions())
 ---
 
 <BaseLayout
@@ -97,7 +95,6 @@ const disclaimer = buildDisclaimer(await getFinancingAssumptions())
     <p class="no-results" data-filter-empty role="status" hidden>
       No encontramos inmuebles con esos criterios.
     </p>
-    <p class="disclaimer">{disclaimer}</p>
   </section>
 
   <!-- ---------- Para ti: se arma en el navegador con lo que la persona vio y guardó ---------- -->

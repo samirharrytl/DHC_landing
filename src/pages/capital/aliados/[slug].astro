@@ -11,7 +11,6 @@ import {
   getFastFilters,
   getFinancingAssumptions,
 } from '../../../lib/properties'
-import { buildDisclaimer } from '../../../lib/format'
 import type { Developer } from '../../../types/property'
 
 export const getStaticPaths = (async () => {
@@ -26,7 +25,6 @@ interface Props {
 const { developer } = Astro.props
 const projects = await getDeveloperProjects(developer.id)
 const filters = await getFastFilters(projects)
-const disclaimer = buildDisclaimer(await getFinancingAssumptions())
 ---
 
 <BaseLayout
@@ -73,7 +71,6 @@ const disclaimer = buildDisclaimer(await getFinancingAssumptions())
       No encontramos proyectos con esos criterios.
     </p>
 
-    <p class="disclaimer">{disclaimer}</p>
     <a class="back" href="/capital#lista-inmuebles">
       <Icon name="arrow-left" size={18} /> Volver a todos los inmuebles
     </a>

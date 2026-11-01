@@ -10,13 +10,12 @@ import BaseLayout from '../../layouts/BaseLayout.astro'
 import Icon from '../../components/Icon.astro'
 import PropertyCard from '../../components/PropertyCard.astro'
 import { getDevelopers, getFinancingAssumptions, getProperties } from '../../lib/properties'
-import { buildDisclaimer, formatPEN } from '../../lib/format'
+import {  formatPEN } from '../../lib/format'
 import { DISTANCE_STEPS, paybackSteps, priceRanges, SORT_OPTIONS, yieldSteps } from '../../lib/catalog-search'
 import { DISTRITOS, LUGARES } from '../../data/lugares'
 
 const depas = await getProperties()
 const developers = (await getDevelopers()).filter((d) => d.projectCount > 0)
-const disclaimer = buildDisclaimer(await getFinancingAssumptions())
 
 const districts = [...new Map(depas.map((d) => [d.district.slug, d.district.name]))].sort((a, b) =>
   a[1].localeCompare(b[1], 'es'),
@@ -319,7 +318,6 @@ const origins = [
             Limpiar filtros
           </button>
         </div>
-        <p class="disclaimer">{disclaimer}</p>
       </section>
     </div>
   </div>

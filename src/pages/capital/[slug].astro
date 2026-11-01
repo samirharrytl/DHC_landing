@@ -12,7 +12,7 @@ import {
   getProperties,
   getSimilarProperties,
 } from '../../lib/properties'
-import { buildDisclaimer, formatFacts, formatMoney, formatYears, formatYield } from '../../lib/format'
+import {  formatFacts, formatMoney, formatYears, formatYield } from '../../lib/format'
 import type { Property } from '../../types/property'
 
 export const getStaticPaths = (async () => {
@@ -31,7 +31,6 @@ const isProject = p.origin === 'developer'
 const statusLabel = { published: 'Disponible', reserved: 'Reservado', sold: 'Vendido' }[p.status]
 const price = formatMoney(p.price.amount, p.price.currency)
 const facts = formatFacts(p)
-const disclaimer = buildDisclaimer(await getFinancingAssumptions())
 const similar = await getSimilarProperties(p, 4)
 const developer = p.developer ? (await getDevelopers()).find((d) => d.id === p.developer!.id) : undefined
 
@@ -229,7 +228,6 @@ const jsonLd = {
       </section>
     )}
 
-    <p class="disclaimer">{disclaimer}</p>
   </article>
 </BaseLayout>
 

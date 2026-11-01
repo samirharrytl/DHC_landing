@@ -65,20 +65,3 @@ export const slugify = (value: string) =>
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '')
-
-/** Nota que va debajo de cada grid de inmuebles. Los supuestos que falten se muestran como [campo]. */
-export function buildDisclaimer(f: {
-  rate: number | null
-  downPaymentPct: number | null
-  termYears: number | null
-  asOf: string | null
-}): string {
-  const term = f.termYears ?? '[plazo]'
-  const down = f.downPaymentPct ?? '[X]'
-  const date = f.asOf ? formatDate(f.asOf) : '[fecha]'
-  const rate = f.rate != null ? ` de ${f.rate}%` : ''
-  return (
-    `*Cuota estimada con tasa pizarra${rate} a ${term} años y ${down} % de inicial, al ${date}. ` +
-    'Renta estimada según el mercado del distrito. No es una rentabilidad garantizada.'
-  )
-}
