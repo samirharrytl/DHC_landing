@@ -2982,14 +2982,15 @@ flowchart TD
   - "Área", "Dormitorios" y "Baños" (con "—" si no los pusiste);
   - "Enviada", con la fecha y la hora en que creaste la solicitud;
   - debajo, el texto de "Cuéntanos más".
-- **Bloque "Fotos".** Muestra las miniaturas, o "Sin fotos. Puedes agregarlas al editar." si la solicitud no tiene fotos.
+- **Bloque "Fotos".** Muestra las miniaturas. Si la solicitud no tiene fotos, dice "Sin fotos. Puedes agregarlas al editar." cuando todavía se puede editar ("Enviada" o "No aprobada"), y solo "Sin fotos." en los demás estados.
 
 ![Solicitud en revisión con comentario del equipo](img/manual/33-solicitud-en-revision.webp)
 
 **Casos especiales.**
 
-- **Enlace de una solicitud ajena o inexistente.** La pantalla se queda en "Cargando…". El panel no muestra el aviso de "no encontrado".
-- **"Sin fotos. Puedes agregarlas al editar." en una solicitud que ya no se puede editar.** El texto aparece siempre que la solicitud no tiene fotos, también en "En revisión" y "Publicada". En esos estados no hay botón "Editar". Si abres la dirección de edición a mano, al guardar aparece "La solicitud ya está en revisión o publicada: escríbenos para cambiarla" (ver 8.8). Para sumar fotos en esos estados, habla con el equipo.
+- **Enlace de una solicitud ajena o inexistente.** Aparece "No encontramos lo que buscas" con el botón "Volver a mis propiedades".
+- **Sin conexión o error del sistema.** Aparece "No pudimos cargar esta página" con el motivo y el botón "Reintentar". Pasa lo mismo en todas las pantallas del panel.
+- **Fotos en una solicitud que ya no se puede editar.** En "En revisión" y "Publicada" no hay botón "Editar". Para sumar fotos en esos estados, habla con el equipo.
 - **Fecha "Enviada".** No cambia aunque edites la solicitud. En la lista, "actualizado …" muestra el último cambio de la solicitud: tu edición o un cambio del equipo (estado, comentario o publicación).
 - **"En revisión" marcado sin haber pasado por revisión.** Si el equipo publica o rechaza la solicitud sin pasarla antes a revisión, la línea de avance igual muestra "En revisión" marcado.
 
@@ -3076,9 +3077,9 @@ Qué pasa después:
 - La solicitud queda "Enviada", también si estaba "No aprobada".
 - Al equipo no le llega correo: solo la ve otra vez como "Enviada" en su lista.
 
-Si el equipo pasó la solicitud a revisión mientras tú la editabas, al guardar aparece "La solicitud ya está en revisión o publicada: escríbenos para cambiarla". Pasa lo mismo si abres la dirección de edición cuando la solicitud ya no se puede editar: el formulario se carga con tus datos, pero no deja guardar.
+Si el equipo pasó la solicitud a revisión mientras tú la editabas, al guardar aparece "La solicitud ya está en revisión o publicada: escríbenos para cambiarla". Si abres la dirección de edición cuando la solicitud ya está "En revisión" o "Publicada", no ves el formulario: aparece "Esta solicitud ya no se puede editar" con el botón "Ver la solicitud".
 
-Si abres "Editar mi inmueble" con el enlace de una solicitud que no existe o que es de otra persona, ves el título "Editar mi inmueble" y debajo "Cargando…" para siempre, sin ningún mensaje de error. Vuelve a "Mis propiedades" y abre la solicitud desde la lista.
+Si abres "Editar mi inmueble" con el enlace de una solicitud que no existe o que es de otra persona, aparece "No encontramos lo que buscas" con el botón "Volver a mis propiedades".
 
 El panel no ofrece un botón ni un número para "escribirnos". Su configuración trae una variable para el WhatsApp con el valor de relleno 51XXXXXXXXX, pero hoy ninguna pantalla la usa. Del otro lado, el equipo puede escribirte por WhatsApp al celular de tu "Perfil", si lo registraste, o por correo.
 
@@ -3509,7 +3510,7 @@ Los ejemplos usan los datos de ejemplo: Lince S/ 310,000, Surquillo y Magdalena.
 | ESC-8.28 | Una solicitud en "Enviada", "En revisión" o "No aprobada" | Toca "Eliminar" y confirma | Ve "¿Eliminar la solicitud?" y "Se borrará la solicitud de {dirección}. No se puede deshacer.". Al confirmar ve "Eliminamos la solicitud" y vuelve a la lista |
 | ESC-8.29 | Una solicitud "Publicada" | Pide borrarla directo al API | El API responde "Una solicitud publicada no se puede borrar" |
 | ESC-8.30 | La ventana de eliminar abierta | Toca "Cancelar", la X, Esc o fuera | La ventana se cierra y la solicitud sigue |
-| ESC-8.31 | Un propietario | Abre `/mis-propiedades/{id}` de otra persona o de una solicitud que no existe | La pantalla se queda en "Cargando…", sin mensaje |
+| ESC-8.31 | Un propietario | Abre `/mis-propiedades/{id}` de otra persona o de una solicitud que no existe | Ve "No encontramos lo que buscas" y el botón "Volver a mis propiedades" |
 | ESC-8.32 | Solicitudes en varios estados | Abre "Mis propiedades" | "En revisión" suma las "Enviada" y las "En revisión". "Publicados" cuenta las "Publicada". La lista va de la más nueva a la más antigua, con etiquetas de acción y estado |
 | ESC-8.33 | Una solicitud sin precio | Mira la fila | Dice "Precio por definir" |
 | ESC-8.34 | Un propietario | Cambia a "Invertir en inmuebles" en "Perfil" | Va a "Mis inmuebles" y ya no ve "Mis propiedades". Al volver a "Vender o alquilar mi inmueble", las solicitudes siguen ahí |
