@@ -306,7 +306,7 @@ sequenceDiagram
 |---|---|---|
 | Resumen | Leads sin contactar, reclamos pendientes y por vencer, solicitudes por revisar, depas publicados, cuentas por rol | Ir a cada lista |
 | Depas | Todo el catálogo con búsqueda y filtros por estado y origen | Crear, editar, borrar, ver en el sitio |
-| Formulario de depa | Ubicación y origen, números, presentación y fotos (con orden y portada) | Guardar como borrador o publicar |
+| Formulario de depa | Ubicación y origen (con el punto en el mapa: "latitud, longitud" o un link de Google Maps u OpenStreetMap), números, presentación, fotos (con orden y portada) y videos (YouTube, Vimeo o archivo .mp4/.webm, con título y orden) | Guardar como borrador o publicar |
 | Solicitudes | Por estado, con datos del propietario | Pasar a revisión, publicar como depa, no aprobar con comentario, escribir por WhatsApp, ver el precio sugerido |
 | Leads | Por estado y origen, con contacto y detalle desplegable | Mover por el embudo: sin contactar, en conversación, cerrado |
 | Reclamos | Pendientes primero, con plazo y alerta de vencidos | Leer la hoja completa y responder por correo |
@@ -315,6 +315,17 @@ sequenceDiagram
 | Configuración | Supuestos de financiamiento con vista previa del texto del sitio, y distritos | Agregar supuestos y distritos |
 | Match (simulado) | Por inmueble o por persona: interesados y sugerencias del motor, con puntaje, motivos y perfil de búsqueda | Filtrar por tipo y afinidad, escribir por WhatsApp o correo, ofrecer las sugerencias |
 | Precio sugerido (simulado) | Inmuebles del catálogo y solicitudes por tasar: valor estimado, rango, diferencia, confianza, cómo se calculó y comparables | Filtrar por resultado y estado, ir a editar el precio o a la solicitud |
+
+### Errores y sesión vencida
+
+- **Ninguna pantalla se queda en "Cargando…".** Si el API no responde o falla, la pantalla muestra
+  "No pudimos cargar esta página" con "Reintentar"; si lo pedido no existe (404) o no es de la
+  persona, "No encontramos lo que buscas" con un botón para volver a la lista (`useLoad` y
+  `LoadError`).
+- **Toda acción que falla avisa.** Lo que ninguna pantalla atrapa (eliminar, cambiar un estado…) lo
+  muestra un aviso con el mensaje del API (`src/errors.ts`, manejador global de Vue).
+- **Si la sesión vence** (el API responde 401), el panel lleva a `/ingresar?volver=…` con el aviso
+  "Tu sesión venció. Vuelve a ingresar." y, al ingresar, vuelve a donde estaba.
 
 ## 7. Identidad visual
 
