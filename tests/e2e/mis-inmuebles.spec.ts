@@ -42,6 +42,8 @@ test('Me interesa → Guarda tus inmuebles → Mis inmuebles → WhatsApp', asyn
   await expect(page.locator('[data-saved-list] article')).toHaveCount(2)
   await expect(page.locator('[data-summary-count]')).toHaveText('2')
   await expect(page.getByText('Guardado para Ana')).toBeVisible()
+  // Por ahora Mis inmuebles no muestra "Parecidos a los que guardaste"
+  await expect(page.getByRole('heading', { name: 'Parecidos a los que guardaste' })).toHaveCount(0)
 
   // "Conversemos ahora" abre WhatsApp con la lista y registra el lead del carrito
   const whatsapp = page.getByRole('link', { name: /Conversemos ahora/ })
@@ -105,8 +107,8 @@ test('/carrito, /capital/empecemos y /mis-depas redirigen a /mis-inmuebles', asy
 })
 
 test('las direcciones anteriores conservan los filtros y el inmueble a agregar', async ({ page }) => {
-  await page.goto('/capital/depas?distrito=brena')
-  await expect(page).toHaveURL(/\/capital\/inmuebles\/?\?distrito=brena$/)
+  await page.goto('/capital/depas?q=brena')
+  await expect(page).toHaveURL(/\/capital\/inmuebles\/?\?q=brena$/)
   await expect(page.locator('[data-results] [data-property-card]:visible')).toHaveCount(1)
 
   await page.goto('/capital/miraflores-calle-schell-cuadra-3')

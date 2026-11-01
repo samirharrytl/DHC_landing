@@ -1,9 +1,11 @@
 ---
 // Tarjeta de inmueble reutilizable (Capital y home). Toda la tarjeta lleva al detalle del inmueble.
 import type { Property } from '../types/property'
-import { formatPEN, formatYears, formatYield } from '../lib/format'
+import { propertyFacts } from '../lib/facts'
+import { formatPEN, streetOf } from '../lib/format'
 import { buildSearchText } from '../lib/filters'
 import { depaPosition } from '../lib/geo'
+import FactRow from './FactRow.astro'
 import HouseIcon from './HouseIcon.astro'
 import Icon from './Icon.astro'
 import PropertyImage from './PropertyImage.astro'
@@ -18,8 +20,12 @@ interface Props {
 const { property: p, priority = false } = Astro.props
 const href = `/capital/${p.slug}`
 const image = p.images[0]
+// Lo que resalta es la calle (sin la cuadra); debajo va el distrito
+const street = streetOf(p.address)
 // Para "Cerca de" en Todos los inmuebles: la ubicación exacta o el centro del distrito
 const position = depaPosition(p)
+// Lo que más mira la gente al comparar: dormitorios y baños, área y antigüedad
+const facts = propertyFacts(p)
 ---
 
 <article
@@ -64,36 +70,33 @@ const position = depaPosition(p)
   </div>
 
   <div class="body">
-    <h3 class="title display">
-      <!-- Este link cubre toda la tarjeta (ver a::after en el CSS) -->
-      <a href={href} data-astro-prefetch>
-        {p.district.name}
-      </a>
-    </h3>
-    <p class="address">{p.address}</p>
+    <!-- Calle y precio en la misma línea; debajo, el distrito y qué precio es -->
+    <div class="head">
+      <h3 class="title display">
+        <!-- Este link cubre toda la tarjeta (ver a::after en el CSS) -->
+        <a href={href} data-astro-prefetch>
+          {street}
+        </a>
+      </h3>
+      <p class="district">{p.district.name}</p>
+      <p class="price">{formatPEN(p.price.amount)}</p>
+      <p class="price-label">{p.origin === 'developer' ? 'Precio desde' : 'Precio'}</p>
+    </div>
     <!-- "a 1.2 km de Larcomar": lo llena la búsqueda de Todos los inmuebles cuando se elige "Cerca de" -->
     <p class="distance" data-distance hidden>
       <Icon name="pin" size={16} />
       <span data-distance-text></span>
     </p>
-    <dl class="stats">
-      <div class="stat">
-        <dt>valor</dt>
-        <dd>{formatPEN(p.price.amount)}</dd>
+    <!-- Al fondo del cuerpo: los datos quedan parejos en todas las tarjetas de una fila -->
+    {facts.length > 0 && (
+      <div class="facts">
+        <FactRow facts={facts} label="Características" />
       </div>
-      <div class="stat">
-        <dt>rentabilidad</dt>
-        <dd>{formatYield(p.yield)}</dd>
-      </div>
-      <div class="stat">
-        <dt>se paga en</dt>
-        <dd>{formatYears(p.paybackYears)}</dd>
-      </div>
-    </dl>
+    )}
   </div>
 
   <div class="footer-actions">
-    <SaveButton id={p.id} name={p.district.name} />
+    <SaveButton id={p.id} name={`${street}, ${p.district.name}`} />
     <a class="btn btn--secondary btn--sm" href={href}>
       Ver más detalle
     </a>
@@ -196,7 +199,7 @@ const position = depaPosition(p)
   .body {
     display: flex;
     flex-direction: column;
-    gap: var(--space-1);
+    gap: var(--space-3);
     flex: 1;
     padding: var(--space-4);
   }
@@ -206,7 +209,21 @@ const position = depaPosition(p)
     }
   }
 
+  /* Dos filas alineadas: calle | precio, distrito | "Precio" */
+  .head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'title price'
+      'district label';
+    align-items: baseline;
+    gap: var(--space-1) var(--space-3);
+  }
+  .head p {
+    margin: 0;
+  }
   .title {
+    grid-area: title;
     font-size: 1.5rem;
     line-height: 1.15;
   }
@@ -222,12 +239,28 @@ const position = depaPosition(p)
   .title a:focus-visible {
     box-shadow: none;
   }
-
-  .address {
-    margin: 0;
+  .district {
+    grid-area: district;
     font-size: var(--fs-sm);
     color: var(--color-text-muted);
   }
+  .price {
+    grid-area: price;
+    font-size: var(--fs-stat);
+    font-weight: var(--fw-bold);
+    line-height: 1.15;
+    color: var(--color-text-strong);
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+    white-space: nowrap;
+  }
+  .price-label {
+    grid-area: label;
+    font-size: var(--fs-13);
+    color: var(--color-text-muted);
+    text-align: right;
+  }
+
   .distance {
     display: flex;
     align-items: center;
@@ -244,58 +277,26 @@ const position = depaPosition(p)
     flex: none;
   }
 
-  .stats {
-    display: grid;
-    /* Columnas iguales si hay espacio; si no, cada una mide al menos su texto
-       (el precio no se monta sobre la línea de "rentabilidad") */
-    grid-template-columns: repeat(3, minmax(min-content, 1fr));
-    column-gap: var(--space-2); /* aire antes de cada línea divisoria */
-    margin: var(--space-4) 0 0;
-  }
-  .stat + .stat {
-    border-left: var(--border-subtle);
-    padding-left: var(--space-3);
-  }
-  dt {
-    font-size: var(--fs-13);
-    color: var(--color-text-muted);
-  }
-  dd {
-    margin: var(--space-1) 0 0;
-    font-size: var(--fs-stat);
-    font-weight: var(--fw-semibold);
-    color: var(--color-text-strong);
-    font-variant-numeric: tabular-nums;
+  .facts {
+    margin-top: auto;
   }
   @container (max-width: 320px) {
     .body {
       padding: var(--space-4);
     }
-    .stats {
-      column-gap: var(--space-1);
-    }
-    dd {
-      font-size: var(--fs-15);
-    }
-    dt {
-      font-size: var(--fs-xs);
-    }
-    .stat + .stat {
-      padding-left: var(--space-2);
-    }
   }
-  /* Tarjeta muy angosta (pantallas de 320px): el valor en su propia fila y debajo los otros dos */
+  /* Tarjeta muy angosta (pantallas de 320px): el precio pasa debajo del distrito */
   @container (max-width: 260px) {
-    .stats {
-      grid-template-columns: repeat(2, minmax(min-content, 1fr));
-      row-gap: var(--space-3);
+    .head {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas: 'title' 'district' 'price' 'label';
     }
-    .stat:first-child {
-      grid-column: 1 / -1;
+    .price,
+    .price-label {
+      text-align: left;
     }
-    .stat:nth-child(2) {
-      border-left: 0;
-      padding-left: 0;
+    .price {
+      margin-top: var(--space-2);
     }
   }
 

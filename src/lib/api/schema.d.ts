@@ -2447,6 +2447,8 @@ export interface components {
             areaM2: number | null;
             bedrooms: number | null;
             bathrooms: number | null;
+            /** @description Año de construcción (en un proyecto, año de entrega) */
+            yearBuilt: number | null;
             images: components["schemas"]["PropertyImageInput"][];
             videos: components["schemas"]["VideoInput"][];
             featured: boolean;
@@ -2510,6 +2512,8 @@ export interface components {
             areaM2: number | null;
             bedrooms: number | null;
             bathrooms: number | null;
+            /** @description Año de construcción (en un proyecto, año de entrega) */
+            yearBuilt: number | null;
             images: components["schemas"]["PropertyImageInput"][];
             videos: components["schemas"]["VideoInput"][];
             featured: boolean;
@@ -2554,6 +2558,7 @@ export interface components {
             areaM2?: number | null;
             bedrooms?: number | null;
             bathrooms?: number | null;
+            yearBuilt?: number | null;
             /** @default [] */
             images: {
                 /** Format: uri */
@@ -2609,6 +2614,7 @@ export interface components {
             areaM2?: number | null;
             bedrooms?: number | null;
             bathrooms?: number | null;
+            yearBuilt?: number | null;
             /** @default [] */
             images: {
                 /** Format: uri */
@@ -3449,6 +3455,8 @@ export interface components {
             areaM2: number | null;
             bedrooms: number | null;
             bathrooms: number | null;
+            /** @description Año de construcción (en un proyecto, año de entrega) */
+            yearBuilt: number | null;
             images: components["schemas"]["PropertyImage"][];
             videos: components["schemas"]["Video"][];
             featured: boolean;
@@ -3512,6 +3520,8 @@ export interface components {
             areaM2: number | null;
             bedrooms: number | null;
             bathrooms: number | null;
+            /** @description Año de construcción (en un proyecto, año de entrega) */
+            yearBuilt: number | null;
             images: components["schemas"]["PropertyImage"][];
             videos: components["schemas"]["Video"][];
             featured: boolean;
@@ -3556,6 +3566,7 @@ export interface components {
             areaM2?: number | null;
             bedrooms?: number | null;
             bathrooms?: number | null;
+            yearBuilt?: number | null;
             /** @default [] */
             images: {
                 /** Format: uri */
@@ -3611,6 +3622,7 @@ export interface components {
             areaM2?: number | null;
             bedrooms?: number | null;
             bathrooms?: number | null;
+            yearBuilt?: number | null;
             /** @default [] */
             images: {
                 /** Format: uri */

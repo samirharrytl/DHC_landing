@@ -161,6 +161,7 @@ const modes = ['Videollamada', 'Llamada', 'Presencial']
   import { api, type LeadCreate } from '../lib/api/client'
   import { enhanceForm, getUtm } from '../scripts/forms'
   import { loadCatalog, type CatalogItem } from '../scripts/catalog'
+  import { streetOf } from '../lib/format'
 
   const dialog = document.querySelector<HTMLDialogElement>('[data-schedule-dialog]')
   const form = dialog?.querySelector<HTMLFormElement>('[data-schedule-form]')
@@ -205,7 +206,8 @@ const modes = ['Videollamada', 'Llamada', 'Presencial']
       const label = ids.length === 1 ? '1 inmueble seleccionado' : `${ids.length} inmuebles seleccionados`
       const text = summary.querySelector('span')!
       text.replaceChildren(label)
-      const names = [...new Set(selection.map((item) => item.district))]
+      // Con la calle, como el título de la tarjeta: "Av. Arequipa y Av. Angamos Este"
+      const names = selection.map((item) => streetOf(item.address))
       if (names.length) {
         const strong = document.createElement('strong')
         strong.textContent = new Intl.ListFormat('es', { type: 'conjunction' }).format(names)

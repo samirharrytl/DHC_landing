@@ -25,8 +25,36 @@ export function formatYield({ min, max }: { min: number; max: number }): string 
   return min === max ? `${min}% anual` : `${min}–${max}% anual`
 }
 
+/** Alquiler mensual que da la rentabilidad estimada (renta anual ÷ precio), redondeado a 10:
+ *  S/ 310,000 al 8–10% anual → "S/ 2,070–2,580" · USD 150,000 al 7% → "USD 880" */
+export function formatMonthlyRent(
+  amount: number,
+  { min, max }: { min: number; max: number },
+  currency: 'PEN' | 'USD' = 'PEN',
+): string {
+  const monthly = (rate: number) => Math.round((amount * rate) / 1200 / 10) * 10
+  const [low, high] = [monthly(min), monthly(max)]
+  return low === high
+    ? formatMoney(low, currency)
+    : `${formatMoney(low, currency)}–${high.toLocaleString('es-PE')}`
+}
+
 /** 11 → "11 años" · 1 → "1 año" */
 export const formatYears = (years: number) => `${years} ${years === 1 ? 'año' : 'años'}`
+
+/** Calle sin la cuadra, para títulos: "Av. Arequipa cuadra 12" → "Av. Arequipa" */
+export const streetOf = (address: string) => address.replace(/ cuadra \d+$/i, '')
+
+/** Antigüedad (en 2026): 2018 → "8 años" de antigüedad · 2026 → "Nuevo" · 2027, un proyecto por entregar →
+ *  "2027" de entrega. text es la frase para listas: "8 años de antigüedad" · "A estrenar" · "Entrega 2027" */
+export function formatAge(yearBuilt: number, currentYear = new Date().getFullYear()) {
+  if (yearBuilt > currentYear)
+    return { value: String(yearBuilt), label: 'entrega', text: `Entrega ${yearBuilt}` }
+  const age = currentYear - yearBuilt
+  return age === 0
+    ? { value: 'Nuevo', label: 'antigüedad', text: 'A estrenar' }
+    : { value: formatYears(age), label: 'antigüedad', text: `${formatYears(age)} de antigüedad` }
+}
 
 /** Datos físicos del inmueble que existan: ["2 dorm.", "2 baños", "68 m²"] */
 export function formatFacts(p: {

@@ -1102,6 +1102,19 @@
               "null"
             ]
           },
+          "yearBuilt": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Año de construcción (en un proyecto, año de entrega)"
+          },
           "images": {
             "type": "array",
             "items": {
@@ -1147,6 +1160,7 @@
           "areaM2",
           "bedrooms",
           "bathrooms",
+          "yearBuilt",
           "images",
           "videos",
           "featured",
@@ -1394,6 +1408,19 @@
               "null"
             ]
           },
+          "yearBuilt": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Año de construcción (en un proyecto, año de entrega)"
+          },
           "images": {
             "type": "array",
             "items": {
@@ -1457,6 +1484,7 @@
           "areaM2",
           "bedrooms",
           "bathrooms",
+          "yearBuilt",
           "images",
           "videos",
           "featured",
@@ -1611,6 +1639,18 @@
               {
                 "type": "number",
                 "minimum": 0
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "yearBuilt": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1900,
+                "maximum": 2100
               },
               {
                 "type": "null"
@@ -1860,6 +1900,18 @@
               {
                 "type": "number",
                 "minimum": 0
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "yearBuilt": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1900,
+                "maximum": 2100
               },
               {
                 "type": "null"
@@ -5437,6 +5489,19 @@
               "null"
             ]
           },
+          "yearBuilt": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Año de construcción (en un proyecto, año de entrega)"
+          },
           "images": {
             "type": "array",
             "items": {
@@ -5482,6 +5547,7 @@
           "areaM2",
           "bedrooms",
           "bathrooms",
+          "yearBuilt",
           "images",
           "videos",
           "featured",
@@ -5737,6 +5803,19 @@
               "null"
             ]
           },
+          "yearBuilt": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Año de construcción (en un proyecto, año de entrega)"
+          },
           "images": {
             "type": "array",
             "items": {
@@ -5800,6 +5879,7 @@
           "areaM2",
           "bedrooms",
           "bathrooms",
+          "yearBuilt",
           "images",
           "videos",
           "featured",
@@ -5957,6 +6037,18 @@
               {
                 "type": "number",
                 "minimum": 0
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "yearBuilt": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1900,
+                "maximum": 2100
               },
               {
                 "type": "null"
@@ -6216,6 +6308,18 @@
               {
                 "type": "number",
                 "minimum": 0
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "yearBuilt": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1900,
+                "maximum": 2100
               },
               {
                 "type": "null"

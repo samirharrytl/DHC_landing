@@ -3,7 +3,7 @@
 // "Para ti, según lo que has visto" (sin property: queda como plantilla con data-slot que un
 // script completa en el navegador con /data/properties.json).
 import type { Property } from '../types/property'
-import { formatMoney, formatYears, formatYield } from '../lib/format'
+import { formatMoney, formatYears, formatYield, streetOf } from '../lib/format'
 import HouseIcon from './HouseIcon.astro'
 import Icon from './Icon.astro'
 import PropertyImage from './PropertyImage.astro'
@@ -13,7 +13,7 @@ interface Props {
 }
 const { property: p } = Astro.props
 const image = p?.images[0]
-const street = p?.address.replace(/ cuadra \d+$/i, '')
+const street = p && streetOf(p.address)
 ---
 
 <article class="mini">

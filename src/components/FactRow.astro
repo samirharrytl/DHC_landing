@@ -1,0 +1,99 @@
+---
+// Fila de datos en columnas iguales separadas por una línea: ícono y valor arriba, qué son debajo.
+// La usan la tarjeta (dormitorios, área y antigüedad) y el detalle (eso mismo, y la rentabilidad).
+import type { Fact } from '../lib/facts'
+import Icon from './Icon.astro'
+
+interface Props {
+  facts: Fact[]
+  /** Nombre de la lista para lectores de pantalla: "Características", "Rentabilidad" */
+  label: string
+}
+
+const { facts, label } = Astro.props
+---
+
+{facts.length > 0 && (
+  <ul class="facts" aria-label={label}>
+    {facts.map((fact) => (
+      <li class="fact">
+        <span class:list={['fact-value', { positive: fact.positive }]}>
+          {fact.parts.map((part) => (
+            <span class="fact-part">
+              <Icon name={part.icon} size={18} />
+              {part.value}
+              {part.name && <span class="sr-only">{part.name}</span>}
+            </span>
+          ))}
+        </span>
+        <span class="fact-label">{fact.label}</span>
+      </li>
+    ))}
+  </ul>
+)}
+
+<style>
+  .facts {
+    display: grid;
+    grid-auto-columns: minmax(0, 1fr);
+    grid-auto-flow: column;
+    margin: 0;
+    padding: var(--space-3) 0 0;
+    border-top: var(--border-subtle);
+    list-style: none;
+  }
+  .fact {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+  }
+  .fact + .fact {
+    padding-left: var(--space-3);
+    border-left: var(--border-subtle);
+  }
+  .fact-value {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--space-3);
+    font-size: var(--fs-18);
+    font-weight: var(--fw-semibold);
+    color: var(--color-text-strong);
+    font-variant-numeric: tabular-nums;
+  }
+  .fact-value.positive {
+    color: var(--color-success);
+  }
+  .fact-part {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    white-space: nowrap;
+  }
+  .fact-part :global(svg) {
+    flex: none;
+    color: var(--color-navy-800);
+  }
+  .fact-label {
+    font-size: var(--fs-13);
+    color: var(--color-text-muted);
+  }
+  /* Espacio angosto (la tarjeta y la columna del detalle declaran container-type): columnas al ancho de su
+     contenido, repartidas, para que "dorm. y baños" no se parta en dos líneas */
+  @container (max-width: 320px) {
+    .facts {
+      grid-auto-columns: auto;
+      justify-content: space-between;
+    }
+    .fact + .fact {
+      padding-left: var(--space-2);
+    }
+    .fact-value {
+      gap: 0 var(--space-2);
+      font-size: var(--fs-15);
+    }
+    .fact-label {
+      font-size: var(--fs-xs);
+      white-space: nowrap;
+    }
+  }
+</style>

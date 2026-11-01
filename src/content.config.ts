@@ -52,6 +52,8 @@ const properties = defineCollection({
       areaM2: z.number().nullish(),
       bedrooms: z.number().int().nullish(),
       bathrooms: z.number().nullish(),
+      // Año de construcción; en un proyecto, el año de entrega (la tarjeta muestra la antigüedad)
+      yearBuilt: z.number().int().nullish(),
       images: z.array(
         z.object({
           // URL de la API (https://…) o ruta a una foto local (../assets/…)

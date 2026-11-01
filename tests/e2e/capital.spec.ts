@@ -34,10 +34,12 @@ test.describe('Capital', () => {
 
   test('las anclas de la página existen', async ({ page }) => {
     await page.goto('/capital')
-    for (const id of ['como-funciona', 'proyectos', 'lista-inmuebles', 'aliados']) {
+    for (const id of ['como-funciona', 'proyectos', 'lista-inmuebles']) {
       await expect(page.locator(`#${id}`)).toHaveCount(1)
     }
     await expect(page.locator('#top-10')).toHaveCount(0)
+    // Por ahora la portada no lleva "Para ti" ni la franja de aliados
+    await expect(page.locator('[data-for-you], #aliados')).toHaveCount(0)
     // "Ver todos los proyectos" también va dentro de la lista
     await expect(
       page.locator('#lista-inmuebles').getByRole('link', { name: /Ver todos los proyectos/ }),
@@ -57,26 +59,20 @@ test.describe('Capital', () => {
     await expect(nav.getByRole('link', { name: 'Vende' })).toHaveAttribute('href', '/propietarios')
   })
 
-  test('"Para ti" aparece después de ver un inmueble', async ({ page }) => {
-    await page.goto('/capital')
-    await expect(page.getByRole('heading', { name: 'Para ti, según lo que has visto' })).toBeHidden()
-    await page.goto('/capital/lince-av-arequipa-cuadra-12')
-    await page.goto('/capital')
-    const row = page.locator('[data-for-you]')
-    await expect(row.getByRole('heading', { name: 'Para ti, según lo que has visto' })).toBeVisible()
-    await expect(row.locator('article')).not.toHaveCount(0)
-    await expect(row).not.toContainText('Lince · Av. Arequipa')
-  })
-
-  test('el detalle muestra datos, aliado y inmuebles similares', async ({ page }) => {
+  test('el detalle muestra datos y Contactar', async ({ page }) => {
     await page.goto('/capital')
     await page.getByRole('link', { name: 'Ver más detalle' }).first().click()
     await expect(page).toHaveURL(/\/capital\/[a-z0-9-]+\/?$/)
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
     await expect(page.getByText('Precio de compra')).toBeVisible()
+    // En la ficha va solo la rentabilidad: por ahora sin alquiler estimado ni "se paga en"
+    await expect(page.getByText('rentabilidad anual')).toBeVisible()
+    await expect(page.getByText('alquiler al mes')).toHaveCount(0)
+    await expect(page.getByText('se paga en')).toHaveCount(0)
+    // Por ahora el detalle no lleva "Te acompaña" ni inmuebles similares
     await expect(
-      page.getByRole('heading', { name: 'Inmuebles similares que te pueden interesar' }),
-    ).toBeVisible()
+      page.getByRole('heading', { name: /Te acompaña|Aliado del proyecto|similares/ }),
+    ).toHaveCount(0)
     await expect(page.getByRole('link', { name: 'Contactar', exact: true })).toHaveAttribute(
       'href',
       /\/mis-inmuebles\?agregar=/,
@@ -108,7 +104,7 @@ test.describe('Capital', () => {
   test('las fotos se amplían a pantalla completa y se recorren con el teclado', async ({ page }) => {
     await page.goto('/capital/lince-av-arequipa-cuadra-12')
     await page.getByRole('button', { name: 'Ampliar foto 1 de 4' }).click()
-    const viewer = page.getByRole('dialog', { name: /Fotos y videos de Lince/ })
+    const viewer = page.getByRole('dialog', { name: /Fotos y videos de Av\. Arequipa, Lince/ })
     await expect(viewer).toBeVisible()
     await expect(viewer.locator('[data-lb-current]')).toHaveText('1')
     await page.keyboard.press('ArrowRight')
@@ -119,7 +115,7 @@ test.describe('Capital', () => {
 })
 
 test.describe('Todos los inmuebles', () => {
-  test('"Ver todos los proyectos" abre la búsqueda con filtros, orden y URL', async ({ page }) => {
+  test('"Ver todos los proyectos" abre la búsqueda con buscador, orden y URL', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 900 })
     await page.goto('/capital')
     await page.getByRole('link', { name: 'Ver todos los proyectos' }).first().click()
@@ -128,120 +124,34 @@ test.describe('Todos los inmuebles', () => {
     const count = page.locator('[data-results-count]')
     await expect(count).toHaveText('36 resultados')
     await expect(cards).toHaveCount(12) // la primera página
+    // Por ahora solo buscador, orden y páginas: sin filtros laterales, "Cerca de" ni mapa
+    await expect(page.getByRole('checkbox')).toHaveCount(0)
+    await expect(page.getByRole('button', { name: 'Mapa', exact: true })).toHaveCount(0)
+    await expect(page.getByLabel('Ordenar por').locator('option[value="cercania"]')).toHaveCount(0)
 
-    await page.getByRole('checkbox', { name: /^De proyecto/ }).check()
-    await expect(count).toHaveText('24 resultados')
-    await expect(cards).toHaveCount(12)
-    await page.getByRole('checkbox', { name: /^Urbana/ }).check()
-    await expect(cards).toHaveCount(6)
-    await page.getByRole('checkbox', { name: /^Miraflores \(/ }).check()
-    await expect(cards).toHaveCount(1)
-    await expect(cards.first()).toContainText('Calle Schell')
-    await expect(page).toHaveURL(/tipo=developer.*distrito=miraflores.*inmobiliaria=urbana/)
-
-    await page.getByRole('button', { name: 'Quitar filtro: Miraflores' }).click()
+    await page.getByRole('searchbox').fill('urbana')
+    await expect(count).toHaveText('6 resultados para "urbana"')
     await expect(cards).toHaveCount(6)
     await page.getByLabel('Ordenar por').selectOption('precio-asc')
     await expect(cards.first()).toContainText('Lince')
     await expect(cards.last()).toContainText('Miraflores')
+    await expect(page).toHaveURL(/q=urbana.*orden=precio-asc/)
 
     // La búsqueda se puede compartir: al recargar sigue igual
     await page.reload()
     await expect(cards).toHaveCount(6)
-    await expect(page.getByRole('checkbox', { name: /^Urbana/ })).toBeChecked()
+    await expect(page.getByRole('searchbox')).toHaveValue('urbana')
 
-    await page.getByRole('button', { name: 'Limpiar todo' }).click()
+    await page.getByRole('searchbox').fill('no-existe-nada')
+    await page.getByRole('button', { name: 'Limpiar búsqueda' }).click()
     await expect(count).toHaveText('36 resultados')
     await expect(cards).toHaveCount(12)
   })
 
-  test('"Cerca de" ordena por distancia a un lugar y filtra por km', async ({ page }) => {
-    await page.setViewportSize({ width: 1280, height: 900 })
-    await page.goto('/capital/inmuebles')
-    const cards = page.locator('[data-results] [data-property-card]:visible')
-    await page.getByLabel('O elige un lugar').selectOption('larcomar')
-    await expect(page.getByLabel('Ordenar por')).toHaveValue('cercania')
-    await expect(cards.first()).toContainText('Av. José Larco cuadra 8')
-    await expect(cards.first()).toContainText('a 350 m de Larcomar')
-    await expect(page).toHaveURL(/cerca=larcomar.*orden=cercania/)
-
-    await page.getByRole('radio', { name: /^Hasta 2 km/ }).check()
-    await expect(cards).toHaveCount(6)
-    await expect(page).toHaveURL(/cerca=larcomar&km=2/)
-
-    // Se puede compartir: al recargar sigue igual
-    await page.reload()
-    await expect(cards).toHaveCount(6)
-    await expect(cards.first()).toContainText('a 350 m de Larcomar')
-
-    await page.getByRole('button', { name: 'Quitar filtro: Cerca de Larcomar (Miraflores)' }).click()
+  test('los links con filtros de antes muestran todos los inmuebles', async ({ page }) => {
+    await page.goto('/capital/inmuebles?distrito=brena&vista=mapa&orden=cercania')
     await expect(page.locator('[data-results-count]')).toHaveText('36 resultados')
-    await expect(page.getByLabel('Ordenar por')).toHaveValue('destacados')
-    await expect(cards.first().locator('[data-distance]')).toBeHidden()
-    expect(page.url()).not.toMatch(/cerca=|km=|orden=/)
-  })
-
-  test('"Más cercanos" usa la ubicación del navegador sin ponerla en la URL', async ({ page, context }) => {
-    await context.grantPermissions(['geolocation'])
-    await context.setGeolocation({ latitude: -12.0853, longitude: -77.037 }) // Lince
-    await page.goto('/capital/inmuebles')
-    await page.getByLabel('Ordenar por').selectOption('cercania')
-    const cards = page.locator('[data-results] [data-property-card]:visible')
-    await expect(cards.first()).toContainText('Av. Petit Thouars cuadra 27')
-    await expect(cards.first()).toContainText('a 450 m de ti')
-    await expect(page.getByLabel('Ordenar por')).toHaveValue('cercania')
-    expect(page.url()).not.toMatch(/cerca=|-12\.0/)
-  })
-
-  test('sin permiso de ubicación, avisa y lleva a elegir un lugar', async ({ page }) => {
-    await page.addInitScript(() => {
-      navigator.geolocation.getCurrentPosition = (_ok, fail) =>
-        fail?.({ code: 1, PERMISSION_DENIED: 1, POSITION_UNAVAILABLE: 2, TIMEOUT: 3, message: '' })
-    })
-    await page.goto('/capital/inmuebles')
-    await page.getByLabel('Ordenar por').selectOption('cercania')
-    await expect(page.getByText('No tenemos permiso para usar tu ubicación.')).toBeVisible()
-    await expect(page.getByLabel('Ordenar por')).toHaveValue('destacados')
-    await page.getByRole('button', { name: 'Elegir un lugar' }).click()
-    await expect(page.getByLabel('O elige un lugar')).toBeFocused()
-  })
-
-  test('la vista de mapa muestra un pin por inmueble y su mini tarjeta', async ({ page }) => {
-    // Sin descargar mosaicos de OpenStreetMap en las pruebas
-    await page.route('https://tile.openstreetmap.org/**', (route) => route.abort())
-    await page.goto('/capital/inmuebles?distrito=miraflores')
-    const cards = page.locator('[data-results] [data-property-card]:visible')
-    const count = await cards.count()
-    expect(count).toBeGreaterThan(1)
-
-    await page.getByRole('button', { name: 'Mapa', exact: true }).click()
-    await expect(page).toHaveURL(/distrito=miraflores.*vista=mapa/)
-    await expect(page.getByRole('button', { name: 'Mapa', exact: true })).toHaveAttribute(
-      'aria-pressed',
-      'true',
-    )
-    await expect(page.locator('[data-results]')).toBeHidden()
-    const pins = page.locator('.map-pin')
-    await expect(pins).toHaveCount(count)
-
-    await pins.first().click()
-    const popup = page.locator('.leaflet-popup')
-    await expect(popup).toContainText('Miraflores')
-    await expect(popup.getByRole('link', { name: 'Ver más detalle' })).toHaveAttribute(
-      'href',
-      /\/capital\/miraflores-/,
-    )
-
-    // Los filtros también cambian el mapa, y al recargar sigue en el mapa
-    await page.reload()
-    await expect(pins).toHaveCount(count)
-    await page.getByRole('button', { name: 'Quitar filtro: Miraflores' }).click()
-    await expect(pins).toHaveCount(36)
-
-    // El mapa lleva todos los pines; la lista, de 12 en 12
-    await page.getByRole('button', { name: 'Lista', exact: true }).click()
-    await expect(cards).toHaveCount(12)
-    expect(page.url()).not.toContain('vista=')
+    await expect(page).toHaveURL(/\/capital\/inmuebles\/?$/)
   })
 
   test('la lista va en páginas de 12 y "Atrás" vuelve a la anterior', async ({ page }) => {
@@ -284,25 +194,11 @@ test.describe('Todos los inmuebles', () => {
     await expect(pages).toContainText('Mostrando 25–36')
     await expect(page).toHaveURL(/pagina=3/)
   })
-
-  test('en móvil los filtros se abren en un panel', async ({ page }) => {
-    await page.setViewportSize({ width: 390, height: 844 })
-    await page.goto('/capital/inmuebles?distrito=brena')
-    await expect(page.locator('[data-results] [data-property-card]:visible')).toHaveCount(1)
-    await page.getByRole('button', { name: /Filtros/ }).click()
-    await expect(page.getByRole('checkbox', { name: /Breña/ })).toBeChecked()
-    await page.getByRole('button', { name: 'Ver 1 resultado' }).click()
-    await expect(page.getByRole('checkbox', { name: /Breña/ })).toBeHidden()
-  })
 })
 
 test.describe('Inmobiliarias aliadas', () => {
-  test('la franja de aliados lleva a los proyectos de la inmobiliaria', async ({ page }) => {
-    await page.goto('/capital')
-    await page
-      .locator('#aliados')
-      .getByRole('link', { name: /Urbana/ })
-      .click()
+  test('la página de la inmobiliaria muestra sus proyectos', async ({ page }) => {
+    await page.goto('/capital/aliados/urbana')
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Proyectos de Urbana')
     await expect(page.getByText('6 proyectos encontrados')).toBeVisible()
     await expect(page.locator('[data-property-card]').first()).toContainText('Precio desde')

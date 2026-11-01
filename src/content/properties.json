@@ -28,6 +28,7 @@
     "areaM2": 70,
     "bedrooms": 2,
     "bathrooms": 2,
+    "yearBuilt": 2016,
     "images": [
       {
         "src": "../assets/depas/lince-av-arequipa.jpg",
@@ -85,6 +86,7 @@
     "areaM2": 62,
     "bedrooms": 2,
     "bathrooms": 1,
+    "yearBuilt": 2009,
     "images": [
       {
         "src": "../assets/depas/surquillo-av-angamos.jpg",
@@ -136,6 +138,7 @@
     "areaM2": 85,
     "bedrooms": 3,
     "bathrooms": 2,
+    "yearBuilt": 2019,
     "images": [
       {
         "src": "../assets/depas/magdalena-av-del-ejercito.jpg",
@@ -191,6 +194,7 @@
     "areaM2": 88,
     "bedrooms": 3,
     "bathrooms": 2,
+    "yearBuilt": 2027,
     "images": [
       {
         "src": "../assets/depas/magdalena-av-del-ejercito.jpg",
@@ -246,6 +250,7 @@
     "areaM2": 92,
     "bedrooms": 2,
     "bathrooms": 2,
+    "yearBuilt": 2027,
     "images": [
       {
         "src": "../assets/hero-home.jpg",
@@ -301,6 +306,7 @@
     "areaM2": 68,
     "bedrooms": 2,
     "bathrooms": 2,
+    "yearBuilt": 2027,
     "images": [
       {
         "src": "../assets/depas/surquillo-av-angamos.jpg",
@@ -352,6 +358,7 @@
     "areaM2": 68,
     "bedrooms": 2,
     "bathrooms": 2,
+    "yearBuilt": 2012,
     "images": [
       {
         "src": "../assets/depas/ilustraciones/sala-01.jpg",
@@ -403,6 +410,7 @@
     "areaM2": 62,
     "bedrooms": 2,
     "bathrooms": 1,
+    "yearBuilt": 2021,
     "images": [
       {
         "src": "../assets/depas/ilustraciones/sala-02.jpg",
@@ -454,6 +462,7 @@
     "areaM2": 95,
     "bedrooms": 3,
     "bathrooms": 2,
+    "yearBuilt": 2004,
     "images": [
       {
         "src": "../assets/depas/ilustraciones/sala-03.jpg",
@@ -505,6 +514,7 @@
     "areaM2": 45,
     "bedrooms": 1,
     "bathrooms": 1,
+    "yearBuilt": 2017,
     "images": [
       {
         "src": "../assets/depas/ilustraciones/sala-04.jpg",
@@ -556,6 +566,7 @@
     "areaM2": 42,
     "bedrooms": 1,
     "bathrooms": 1,
+    "yearBuilt": 1998,
     "images": [
       {
         "src": "../assets/depas/ilustraciones/sala-05.jpg",
@@ -613,6 +624,7 @@
     "areaM2": 105,
     "bedrooms": 3,
     "bathrooms": 2,
+    "yearBuilt": 2014,
     "images": [
       {
         "src": "../assets/depas/ilustraciones/sala-06.jpg",
@@ -664,6 +676,7 @@
     "areaM2": 80,
     "bedrooms": 2,
     "bathrooms": 2,
+    "yearBuilt": 2022,
     "images": [
       {
         "src": "../assets/depas/ilustraciones/sala-07.jpg",
@@ -715,6 +728,7 @@
     "areaM2": 64,
     "bedrooms": 2,
     "bathrooms": 1,
+    "yearBuilt": 2011,
     "images": [
       {
         "src": "../assets/depas/ilustraciones/sala-08.jpg",
@@ -766,6 +780,7 @@
     "areaM2": 48,
     "bedrooms": 1,
     "bathrooms": 1,
+    "yearBuilt": 2007,
     "images": [
       {
         "src": "../assets/depas/ilustraciones/sala-09.jpg",
@@ -821,6 +836,7 @@
     "areaM2": 70,
     "bedrooms": 2,
     "bathrooms": 2,
+    "yearBuilt": 2028,
     "images": [
       {
         "src": "../assets/depas/ilustraciones/fachada-10.jpg",
@@ -876,6 +892,7 @@
     "areaM2": 58,
     "bedrooms": 2,
     "bathrooms": 1,
+    "yearBuilt": 2026,
     "images": [
       {
         "src": "../assets/depas/ilustraciones/fachada-11.jpg",
@@ -931,6 +948,7 @@
     "areaM2": 50,
     "bedrooms": 1,
     "bathrooms": 1,
+    "yearBuilt": 2025,
     "images": [
       {
         "src": "../assets/depas/ilustraciones/fachada-12.jpg",
@@ -986,6 +1004,7 @@
     "areaM2": 60,
     "bedrooms": 2,
     "bathrooms": 2,
+    "yearBuilt": 2028,
     "images": [
       {
         "src": "../assets/depas/ilustraciones/fachada-13.jpg",
@@ -1041,6 +1060,7 @@
     "areaM2": 74,
     "bedrooms": 2,
     "bathrooms": 2,
+    "yearBuilt": 2027,
     "images": [
       {
         "src": "../assets/depas/ilustraciones/fachada-14.jpg",
@@ -1096,6 +1116,7 @@
     "areaM2": 55,
     "bedrooms": 2,
     "bathrooms": 1,
+    "yearBuilt": 2027,
     "images": [
       {
         "src": "../assets/depas/ilustraciones/fachada-01.jpg",
@@ -1151,6 +1172,7 @@
     "areaM2": 82,
     "bedrooms": 2,
     "bathrooms": 2,
+    "yearBuilt": 2027,
     "images": [
       {
         "src": "../assets/depas/ilustraciones/fachada-02.jpg",
@@ -1206,6 +1228,7 @@
     "areaM2": 57,
     "bedrooms": 2,
     "bathrooms": 1,
+    "yearBuilt": 2027,
     "images": [
       {
         "src": "../assets/depas/ilustraciones/fachada-03.jpg",
@@ -1261,6 +1284,7 @@
     "areaM2": 63,
     "bedrooms": 2,
     "bathrooms": 2,
+    "yearBuilt": 2028,
     "images": [
       {
         "src": "../assets/depas/ilustraciones/fachada-04.jpg",
@@ -1316,6 +1340,7 @@
     "areaM2": 60,
     "bedrooms": 3,
     "bathrooms": 2,
+    "yearBuilt": 2027,
     "images": [
       {
         "src": "../assets/depas/ilustraciones/fachada-05.jpg",
@@ -1371,6 +1396,7 @@
     "areaM2": 62,
     "bedrooms": 2,
     "bathrooms": 2,
+    "yearBuilt": 2027,
     "images": [
       {
         "src": "../assets/depas/ilustraciones/fachada-06.jpg",
@@ -1426,6 +1452,7 @@
     "areaM2": 56,
     "bedrooms": 2,
     "bathrooms": 1,
+    "yearBuilt": 2026,
     "images": [
       {
         "src": "../assets/depas/ilustraciones/fachada-07.jpg",
@@ -1481,6 +1508,7 @@
     "areaM2": 48,
     "bedrooms": 1,
     "bathrooms": 1,
+    "yearBuilt": 2027,
     "images": [
       {
         "src": "../assets/depas/ilustraciones/fachada-08.jpg",
@@ -1536,6 +1564,7 @@
     "areaM2": 98,
     "bedrooms": 3,
     "bathrooms": 3,
+    "yearBuilt": 2027,
     "images": [
       {
         "src": "../assets/depas/ilustraciones/fachada-09.jpg",
@@ -1591,6 +1620,7 @@
     "areaM2": 46,
     "bedrooms": 1,
     "bathrooms": 1,
+    "yearBuilt": 2028,
     "images": [
       {
         "src": "../assets/depas/ilustraciones/fachada-10.jpg",
@@ -1652,6 +1682,7 @@
     "areaM2": 120,
     "bedrooms": 3,
     "bathrooms": 3,
+    "yearBuilt": 2027,
     "images": [
       {
         "src": "../assets/depas/ilustraciones/fachada-11.jpg",
@@ -1707,6 +1738,7 @@
     "areaM2": 52,
     "bedrooms": 1,
     "bathrooms": 1,
+    "yearBuilt": 2026,
     "images": [
       {
         "src": "../assets/depas/ilustraciones/fachada-12.jpg",
@@ -1762,6 +1794,7 @@
     "areaM2": 72,
     "bedrooms": 2,
     "bathrooms": 2,
+    "yearBuilt": 2028,
     "images": [
       {
         "src": "../assets/depas/ilustraciones/fachada-13.jpg",
@@ -1817,6 +1850,7 @@
     "areaM2": 54,
     "bedrooms": 2,
     "bathrooms": 1,
+    "yearBuilt": 2027,
     "images": [
       {
         "src": "../assets/depas/ilustraciones/fachada-14.jpg",
@@ -1872,6 +1906,7 @@
     "areaM2": 110,
     "bedrooms": 3,
     "bathrooms": 2,
+    "yearBuilt": 2027,
     "images": [
       {
         "src": "../assets/depas/ilustraciones/fachada-01.jpg",
@@ -1927,6 +1962,7 @@
     "areaM2": 61,
     "bedrooms": 2,
     "bathrooms": 2,
+    "yearBuilt": 2025,
     "images": [
       {
         "src": "../assets/depas/ilustraciones/fachada-02.jpg",

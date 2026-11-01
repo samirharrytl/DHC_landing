@@ -26,6 +26,7 @@ const { title = 'Para ti, según lo que has visto', seeAllHref = '/capital/inmue
 </section>
 
 <script>
+  import { streetOf } from '../lib/format'
   import { getHistoryStore, getSavedStore } from '../lib/saved-store'
   import { recommend } from '../lib/recommend'
   import { asRecommendable, loadCatalog, type CatalogItem } from '../scripts/catalog'
@@ -39,7 +40,7 @@ const { title = 'Para ti, según lo que has visto', seeAllHref = '/capital/inmue
     const slot = <T extends HTMLElement>(name: string) => fragment.querySelector<T>(`[data-slot="${name}"]`)!
     const link = slot<HTMLAnchorElement>('link')
     link.href = item.url
-    link.textContent = `${item.district} · ${item.address.replace(/ cuadra \d+$/i, '')}`
+    link.textContent = `${item.district} · ${streetOf(item.address)}`
     slot('meta').textContent = item.developer
       ? `${item.district}, Lima · ${item.developer.name}`
       : `${item.district}, Lima`

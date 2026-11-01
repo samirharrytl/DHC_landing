@@ -1,42 +1,24 @@
 ---
-// "Todos los inmuebles": la búsqueda completa de Capital, como los resultados de una tienda en línea.
-// Todos los inmuebles (de propietarios y de proyectos) salen del build; los filtros de la barra lateral,
-// el buscador y el orden se aplican en el navegador (lógica en src/lib/catalog-search.ts) y quedan
-// en la URL (?distrito=lince&orden=precio-asc), así la búsqueda se puede compartir.
-// "Cerca de" ordena por distancia a la ubicación de la persona o a un lugar de la lista (src/lib/geo.ts).
-// "Mapa" muestra los mismos resultados como pines (src/scripts/depas-map.ts, se carga al elegirlo).
+// "Todos los inmuebles": la búsqueda completa de Capital, en su versión básica (buscador, orden y páginas).
+// Todos los inmuebles (de propietarios y de proyectos) salen del build; el buscador y el orden se aplican
+// en el navegador (lógica en src/lib/catalog-search.ts) y quedan en la URL (?q=lince&orden=precio-asc),
+// así la búsqueda se puede compartir.
 // La lista va en páginas de 12 (?pagina=2): cada página queda en el historial, así "Atrás" vuelve a la anterior.
+// Por ahora no van los filtros de la barra lateral, "Cerca de" ni el mapa (siguen en el historial de git).
 import BaseLayout from '../../layouts/BaseLayout.astro'
 import Icon from '../../components/Icon.astro'
 import PropertyCard from '../../components/PropertyCard.astro'
-import { getDevelopers, getFinancingAssumptions, getProperties } from '../../lib/properties'
-import {  formatPEN } from '../../lib/format'
-import { DISTANCE_STEPS, paybackSteps, priceRanges, SORT_OPTIONS, yieldSteps } from '../../lib/catalog-search'
-import { DISTRITOS, LUGARES } from '../../data/lugares'
+import { getProperties } from '../../lib/properties'
+import { SORT_OPTIONS } from '../../lib/catalog-search'
 
 const depas = await getProperties()
-const developers = (await getDevelopers()).filter((d) => d.projectCount > 0)
-
-const districts = [...new Map(depas.map((d) => [d.district.slug, d.district.name]))].sort((a, b) =>
-  a[1].localeCompare(b[1], 'es'),
-)
-const prices = priceRanges(
-  depas.map((d) => d.price.amount),
-  formatPEN,
-)
-const yields = yieldSteps(depas.map((d) => d.yield.min))
-const paybacks = paybackSteps(depas.map((d) => d.paybackYears))
-const hasReserved = depas.some((d) => d.status === 'reserved')
-
-const origins = [
-  { value: 'owner', label: 'De propietario' },
-  { value: 'developer', label: 'De proyecto' },
-]
+// "Más cercanos" necesita "Cerca de", que por ahora no está
+const sortOptions = SORT_OPTIONS.filter((option) => option.value !== 'cercania')
 ---
 
 <BaseLayout
   title="Todos los inmuebles"
-  description="Todos los inmuebles para invertir en Lima de DepaHost Capital: filtra por distrito, precio, rentabilidad, plazo y cercanía."
+  description="Todos los inmuebles para invertir en Lima de DepaHost Capital: busca por distrito, dirección, inmobiliaria o precio."
 >
   <div class="container results-page" data-depa-search>
     <nav class="breadcrumb" aria-label="Migas de pan">
@@ -67,265 +49,55 @@ const origins = [
       <p class="results-count" data-results-count role="status" aria-live="polite">
         {depas.length} resultados
       </p>
-      <div class="results-tools">
-        <div class="view-toggle" role="group" aria-label="Ver resultados como">
-          <button type="button" aria-pressed="true" data-view="lista">
-            <Icon name="list" size={18} />
-            Lista
-          </button>
-          <button type="button" aria-pressed="false" data-view="mapa">
-            <Icon name="map" size={18} />
-            Mapa
-          </button>
-        </div>
-        <button
-          type="button"
-          class="btn btn--secondary btn--sm filters-open"
-          aria-expanded="false"
-          aria-controls="filtros"
-          data-filters-open
-        >
-          <Icon name="sliders" size={18} />
-          Filtros <span class="filters-badge" data-filters-badge hidden></span>
-        </button>
-        <label class="sort">
-          <span>Ordenar por</span>
-          <select data-sort>
-            {SORT_OPTIONS.map((option) => (
-              <option value={option.value}>{option.label}</option>
-            ))}
-          </select>
-        </label>
-      </div>
-    </div>
-
-    <!-- Avisos de "Cerca de": buscando la ubicación, permiso denegado… -->
-    <div class="near-status" role="status" data-near-status></div>
-
-    <div class="chips" data-active-chips hidden>
-      <ul data-chip-list aria-label="Filtros activos"></ul>
-      <button type="button" class="clear-all" data-clear-all>
-        Limpiar todo
-      </button>
-    </div>
-
-    <div class="layout">
-      <!-- Barra lateral de filtros. En móvil es un panel que se abre con "Filtros". -->
-      <aside id="filtros" class="filters" aria-labelledby="filters-title" data-filters>
-        <div class="filters-head">
-          <h2 id="filters-title" tabindex="-1" data-filters-title>
-            Filtros
-          </h2>
-          <button type="button" class="filters-close" aria-label="Cerrar filtros" data-filters-close>
-            <Icon name="x" size={22} />
-          </button>
-        </div>
-
-        <div class="filters-body">
-          <fieldset class="group near">
-            <legend>Cerca de</legend>
-            <button type="button" class="btn btn--secondary btn--sm near-locate" data-near-locate>
-              <Icon name="locate" size={18} />
-              <span data-near-locate-label>Usar mi ubicación</span>
-            </button>
-            <label class="near-field">
-              <span>O elige un lugar</span>
-              <select data-near-select>
-                <option value="">Elige un distrito o lugar</option>
-                {LUGARES.map((group) => (
-                  <optgroup label={group.group}>
-                    {group.places.map((place) => (
-                      <option value={place.slug}>{place.name}</option>
-                    ))}
-                  </optgroup>
-                ))}
-                <optgroup label="Distritos">
-                  {DISTRITOS.map((district) => (
-                    <option value={district.slug}>{district.name}</option>
-                  ))}
-                </optgroup>
-              </select>
-            </label>
-            <div class="near-radius" data-near-radius hidden>
-              {DISTANCE_STEPS.map((km) => (
-                <label class="facet">
-                  <input type="radio" name="km" value={km} data-facet="distance" />
-                  <span data-label>Hasta {km} km</span>
-                  <span class="facet-count" data-facet-count />
-                </label>
-              ))}
-              <button type="button" class="clear-group" data-clear-group="distance" hidden>
-                Borrar distancia
-              </button>
-            </div>
-          </fieldset>
-
-          <fieldset class="group">
-            <legend>Tipo</legend>
-            {origins.map((o) => (
-              <label class="facet">
-                <input type="checkbox" name="tipo" value={o.value} data-facet="origin" />
-                <span data-label>{o.label}</span>
-                <span class="facet-count" data-facet-count />
-              </label>
-            ))}
-          </fieldset>
-
-          <fieldset class="group">
-            <legend>Distrito</legend>
-            {districts.map(([slug, name]) => (
-              <label class="facet">
-                <input type="checkbox" name="distrito" value={slug} data-facet="district" />
-                <span data-label>{name}</span>
-                <span class="facet-count" data-facet-count />
-              </label>
-            ))}
-          </fieldset>
-
-          {developers.length > 0 && (
-            <fieldset class="group">
-              <legend>Inmobiliaria</legend>
-              {developers.map((d) => (
-                <label class="facet">
-                  <input type="checkbox" name="inmobiliaria" value={d.slug} data-facet="developer" />
-                  <span data-label>{d.name}</span>
-                  <span class="facet-count" data-facet-count />
-                </label>
-              ))}
-            </fieldset>
-          )}
-
-          <fieldset class="group">
-            <legend>Precio</legend>
-            {prices.map((range) => (
-              <label class="facet">
-                <input
-                  type="radio"
-                  name="precio"
-                  value={`${range.min ?? ''}-${range.max ?? ''}`}
-                  data-facet="price"
-                  data-min={range.min}
-                  data-max={range.max}
-                />
-                <span data-label>{range.label}</span>
-                <span class="facet-count" data-facet-count />
-              </label>
-            ))}
-            <div class="price-custom" data-price-custom>
-              <label>
-                <span class="sr-only">Precio mínimo en soles</span>
-                <input type="text" inputmode="numeric" placeholder="S/ Mín" data-price-min />
-              </label>
-              <label>
-                <span class="sr-only">Precio máximo en soles</span>
-                <input type="text" inputmode="numeric" placeholder="S/ Máx" data-price-max />
-              </label>
-              <button type="button" class="btn btn--secondary btn--sm" data-price-apply>
-                Ir
-              </button>
-            </div>
-            <button type="button" class="clear-group" data-clear-group="price" hidden>
-              Borrar precio
-            </button>
-          </fieldset>
-
-          {yields.length > 0 && (
-            <fieldset class="group">
-              <legend>Rentabilidad estimada</legend>
-              {yields.map((y) => (
-                <label class="facet">
-                  <input type="radio" name="rentabilidad" value={y} data-facet="yield" />
-                  <span data-label>Desde {y}% anual</span>
-                  <span class="facet-count" data-facet-count />
-                </label>
-              ))}
-              <button type="button" class="clear-group" data-clear-group="yield" hidden>
-                Borrar rentabilidad
-              </button>
-            </fieldset>
-          )}
-
-          {paybacks.length > 0 && (
-            <fieldset class="group">
-              <legend>Se paga en</legend>
-              {paybacks.map((y) => (
-                <label class="facet">
-                  <input type="radio" name="plazo" value={y} data-facet="payback" />
-                  <span data-label>Hasta {y} años</span>
-                  <span class="facet-count" data-facet-count />
-                </label>
-              ))}
-              <button type="button" class="clear-group" data-clear-group="payback" hidden>
-                Borrar plazo
-              </button>
-            </fieldset>
-          )}
-
-          {hasReserved && (
-            <fieldset class="group">
-              <legend>Disponibilidad</legend>
-              <label class="facet">
-                <input type="checkbox" name="disponibles" value="1" data-facet="available" />
-                <span data-label>Solo disponibles</span>
-                <span class="facet-count" data-facet-count />
-              </label>
-            </fieldset>
-          )}
-        </div>
-
-        <div class="filters-foot">
-          <button type="button" class="btn btn--cta btn--block" data-filters-close>
-            <span data-results-short>Ver {depas.length} resultados</span>
-          </button>
-        </div>
-      </aside>
-      <div class="filters-backdrop" data-filters-backdrop hidden></div>
-
-      <section class="results" aria-labelledby="results-title">
-        <h2 id="results-title" class="sr-only" tabindex="-1" data-results-title>
-          Resultados
-        </h2>
-        <div class="results-map" data-results-map hidden>
-          <div class="map-canvas" data-map-canvas></div>
-          <p class="map-message" data-map-message>
-            Cargando mapa…
-          </p>
-        </div>
-        <div class="results-grid" data-results data-paging-pending>
-          {depas.map((d, index) => (
-            <PropertyCard property={d} priority={index < 3} />
+      <label class="sort">
+        <span>Ordenar por</span>
+        <select data-sort>
+          {sortOptions.map((option) => (
+            <option value={option.value}>{option.label}</option>
           ))}
-        </div>
-        <!-- Páginas de 12: los números y los links los arma el script según los resultados -->
-        <nav class="pagination" aria-label="Páginas de resultados" data-pagination hidden>
-          <p class="pagination-info" data-pagination-info></p>
-          <div class="pagination-pages">
-            <!-- Sin página vecina es un texto gris; con página, el script lo cambia por un link -->
-            <span class="pagination-step" data-page-step="-1" aria-disabled="true">
-              <Icon name="arrow-left" size={18} />
-              <span class="pagination-step-label">Anterior</span>
-            </span>
-            <ul class="pagination-list" data-page-list></ul>
-            <span class="pagination-step" data-page-step="1" aria-disabled="true">
-              <span class="pagination-step-label">Siguiente</span>
-              <Icon name="arrow-right" size={18} />
-            </span>
-          </div>
-        </nav>
-        <div class="empty" data-results-empty hidden>
-          <Icon name="search" size={28} />
-          <p>No encontramos inmuebles con esos filtros.</p>
-          <button type="button" class="btn btn--secondary btn--sm" data-clear-all>
-            Limpiar filtros
-          </button>
-        </div>
-      </section>
+        </select>
+      </label>
     </div>
+
+    <section class="results" aria-labelledby="results-title">
+      <h2 id="results-title" class="sr-only" tabindex="-1" data-results-title>
+        Resultados
+      </h2>
+      <div class="results-grid" data-results data-paging-pending>
+        {depas.map((d, index) => (
+          <PropertyCard property={d} priority={index < 3} />
+        ))}
+      </div>
+      <!-- Páginas de 12: los números y los links los arma el script según los resultados -->
+      <nav class="pagination" aria-label="Páginas de resultados" data-pagination hidden>
+        <p class="pagination-info" data-pagination-info></p>
+        <div class="pagination-pages">
+          <!-- Sin página vecina es un texto gris; con página, el script lo cambia por un link -->
+          <span class="pagination-step" data-page-step="-1" aria-disabled="true">
+            <Icon name="arrow-left" size={18} />
+            <span class="pagination-step-label">Anterior</span>
+          </span>
+          <ul class="pagination-list" data-page-list></ul>
+          <span class="pagination-step" data-page-step="1" aria-disabled="true">
+            <span class="pagination-step-label">Siguiente</span>
+            <Icon name="arrow-right" size={18} />
+          </span>
+        </div>
+      </nav>
+      <div class="empty" data-results-empty hidden>
+        <Icon name="search" size={28} />
+        <p>No encontramos inmuebles con esa búsqueda.</p>
+        <button type="button" class="btn btn--secondary btn--sm" data-clear-search>
+          Limpiar búsqueda
+        </button>
+      </div>
+    </section>
   </div>
 </BaseLayout>
 
 <script>
   import {
+    emptyQuery,
     matchesQuery,
     pageNumbers,
     paginate,
@@ -333,22 +105,10 @@ const origins = [
     queryToParams,
     sortDepas,
     type DepaQuery,
-    type FacetGroup,
     type PageSlice,
     type SearchableDepa,
     type SortKey,
   } from '../../lib/catalog-search'
-  import { formatPEN } from '../../lib/format'
-  import type { DepasMap, MapDepa } from '../../scripts/depas-map'
-  import {
-    districtCenter,
-    distanceKm,
-    formatDistance,
-    isNearLima,
-    MY_LOCATION,
-    placeBySlug,
-    type Point,
-  } from '../../lib/geo'
 
   const root = document.querySelector<HTMLElement>('[data-depa-search]')
   if (root) {
@@ -358,23 +118,7 @@ const origins = [
     const searchInput = $<HTMLInputElement>('[data-search-input]')
     const sortSelect = $<HTMLSelectElement>('[data-sort]')
     const count = $<HTMLElement>('[data-results-count]')
-    const countShort = $<HTMLElement>('[data-results-short]')
     const empty = $<HTMLElement>('[data-results-empty]')
-    const chips = $<HTMLElement>('[data-active-chips]')
-    const chipList = $<HTMLUListElement>('[data-chip-list]')
-    const badge = $<HTMLElement>('[data-filters-badge]')
-    const priceMin = $<HTMLInputElement>('[data-price-min]')
-    const priceMax = $<HTMLInputElement>('[data-price-max]')
-    const facets = [...root.querySelectorAll<HTMLInputElement>('[data-facet]')]
-    const nearSelect = $<HTMLSelectElement>('[data-near-select]')
-    const nearRadius = $<HTMLElement>('[data-near-radius]')
-    const nearStatus = $<HTMLElement>('[data-near-status]')
-    const locateButton = $<HTMLButtonElement>('[data-near-locate]')
-    const locateLabel = $<HTMLElement>('[data-near-locate-label]')
-    const mapBox = $<HTMLElement>('[data-results-map]')
-    const mapCanvas = $<HTMLElement>('[data-map-canvas]')
-    const mapMessage = $<HTMLElement>('[data-map-message]')
-    const viewButtons = [...root.querySelectorAll<HTMLButtonElement>('[data-view]')]
     const resultsBar = $<HTMLElement>('.results-bar')
     const resultsTitle = $<HTMLElement>('[data-results-title]')
     const pagination = $<HTMLElement>('[data-pagination]')
@@ -382,16 +126,7 @@ const origins = [
     const pageList = $<HTMLUListElement>('[data-page-list]')
     let pageSteps = [...root.querySelectorAll<HTMLElement>('[data-page-step]')]
 
-    type Item = SearchableDepa & {
-      card: HTMLElement
-      position?: Point & { exact: boolean }
-      distance: HTMLElement
-      distanceText: HTMLElement
-      /** Para la mini tarjeta del mapa */
-      district: string
-      address: string
-      href: string
-    }
+    type Item = SearchableDepa & { card: HTMLElement }
     const items: Item[] = [...grid.querySelectorAll<HTMLElement>('[data-property-card]')].map(
       (card, order) => ({
         card,
@@ -406,211 +141,31 @@ const origins = [
         paybackYears: Number(card.dataset.payback),
         status: (card.dataset.status ?? 'published') as SearchableDepa['status'],
         searchText: card.dataset.search ?? '',
-        position:
-          card.dataset.lat && card.dataset.lng
-            ? { lat: Number(card.dataset.lat), lng: Number(card.dataset.lng), exact: 'exact' in card.dataset }
-            : undefined,
-        distance: card.querySelector<HTMLElement>('[data-distance]')!,
-        distanceText: card.querySelector<HTMLElement>('[data-distance-text]')!,
-        district: card.querySelector('.title a')?.textContent?.trim() ?? '',
-        address: card.querySelector('.address')?.textContent?.trim() ?? '',
-        href: card.querySelector<HTMLAnchorElement>('.title a')?.href ?? '',
       }),
     )
 
-    // ---------- "Cerca de" ----------
-    /** Ubicación del navegador: solo en memoria, no va a la URL ni se guarda */
-    let myPosition: Point | undefined
-
-    /** El punto de "Cerca de", con su nombre para el chip ("Cerca de Larcomar (Miraflores)") y la tarjeta ("de Larcomar") */
-    const originOf = (near: string | undefined) => {
-      if (!near) return undefined
-      if (near === MY_LOCATION) return myPosition && { ...myPosition, name: 'tu ubicación', from: 'de ti' }
-      const place = placeBySlug(near)
-      if (!place) return undefined
-      return districtCenter(near)
-        ? { ...place, from: `del centro de ${place.name}` }
-        : { ...place, from: `de ${place.name.replace(/\s*\(.*\)$/, '')}` }
+    /** De la URL solo cuentan el buscador y el orden: los links con filtros de antes muestran todo */
+    const readQuery = (params: URLSearchParams): DepaQuery => {
+      const { q, sort } = queryFromParams(params)
+      return { ...emptyQuery(), q, sort: sort === 'cercania' ? 'destacados' : sort }
     }
-
-    /** Sin un punto válido en "Cerca de" se quitan la distancia y el orden por cercanía */
-    const normalizeNear = () => {
-      if (!originOf(query.near)) query.near = undefined
-      if (!query.near) {
-        query.maxKm = undefined
-        if (query.sort === 'cercania') query.sort = 'destacados'
-      }
-    }
-
-    let query: DepaQuery = queryFromParams(new URLSearchParams(location.search))
-    normalizeNear()
-
-    // ---------- Vista: lista o mapa ----------
-    let view: 'lista' | 'mapa' =
-      new URLSearchParams(location.search).get('vista') === 'mapa' ? 'mapa' : 'lista'
+    let query = readQuery(new URLSearchParams(location.search))
+    // Lo que se escribió antes de que cargara este script (conexión lenta) también cuenta
+    if (searchInput.value) query.q = searchInput.value
     /** Página de la lista (desde 1). Si pasa de las que hay, render la lleva a la última. */
     let page = Number(new URLSearchParams(location.search).get('pagina')) || 1
-    let visibleItems: Item[] = []
-    let depasMap: DepasMap | undefined
-    let mapLoading: Promise<void> | undefined
 
-    /** Foto chica de la tarjeta para la mini tarjeta del mapa (la primera del srcset) */
-    const thumbnail = (card: HTMLElement) => {
-      const source = card.querySelector<HTMLSourceElement>('picture source')
-      return source?.srcset.split(',')[0]?.trim().split(' ')[0] || card.querySelector('img')?.src
-    }
-
-    const syncMap = () => {
-      if (view !== 'mapa' || !depasMap) return
-      const origin = originOf(query.near)
-      const depas: MapDepa[] = visibleItems.flatMap((item) =>
-        item.position
-          ? [
-              {
-                id: item.id,
-                lat: item.position.lat,
-                lng: item.position.lng,
-                exact: item.position.exact,
-                price: item.price,
-                district: item.district,
-                address: item.address,
-                href: item.href,
-                image: thumbnail(item.card),
-                distance:
-                  item.distanceKm === undefined ? undefined : (item.distanceText.textContent ?? undefined),
-              },
-            ]
-          : [],
-      )
-      depasMap.update(
-        depas,
-        origin && { lat: origin.lat, lng: origin.lng, name: origin.name, radiusKm: query.maxKm },
-      )
-    }
-
-    /** Leaflet se descarga la primera vez que se abre el mapa */
-    const showMap = async () => {
-      mapLoading ??= import('../../scripts/depas-map')
-        .then(async ({ createDepasMap }) => {
-          depasMap = await createDepasMap(mapCanvas)
-          mapMessage.hidden = true
-        })
-        .catch(() => {
-          mapMessage.textContent = 'No pudimos cargar el mapa. Revisa tu conexión y vuelve a intentarlo.'
-          mapLoading = undefined
-        })
-      await mapLoading
-      depasMap?.resize()
-      syncMap()
-    }
-
-    const setView = (next: typeof view) => {
-      view = next
-      for (const button of viewButtons)
-        button.setAttribute('aria-pressed', String(button.dataset.view === view))
-      grid.hidden = view === 'mapa'
-      mapBox.hidden = view !== 'mapa'
-    }
-    for (const button of viewButtons) {
-      button.addEventListener('click', () => {
-        setView(button.dataset.view === 'mapa' ? 'mapa' : 'lista')
-        render()
-        if (view === 'mapa') void showMap()
-      })
-    }
-
-    /** La búsqueda actual en una página: para la barra de direcciones y los links de la paginación.
-     *  En el mapa no hay páginas: van todos los pines. */
+    /** La búsqueda actual en una página: para la barra de direcciones y los links de la paginación */
     const urlFor = (target: number) => {
       const params = queryToParams(query)
-      if (view === 'mapa') params.set('vista', 'mapa')
-      else if (target > 1) params.set('pagina', String(target))
+      if (target > 1) params.set('pagina', String(target))
       const search = params.toString()
       return search ? `${location.pathname}?${search}` : location.pathname
     }
 
-    const listKey = { origin: 'origins', district: 'districts', developer: 'developers' } as const
-    const n = (value: string | undefined) => (value === undefined || value === '' ? undefined : Number(value))
-
-    /** ¿Esta opción coincide con el inmueble? (para contar cuántos inmuebles trae cada opción) */
-    const optionMatches = (input: HTMLInputElement, d: SearchableDepa) => {
-      const v = input.value
-      switch (input.dataset.facet as FacetGroup) {
-        case 'origin':
-          return d.origin === v
-        case 'district':
-          return d.districtSlug === v
-        case 'developer':
-          return d.developerSlug === v
-        case 'price': {
-          const min = n(input.dataset.min)
-          const max = n(input.dataset.max)
-          return (min === undefined || d.price >= min) && (max === undefined || d.price <= max)
-        }
-        case 'yield':
-          return d.yieldMin >= Number(v)
-        case 'payback':
-          return d.paybackYears <= Number(v)
-        case 'available':
-          return d.status === 'published'
-        case 'distance':
-          return d.distanceKm != null && d.distanceKm <= Number(v)
-      }
-    }
-
-    /** ¿La opción está activa en la búsqueda actual? */
-    const isActive = (input: HTMLInputElement) => {
-      const group = input.dataset.facet as FacetGroup
-      if (group === 'origin' || group === 'district' || group === 'developer')
-        return (query[listKey[group]] as string[]).includes(input.value)
-      if (group === 'price')
-        return query.minPrice === n(input.dataset.min) && query.maxPrice === n(input.dataset.max)
-      if (group === 'yield') return query.minYield === Number(input.value)
-      if (group === 'payback') return query.maxPayback === Number(input.value)
-      if (group === 'distance') return query.maxKm === Number(input.value)
-      return query.available
-    }
-
-    const labelOf = (input: HTMLInputElement) =>
-      input.closest('label')?.querySelector('[data-label]')?.textContent?.trim() ?? input.value
-
-    /** Quita un filtro: lo usan los chips y los botones "Borrar". */
-    const removers: Record<FacetGroup, (value?: string) => void> = {
-      origin: (v) => (query.origins = query.origins.filter((x) => x !== v)),
-      district: (v) => (query.districts = query.districts.filter((x) => x !== v)),
-      developer: (v) => (query.developers = query.developers.filter((x) => x !== v)),
-      price: () => {
-        query.minPrice = undefined
-        query.maxPrice = undefined
-      },
-      yield: () => (query.minYield = undefined),
-      payback: () => (query.maxPayback = undefined),
-      available: () => (query.available = false),
-      distance: () => (query.maxKm = undefined),
-    }
-
-    const chip = (label: string, onRemove: () => void) => {
-      const li = document.createElement('li')
-      const button = document.createElement('button')
-      button.type = 'button'
-      button.className = 'chip'
-      button.textContent = label
-      button.setAttribute('aria-label', `Quitar filtro: ${label}`)
-      button.insertAdjacentHTML(
-        'beforeend',
-        '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>',
-      )
-      button.addEventListener('click', () => {
-        onRemove()
-        apply()
-      })
-      li.append(button)
-      return li
-    }
-
     /** "Mostrando 13–24 de 36 inmuebles", los números y Anterior / Siguiente */
     const renderPagination = (slice: PageSlice, total: number) => {
-      const paged = view === 'lista' && slice.pages > 1
+      const paged = slice.pages > 1
       pagination.hidden = !paged
       resultsTitle.textContent = paged ? `Resultados, página ${slice.page} de ${slice.pages}` : 'Resultados'
       if (!paged) return
@@ -658,22 +213,12 @@ const origins = [
     }
 
     const render = () => {
-      // Distancia de cada inmueble al punto de "Cerca de"
-      const origin = originOf(query.near)
-      for (const item of items) {
-        item.distanceKm = origin && item.position ? distanceKm(origin, item.position) : undefined
-        item.distance.hidden = item.distanceKm === undefined
-        if (origin && item.position && item.distanceKm !== undefined)
-          item.distanceText.textContent = `${formatDistance(item.distanceKm, item.position.exact)} ${origin.from}`
-      }
-
       // Resultados: los que coinciden, en el orden elegido; el resto queda oculto al final.
       // A la vista, solo los de la página actual.
       const visible = sortDepas(
         items.filter((d) => matchesQuery(d, query)),
         query.sort,
       )
-      visibleItems = visible
       const slice = paginate(visible.length, page)
       page = slice.page
       const onPage = new Set(visible.slice(slice.start, slice.end))
@@ -688,223 +233,31 @@ const origins = [
 
       const total = visible.length
       count.textContent = `${total} ${total === 1 ? 'resultado' : 'resultados'}${query.q.trim() ? ` para "${query.q.trim()}"` : ''}`
-      countShort.textContent = `Ver ${total} ${total === 1 ? 'resultado' : 'resultados'}`
       empty.hidden = total > 0
-
-      // Controles: marcados según la búsqueda, con cuántos inmuebles trae cada opción
-      for (const input of facets) {
-        const group = input.dataset.facet as FacetGroup
-        const amount = items.filter((d) => matchesQuery(d, query, group) && optionMatches(input, d)).length
-        input.checked = isActive(input)
-        input.disabled = amount === 0 && !input.checked
-        const label = input.closest('label')!
-        label.classList.toggle('is-empty', input.disabled)
-        label.querySelector('[data-facet-count]')!.textContent = `(${amount})`
-      }
-      const customPrice =
-        (query.minPrice !== undefined || query.maxPrice !== undefined) &&
-        !facets.some((input) => input.dataset.facet === 'price' && input.checked)
-      priceMin.value = customPrice && query.minPrice !== undefined ? String(query.minPrice) : ''
-      priceMax.value = customPrice && query.maxPrice !== undefined ? String(query.maxPrice) : ''
-      const groupIsSet: Partial<Record<FacetGroup, boolean>> = {
-        price: query.minPrice !== undefined || query.maxPrice !== undefined,
-        yield: query.minYield !== undefined,
-        payback: query.maxPayback !== undefined,
-        distance: query.maxKm !== undefined,
-      }
-      root.querySelectorAll<HTMLElement>('[data-clear-group]').forEach((button) => {
-        button.hidden = !groupIsSet[button.dataset.clearGroup as FacetGroup]
-      })
-      nearSelect.value = query.near ?? ''
-      nearRadius.hidden = !origin
       if (document.activeElement !== searchInput) searchInput.value = query.q
       sortSelect.value = query.sort
 
-      // Chips de filtros activos
-      const active: HTMLLIElement[] = []
-      if (query.q.trim()) active.push(chip(`"${query.q.trim()}"`, () => (query.q = '')))
-      if (origin) active.push(chip(`Cerca de ${origin.name}`, clearNear))
-      for (const input of facets) {
-        if (!input.checked) continue
-        const group = input.dataset.facet as FacetGroup
-        active.push(chip(labelOf(input), () => removers[group](input.value)))
-      }
-      if (customPrice) {
-        const from = query.minPrice !== undefined ? formatPEN(query.minPrice) : ''
-        const to = query.maxPrice !== undefined ? formatPEN(query.maxPrice) : ''
-        const label = from && to ? `${from} a ${to}` : from ? `Desde ${from}` : `Hasta ${to}`
-        active.push(chip(label, removers.price))
-      }
-      chipList.replaceChildren(...active)
-      chips.hidden = active.length === 0
-      const filterCount = active.length - (query.q.trim() ? 1 : 0)
-      badge.hidden = filterCount === 0
-      badge.textContent = String(filterCount)
-
-      syncMap()
-
-      // La URL guarda la búsqueda, la vista y la página (para compartirla o volver con "Atrás")
+      // La URL guarda la búsqueda y la página (para compartirla o volver con "Atrás")
       history.replaceState(null, '', urlFor(page))
     }
-    /** Cambió la búsqueda (filtros, buscador u orden): vuelve a la primera página */
+    /** Cambió la búsqueda (buscador u orden): vuelve a la primera página */
     const apply = () => {
       page = 1
       render()
     }
 
     // ---------- Eventos ----------
-    /** Pasa el estado de una opción (marcada o no) a la búsqueda. */
-    const readInput = (input: HTMLInputElement) => {
-      const group = input.dataset.facet as FacetGroup
-      if (group === 'origin' || group === 'district' || group === 'developer') {
-        const key = listKey[group]
-        const values = query[key].filter((v) => v !== input.value)
-        query[key] = input.checked ? [...values, input.value] : values
-      } else if (group === 'price') {
-        query.minPrice = n(input.dataset.min)
-        query.maxPrice = n(input.dataset.max)
-      } else if (group === 'yield') query.minYield = Number(input.value)
-      else if (group === 'payback') query.maxPayback = Number(input.value)
-      else if (group === 'distance') query.maxKm = Number(input.value)
-      else query.available = input.checked
-    }
-    for (const input of facets) {
-      input.addEventListener('change', () => {
-        readInput(input)
-        apply()
-      })
-    }
-    // Lo que se marcó antes de que cargara este script (conexión lenta) también cuenta
-    for (const input of facets) if (input.checked && !isActive(input)) readInput(input)
-
-    const amount = (value: string) => {
-      const digits = value.replace(/[^\d]/g, '')
-      return digits ? Number(digits) : undefined
-    }
-    const applyCustomPrice = () => {
-      let [min, max] = [amount(priceMin.value), amount(priceMax.value)]
-      if (min !== undefined && max !== undefined && min > max) [min, max] = [max, min]
-      query.minPrice = min
-      query.maxPrice = max
-      apply()
-    }
-    $('[data-price-apply]').addEventListener('click', applyCustomPrice)
-    for (const input of [priceMin, priceMax]) {
-      input.addEventListener('keydown', (event) => {
-        if (event.key !== 'Enter') return
-        event.preventDefault()
-        applyCustomPrice()
-      })
-    }
-
-    root.querySelectorAll<HTMLElement>('[data-clear-group]').forEach((button) => {
-      button.addEventListener('click', () => {
-        removers[button.dataset.clearGroup as FacetGroup]()
-        apply()
-      })
-    })
-
-    root.querySelectorAll('[data-clear-all]').forEach((button) => {
-      button.addEventListener('click', () => {
-        query = { ...queryFromParams(new URLSearchParams()), sort: query.sort }
-        normalizeNear()
-        apply()
-      })
-    })
-
     sortSelect.addEventListener('change', () => {
-      const sort = sortSelect.value as SortKey
-      // "Más cercanos" sin un punto elegido: primero se pide la ubicación
-      if (sort === 'cercania' && !originOf(query.near)) {
-        sortSelect.value = query.sort
-        void locate()
-        return
-      }
-      query.sort = sort
+      query.sort = sortSelect.value as SortKey
       apply()
     })
 
-    // ---------- "Cerca de": ubicación del navegador o un lugar de la lista ----------
-    /** Aviso bajo la barra de resultados. Con `pickPlace` suma el botón para elegir un lugar. */
-    const showStatus = (message: string, pickPlace = false) => {
-      const text = document.createElement('p')
-      text.textContent = message
-      nearStatus.replaceChildren(text)
-      if (!pickPlace) return
-      const button = document.createElement('button')
-      button.type = 'button'
-      button.className = 'near-status-action'
-      button.textContent = 'Elegir un lugar'
-      button.addEventListener('click', () => {
-        if (!desktop.matches) open()
-        nearSelect.focus()
-      })
-      nearStatus.append(button)
-    }
-    const clearStatus = () => nearStatus.replaceChildren()
-
-    const chooseNear = (near: string) => {
-      query.near = near
-      query.sort = 'cercania'
-      clearStatus()
+    $('[data-clear-search]').addEventListener('click', () => {
+      query.q = ''
+      searchInput.value = ''
       apply()
-    }
-    function clearNear() {
-      query.near = undefined
-      normalizeNear()
-    }
-
-    nearSelect.addEventListener('change', () => {
-      if (nearSelect.value) chooseNear(nearSelect.value)
-      else {
-        clearNear()
-        apply()
-      }
+      searchInput.focus()
     })
-
-    const setLocating = (locating: boolean) => {
-      locateButton.disabled = locating
-      locateLabel.textContent = locating ? 'Buscando tu ubicación…' : 'Usar mi ubicación'
-    }
-    const locate = () =>
-      new Promise<boolean>((resolve) => {
-        if (!('geolocation' in navigator)) {
-          showStatus('Tu navegador no comparte la ubicación. Elige un lugar de la lista.', true)
-          return resolve(false)
-        }
-        setLocating(true)
-        showStatus('Buscando tu ubicación…')
-        navigator.geolocation.getCurrentPosition(
-          ({ coords }) => {
-            setLocating(false)
-            const point = { lat: coords.latitude, lng: coords.longitude }
-            if (!isNearLima(point)) {
-              showStatus(
-                'Parece que no estás en Lima. Elige un lugar de la lista para ver los inmuebles más cercanos.',
-                true,
-              )
-              return resolve(false)
-            }
-            myPosition = point
-            if (!nearSelect.querySelector(`option[value="${MY_LOCATION}"]`))
-              nearSelect.options[0]!.after(new Option('Mi ubicación', MY_LOCATION))
-            chooseNear(MY_LOCATION)
-            resolve(true)
-          },
-          (error) => {
-            setLocating(false)
-            showStatus(
-              error.code === error.PERMISSION_DENIED
-                ? 'No tenemos permiso para usar tu ubicación. Elige un lugar de la lista.'
-                : 'No pudimos encontrar tu ubicación. Elige un lugar de la lista.',
-              true,
-            )
-            resolve(false)
-          },
-          { timeout: 10_000, maximumAge: 300_000 },
-        )
-      })
-    locateButton.addEventListener('click', () => void locate())
 
     // El buscador filtra mientras se escribe; "Buscar" solo cierra el teclado en el celular
     let typing = 0
@@ -923,13 +276,10 @@ const origins = [
     })
 
     // ---------- Páginas ----------
-    /** Sube al inicio de los resultados, sin que los tape el header (ni la barra fija de móvil y tablet) */
+    /** Sube al inicio de los resultados, sin que los tape el header */
     const scrollToResults = () => {
       const header = document.querySelector<HTMLElement>('[data-header]')?.offsetHeight ?? 0
-      const stickyBar = getComputedStyle(resultsBar).position === 'sticky'
-      const target = stickyBar ? grid : resultsBar
-      const covered = header + (stickyBar ? resultsBar.offsetHeight : 0)
-      window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - covered - 16 })
+      window.scrollTo({ top: resultsBar.getBoundingClientRect().top + window.scrollY - header - 16 })
     }
     /** Cada página es una entrada del historial: "Atrás" vuelve a la anterior */
     const goToPage = (target: number) => {
@@ -949,56 +299,15 @@ const origins = [
       event.preventDefault()
       goToPage(Number(link.dataset.page))
     })
-    // "Atrás" y "Adelante": la búsqueda, la vista y la página salen de la URL de esa entrada
+    // "Atrás" y "Adelante": la búsqueda y la página salen de la URL de esa entrada
     window.addEventListener('popstate', () => {
       const params = new URLSearchParams(location.search)
-      const previous = query
-      query = queryFromParams(params)
-      // "Mi ubicación" no va a la URL (solo queda orden=cercania): si ya la teníamos, sigue
-      if (!query.near && query.sort === 'cercania' && myPosition) {
-        query.near = MY_LOCATION
-        if (previous.near === MY_LOCATION) query.maxKm = previous.maxKm
-      }
-      normalizeNear()
+      query = readQuery(params)
       page = Number(params.get('pagina')) || 1
-      setView(params.get('vista') === 'mapa' ? 'mapa' : 'lista')
       render()
-      if (view === 'mapa') void showMap()
     })
 
-    // ---------- Panel de filtros en móvil ----------
-    const panel = $<HTMLElement>('[data-filters]')
-    const backdrop = $<HTMLElement>('[data-filters-backdrop]')
-    const openButton = $<HTMLButtonElement>('[data-filters-open]')
-    const desktop = window.matchMedia('(min-width: 1024px)')
-    const open = () => {
-      panel.classList.add('is-open')
-      backdrop.hidden = false
-      openButton.setAttribute('aria-expanded', 'true')
-      document.documentElement.classList.add('menu-open')
-      $<HTMLElement>('[data-filters-title]').focus()
-    }
-    const close = () => {
-      if (!panel.classList.contains('is-open')) return
-      panel.classList.remove('is-open')
-      backdrop.hidden = true
-      openButton.setAttribute('aria-expanded', 'false')
-      document.documentElement.classList.remove('menu-open')
-      openButton.focus()
-    }
-    openButton.addEventListener('click', open)
-    backdrop.addEventListener('click', close)
-    root.querySelectorAll('[data-filters-close]').forEach((b) => b.addEventListener('click', close))
-    document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape') close()
-    })
-    desktop.addEventListener('change', (event) => {
-      if (event.matches) close()
-    })
-
-    setView(view)
     render()
-    if (view === 'mapa') void showMap()
   }
 </script>
 
@@ -1060,7 +369,7 @@ const origins = [
     padding-inline: var(--space-5);
   }
 
-  /* ---------- Barra de resultados: cantidad, filtros y orden ---------- */
+  /* ---------- Barra de resultados: cantidad y orden ---------- */
   .results-bar {
     display: flex;
     flex-wrap: wrap;
@@ -1076,28 +385,6 @@ const origins = [
     font-weight: var(--fw-semibold);
     color: var(--color-text-strong);
   }
-  .results-tools {
-    display: flex;
-    flex: 1 1 auto;
-    align-items: center;
-    justify-content: flex-end;
-    gap: var(--space-3);
-    min-width: 0;
-  }
-  .filters-badge {
-    display: inline-grid;
-    place-items: center;
-    min-width: 20px;
-    height: 20px;
-    padding: 0 5px;
-    border-radius: var(--radius-pill);
-    background: var(--color-gold-500);
-    color: var(--color-navy-900);
-    font-size: var(--fs-xs);
-  }
-  .filters-badge[hidden] {
-    display: none;
-  }
   .sort {
     display: flex;
     align-items: center;
@@ -1106,49 +393,6 @@ const origins = [
     font-size: var(--fs-sm);
     color: var(--color-text-muted);
     white-space: nowrap;
-  }
-  /* Móvil y tablet: "Filtros" y "Ordenar" quedan a mano bajo el header mientras se baja por los inmuebles.
-     Mitad y mitad; arriba, la cantidad de resultados y "Lista | Mapa". */
-  @media (max-width: 1023px) {
-    .results-bar {
-      position: sticky;
-      top: var(--header-h);
-      z-index: 50;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: var(--space-2) var(--space-3);
-      margin-inline: calc(-1 * var(--gutter));
-      padding: var(--space-2) var(--gutter) var(--space-3);
-      border: 0;
-      background: #fff;
-      box-shadow:
-        0 1px 0 var(--color-border-subtle),
-        0 8px 12px -10px rgb(3 26 57 / 0.25);
-    }
-    .results-count {
-      font-size: var(--fs-sm);
-    }
-    .results-tools {
-      display: contents;
-    }
-    .view-toggle {
-      justify-self: end;
-    }
-    .filters-open {
-      width: 100%;
-    }
-    .sort,
-    .sort select {
-      width: 100%;
-    }
-    /* El select ya dice cómo ordena: "Ordenar por" queda para lectores de pantalla */
-    .sort span {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-    }
   }
   .sort select {
     min-height: var(--control-h-sm);
@@ -1159,94 +403,27 @@ const origins = [
     color: var(--color-text);
     font-size: var(--fs-sm);
   }
-
-  /* ---------- Lista | Mapa ---------- */
-  .view-toggle {
-    display: inline-flex;
-    padding: 3px;
-    border: 1px solid var(--color-border-input);
-    border-radius: var(--radius-pill);
-    background: var(--color-surface-alt);
-  }
-  .view-toggle button {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    min-height: 36px;
-    padding: 0 var(--space-3);
-    border: 0;
-    border-radius: var(--radius-pill);
-    background: transparent;
-    color: var(--color-text-muted);
-    font: inherit;
-    font-size: var(--fs-sm);
-    font-weight: var(--fw-semibold);
-    cursor: pointer;
-  }
-  .view-toggle button[aria-pressed='true'] {
-    background: var(--color-navy-800);
-    color: #fff;
+  /* Celular: el select ya dice cómo ordena; "Ordenar por" queda para lectores de pantalla */
+  @media (max-width: 639px) {
+    .results-count {
+      font-size: var(--fs-sm);
+    }
+    .sort span {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+    }
   }
 
-  /* ---------- Chips de filtros activos ---------- */
-  .chips {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--space-2);
-    margin-top: var(--space-3);
-  }
-  .chips[hidden] {
-    display: none;
-  }
-  .chips ul {
-    display: contents;
-    list-style: none;
-  }
-  .chips :global(.chip) {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    min-height: 36px;
-    padding: 0 var(--space-3);
-    border: 1px solid var(--color-navy-800);
-    border-radius: var(--radius-pill);
-    background: var(--color-navy-800);
-    color: #fff;
-    font-size: var(--fs-sm);
-    cursor: pointer;
-  }
-  .chips :global(.chip:hover) {
-    background: var(--color-navy-850);
-  }
-  .clear-all,
-  .clear-group {
-    min-height: 36px;
-    padding: 0 var(--space-2);
-    border: 0;
-    background: none;
-    color: var(--color-navy-800);
-    font: inherit;
-    font-size: var(--fs-sm);
-    font-weight: var(--fw-semibold);
-    text-decoration: underline;
-    text-underline-offset: 3px;
-    cursor: pointer;
-  }
-  .clear-group[hidden] {
-    display: none;
-  }
-
-  /* ---------- Layout: filtros a la izquierda y resultados ---------- */
-  .layout {
+  /* ---------- Resultados ---------- */
+  .results {
     margin-top: var(--space-5);
   }
   .results-grid {
     display: grid;
     gap: var(--grid-gap);
-  }
-  .results-grid[hidden] {
-    display: none;
   }
   /* Antes de que corra el script: solo la primera página, sin salto al cargar (13 = PAGE_SIZE + 1) */
   .results-grid[data-paging-pending] :global(article[data-property-card]:nth-of-type(n + 13)) {
@@ -1342,162 +519,6 @@ const origins = [
     }
   }
 
-  /* ---------- Mapa ---------- */
-  .results-map {
-    position: relative;
-    height: max(420px, calc(100dvh - var(--header-h) - 200px));
-    margin-bottom: var(--space-4);
-    overflow: hidden;
-    border: var(--border);
-    border-radius: var(--radius-lg);
-    background: var(--color-surface-muted);
-  }
-  .results-map[hidden] {
-    display: none;
-  }
-  .map-canvas {
-    position: absolute;
-    inset: 0;
-    z-index: 0; /* los controles de Leaflet no tapan el header ni el panel de filtros */
-  }
-  /* Leaflet trae su propia fuente y color de links: usamos los del sitio */
-  .map-canvas:global(.leaflet-container) {
-    font: inherit;
-  }
-  .map-canvas :global(.map-card a.btn) {
-    color: var(--color-navy-800);
-  }
-  /* Mosaicos con menos color: los pines de precio resaltan */
-  .map-canvas :global(.leaflet-tile-pane) {
-    filter: saturate(0.45) contrast(0.95);
-  }
-  .map-message {
-    position: absolute;
-    inset: 0;
-    display: grid;
-    place-items: center;
-    margin: 0;
-    padding: var(--space-6);
-    color: var(--color-text-muted);
-    text-align: center;
-  }
-  .map-message[hidden] {
-    display: none;
-  }
-
-  /* Pin con el precio; con poco zoom (.is-far) es un punto */
-  .map-canvas :global(.map-pin-anchor) {
-    background: none;
-    border: 0;
-  }
-  .map-canvas :global(.map-pin) {
-    position: absolute;
-    left: 0;
-    bottom: 8px;
-    transform: translateX(-50%);
-    padding: 4px 10px;
-    border: 1px solid var(--color-navy-800);
-    border-radius: var(--radius-pill);
-    background: #fff;
-    box-shadow: 0 2px 6px rgb(3 26 57 / 0.25);
-    color: var(--color-navy-800);
-    font: 700 13px/1.2 var(--font-sans);
-    white-space: nowrap;
-    cursor: pointer;
-    transition:
-      background var(--dur-fast) var(--ease-out),
-      color var(--dur-fast) var(--ease-out);
-  }
-  .map-canvas :global(.map-pin::after) {
-    content: '';
-    position: absolute;
-    left: 50%;
-    bottom: -6px;
-    width: 10px;
-    height: 10px;
-    margin-left: -5px;
-    border-right: 1px solid var(--color-navy-800);
-    border-bottom: 1px solid var(--color-navy-800);
-    background: inherit;
-    transform: rotate(45deg);
-  }
-  .map-canvas :global(.map-pin.is-active),
-  .map-canvas :global(.leaflet-marker-icon:hover .map-pin),
-  .map-canvas :global(.leaflet-marker-icon:focus-visible .map-pin) {
-    background: var(--color-navy-800);
-    color: #fff;
-  }
-  .map-canvas:global(.is-far) :global(.map-pin) {
-    bottom: -7px;
-    width: 14px;
-    height: 14px;
-    padding: 0;
-    border: 2px solid #fff;
-    background: var(--color-navy-800);
-    color: transparent;
-    font-size: 0;
-  }
-  .map-canvas:global(.is-far) :global(.map-pin::after) {
-    display: none;
-  }
-  .map-canvas:global(.is-far) :global(.map-pin.is-active) {
-    background: var(--color-gold-500);
-  }
-  /* Punto de "Cerca de" */
-  .map-canvas :global(.map-origin) {
-    border: 3px solid #fff;
-    border-radius: 50%;
-    background: var(--color-gold-500);
-    box-shadow: 0 0 0 2px var(--color-navy-800);
-  }
-
-  /* Mini tarjeta del pin */
-  .map-canvas :global(.leaflet-popup-content-wrapper) {
-    padding: 0;
-    overflow: hidden;
-    border-radius: var(--radius-lg);
-  }
-  .map-canvas :global(.leaflet-popup-content) {
-    width: 240px !important;
-    margin: 0;
-    font: inherit;
-  }
-  .map-canvas :global(.map-card img) {
-    display: block;
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    object-fit: cover;
-  }
-  .map-canvas :global(.map-card-body) {
-    display: grid;
-    gap: 2px;
-    padding: var(--space-3);
-  }
-  .map-canvas :global(.map-card-title) {
-    color: var(--color-navy-800);
-    font-family: var(--font-display);
-    font-size: 1.25rem;
-    font-weight: 500;
-  }
-  .map-canvas :global(.map-card-address),
-  .map-canvas :global(.map-card-note) {
-    color: var(--color-text-muted);
-    font-size: var(--fs-13);
-  }
-  .map-canvas :global(.map-card-distance) {
-    color: var(--color-navy-800);
-    font-size: var(--fs-13);
-    font-weight: var(--fw-semibold);
-  }
-  .map-canvas :global(.map-card-price) {
-    margin: var(--space-1) 0 var(--space-2);
-    color: var(--color-text-strong);
-    font-size: var(--fs-18);
-    font-weight: var(--fw-bold);
-  }
-  .map-canvas :global(.map-card .btn) {
-    width: 100%;
-  }
   .empty {
     display: grid;
     justify-items: start;
@@ -1515,258 +536,6 @@ const origins = [
     color: var(--color-text-muted);
   }
 
-  /* ---------- Filtros ---------- */
-  .filters-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-3);
-  }
-  .filters-head h2 {
-    font-size: var(--fs-18);
-    letter-spacing: 0;
-  }
-  .filters-head h2:focus-visible {
-    box-shadow: none;
-  }
-  .filters-close {
-    display: grid;
-    place-items: center;
-    width: var(--control-h-sm);
-    height: var(--control-h-sm);
-    padding: 0;
-    border: 0;
-    border-radius: var(--radius-pill);
-    background: transparent;
-    color: var(--color-text);
-    cursor: pointer;
-  }
-  .group {
-    display: grid;
-    gap: 2px;
-    margin: 0;
-    padding: var(--space-4) 0;
-    border: 0;
-    border-top: var(--border-subtle);
-  }
-  .group legend {
-    float: left;
-    width: 100%;
-    margin-bottom: var(--space-2);
-    padding: 0;
-    color: var(--color-text-strong);
-    font-weight: var(--fw-bold);
-  }
-  .facet {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    min-height: 36px;
-    font-size: var(--fs-15);
-    cursor: pointer;
-  }
-  .facet input {
-    width: 18px;
-    height: 18px;
-    margin: 0;
-    flex: none;
-    accent-color: var(--color-navy-800);
-  }
-  /* Solo con mouse: en el celular el subrayado quedaba "pegado" después de tocar */
-  @media (hover: hover) {
-    .facet:hover [data-label] {
-      color: var(--color-navy-800);
-      text-decoration: underline;
-    }
-  }
-  .facet-count {
-    color: var(--color-text-muted);
-    font-size: var(--fs-13);
-  }
-  .facet.is-empty {
-    color: var(--color-disabled-text);
-    cursor: default;
-  }
-  .facet.is-empty [data-label] {
-    color: inherit;
-    text-decoration: none !important;
-  }
-  .price-custom {
-    display: grid;
-    grid-template-columns: 1fr 1fr auto;
-    gap: var(--space-2);
-    margin-top: var(--space-2);
-  }
-  .price-custom input {
-    width: 100%;
-    min-height: var(--control-h-sm);
-    padding: 0 var(--space-2);
-    border: 1px solid var(--color-border-input);
-    border-radius: var(--radius-md);
-    font-size: 16px;
-  }
-  .clear-group {
-    justify-self: start;
-    padding-inline: 0;
-  }
-
-  /* ---------- "Cerca de" ---------- */
-  .near {
-    gap: var(--space-2);
-  }
-  .near-locate {
-    width: 100%;
-    gap: var(--space-2);
-  }
-  .near-field {
-    display: grid;
-    gap: var(--space-1);
-    font-size: var(--fs-sm);
-    color: var(--color-text-muted);
-  }
-  .near-field select {
-    width: 100%;
-    min-height: var(--control-h-sm);
-    padding: 0 var(--space-2);
-    border: 1px solid var(--color-border-input);
-    border-radius: var(--radius-md);
-    background: #fff;
-    color: var(--color-text);
-    font-size: 16px; /* evita el zoom de iOS */
-  }
-  .near-radius {
-    display: grid;
-    gap: 2px;
-    margin-top: var(--space-1);
-  }
-  .near-radius[hidden] {
-    display: none;
-  }
-  .near-status {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--space-1) var(--space-3);
-    margin-top: var(--space-3);
-    padding: var(--space-3) var(--space-4);
-    border-radius: var(--radius-md);
-    background: var(--color-gold-100);
-    color: var(--color-text-strong);
-    font-size: var(--fs-sm);
-  }
-  .near-status:empty {
-    display: none;
-  }
-  .near-status :global(p) {
-    margin: 0;
-  }
-  .near-status :global(.near-status-action) {
-    min-height: 36px;
-    padding: 0;
-    border: 0;
-    background: none;
-    color: var(--color-navy-800);
-    font: inherit;
-    font-weight: var(--fw-semibold);
-    text-decoration: underline;
-    text-underline-offset: 3px;
-    cursor: pointer;
-  }
-  .filters-foot {
-    padding-top: var(--space-4);
-  }
-
-  /* Móvil y tablet: panel lateral que se abre con "Filtros" */
-  @media (max-width: 1023px) {
-    .filters {
-      position: fixed;
-      inset: 0 auto 0 0;
-      z-index: var(--z-drawer);
-      display: none;
-      flex-direction: column;
-      width: min(360px, 90vw);
-      background: #fff;
-      box-shadow: var(--shadow-dropdown);
-    }
-    .filters.is-open {
-      display: flex;
-      animation: drawer-in var(--dur-slow) var(--ease-out);
-    }
-    .facet {
-      min-height: var(--control-h-sm); /* filas de 44px para el dedo */
-    }
-    .filters-head {
-      padding: var(--space-3) var(--space-4);
-      border-bottom: var(--border-subtle);
-    }
-    .filters-body {
-      flex: 1;
-      overflow-y: auto;
-      padding: 0 var(--space-4);
-    }
-    .filters-body .group:first-child {
-      border-top: 0;
-    }
-    .filters-foot {
-      padding: var(--space-3) var(--space-4) calc(var(--space-3) + env(safe-area-inset-bottom));
-      border-top: var(--border-subtle);
-    }
-    .filters-backdrop {
-      position: fixed;
-      inset: 0;
-      z-index: var(--z-overlay);
-      background: var(--color-overlay);
-    }
-    .filters-backdrop[hidden] {
-      display: none;
-    }
-  }
-
-  /* Celular: los filtros suben desde abajo como una hoja, igual que en las apps de compra */
-  @media (max-width: 639px) {
-    .filters {
-      inset: auto 0 0 0;
-      width: 100%;
-      max-height: 88dvh;
-      border-radius: 20px 20px 0 0;
-    }
-    .filters.is-open {
-      animation-name: sheet-up;
-    }
-    .filters-head {
-      position: relative;
-      padding-top: var(--space-6);
-    }
-    /* Asa de la hoja */
-    .filters-head::before {
-      content: '';
-      position: absolute;
-      top: var(--space-2);
-      left: 50%;
-      width: 40px;
-      height: 4px;
-      margin-left: -20px;
-      border-radius: var(--radius-pill);
-      background: var(--color-border);
-    }
-  }
-  @keyframes drawer-in {
-    from {
-      transform: translateX(-100%);
-    }
-    to {
-      transform: none;
-    }
-  }
-  @keyframes sheet-up {
-    from {
-      transform: translateY(100%);
-    }
-    to {
-      transform: none;
-    }
-  }
-
   @media (min-width: 640px) {
     .results-head {
       grid-template-columns: auto minmax(0, 1fr);
@@ -1777,48 +546,7 @@ const origins = [
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
-
-  /* Escritorio: barra lateral fija a la izquierda, como en las tiendas. Cada lado tiene su propio
-     scroll: los filtros se desplazan dentro de la barra y los inmuebles con la página. */
   @media (min-width: 1024px) {
-    .layout {
-      display: grid;
-      grid-template-columns: 240px minmax(0, 1fr);
-      gap: var(--space-8);
-      align-items: start;
-    }
-    .filters {
-      position: sticky;
-      top: calc(var(--header-h) + var(--space-4));
-      display: flex;
-      flex-direction: column;
-      max-height: calc(100dvh - var(--header-h) - var(--space-8));
-    }
-    .filters-body {
-      min-height: 0;
-      padding-right: var(--space-2);
-      overflow-y: auto;
-      overscroll-behavior: contain; /* al llegar al final no arrastra la página */
-      scrollbar-gutter: stable;
-      scrollbar-width: thin;
-      scrollbar-color: var(--color-border-input) transparent;
-    }
-    .filters-close,
-    .filters-open,
-    .filters-foot,
-    .filters-backdrop {
-      display: none;
-    }
-    .filters-head {
-      flex: none;
-      padding-bottom: var(--space-2);
-      border-bottom: var(--border-subtle);
-    }
-    .filters-body .group:first-child {
-      border-top: 0;
-    }
-  }
-  @media (min-width: 1280px) {
     .results-grid {
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }

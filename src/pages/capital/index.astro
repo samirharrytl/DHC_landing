@@ -1,20 +1,12 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro'
-import AlliesStrip from '../../components/AlliesStrip.astro'
 import Button from '../../components/Button.astro'
 import Icon from '../../components/Icon.astro'
-import ForYouRow from '../../components/ForYouRow.astro'
 import PropertyCard from '../../components/PropertyCard.astro'
 import PropertyGrid from '../../components/PropertyGrid.astro'
 import SearchFilters from '../../components/SearchFilters.astro'
 import Step from '../../components/Step.astro'
-import {
-  getDevelopers,
-  getFastFilters,
-  getFinancingAssumptions,
-  getOwnerProperties,
-  getProperties,
-} from '../../lib/properties'
+import { getFastFilters, getOwnerProperties, getProperties } from '../../lib/properties'
 
 const steps = [
   { number: 1, title: 'Comparas' },
@@ -27,7 +19,6 @@ const steps = [
 const depas = await getOwnerProperties()
 const total = (await getProperties()).length
 const fastFilters = await getFastFilters(depas)
-const developers = await getDevelopers()
 ---
 
 <BaseLayout
@@ -85,9 +76,7 @@ const developers = await getDevelopers()
         </span>
         <span class="see-all-text">
           <strong>Ver todos los proyectos</strong>
-          <span>
-            {total} inmuebles de propietarios e inmobiliarias, con filtros por distrito, precio y rentabilidad
-          </span>
+          <span>{total} inmuebles de propietarios e inmobiliarias</span>
         </span>
         <Icon name="arrow-right" size={24} class="see-all-arrow" />
       </a>
@@ -96,12 +85,6 @@ const developers = await getDevelopers()
       No encontramos inmuebles con esos criterios.
     </p>
   </section>
-
-  <!-- ---------- Para ti: se arma en el navegador con lo que la persona vio y guardó ---------- -->
-  <ForYouRow />
-
-  <!-- ---------- Inmobiliarias aliadas: cada una lleva a sus proyectos ---------- -->
-  <AlliesStrip developers={developers} title="Proyectos de aliados" />
 </BaseLayout>
 
 <style>

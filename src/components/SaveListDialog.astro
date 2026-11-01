@@ -109,6 +109,7 @@ import Turnstile from './Turnstile.astro'
   import { api, type LeadCreate } from '../lib/api/client'
   import { enhanceForm, getUtm } from '../scripts/forms'
   import { loadCatalog } from '../scripts/catalog'
+  import { streetOf } from '../lib/format'
 
   const dialog = document.querySelector<HTMLDialogElement>('[data-save-dialog]')
   const form = dialog?.querySelector<HTMLFormElement>('[data-save-form]')
@@ -130,9 +131,11 @@ import Turnstile from './Turnstile.astro'
         return
       }
       const catalog = await loadCatalog().catch(() => [])
-      const names = ids
-        .map((id) => catalog.find((item) => item.id === id)?.district)
-        .filter(Boolean) as string[]
+      // Con la calle, como el título de la tarjeta: "Av. Arequipa y Av. Angamos Este"
+      const names = ids.flatMap((id) => {
+        const item = catalog.find((entry) => entry.id === id)
+        return item ? [streetOf(item.address)] : []
+      })
       const label = ids.length === 1 ? '1 inmueble seleccionado' : `${ids.length} inmuebles seleccionados`
       const text = summary.querySelector('span')!
       text.replaceChildren(label)

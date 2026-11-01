@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
-import ForYouRow from '../components/ForYouRow.astro'
 import Icon from '../components/Icon.astro'
 import SavedDepa from '../components/SavedDepa.astro'
 import ScheduleDialog from '../components/ScheduleDialog.astro'
@@ -99,19 +98,18 @@ import { waLink } from '../data/contacto'
         y te escribimos con los que marcaste.
       </span>
       <span data-saved-note-profile hidden>
-        Guardado para <strong data-profile-name></strong>. La próxima vez te mostramos inmuebles parecidos.
+        Guardado para <strong data-profile-name></strong>.
       </span>
     </p>
   </section>
 
-  <ForYouRow title="Parecidos a los que guardaste" />
   <ScheduleDialog />
 </BaseLayout>
 
 <script>
   import { getSavedStore } from '../lib/saved-store'
   import { getProfileStore, PROFILE_EVENT } from '../lib/profile'
-  import { formatMoney } from '../lib/format'
+  import { formatMoney, streetOf } from '../lib/format'
   import { api, apiConfigured } from '../lib/api/client'
   import { waLink } from '../data/contacto'
   import { getUtm } from '../scripts/forms'
@@ -185,7 +183,8 @@ import { waLink } from '../data/contacto'
       const fragment = template.content.cloneNode(true) as DocumentFragment
       const link = slot<HTMLAnchorElement>(fragment, 'link')
       link.href = item.url
-      link.textContent = item.district
+      // Como la tarjeta: resalta la calle y debajo va el distrito
+      link.textContent = streetOf(item.address)
       if (item.image) {
         const img = slot<HTMLImageElement>(fragment, 'image')
         img.src = item.image.src
@@ -195,7 +194,7 @@ import { waLink } from '../data/contacto'
         img.hidden = false
         slot(fragment, 'placeholder').hidden = true
       }
-      slot(fragment, 'place').textContent = `${item.address}, ${item.district}`
+      slot(fragment, 'place').textContent = item.district
       slot(fragment, 'facts').replaceChildren(...facts(item))
       const description = item.status === 'reserved' ? 'Reservado' : (item.description ?? item.badge ?? '')
       slot(fragment, 'description').textContent = item.developer
@@ -204,7 +203,7 @@ import { waLink } from '../data/contacto'
       slot(fragment, 'price-label').textContent = item.origin === 'developer' ? 'Desde' : 'Valor'
       slot(fragment, 'price').textContent = item.price.label
       const remove = slot<HTMLButtonElement>(fragment, 'remove')
-      remove.setAttribute('aria-label', `Quitar ${item.district} de la selección`)
+      remove.setAttribute('aria-label', `Quitar ${streetOf(item.address)} de la selección`)
       remove.addEventListener('click', () => store.remove(item.id))
       return fragment
     }
@@ -235,7 +234,7 @@ import { waLink } from '../data/contacto'
           const row = document.createElement('li')
           const name = document.createElement('span')
           const price = document.createElement('strong')
-          name.append(summaryIcon?.firstElementChild?.cloneNode(true) ?? '', item.district)
+          name.append(summaryIcon?.firstElementChild?.cloneNode(true) ?? '', streetOf(item.address))
           price.textContent = item.price.label
           row.append(name, price)
           return row
