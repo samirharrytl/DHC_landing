@@ -6,9 +6,10 @@
   Node 24 (`nvm install 24`, y luego `nvm use` en la raíz). Node 22.12 también funciona (`engines`
   en `package.json`), pero lo que se valida es la 24. El `package.json` de la raíz fija pnpm con
   `packageManager`.
-- PostgreSQL 16 o superior instalado en la máquina (en Ubuntu: `sudo apt install postgresql`). No
-  hace falta tenerlo encendido como servicio ni usar `sudo` después: el API levanta su propio
-  servidor con esos programas (ver [Postgres local](#postgres-local)).
+- PostgreSQL 16 o superior instalado en la máquina (en Ubuntu: `sudo apt install postgresql`; en
+  Windows, 17 o superior: `winget install PostgreSQL.PostgreSQL.17`). No hace falta tenerlo
+  encendido como servicio ni usar `sudo` después: el API levanta su propio servidor con esos
+  programas (ver [Postgres local](#postgres-local)).
 - Un solo repo (monorepo con workspaces de pnpm). Las tres apps están lado a lado en `apps/`, y así
   `pnpm api:sync` y las pruebas del panel encuentran el API:
 
@@ -55,7 +56,7 @@ flowchart LR
 | Panel | `vite` en `:5173` | Build servido en `:4173` | Cloudflare Pages, `app.depahostperu.com` |
 | Cookie de sesión | Sin `Secure` | `Secure` | `Secure`, dominio `.depahostperu.com` |
 | Turnstile | Apagado | Claves de prueba (siempre pasan) | Claves reales |
-| Correos, fotos (R2) y deploy hook | Apagados: los correos quedan en el log | Apagados | Activos |
+| Correos, fotos (R2) y deploy hook | Apagados: los correos quedan en el log. Fotos solo con el bucket de desarrollo | Apagados, salvo fotos con el bucket de desarrollo | Activos |
 | Configuración | `.env` | `.env.preprod` | Panel de cada hosting |
 
 Desarrollo y preproducción usan los mismos puertos: se corre uno o el otro, no los dos a la vez.
@@ -145,8 +146,8 @@ entre sitio, panel y API.
 `scripts/pg-local.mjs`, en el API, crea un servidor PostgreSQL propio del proyecto. No necesita
 Docker ni `sudo`:
 
-- Usa los programas de PostgreSQL instalados en la máquina; en Ubuntu, la versión más nueva de
-  `/usr/lib/postgresql`.
+- Usa los programas de PostgreSQL instalados en la máquina: la versión más nueva de
+  `/usr/lib/postgresql` en Ubuntu, o de `C:\Program Files\PostgreSQL` en Windows.
 - Guarda los datos en `.data/postgres`, que git ignora, y el log en `.data/postgres.log`.
 - Escucha solo en `localhost:15432`, con contraseña y en hora UTC, como Supabase.
 - Toma usuario, clave y base de `DATABASE_URL` en `.env`, y crea también la base de `.env.preprod`.
@@ -546,6 +547,55 @@ flowchart LR
     REST -. "sin acceso: RLS sin políticas" .-> DB
 ```
 
+### Fotos en Cloudflare R2
+
+El panel pide al API una URL prefirmada y sube cada foto directo al bucket; el API nunca recibe el
+archivo. Al construirse, el sitio descarga las fotos del bucket y las sirve optimizadas. Se usan dos
+buckets en la misma cuenta de Cloudflare, para que las pruebas no dejen fotos en producción:
+
+| | Producción | Desarrollo y preproducción |
+|---|---|---|
+| Bucket | `depahost-media` | `depahost-media-dev` |
+| URL pública | Dominio propio `media.depahostperu.com` | `https://pub-….r2.dev` |
+| Orígenes que suben | `https://app.depahostperu.com` | `http://localhost:5173`, `http://localhost:4173` |
+
+1. **Bucket:** R2 → Create bucket, con la ubicación en Automatic.
+
+2. **URL pública:** en producción, Settings → Custom Domains → `media.depahostperu.com`. La zona ya
+   está en Cloudflare, así que el registro DNS se crea solo. La URL `r2.dev` tiene límite de pedidos
+   y Cloudflare la recomienda solo para desarrollo: en el bucket de desarrollo, Settings → Public
+   Development URL → Enable.
+
+3. **CORS:** Settings → CORS Policy, con los orígenes de la tabla. Sin esta regla, el navegador bloquea
+   la subida y el panel muestra "No se pudo subir la foto".
+
+   ```json
+   [
+     {
+       "AllowedOrigins": ["https://app.depahostperu.com"],
+       "AllowedMethods": ["PUT"],
+       "AllowedHeaders": ["content-type"],
+       "MaxAgeSeconds": 3600
+     }
+   ]
+   ```
+
+4. **Token:** R2 → Manage API tokens → Create API token, con permiso **Object Read & Write** y
+   "Apply to specific buckets only" en ese bucket: un token por bucket. Cloudflare muestra el Access
+   Key ID y el Secret Access Key una sola vez. El Account ID es el que aparece en el endpoint
+   `https://<account-id>.r2.cloudflarestorage.com`.
+
+5. **API:** `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET` y
+   `R2_PUBLIC_URL` (la URL pública del paso 2, sin `/` al final). En producción van en Railway; en
+   desarrollo, en `.env` con el bucket de desarrollo. Si falta alguna, subir fotos responde 503 y el
+   panel dice "La subida de fotos todavía no está disponible".
+
+6. **Sitio:** `PUBLIC_MEDIA_HOST=media.depahostperu.com` en Cloudflare Pages. `*.r2.dev` ya está
+   permitido; un dominio propio no, y sin esta variable el build no puede optimizar sus fotos.
+
+Para probarlo, sube una foto desde Inmuebles en el panel y abre su enlace: debe responder desde la
+URL pública del bucket.
+
 ### Primera vez
 
 Los valores de cada variable están en los `.env.production.example` de las tres apps.
@@ -555,22 +605,23 @@ Los valores de cada variable están en los `.env.production.example` de las tres
    de `apps/depahost-api/.env.production.example`. Lee `certs/` desde `apps/depahost-api` y al
    arrancar aplica las migraciones.
 3. **Dominio del API:** `api.depahostperu.com` en Railway y su CNAME en el DNS de Cloudflare.
-4. **Datos:** cargar inmobiliarias, distritos, inmuebles, fotos y supuestos desde el panel o con las
+4. **Fotos:** los dos buckets de R2, como en [Fotos en Cloudflare R2](#fotos-en-cloudflare-r2).
+5. **Datos:** cargar inmobiliarias, distritos, inmuebles, fotos y supuestos desde el panel o con las
    rutas de admin (o `pnpm db:seed` solo para una demo).
-5. **Sitio:** el proyecto de Cloudflare Pages, como en
+6. **Sitio:** el proyecto de Cloudflare Pages, como en
    [Sitio y panel en Cloudflare Pages](#sitio-y-panel-en-cloudflare-pages), con los dominios
    `depahostperu.com` y `www.depahostperu.com`.
-6. **Deploy hook:** crearlo en el proyecto del sitio en Pages y ponerlo en `DEPLOY_HOOK_URL` del API.
-7. **CORS:** `CORS_ORIGINS` con el sitio y el panel:
+7. **Deploy hook:** crearlo en el proyecto del sitio en Pages y ponerlo en `DEPLOY_HOOK_URL` del API.
+8. **CORS:** `CORS_ORIGINS` con el sitio y el panel:
    `https://depahostperu.com,https://www.depahostperu.com,https://app.depahostperu.com`.
-8. **Turnstile:** registrar el dominio y poner la clave pública en el sitio y el panel, y la secreta
+9. **Turnstile:** registrar el dominio y poner la clave pública en el sitio y el panel, y la secreta
    en el API.
-9. **Resend:** verificar el dominio con sus registros DNS y poner la clave en el API.
-10. **Panel:** el segundo proyecto de Cloudflare Pages, con las variables de
+10. **Resend:** verificar el dominio con sus registros DNS y poner la clave en el API.
+11. **Panel:** el segundo proyecto de Cloudflare Pages, con las variables de
     `apps/depahost-panel/.env.production.example` y el dominio `app.depahostperu.com`.
-11. **Cuentas:** en el API, `COOKIE_DOMAIN=.depahostperu.com` y `PANEL_URL=https://app.depahostperu.com`.
+12. **Cuentas:** en el API, `COOKIE_DOMAIN=.depahostperu.com` y `PANEL_URL=https://app.depahostperu.com`.
     En el sitio, `PUBLIC_PANEL_URL=https://app.depahostperu.com`.
-12. **Primer administrador:** desde tu máquina, contra la base de producción:
+13. **Primer administrador:** desde tu máquina, contra la base de producción:
     `DATABASE_URL='<cadena de Supabase>' pnpm user:create --email … --name … --role admin`.
 
 ### Cada cambio
@@ -593,6 +644,7 @@ Antes de publicar un cambio grande, conviene probarlo en preproducción.
 - [ ] Inmobiliarias reales, con permiso para usar su nombre y logo.
 - [ ] `NOTIFY_EMAIL` apuntando a un buzón que alguien revise: ahí llegan los reclamos.
 - [ ] Data API de Supabase desactivada y `certs/supabase-ca.crt` en el repo del API.
+- [ ] Una foto subida desde `app.depahostperu.com` se ve en el panel y, tras el rebuild, en el sitio.
 
 ## 9. Monitoreo
 
