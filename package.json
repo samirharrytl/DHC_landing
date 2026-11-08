@@ -1,11 +1,13 @@
 {
   "name": "depahostcapital",
   "type": "module",
+  "packageManager": "pnpm@11.24.0",
   "version": "0.0.1",
   "engines": {
     "node": ">=22.12.0"
   },
   "scripts": {
+    "prepare": "husky || true",
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
@@ -47,6 +49,8 @@
     "eslint-plugin-jsx-a11y-x": "^0.2.0",
     "globals": "^17.13.0",
     "happy-dom": "^21.0.3",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0",
     "openapi-typescript": "^7.13.0",
     "prettier": "^3.9.10",
     "prettier-plugin-astro": "^1.1.1",

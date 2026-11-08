@@ -2,27 +2,22 @@
 
 ## 1. Requisitos
 
-- Node 24 y pnpm 11. La CI, el hosting del API y el `.nvmrc` de la raíz del monorepo usan
+- Node 24 y pnpm 11. La CI, el hosting del API y el `.nvmrc` de cada repo usan
   Node 24 (`nvm install 24`, y luego `nvm use` en la raíz). Node 22.12 también funciona (`engines`
-  en `package.json`), pero lo que se valida es la 24. El `package.json` de la raíz fija pnpm con
+  en `package.json`), pero lo que se valida es la 24. El `package.json` de cada repo fija pnpm con
   `packageManager`.
 - PostgreSQL 16 o superior instalado en la máquina (en Ubuntu: `sudo apt install postgresql`; en
   Windows, 17 o superior: `winget install PostgreSQL.PostgreSQL.17`). No hace falta tenerlo
   encendido como servicio ni usar `sudo` después: el API levanta su propio servidor con esos
   programas (ver [Postgres local](#postgres-local)).
-- Un solo repo (monorepo con workspaces de pnpm). Las tres apps están lado a lado en `apps/`, y así
-  `pnpm api:sync` y las pruebas del panel encuentran el API:
+- Tres repos independientes, cada uno con su `pnpm-lock.yaml` y su CI. Se clonan lado a lado en una
+  misma carpeta, y así `pnpm api:sync`, `pnpm sync:brand` y las pruebas del panel encuentran a los demás:
 
 ```text
 DepaHost/
-├── package.json         scripts de todo el monorepo
-├── pnpm-workspace.yaml
-├── pnpm-lock.yaml       un solo lockfile para las tres apps
-├── .github/workflows/   web.yml · api.yml · panel.yml
-└── apps/
-    ├── depahostcapital/   sitio
-    ├── depahost-api/      API
-    └── depahost-panel/    panel
+├── depahostcapital/   sitio
+├── depahost-api/      API
+└── depahost-panel/    panel
 ```
 
 ## 2. Entornos
@@ -390,40 +385,37 @@ nueva y un admin de prueba, y construyen el panel apuntando a ese API. No usan e
 
 ## 7. Integración continua (GitHub Actions)
 
-Hay un workflow por app en `.github/workflows/` de la raíz. Cada uno corre en los push a `main` y
-en los pull request que tocan su carpeta en `apps/`, el lockfile o el propio workflow. Todos los jobs usan Node 24, y también las
+Cada repo tiene su workflow en `.github/workflows/ci.yml`, que corre en los push a `main` y en los
+pull request. Por ahora solo valida calidad de código: las pruebas funcionales (`pnpm test`,
+`pnpm test:e2e`, migraciones) se corren a mano en cada repo. Todos los jobs usan Node 24, y también las
 acciones corren sobre Node 24: `actions/checkout@v7`, `actions/setup-node@v7`,
 `pnpm/action-setup@v6`, `actions/upload-artifact@v7` y `actions/download-artifact@v8`. Con las
 versiones `@v4`, GitHub avisa que se ejecutan en Node 20, que ya está obsoleto.
 
-**Frontend** (`.github/workflows/web.yml`):
+**Frontend** (repo `depahostcapital`):
 
 ```mermaid
 flowchart TB
     F0(("push o PR"))
-    F1["Job check<br/>install · format:check<br/>astro check · vitest · build"]
-    F2["Job e2e<br/>install · Chromium<br/>playwright test"]
+    F1["Job check<br/>install · format:check · lint<br/>astro check · build"]
     F3["Job lighthouse<br/>mide dist/ del job check"]
     F0 --> F1
-    F0 --> F2
     F1 -- "artefacto dist" --> F3
 ```
 
-**API** (`.github/workflows/api.yml`):
+**API** (repo `depahost-api`):
 
 ```mermaid
 flowchart TB
     B0(("push o PR"))
-    B1["install · format:check<br/>typecheck · test"]
+    B1["install · format:check<br/>lint · typecheck"]
     B2["openapi:check<br/>el contrato coincide con el código"]
-    B3["db:migrate<br/>contra PostgreSQL 17 real"]
     B4["build"]
-    B0 --> B1 --> B2 --> B3 --> B4
+    B0 --> B1 --> B2 --> B4
 ```
 
-**Panel** (`.github/workflows/panel.yml`): formato, tipos, pruebas y build; y un job de punta a
-punta que levanta el API desde `apps/depahost-api`, en el mismo checkout. También corre cuando
-cambia el API.
+**Panel** (repo `depahost-panel`): formato, lint, tipos y build. `sync:brand` no se valida en la CI
+porque necesita el repo del sitio al lado: se corre a mano al cambiar el diseño del sitio.
 
 Umbrales de Lighthouse (`lighthouserc.json`): accesibilidad 95 y SEO 90 hacen fallar; rendimiento
 90 y buenas prácticas 90 solo advierten. Se miden `/` y `/capital`.
@@ -441,12 +433,12 @@ Umbrales de Lighthouse (`lighthouserc.json`): accesibilidad 95 y SEO 90 hacen fa
 
 El API y la base van en la misma región porque cada pedido hace varias consultas. Ninguno de los
 hostings usa Docker: Cloudflare construye los frontends y Railway construye y arranca el API desde
-el monorepo.
+su repo.
 
 #### Sitio y panel en Cloudflare Pages
 
-Dos proyectos de Pages conectados al mismo repo de GitHub (Workers & Pages → Create → Pages →
-Connect to Git). Los dos se construyen desde la raíz del monorepo: ahí están `pnpm-lock.yaml` y el
+Dos proyectos de Pages, cada uno conectado a su repo de GitHub (Workers & Pages → Create → Pages →
+Connect to Git). Los dos se construyen desde la raíz de su repo: ahí están `pnpm-lock.yaml` y el
 `.nvmrc` con Node 24.
 
 | Ajuste | Sitio | Panel |
@@ -455,14 +447,14 @@ Connect to Git). Los dos se construyen desde la raíz del monorepo: ahí están 
 | Rama de producción | `deploy/sitio` | `deploy/panel` |
 | Framework preset | None | None |
 | Root directory | vacío (raíz del repo) | vacío (raíz del repo) |
-| Build command | `pnpm --filter depahostcapital build` | `pnpm --filter depahost-panel build` |
-| Build output directory | `apps/depahostcapital/dist` | `apps/depahost-panel/dist` |
-| Build watch paths, include | `apps/depahostcapital/*`, `pnpm-lock.yaml`, `pnpm-workspace.yaml` | `apps/depahost-panel/*`, `pnpm-lock.yaml`, `pnpm-workspace.yaml` |
-| Variables | `PNPM_VERSION=11.24.0` y las de `apps/depahostcapital/.env.production.example` | `PNPM_VERSION=11.24.0` y las de `apps/depahost-panel/.env.production.example` |
+| Build command | `pnpm build` | `pnpm build` |
+| Build output directory | `dist` | `dist` |
+| Build watch paths, include | `*` | `*` |
+| Variables | `PNPM_VERSION=11.24.0` y las de `.env.production.example` del repo | `PNPM_VERSION=11.24.0` y las de `.env.production.example` del repo |
 
 - **Se publica después de las validaciones.** La rama de producción no es `main`: es
-  `deploy/sitio` o `deploy/panel`, y solo la mueve GitHub Actions (job `deploy` de `web.yml` y
-  `panel.yml`) cuando formato, lint, tipos, pruebas, e2e y build pasaron en ese commit de `main`.
+  `deploy/sitio` o `deploy/panel`, y solo la mueve GitHub Actions (job `deploy` del `ci.yml` de
+  cada repo) cuando formato, lint, tipos y build pasaron en ese commit de `main`.
   Nadie hace push a mano a esas ramas.
 - **`PNPM_VERSION` es obligatoria.** Sin ella, Pages usa pnpm 10, que no lee `allowBuilds` de
   `pnpm-workspace.yaml`.
@@ -479,23 +471,22 @@ Connect to Git). Los dos se construyen desde la raíz del monorepo: ahí están 
 
 #### API en Railway
 
-Un proyecto de Railway con un solo servicio (New Project → Deploy from GitHub repo). Railway detecta
-el monorepo y propone un servicio por app: se deja solo `depahost-api`, porque el sitio y el panel
-van en Cloudflare.
+Un proyecto de Railway con un solo servicio (New Project → Deploy from GitHub repo). Se conecta el
+repo `depahost-api`.
 
 | Ajuste (Settings del servicio) | Valor |
 |---|---|
 | Root directory | vacío (raíz del repo) |
 | Branch (Source → Branch connected to production) | `deploy/api` |
-| Build command | `pnpm --filter depahost-api build` |
-| Start command | `pnpm --filter depahost-api start` |
-| Watch paths | `/apps/depahost-api/**`, `/pnpm-lock.yaml`, `/pnpm-workspace.yaml` |
+| Build command | `pnpm build` |
+| Start command | `pnpm start` |
+| Watch paths | vacío (todo el repo) |
 | Healthcheck path | `/health` |
 | Región | US East (Virginia) |
-| Variables | `RAILPACK_NODE_VERSION=24` y las de `apps/depahost-api/.env.production.example` |
+| Variables | `RAILPACK_NODE_VERSION=24` y las de `.env.production.example` del repo |
 
 - **Se publica después de las validaciones.** Railway sigue la rama `deploy/api`, que solo mueve el
-  job `deploy` de `api.yml` cuando pasaron formato, lint, tipos, pruebas, migraciones y build.
+  job `deploy` del `ci.yml` del API cuando pasaron formato, lint, tipos, contrato y build.
 - **`RAILPACK_NODE_VERSION=24` es obligatoria.** Railway toma la versión de `engines`
   (`>=22.12.0`) antes que la del `.nvmrc`, así que sin ella podría elegir otra versión.
 - **Instalación:** Railway corre `pnpm install` en la raíz con el pnpm de `packageManager`. Luego
@@ -602,7 +593,7 @@ Los valores de cada variable están en los `.env.production.example` de las tres
 
 1. **Base de datos:** Supabase, como en la sección anterior.
 2. **API:** el servicio de Railway, como en [API en Railway](#api-en-railway), con las variables
-   de `apps/depahost-api/.env.production.example`. Lee `certs/` desde `apps/depahost-api` y al
+   de `depahost-api/.env.production.example`. Lee `certs/` desde la raíz del repo del API y al
    arrancar aplica las migraciones.
 3. **Dominio del API:** `api.depahostperu.com` en Railway y su CNAME en el DNS de Cloudflare.
 4. **Fotos:** los dos buckets de R2, como en [Fotos en Cloudflare R2](#fotos-en-cloudflare-r2).
@@ -618,7 +609,7 @@ Los valores de cada variable están en los `.env.production.example` de las tres
    en el API.
 10. **Resend:** verificar el dominio con sus registros DNS y poner la clave en el API.
 11. **Panel:** el segundo proyecto de Cloudflare Pages, con las variables de
-    `apps/depahost-panel/.env.production.example` y el dominio `app.depahostperu.com`.
+    `depahost-panel/.env.production.example` y el dominio `app.depahostperu.com`.
 12. **Cuentas:** en el API, `COOKIE_DOMAIN=.depahostperu.com` y `PANEL_URL=https://app.depahostperu.com`.
     En el sitio, `PUBLIC_PANEL_URL=https://app.depahostperu.com`.
 13. **Primer administrador:** desde tu máquina, contra la base de producción:

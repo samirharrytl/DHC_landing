@@ -1,5 +1,5 @@
 // Copia el contrato de la API a openapi/depahost-api.json y regenera los tipos.
-//   pnpm api:sync                         → desde ../depahost-api/openapi.json (apps/ del monorepo)
+//   pnpm api:sync                         → desde ../depahost-api/openapi.json (repo hermano)
 //   OPENAPI_URL=https://api.depahostperu.com/openapi.json pnpm api:sync   → desde la API publicada
 import { execSync } from 'node:child_process'
 import { readFile, writeFile } from 'node:fs/promises'

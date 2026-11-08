@@ -1,0 +1,70 @@
+name: Sitio
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: web-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Solo calidad de código. Las pruebas funcionales (pnpm test, pnpm test:e2e) se corren a mano por ahora.
+  check:
+    name: Formato, lint, tipos y build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # Fotos ya optimizadas por builds anteriores: sin ellas el build tarda minutos en el runner
+      - uses: actions/cache@v6
+        with:
+          path: node_modules/.astro
+          key: astro-${{ hashFiles('src/assets/**', 'src/content/**', 'pnpm-lock.yaml') }}
+          restore-keys: astro-
+      - run: pnpm format:check
+      - run: pnpm lint
+      - run: pnpm check
+      - run: pnpm build
+      - uses: actions/upload-artifact@v7
+        with:
+          name: dist
+          path: dist
+
+  lighthouse:
+    name: Lighthouse
+    needs: check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - uses: actions/download-artifact@v8
+        with:
+          name: dist
+          path: dist
+      - run: npx --yes @lhci/cli@0.15.1 autorun
+
+  # Producción: Cloudflare publica la rama deploy/sitio, no main. Esa rama solo avanza aquí,
+  # después de que pasaron todas las validaciones de este commit.
+  deploy:
+    name: Publicar (deploy/sitio)
+    needs: [check, lighthouse]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # Historial completo: git necesita ver que el commit desciende del que ya está publicado
+          fetch-depth: 0
+      # Sin --force: si una ejecución vieja termina después de una nueva, falla en vez de volver atrás
+      - run: git push origin HEAD:refs/heads/deploy/sitio

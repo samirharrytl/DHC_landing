@@ -5,12 +5,7 @@ import BaseLayout from '../../../layouts/BaseLayout.astro'
 import Icon from '../../../components/Icon.astro'
 import ProjectCard from '../../../components/ProjectCard.astro'
 import SearchFilters from '../../../components/SearchFilters.astro'
-import {
-  getDeveloperProjects,
-  getDevelopers,
-  getFastFilters,
-  getFinancingAssumptions,
-} from '../../../lib/properties'
+import { getDeveloperProjects, getDevelopers, getFastFilters } from '../../../lib/properties'
 import type { Developer } from '../../../types/property'
 
 export const getStaticPaths = (async () => {
