@@ -16,32 +16,26 @@ interface HybridLoaderOptions {
   apiUrl?: string
   /** Trae los items desde la API y los devuelve ya con la forma del esquema de la colección. */
   fetchRemote: (apiUrl: string) => Promise<(Record<string, unknown> & { id: string })[]>
-  /** Items del JSON local que se conservan también cuando hay API (lo que solo vive en el sitio). */
-  keepLocal?: (item: Record<string, unknown>) => boolean
 }
 
 export function hybridLoader(options: HybridLoaderOptions): Loader {
   return {
     name: options.name,
     async load(context) {
-      const root = fileURLToPath(context.config.root)
-      const absolute = path.join(root, options.localFile)
-      const readLocal = async () => {
-        const items: unknown = JSON.parse(await readFile(absolute, 'utf8'))
-        if (!isObjectList(items)) throw new Error(`${options.localFile} debe ser un arreglo de objetos`)
-        return items
-      }
-
       if (options.apiUrl) {
         context.logger.info(`Cargando desde la API ${options.apiUrl}`)
         const items = await options.fetchRemote(options.apiUrl.replace(/\/$/, ''))
         await fill(context, items)
-        if (options.keepLocal)
-          await fill(context, (await readLocal()).filter(options.keepLocal), options.localFile, false)
         return
       }
 
-      const loadLocal = async () => fill(context, await readLocal(), options.localFile)
+      const root = fileURLToPath(context.config.root)
+      const absolute = path.join(root, options.localFile)
+      const loadLocal = async () => {
+        const items: unknown = JSON.parse(await readFile(absolute, 'utf8'))
+        if (!isObjectList(items)) throw new Error(`${options.localFile} debe ser un arreglo de objetos`)
+        await fill(context, items, options.localFile)
+      }
       await loadLocal()
 
       // En desarrollo, recarga al editar el JSON
@@ -61,13 +55,8 @@ function isObjectList(value: unknown): value is Record<string, unknown>[] {
   return Array.isArray(value) && value.every((item) => typeof item === 'object' && item !== null)
 }
 
-async function fill(
-  context: LoaderContext,
-  items: Record<string, unknown>[],
-  filePath?: string,
-  clear = true,
-) {
-  if (clear) context.store.clear()
+async function fill(context: LoaderContext, items: Record<string, unknown>[], filePath?: string) {
+  context.store.clear()
   for (const item of items) {
     const id = String(item.id)
     // filePath permite que image() resuelva rutas relativas al JSON

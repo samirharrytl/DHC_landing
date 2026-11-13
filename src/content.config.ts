@@ -1,7 +1,7 @@
 // Colecciones de datos del sitio. El esquema refleja la respuesta de la API (el panel de DepaHost, /api/v1):
 // si la API cambia de forma, el build falla aquí en vez de romper una página.
-// Del panel solo vienen los inmuebles de propietarios. Capital (inmobiliarias aliadas, sus proyectos y los
-// supuestos de financiamiento) vive solo en el sitio, en src/content/*.json.
+// Los inmuebles vienen solo del panel; sin API_URL, de src/content/properties.json (vacío). Las inmobiliarias
+// aliadas y los supuestos de financiamiento viven solo en el sitio, en src/content/*.json.
 import { defineCollection } from 'astro:content'
 import { file } from 'astro/loaders'
 import { z } from 'astro/zod'
@@ -32,8 +32,6 @@ const properties = defineCollection({
         images: images.map(({ url, ...img }) => ({ ...img, src: url })),
       }))
     },
-    // Los proyectos de inmobiliarias no están en el panel: siguen saliendo del JSON local
-    keepLocal: (item) => item.origin === 'developer',
   }),
   schema: ({ image }) =>
     z.object({
