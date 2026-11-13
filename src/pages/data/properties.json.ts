@@ -19,7 +19,8 @@ export interface CatalogItem {
   description: string | null
   status: 'published' | 'reserved' | 'sold'
   price: { amount: number; currency: 'PEN' | 'USD'; label: string }
-  yield: { min: number; max: number }
+  yield: { min: number; max: number } | null
+  /** Vacíos cuando el inmueble no tiene rentabilidad registrada */
   yieldLabel: string
   paybackLabel: string
   facts: string[]
@@ -61,7 +62,7 @@ export const GET: APIRoute = async () => {
         price: { ...p.price, label: formatMoney(p.price.amount, p.price.currency) },
         yield: p.yield,
         yieldLabel: formatYield(p.yield),
-        paybackLabel: `Se paga en ${formatYears(p.paybackYears)}`,
+        paybackLabel: p.paybackYears === null ? '' : `Se paga en ${formatYears(p.paybackYears)}`,
         facts: formatFacts(p),
         image,
       }

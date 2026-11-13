@@ -21,7 +21,7 @@ export function asRecommendable(item: CatalogItem) {
     districtSlug: item.districtSlug,
     origin: item.origin,
     price: item.price.amount,
-    yieldMin: item.yield.min,
-    yieldMax: item.yield.max,
+    yieldMin: item.yield?.min ?? 0,
+    yieldMax: item.yield?.max ?? 0,
   }
 }

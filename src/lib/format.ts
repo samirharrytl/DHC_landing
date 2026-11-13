@@ -20,9 +20,10 @@ export function formatPENShort(amount: number): string {
   return `S/ ${Math.round(amount / 1000)}k`
 }
 
-/** { min: 8, max: 10 } → "8–10% anual" · { min: 8, max: 8 } → "8% anual" */
-export function formatYield({ min, max }: { min: number; max: number }): string {
-  return min === max ? `${min}% anual` : `${min}–${max}% anual`
+/** { min: 8, max: 10 } → "8–10% anual" · { min: 8, max: 8 } → "8% anual" · null (sin dato) → "" */
+export function formatYield(y: { min: number; max: number } | null): string {
+  if (!y) return ''
+  return y.min === y.max ? `${y.min}% anual` : `${y.min}–${y.max}% anual`
 }
 
 /** Alquiler mensual que da la rentabilidad estimada (renta anual ÷ precio), redondeado a 10:
@@ -40,7 +41,8 @@ export function formatMonthlyRent(
 }
 
 /** 11 → "11 años" · 1 → "1 año" */
-export const formatYears = (years: number) => `${years} ${years === 1 ? 'año' : 'años'}`
+export const formatYears = (years: number | null) =>
+  years === null ? '' : `${years} ${years === 1 ? 'año' : 'años'}`
 
 /** Calle sin la cuadra, para títulos: "Av. Arequipa cuadra 12" → "Av. Arequipa" */
 export const streetOf = (address: string) => address.replace(/ cuadra \d+$/i, '')

@@ -32,8 +32,8 @@ export const toRecommendable = (p: Property): Recommendable => ({
   districtSlug: p.district.slug,
   origin: p.origin,
   price: p.price.amount,
-  yieldMin: p.yield.min,
-  yieldMax: p.yield.max,
+  yieldMin: p.yield?.min ?? 0,
+  yieldMax: p.yield?.max ?? 0,
 })
 
 /** "Inmuebles similares que te pueden interesar" del detalle. */

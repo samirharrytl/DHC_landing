@@ -47,6 +47,9 @@ const { title = 'Para ti, según lo que has visto', seeAllHref = '/capital/inmue
     slot('price').textContent = item.price.label
     slot('yield').textContent = item.yieldLabel.replace(' anual', '')
     slot('payback').textContent = item.paybackLabel.replace('Se paga en ', '')
+    // Sin rentabilidad registrada no se muestra el dato vacío
+    slot('yield').closest('li')!.hidden = !item.yieldLabel
+    slot('payback').closest('li')!.hidden = !item.paybackLabel
     if (item.image) {
       const img = slot<HTMLImageElement>('image')
       img.src = item.image.src

@@ -3,8 +3,11 @@
 Sitio de **Depa Host Perú** (depahostperu.com): reservar estadías, vender o alquilar tu inmueble,
 y **DepaHost Capital** (comprar inmuebles en Lima para que rindan).
 
-Esta app es solo el **frontend estático**. El backend es otro repo (`depahost-api`,
-Fastify + PostgreSQL). Se comunican por HTTP con un contrato OpenAPI.
+Esta app es solo el **frontend estático**. El backend es el **panel de DepaHost** (Next.js + Supabase),
+que expone `/api/v1/properties` y `/api/v1/leads` con la forma del contrato `openapi/depahost-api.json`.
+Los inmuebles de propietarios se registran en el panel; Capital (inmobiliarias aliadas, sus proyectos y los
+supuestos de financiamiento) vive solo en este repo, en `src/content/*.json`.
+Los repos `depahost-api` y `depahost-panel` quedaron reemplazados por el panel.
 
 ## Documentación
 
@@ -63,9 +66,9 @@ durante el build, el build falla a propósito para no publicar datos viejos.
 ## Cómo fluyen los datos
 
 ```text
-API (depahost-api) ──GET /v1/properties──▶ src/content.config.ts ──▶ src/lib/properties.ts ──▶ páginas
+Panel (/api) ──GET /v1/properties──▶ src/content.config.ts ──▶ src/lib/properties.ts ──▶ páginas
         ▲                                   (o src/content/*.json)
-        │ POST /v1/leads, /v1/complaints
+        │ POST /v1/leads
 navegador (src/scripts/forms.ts)
 ```
 
@@ -114,8 +117,8 @@ openapi/            copia del contrato de la API
 | Número de WhatsApp real                                  | `PUBLIC_WHATSAPP_NUMBER`                                 |
 | Razón social, RUC y dirección fiscal                     | `src/data/empresa.ts` y variables `COMPANY_*` de la API  |
 | Revisión legal de privacidad y términos (son borradores) | `src/pages/privacidad.astro`, `src/pages/terminos.astro` |
-| Supuestos de la cuota estimada                           | API: `POST /v1/admin/financing-assumptions`              |
-| Fotos de los inmuebles en la API                         | Subir a R2 con `POST /v1/admin/uploads`                  |
+| Supuestos de la cuota estimada                           | `src/content/financing.json`                             |
+| Fotos de los inmuebles                                   | Ficha del inmueble en el panel                           |
 | Logos de aliados                                         | `src/pages/capital/index.astro`                          |
 | Páginas Estadías y Nosotros (siguen en construcción)     | `src/pages/`                                             |
 | Versión en inglés del sitio                              | Selector EN deshabilitado en `LangSwitch.astro`          |

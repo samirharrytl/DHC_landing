@@ -26,7 +26,7 @@ const yieldLabel = formatYield(p.yield).replace(' anual', '')
   data-search={buildSearchText(p)}
   data-district={p.district.slug}
   data-price={p.price.amount}
-  data-yield-min={p.yield.min}
+  data-yield-min={p.yield?.min ?? 0}
 >
   <div class="media">
     {image ? (

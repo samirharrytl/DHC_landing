@@ -56,11 +56,11 @@ const street = p && streetOf(p.address)
         <Icon name="tag" size={15} />
         <span data-slot="price">{p ? formatMoney(p.price.amount, p.price.currency) : ''}</span>
       </li>
-      <li>
+      <li hidden={p ? !p.yield : false}>
         <Icon name="trend" size={15} />
         <span data-slot="yield">{p ? formatYield(p.yield).replace(' anual', '') : ''}</span>
       </li>
-      <li>
+      <li hidden={p ? p.paybackYears === null : false}>
         <Icon name="calendar" size={15} />
         <span data-slot="payback">{p ? formatYears(p.paybackYears) : ''}</span>
       </li>

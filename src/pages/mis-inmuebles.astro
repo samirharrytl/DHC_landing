@@ -168,10 +168,12 @@ import { waLink } from '../data/contacto'
             fact.includes('dorm') ? 'bed' : fact.includes('baño') ? 'bath' : 'area',
             fact,
           ])
-        : [
-            ['trend', item.yieldLabel],
-            ['calendar', item.paybackLabel],
-          ]
+        : (
+            [
+              ['trend', item.yieldLabel],
+              ['calendar', item.paybackLabel],
+            ] as [string, string][]
+          ).filter(([, text]) => text)
       return entries.map(([name, text]) => {
         const span = document.createElement('span')
         span.append(icon(name), text)

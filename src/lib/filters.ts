@@ -27,7 +27,8 @@ interface PropertyLike {
   badge?: string | null
   developer?: { name: string } | null
   price: { amount: number }
-  yield: { min: number; max: number }
+  /** null: el inmueble no tiene rentabilidad registrada */
+  yield: { min: number; max: number } | null
 }
 
 /** Texto por el que se busca una tarjeta: distrito, dirección, inmobiliaria, badge y precio en varios formatos. */
@@ -96,7 +97,7 @@ export function buildFastFilters(properties: PropertyLike[], max = { districts: 
   for (const p of properties) {
     const d = districts.get(p.district.slug) ?? { name: p.district.name, count: 0, yieldSum: 0 }
     d.count += 1
-    d.yieldSum += (p.yield.min + p.yield.max) / 2
+    d.yieldSum += p.yield ? (p.yield.min + p.yield.max) / 2 : 0
     districts.set(p.district.slug, d)
   }
   const districtFilters = [...districts]

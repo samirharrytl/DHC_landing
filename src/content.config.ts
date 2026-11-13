@@ -1,14 +1,15 @@
-// Colecciones de datos del sitio. El esquema refleja la respuesta de la API (repo depahost-api):
+// Colecciones de datos del sitio. El esquema refleja la respuesta de la API (el panel de DepaHost, /api/v1):
 // si la API cambia de forma, el build falla aquí en vez de romper una página.
+// Del panel solo vienen los inmuebles de propietarios. Capital (inmobiliarias aliadas, sus proyectos y los
+// supuestos de financiamiento) vive solo en el sitio, en src/content/*.json.
 import { defineCollection } from 'astro:content'
+import { file } from 'astro/loaders'
 import { z } from 'astro/zod'
 import { fetchJson, hybridLoader } from './lib/api/loaders'
 import type { components } from './lib/api/schema'
 
 type ApiProperty = components['schemas']['Property']
 type ApiPropertyPage = components['schemas']['PropertyPage']
-type ApiFinancing = components['schemas']['FinancingAssumptions']
-type ApiDeveloper = components['schemas']['Developer']
 
 // Se lee en el build. Ver .env.example
 const API_URL = import.meta.env.API_URL
@@ -31,6 +32,8 @@ const properties = defineCollection({
         images: images.map(({ url, ...img }) => ({ ...img, src: url })),
       }))
     },
+    // Los proyectos de inmobiliarias no están en el panel: siguen saliendo del JSON local
+    keepLocal: (item) => item.origin === 'developer',
   }),
   schema: ({ image }) =>
     z.object({
@@ -47,8 +50,9 @@ const properties = defineCollection({
       badge: z.string().nullish(),
       description: z.string().nullish(),
       price: z.object({ amount: z.number().nonnegative(), currency: z.enum(['PEN', 'USD']) }),
-      yield: z.object({ min: z.number(), max: z.number() }),
-      paybackYears: z.number().positive(),
+      // El panel solo los envía si se registraron en la ficha; sin ellos el sitio no muestra rentabilidad
+      yield: z.object({ min: z.number(), max: z.number() }).nullable(),
+      paybackYears: z.number().positive().nullable(),
       areaM2: z.number().nullish(),
       bedrooms: z.number().int().nullish(),
       bathrooms: z.number().nullish(),
@@ -72,18 +76,7 @@ const properties = defineCollection({
 })
 
 const financing = defineCollection({
-  loader: hybridLoader({
-    name: 'financing',
-    localFile: 'src/content/financing.json',
-    apiUrl: API_URL,
-    async fetchRemote(apiUrl) {
-      const response = await fetch(`${apiUrl}/v1/financing-assumptions`)
-      if (response.status === 404) return [] // aún no cargan supuestos: se muestran [plazo], [X]…
-      if (!response.ok) throw new Error(`financing-assumptions respondió ${response.status}`)
-      const f = (await response.json()) as ApiFinancing
-      return [{ id: 'current', ...f }]
-    },
-  }),
+  loader: file('src/content/financing.json'),
   schema: z.object({
     rate: z.number().nullable(),
     downPaymentPct: z.number().nullable(),
@@ -94,12 +87,7 @@ const financing = defineCollection({
 
 // Inmobiliarias aliadas: tienen su página /capital/aliados/{slug}
 const developers = defineCollection({
-  loader: hybridLoader({
-    name: 'developers',
-    localFile: 'src/content/developers.json',
-    apiUrl: API_URL,
-    fetchRemote: (apiUrl) => fetchJson<ApiDeveloper[]>(`${apiUrl}/v1/developers`),
-  }),
+  loader: file('src/content/developers.json'),
   schema: z.object({
     id: z.string(),
     slug: z.string(),

@@ -35,13 +35,15 @@ const price = formatMoney(p.price.amount, p.price.currency)
 const facts = propertyFacts(p)
 // Lo que rinde, debajo del precio, con el mismo formato que los datos del inmueble. Por ahora sin el
 // alquiler mensual estimado (formatMonthlyRent)
-const returns: Fact[] = [
-  {
-    parts: [{ icon: 'trend', value: formatYield(p.yield).replace(' anual', '') }],
-    label: 'rentabilidad anual',
-    positive: true,
-  },
-]
+const returns: Fact[] = !p.yield
+  ? []
+  : [
+      {
+        parts: [{ icon: 'trend', value: formatYield(p.yield).replace(' anual', '') }],
+        label: 'rentabilidad anual',
+        positive: true,
+      },
+    ]
 
 // Datos estructurados para Google (schema.org)
 const jsonLd = {
@@ -60,7 +62,7 @@ const jsonLd = {
 
 <BaseLayout
   title={name}
-  description={`Inmueble en ${p.district.name} desde ${price}. Rentabilidad ${formatYield(p.yield)}.`}
+  description={`Inmueble en ${p.district.name} desde ${price}.${p.yield ? ` Rentabilidad ${formatYield(p.yield)}.` : ''}`}
 >
   <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   <article class="container detail" data-property-id={p.id}>
