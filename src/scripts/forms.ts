@@ -181,9 +181,14 @@ export function enhanceForm<P extends Json, T>(form: HTMLFormElement, options: E
         options.onSuccess(data, form)
         return
       }
+      // Solo se marcan los errores de campos que están en el formulario; si la API rechaza otro dato
+      // (p. ej. source), se muestra su mensaje con WhatsApp en vez de "Revisa los campos marcados"
+      const fieldIssues = (error?.issues ?? []).filter((issue) =>
+        form.querySelector(`[name="${CSS.escape(issue.path)}"]`),
+      )
       if (response?.status === 429) setStatus(form, 'error', messages.tooMany)
-      else if (error?.issues?.length) {
-        showFieldErrors(form, error.issues)
+      else if (fieldIssues.length) {
+        showFieldErrors(form, fieldIssues)
         setStatus(form, 'error', messages.invalid)
       } else
         setStatus(form, 'error', error?.message ?? messages.networkError, whatsapp, messages.whatsappLink)

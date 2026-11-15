@@ -1,0 +1,152 @@
+---
+// Formulario de pauta digital: nombre, celular, correo, comprar o vender y los dos consentimientos.
+// Crea el lead en el panel (ad-buy / ad-sell, ver src/lib/campaign-lead.ts) con la UTM del anuncio y lleva a
+// /registro/gracias, la URL que Meta y Google Ads usan para contar la conversión.
+// Se puede poner en otras páginas de campaña: cada instancia necesita un idPrefix distinto.
+import Icon from './Icon.astro'
+import Turnstile from './Turnstile.astro'
+import WhatsAppIcon from './WhatsAppIcon.astro'
+
+interface Props {
+  heading?: string
+  idPrefix?: string
+}
+const { heading = 'Cuéntanos qué buscas', idPrefix = 'lead' } = Astro.props
+const id = (name: string) => `${idPrefix}-${name}`
+---
+
+<form class="form campaign-form" data-campaign-form novalidate aria-labelledby={id('title')}>
+  <h2 id={id('title')} class="display">
+    {heading}
+  </h2>
+  <div class="field">
+    <label for={id('name')}>Nombre</label>
+    <input
+      id={id('name')}
+      name="name"
+      autocomplete="name"
+      placeholder="Tu nombre completo"
+      required
+      minlength="2"
+      maxlength="120"
+    />
+    <p class="field-error" data-error-for="name" hidden></p>
+  </div>
+  <div class="field">
+    <label for={id('phone')}>Celular</label>
+    <input
+      id={id('phone')}
+      name="phone"
+      type="tel"
+      inputmode="tel"
+      autocomplete="tel"
+      placeholder="9XX XXX XXX"
+      required
+      pattern="\+?[0-9 ()\-]{6,20}"
+    />
+    <p class="field-error" data-error-for="phone" hidden></p>
+  </div>
+  <div class="field">
+    <label for={id('email')}>Correo</label>
+    <input
+      id={id('email')}
+      name="email"
+      type="email"
+      autocomplete="email"
+      placeholder="tu@correo.com"
+      required
+      maxlength="200"
+    />
+    <p class="field-error" data-error-for="email" hidden></p>
+  </div>
+  <fieldset class="intent">
+    <legend>¿Qué quieres hacer?</legend>
+    <div class="choices">
+      <label class="check">
+        <input type="radio" name="intent" value="buy" required /> Comprar
+      </label>
+      <label class="check">
+        <input type="radio" name="intent" value="sell" required /> Vender
+      </label>
+    </div>
+  </fieldset>
+  <label class="check">
+    <input type="checkbox" name="consent" required />
+    <span>
+      Acepto la <a href="/privacidad">política de privacidad</a>.
+    </span>
+  </label>
+  <p class="field-error" data-error-for="consent" hidden></p>
+  <label class="check">
+    <input type="checkbox" name="marketingConsent" />
+    <span>
+      Acepto recibir novedades y ofertas de Depa Host por WhatsApp y correo.
+      <span class="hint">Opcional</span>
+    </span>
+  </label>
+  <div class="hp" aria-hidden="true">
+    <label>
+      Sitio web <input type="text" name="website" tabindex="-1" autocomplete="off" />
+    </label>
+  </div>
+  <Turnstile />
+  <button type="submit" class="btn btn--primary btn--block submit">
+    Enviar mis datos
+    <WhatsAppIcon size={22} />
+  </button>
+  <p class="form-note">
+    <Icon name="info" size={16} /> Te escribimos por WhatsApp para ayudarte.
+  </p>
+  <p class="form-status" data-form-status role="status" aria-live="polite" hidden></p>
+</form>
+
+<script>
+  import { enhanceForm, getUtm } from '../scripts/forms'
+  import { api } from '../lib/api/client'
+  import { buildCampaignLead, campaignWhatsappMessage } from '../lib/campaign-lead'
+
+  document.querySelectorAll<HTMLFormElement>('[data-campaign-form]').forEach((form) => {
+    enhanceForm(form, {
+      buildPayload: (fields) => buildCampaignLead(fields, getUtm()),
+      send: (body) => api.POST('/v1/leads', { body }),
+      whatsappMessage: campaignWhatsappMessage,
+      onSuccess: () => location.assign('/registro/gracias'),
+    })
+  })
+</script>
+
+<style>
+  .campaign-form {
+    gap: var(--space-3);
+    padding: var(--space-6);
+    border: var(--border);
+    border-radius: var(--radius-lg);
+    background: #fff;
+    box-shadow: var(--shadow-md);
+  }
+  .campaign-form h2 {
+    margin-bottom: var(--space-2);
+    font-size: var(--fs-h2);
+    color: var(--color-navy-800);
+  }
+  .intent legend {
+    margin-bottom: var(--space-2);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-medium);
+    color: var(--color-text);
+  }
+  .submit {
+    margin-top: var(--space-2);
+    min-height: 52px;
+    font-size: var(--fs-18);
+  }
+  .form-note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    margin: 0;
+    font-size: var(--fs-13);
+    color: var(--color-text-muted);
+  }
+</style>

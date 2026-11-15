@@ -94,3 +94,76 @@ test('banner de cookies: aparece la primera vez y recuerda la elección', async 
   await expect(banner).toBeVisible()
   await page.close()
 })
+
+// Formulario de pauta digital (/registro)
+const fillCampaignForm = async (page: import('@playwright/test').Page) => {
+  const form = page.locator('[data-campaign-form]')
+  await form.getByLabel('Nombre').fill('Ana')
+  await form.getByLabel('Celular').fill('987 654 321')
+  await form.getByLabel('Correo', { exact: true }).fill('ana@example.com')
+  await form.getByLabel(/política de privacidad/).check()
+  return form
+}
+const leadReceipt = () => ({ id: crypto.randomUUID(), createdAt: new Date().toISOString() })
+
+test('Pauta digital: envía el lead de compra con la UTM y lleva a gracias', async ({ page }) => {
+  const received = await mockApi(page, '/v1/leads', 201, leadReceipt())
+  await page.goto('/registro?utm_source=facebook&utm_campaign=lanzamiento')
+  const form = await fillCampaignForm(page)
+  await form.getByLabel('Comprar').check()
+  await form.getByRole('button', { name: /Enviar/ }).click()
+  await expect(page).toHaveURL(/\/registro\/gracias\/?$/)
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('Gracias')
+  expect(received[0]).toMatchObject({
+    source: 'ad-buy',
+    name: 'Ana',
+    phone: '987 654 321',
+    email: 'ana@example.com',
+    consent: true,
+    marketingConsent: false,
+    locale: 'es',
+    utm: { source: 'facebook', campaign: 'lanzamiento' },
+  })
+  expect(received[0]).not.toHaveProperty('intent')
+})
+
+test('Pauta digital: vender con publicidad aceptada', async ({ page }) => {
+  const received = await mockApi(page, '/v1/leads', 201, leadReceipt())
+  await page.goto('/registro')
+  const form = await fillCampaignForm(page)
+  await form.getByLabel('Vender').check()
+  await form.getByLabel(/novedades y ofertas/).check()
+  await form.getByRole('button', { name: /Enviar/ }).click()
+  await expect(page).toHaveURL(/\/registro\/gracias\/?$/)
+  expect(received[0]).toMatchObject({ source: 'ad-sell', marketingConsent: true })
+})
+
+test('Pauta digital: sin elegir comprar o vender no envía', async ({ page }) => {
+  const received = await mockApi(page, '/v1/leads', 201, leadReceipt())
+  await page.goto('/registro')
+  const form = await fillCampaignForm(page)
+  await form.getByRole('button', { name: /Enviar/ }).click()
+  await expect
+    .poll(() => form.getByLabel('Comprar').evaluate((el) => (el as HTMLInputElement).validity.valueMissing))
+    .toBe(true)
+  await expect(form.getByRole('status')).toBeHidden()
+  expect(received).toHaveLength(0)
+  await expect(page).toHaveURL(/\/registro\/?$/)
+})
+
+test('Pauta digital: si el panel rechaza el origen ofrece WhatsApp', async ({ page }) => {
+  // Respuesta real del panel cuando aún no conoce ad-buy/ad-sell
+  await mockApi(page, '/v1/leads', 400, {
+    statusCode: 400,
+    error: 'Bad Request',
+    message: 'Origen no válido',
+    issues: [{ path: 'source', message: 'Origen no válido' }],
+  })
+  await page.goto('/registro')
+  const form = await fillCampaignForm(page)
+  await form.getByLabel('Comprar').check()
+  await form.getByRole('button', { name: /Enviar/ }).click()
+  await expect(form.getByRole('status')).toContainText('Origen no válido')
+  await expect(form.getByRole('link', { name: 'Escribir por WhatsApp' })).toHaveAttribute('href', /wa\.me/)
+  await expect(page).toHaveURL(/\/registro\/?$/)
+})
