@@ -14,6 +14,13 @@ const dotenv = {
 }
 const PUBLIC_MEDIA_HOST = process.env.PUBLIC_MEDIA_HOST || dotenv.PUBLIC_MEDIA_HOST
 
+// En el build de producción de Cloudflare (Workers Builds define WORKERS_CI=1), sin estas variables el sitio
+// se publicaría sin inmuebles o con fotos que caducan a las 6 horas (URLs firmadas de Supabase): mejor fallar.
+if (process.env.WORKERS_CI) {
+  const missing = ['API_URL', 'PUBLIC_MEDIA_HOST'].filter((name) => !process.env[name])
+  if (missing.length) throw new Error(`Faltan variables de entorno en Cloudflare: ${missing.join(', ')}`)
+}
+
 // https://astro.build/config
 export default defineConfig({
   // Dominio final: Astro lo usa para armar URLs absolutas (og:image, og:url, sitemap)
@@ -60,10 +67,6 @@ export default defineConfig({
       PUBLIC_TURNSTILE_SITE_KEY: envField.string({ context: 'client', access: 'public', optional: true }),
       PUBLIC_SENTRY_DSN: envField.string({ context: 'client', access: 'public', optional: true }),
       PUBLIC_MEDIA_HOST: envField.string({ context: 'client', access: 'public', optional: true }),
-      // Panel de cuentas (repo depahost-panel). Vacío = no se muestra "Ingresar"
-      PUBLIC_PANEL_URL: envField.string({ context: 'client', access: 'public', optional: true }),
-      // "Ingresar" en el header. Apagado por ahora; necesita además PUBLIC_PANEL_URL
-      PUBLIC_LOGIN_ENABLED: envField.boolean({ context: 'client', access: 'public', default: false }),
       // Mapa de Todos los depas. Vacío = mosaicos de OpenStreetMap. Con mucho tráfico conviene un
       // proveedor con clave (MapTiler, Mapbox…): su URL {z}/{x}/{y} y el texto de atribución que pide
       PUBLIC_MAP_TILE_URL: envField.string({ context: 'client', access: 'public', optional: true }),
@@ -76,15 +79,12 @@ export default defineConfig({
     optimizeDeps: { include: ['openapi-fetch', 'leaflet'] },
   },
 
-  // Fotos que vienen de la API (Cloudflare R2): Astro las descarga al construir y las optimiza
+  // Fotos que vienen de la API (Supabase Storage del panel): Astro las descarga al construir y las optimiza
   image: {
-    remotePatterns: [
-      { protocol: 'https', hostname: '**.r2.dev' },
-      ...(PUBLIC_MEDIA_HOST ? [{ protocol: 'https', hostname: PUBLIC_MEDIA_HOST }] : []),
-    ],
+    remotePatterns: PUBLIC_MEDIA_HOST ? [{ protocol: 'https', hostname: PUBLIC_MEDIA_HOST }] : [],
   },
 
-  // Fuente Inter autoalojada: Astro la descarga al construir y la sirve desde nuestro sitio
+  // Fuente autoalojada: Astro la descarga al construir y la sirve desde nuestro sitio
   // (sin pedirle nada a Google). También genera una fuente de respaldo ajustada a sus medidas.
   fonts: [
     // Poppins: la misma fuente de depahostperu.com, para textos y títulos.

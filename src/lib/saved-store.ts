@@ -1,8 +1,7 @@
 // Listas de IDs guardadas en el navegador:
 // - "Mis inmuebles": los inmuebles que la persona marcó con "Me interesa"
 // - Historial: los últimos inmuebles que abrió (para "Según lo que has visto")
-// Hoy viven en localStorage. La interfaz permite cambiar "Mis inmuebles" por una implementación que
-// sincronice con la API (GET/PUT /v1/me/saved) cuando haya login, sin tocar los componentes.
+// Viven solo en localStorage: el sitio no tiene cuentas de visitantes.
 
 export const SAVED_KEY = 'depahost:saved-depas:v2'
 export const SAVED_EVENT = 'depahost:saved-depas-updated'
@@ -20,7 +19,7 @@ export interface IdListStore {
   toggle(id: string): string[]
   /** Mueve el ID al final (el más reciente), agregándolo si no estaba. */
   touch(id: string): string[]
-  /** Reemplaza la lista completa (sincronización con la cuenta). */
+  /** Reemplaza la lista completa. */
   set(ids: string[]): string[]
   clear(): void
   /** Llama a fn cada vez que cambia la lista (también desde otra pestaña). Devuelve cómo desuscribirse. */

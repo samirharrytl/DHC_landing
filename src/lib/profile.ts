@@ -1,6 +1,5 @@
 // Perfil liviano: el nombre que la persona dejó en "Guarda tus inmuebles", para saludarla ("Hola, Ana").
 // Solo se guarda el primer nombre en el navegador: el contacto completo queda en la API (lead).
-// Cuando exista login, esto se reemplaza por la sesión (GET /v1/me).
 import { browserStorage, type StorageLike } from './saved-store'
 
 export const PROFILE_KEY = 'depahost:profile'

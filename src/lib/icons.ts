@@ -1,5 +1,4 @@
-// Trazos de los íconos del sitio (24×24, línea de 1.6). Fuente única: el panel los copia con
-// `pnpm sync:brand` en depahost-panel, así los dos se ven de la misma familia.
+// Trazos de los íconos del sitio (24×24, línea de 1.6).
 export const ICONS = {
   heart: ['M12 20s-7-4.35-7-10a4 4 0 0 1 7-2.65A4 4 0 0 1 19 10c0 5.65-7 10-7 10Z'],
   pin: [
@@ -64,10 +63,6 @@ export const ICONS = {
   tag: [
     'M3 12.6V4.5A1.5 1.5 0 0 1 4.5 3h8.1a1.5 1.5 0 0 1 1 .4l6.9 7a1.5 1.5 0 0 1 0 2.1l-7 7a1.5 1.5 0 0 1-2.1 0l-7-7a1.5 1.5 0 0 1-.4-1Z',
     'M8 8h.01',
-  ],
-  lock: [
-    'M6.5 10.5h11a1.5 1.5 0 0 1 1.5 1.5v7a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 5 19v-7a1.5 1.5 0 0 1 1.5-1.5Z',
-    'M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5',
   ],
   user: ['M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z', 'M4.5 20a7.5 7.5 0 0 1 15 0'],
 } as const

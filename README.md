@@ -3,11 +3,16 @@
 Sitio de **Depa Host Perú** (depahostperu.com): reservar estadías, vender o alquilar tu inmueble,
 y **DepaHost Capital** (comprar inmuebles en Lima para que rindan).
 
-Esta app es solo el **frontend estático**. El backend es el **panel de DepaHost** (Next.js + Supabase),
-que expone `/api/v1/properties` y `/api/v1/leads` con la forma del contrato `openapi/depahost-api.json`.
-Los inmuebles de propietarios se registran en el panel; Capital (inmobiliarias aliadas, sus proyectos y los
-supuestos de financiamiento) vive solo en este repo, en `src/content/*.json`.
-Los repos `depahost-api` y `depahost-panel` quedaron reemplazados por el panel.
+Esta app es solo el **frontend estático**. El backend es el **panel de DepaHost** (repo `DH_panel`:
+Next.js + Supabase, en Vercel), que implementa la parte del contrato `openapi/depahost-api.json` que el sitio usa:
+`GET /api/v1/properties` y `POST /api/v1/leads`. El contrato vive en este repo; si cambia, se ajusta el panel.
+Los inmuebles se registran en el panel; las inmobiliarias aliadas (hoy ninguna) y los supuestos de
+financiamiento viven solo en este repo, en `src/content/*.json`. El sitio no tiene cuentas de visitantes:
+"Mis inmuebles" y el saludo se guardan en el navegador.
+Los repos `depahost-api` y `depahost-panel` (Fastify y Vue) quedaron reemplazados por el panel.
+
+> **Pendiente:** el panel aún no implementa `POST /api/v1/complaints`, así que el Libro de Reclamaciones
+> muestra un error y ofrece WhatsApp. Ver [07 · Decisiones y pendientes](docs/plataforma/07-decisiones-y-pendientes.md).
 
 ## Documentación
 
@@ -25,26 +30,27 @@ con diagramas UML) está en [docs/plataforma](docs/plataforma/README.md).
 
 ## Comandos
 
-| Comando         | Qué hace                                                              |
-| --------------- | --------------------------------------------------------------------- |
-| `pnpm install`  | Instala las dependencias                                              |
-| `pnpm dev`      | Servidor de desarrollo en `http://localhost:4321`                     |
-| `pnpm build`    | Construye el sitio final en `dist/`                                   |
-| `pnpm preview`  | Sirve `dist/` para revisarlo antes de publicar                        |
-| `pnpm preprod`  | Build con `.env.preprod` (lee el API de preproducción) y vista previa |
-| `pnpm check`    | Revisa tipos de TypeScript y de los `.astro`                          |
-| `pnpm test`     | Pruebas unitarias (Vitest)                                            |
-| `pnpm test:e2e` | Pruebas en navegador (Playwright, escritorio y móvil)                 |
-| `pnpm format`   | Formatea el código con Prettier                                       |
-| `pnpm api:sync` | Copia el contrato de la API y regenera los tipos del cliente          |
-| `pnpm api:mock` | API falsa en `http://127.0.0.1:4010` a partir del contrato (Prism)    |
+| Comando          | Qué hace                                                              |
+| ---------------- | --------------------------------------------------------------------- |
+| `pnpm install`   | Instala las dependencias                                              |
+| `pnpm dev`       | Servidor de desarrollo en `http://localhost:4321`                     |
+| `pnpm build`     | Construye el sitio final en `dist/`                                   |
+| `pnpm preview`   | Sirve `dist/` para revisarlo antes de publicar                        |
+| `pnpm preprod`   | Build con `.env.preprod` (lee el API de preproducción) y vista previa |
+| `pnpm check`     | Revisa tipos de TypeScript y de los `.astro`                          |
+| `pnpm test`      | Pruebas unitarias (Vitest)                                            |
+| `pnpm test:e2e`  | Pruebas en navegador (Playwright, escritorio y móvil)                 |
+| `pnpm format`    | Formatea el código con Prettier                                       |
+| `pnpm api:types` | Regenera los tipos del cliente desde `openapi/depahost-api.json`      |
+| `pnpm api:mock`  | API falsa en `http://127.0.0.1:4010` a partir del contrato (Prism)    |
 
 ## Configuración
 
 Cada entorno tiene su archivo de ejemplo: `.env.example` → `.env` (desarrollo),
 `.env.preprod.example` → `.env.preprod` (preproducción local, con `pnpm preprod`) y
-`.env.production.example` (lo que va en el panel del hosting). En desarrollo, el sitio lee los inmuebles
-de `src/content/*.json` y envía formularios y cuentas al API local (`http://localhost:3000`).
+`.env.production.example` (lo que va en Cloudflare). En desarrollo, sin `API_URL` el sitio no tiene inmuebles
+(`src/content/properties.json` está vacío); con `API_URL=http://localhost:3000/api` los lee del panel local.
+Las pruebas e2e usan su propio catálogo de ejemplo (`tests/e2e/catalogo`, con `CATALOG_DIR`).
 Ver los entornos en [docs/plataforma/06](docs/plataforma/06-desarrollo-y-operacion.md#2-entornos).
 
 Variables principales:
@@ -53,15 +59,15 @@ Variables principales:
 | --------------------------- | ----------------------------------------------------------------------------------------- |
 | `PUBLIC_WHATSAPP_NUMBER`    | Número de todos los botones de WhatsApp                                                   |
 | `PUBLIC_API_URL`            | API que reciben los formularios en el navegador. Vacío = los formularios ofrecen WhatsApp |
-| `API_URL`                   | API de la que el build lee los inmuebles. Vacío = usa `src/content/*.json`                |
+| `API_URL`                   | API de la que el build lee los inmuebles. Vacío = sitio sin inmuebles                     |
 | `PUBLIC_TURNSTILE_SITE_KEY` | Anti-spam de Cloudflare en los formularios                                                |
 | `PUBLIC_CLARITY_ID`         | Analítica; solo se carga si la persona acepta cookies                                     |
-| `PUBLIC_MEDIA_HOST`         | Dominio de las fotos de la API, para optimizarlas                                         |
+| `PUBLIC_MEDIA_HOST`         | Dominio de las fotos (Supabase del panel), para optimizarlas en el build                  |
 | `PUBLIC_SENTRY_DSN`         | Errores del navegador (opcional)                                                          |
-| `PUBLIC_PANEL_URL`          | Panel de cuentas. Vacío = no se muestra "Ingresar"                                        |
 
 En producción, `API_URL` y `PUBLIC_API_URL` apuntan a la misma API. Si la API no responde
-durante el build, el build falla a propósito para no publicar datos viejos.
+durante el build, el build falla a propósito para no publicar datos viejos. En el build de Cloudflare
+(`WORKERS_CI=1`), también falla si faltan `API_URL` o `PUBLIC_MEDIA_HOST`.
 
 ## Cómo fluyen los datos
 
@@ -81,14 +87,14 @@ navegador (src/scripts/forms.ts)
   `saved-list` en la API. Solo el primer nombre queda en el navegador para saludar ("Hola, Ana").
 - "Mis inmuebles" se guarda en el navegador (`src/lib/saved-store.ts`) y se pinta con
   `/data/properties.json`, un catálogo liviano generado en el build.
-- Al publicar o editar un inmueble, la API llama al deploy hook del hosting y el sitio se reconstruye.
+- En el panel, **Actualizar web** llama al deploy hook de Cloudflare y el sitio se reconstruye (unos 2 minutos).
 
 ## Estructura
 
 ```text
 src/
-├── components/     piezas reutilizables (Header, PropertyCard, OwnerForm, ConsentBanner…)
-├── content/        datos locales (properties.json, financing.json) cuando no hay API
+├── components/     piezas reutilizables (Header, PropertyCard, SaveListDialog, ConsentBanner…)
+├── content/        datos locales: financiamiento, inmobiliarias aliadas y properties.json (vacío) sin API
 ├── content.config.ts  esquema de los datos (refleja la respuesta de la API)
 ├── data/           contacto (WhatsApp) y datos legales de la empresa
 ├── layouts/        BaseLayout, LegalLayout, PlaceholderLayout
@@ -102,12 +108,12 @@ src/
 │   └── saved-store.ts "Mis depas" e historial de depas vistos
 ├── pages/          una página por archivo:
 │                   capital/index (portada), capital/[slug] (detalle), capital/aliados/[slug]
-│                   (proyectos de una inmobiliaria), capital/empecemos (Te acompañamos),
-│                   mis-inmuebles, propietarios
+│                   (proyectos de una inmobiliaria), capital/inmuebles (todos), mis-inmuebles,
+│                   propietarios, libro-de-reclamaciones
 ├── scripts/        JS del navegador (formularios, consentimiento, botones de guardado)
 └── styles/         tokens.css y global.css
-tests/unit, tests/e2e   Vitest y Playwright
-openapi/            copia del contrato de la API
+tests/unit, tests/e2e   Vitest y Playwright (tests/e2e/catalogo: inmuebles y fotos de ejemplo)
+openapi/            contrato de la API (fuente de verdad; el panel lo implementa)
 ```
 
 ## Pendientes (contenido y datos reales)
@@ -118,7 +124,8 @@ openapi/            copia del contrato de la API
 | Razón social, RUC y dirección fiscal                     | `src/data/empresa.ts` y variables `COMPANY_*` de la API  |
 | Revisión legal de privacidad y términos (son borradores) | `src/pages/privacidad.astro`, `src/pages/terminos.astro` |
 | Supuestos de la cuota estimada                           | `src/content/financing.json`                             |
+| Libro de Reclamaciones: `POST /api/v1/complaints`        | Repo `DH_panel`                                          |
 | Fotos de los inmuebles                                   | Ficha del inmueble en el panel                           |
-| Logos de aliados                                         | `src/pages/capital/index.astro`                          |
+| Inmobiliarias aliadas reales, con permiso de nombre/logo | `src/content/developers.json` (hoy vacío)                |
 | Páginas Estadías y Nosotros (siguen en construcción)     | `src/pages/`                                             |
 | Versión en inglés del sitio                              | Selector EN deshabilitado en `LangSwitch.astro`          |

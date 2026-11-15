@@ -27,8 +27,8 @@ export default defineConfig({
     // Pisan las del .env local: las pruebas no dependen de la configuración de cada máquina
     env: {
       PUBLIC_API_URL: 'https://api.test.local',
-      API_URL: '', // catálogo de src/content/*.json, sin API corriendo
-      PUBLIC_PANEL_URL: '',
+      API_URL: '', // sin API corriendo: catálogo de ejemplo de las pruebas
+      CATALOG_DIR: 'tests/e2e/catalogo',
       PUBLIC_WHATSAPP_NUMBER: '51900000000',
       PUBLIC_TURNSTILE_SITE_KEY: '',
       PUBLIC_CLARITY_ID: '',

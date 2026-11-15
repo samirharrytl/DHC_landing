@@ -7,3 +7,5 @@ openapi/
 docs/
 test-results/
 playwright-report/
+.claude/
+tests/e2e/catalogo/

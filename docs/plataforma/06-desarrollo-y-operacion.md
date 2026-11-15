@@ -2,111 +2,86 @@
 
 ## 1. Requisitos
 
-- Node 24 y pnpm 11. La CI, el hosting del API y el `.nvmrc` de cada repo usan
-  Node 24 (`nvm install 24`, y luego `nvm use` en la raíz). Node 22.12 también funciona (`engines`
-  en `package.json`), pero lo que se valida es la 24. El `package.json` de cada repo fija pnpm con
-  `packageManager`.
-- PostgreSQL 16 o superior instalado en la máquina (en Ubuntu: `sudo apt install postgresql`; en
-  Windows, 17 o superior: `winget install PostgreSQL.PostgreSQL.17`). No hace falta tenerlo
-  encendido como servicio ni usar `sudo` después: el API levanta su propio servidor con esos
-  programas (ver [Postgres local](#postgres-local)).
-- Tres repos independientes, cada uno con su `pnpm-lock.yaml` y su CI. Se clonan lado a lado en una
-  misma carpeta, y así `pnpm api:sync`, `pnpm sync:brand` y las pruebas del panel encuentran a los demás:
+- Node 24 (`.nvmrc`; `nvm install 24` y luego `nvm use` en la raíz). Node 22.12 también funciona
+  (`engines` en `package.json`), pero la CI valida con la 24.
+- pnpm 11 para el sitio. `package.json` lo fija con `packageManager` (`pnpm@11.24.0`).
+- Dos repos hermanos, clonados lado a lado:
 
 ```text
 DepaHost/
-├── depahostcapital/   sitio
-├── depahost-api/      API
-└── depahost-panel/    panel
+├── DHC_landing/   sitio Astro, 100 % estático (este repo)
+└── DH_panel/      panel de DepaHost: CRM interno y backend del sitio (Next.js + Supabase)
 ```
+
+El panel usa npm y necesita su propio proyecto de Supabase. Cómo instalarlo y correrlo está en
+`DH_panel/README.md`; este capítulo no lo repite.
 
 ## 2. Entornos
 
-Desarrollo y preproducción corren en tu máquina, con un mismo PostgreSQL local y una base para cada
-uno. Producción corre en internet, con Supabase como base de datos.
+Desarrollo y preproducción del sitio corren en tu máquina. Para ver inmuebles o enviar formularios
+necesitan el panel encendido en `http://localhost:3000`. Producción corre en internet.
 
 ```mermaid
 flowchart LR
     subgraph Local["«device» Tu máquina"]
-        PG[("«database» Postgres local<br/>localhost:15432")]
-        DEV["Desarrollo<br/>API :3000 · sitio :4321 · panel :5173<br/>con recarga automática"]
-        PRE["Preproducción<br/>API compilado :3000 · sitio :4321 · panel :4173<br/>builds de producción"]
-        DEV -- "base depahost_dev" --> PG
-        PRE -- "base depahost_preprod" --> PG
+        PN["Panel<br/>npm run dev · :3000<br/>API en /api"]
+        DEV["Desarrollo del sitio<br/>pnpm dev · :4321"]
+        PRE["Preproducción del sitio<br/>pnpm preprod · :4321"]
+        DEV -- "formularios" --> PN
+        PRE -- "build y formularios" --> PN
     end
     subgraph Nube["«node» Internet"]
-        PROD["Producción<br/>sitio en hosting estático<br/>sitio y panel en Cloudflare Pages · API en Railway"]
-        SB[("«database» Supabase<br/>solo como PostgreSQL")]
-        PROD -- "SSL verificado" --> SB
+        CF["Sitio<br/>Cloudflare Workers<br/>depahostperu.com"]
+        VC["Panel<br/>Vercel"]
+        SB[("«database» Supabase<br/>Postgres, Auth y Storage")]
+        VC --> SB
+        CF -- "build: GET /api/v1/properties" --> VC
+        CF -. "navegador: POST /api/v1/leads" .-> VC
     end
+    PN --> SB
 ```
 
 | | Desarrollo | Preproducción | Producción |
 |---|---|---|---|
-| Para qué | Programar, con recarga automática | Probar tal cual lo que se va a publicar | El sitio real |
-| Dónde corre | Tu máquina | Tu máquina | Internet |
-| Base de datos | Postgres local, base `depahost_dev` | Postgres local, base `depahost_preprod` | Supabase |
-| API | `pnpm dev` en `:3000` | Compilado, `NODE_ENV=production`, en `:3000` | Railway, `api.depahostperu.com` |
-| Sitio | `astro dev` en `:4321`, con los JSON locales | Build que lee el catálogo del API, en `:4321` | Cloudflare Pages, `depahostperu.com` |
-| Panel | `vite` en `:5173` | Build servido en `:4173` | Cloudflare Pages, `app.depahostperu.com` |
-| Cookie de sesión | Sin `Secure` | `Secure` | `Secure`, dominio `.depahostperu.com` |
-| Turnstile | Apagado | Claves de prueba (siempre pasan) | Claves reales |
-| Correos, fotos (R2) y deploy hook | Apagados: los correos quedan en el log. Fotos solo con el bucket de desarrollo | Apagados, salvo fotos con el bucket de desarrollo | Activos |
-| Configuración | `.env` | `.env.preprod` | Panel de cada hosting |
+| Para qué | Programar, con recarga automática | Probar tal cual el build que se publica | El sitio real |
+| Sitio | `pnpm dev` en `:4321` | `pnpm preprod`: build + vista previa en `:4321` | Cloudflare Workers, `depahostperu.com` |
+| Panel | `npm run dev` en `:3000` | `npm run dev` en `:3000` | Vercel |
+| Catálogo (`API_URL`) | Vacío: sin inmuebles. O `http://localhost:3000/api` | `http://localhost:3000/api` | `https://<dominio del panel>/api` |
+| Formularios (`PUBLIC_API_URL`) | `http://localhost:3000/api` | `http://localhost:3000/api` | `https://<dominio del panel>/api` |
+| Turnstile | Apagado | Clave de prueba (siempre pasa) | Clave real |
+| Cambios de inmuebles | Reiniciar `pnpm dev` | Volver a correr `pnpm preprod` | "Actualizar web" en el panel (deploy hook) |
+| Configuración | `.env` | `.env.preprod` | Variables del Worker en Cloudflare |
 
-Desarrollo y preproducción usan los mismos puertos: se corre uno o el otro, no los dos a la vez.
+Desarrollo y preproducción usan el mismo puerto: se corre uno o el otro, no los dos a la vez.
 
 ### Archivos de configuración
-
-Las tres apps tienen los mismos tres ejemplos:
 
 | Archivo | Entorno | En git |
 |---|---|---|
 | `.env.example` → copiar como `.env` | Desarrollo | Solo el ejemplo |
 | `.env.preprod.example` → copiar como `.env.preprod` | Preproducción | Solo el ejemplo |
-| `.env.production.example` | Producción: lista de lo que va en el panel del hosting | Sí, sin valores reales |
+| `.env.production.example` | Producción: lista de lo que va en Cloudflare | Sí, sin valores reales |
 
-Los `.env` y `.env.preprod` reales nunca se suben. El sitio y el panel eligen `.env.preprod` con
-`--mode preprod` (Vite y Astro lo cargan encima de `.env`); el API, con `node --env-file=.env.preprod`.
+Los `.env` y `.env.preprod` reales nunca se suben. `--mode preprod` hace que Astro cargue
+`.env.preprod` encima de `.env`.
+
+| Variable | Para qué |
+|---|---|
+| `PUBLIC_WHATSAPP_NUMBER` | Número de WhatsApp (por defecto `51981352247` en `astro.config.mjs`) |
+| `PUBLIC_API_URL` | Base del API a la que el navegador envía los formularios. Vacía: ofrecen WhatsApp |
+| `API_URL` | Base del API de la que el build lee los inmuebles. No llega al navegador |
+| `PUBLIC_MEDIA_HOST` | Dominio de Supabase del panel, para que el build optimice las fotos |
+| `PUBLIC_TURNSTILE_SITE_KEY` | Clave pública de Turnstile |
+| `PUBLIC_CLARITY_ID`, `PUBLIC_SENTRY_DSN` | Analítica y errores del navegador (opcionales) |
+| `PUBLIC_MAP_TILE_URL`, `PUBLIC_MAP_ATTRIBUTION` | Mosaicos del mapa. Vacías: OpenStreetMap |
+| `CATALOG_DIR` | Solo pruebas e2e: carpeta del catálogo de ejemplo |
 
 ## 3. Desarrollo
 
 ### Primera vez
 
-En `depahost-api`:
-
-```bash
-cp .env.example .env
-```
-
-```bash
-pnpm install
-```
-
-```bash
-pnpm db:up
-```
-
-```bash
-pnpm db:seed
-```
-
-```bash
-pnpm user:create --email tu@correo.com --name "Tu nombre" --role admin
-```
-
-`db:up` crea el Postgres local y la base `depahost_dev`. `db:seed` aplica las migraciones y carga
-los datos de ejemplo. `user:create` muestra una vez una contraseña temporal.
-
-Para probar el panel con datos, `pnpm db:seed:demo` carga inmuebles en todos los estados, cuentas de
-cada rol, solicitudes, leads, reclamos y supuestos de financiamiento. Las cuentas son
-`admin@demo.test`, `propietario@demo.test` y `comprador@demo.test`, con la contraseña
-`DemoDepa2026` (o la de `DEMO_PASSWORD`). Se puede repetir: borra y recrea lo suyo (correos
-`@demo.test` y slugs `demo-*`). Se niega a correr si `DATABASE_URL` no es local. Los precios siguen
-la tabla de mercado del motor simulado y cada persona busca en dos distritos, para que Match y
-Precio sugerido tengan qué mostrar.
-
-En `depahostcapital` y en `depahost-panel`:
+1. Prepara y levanta el panel según `DH_panel/README.md` (`npm run dev`, `http://localhost:3000`).
+2. En `DHC_landing`:
 
 ```bash
 cp .env.example .env
@@ -118,68 +93,19 @@ pnpm install
 
 ### Cada día
 
-| App | Comando | Abre |
+| Repo | Comando | Abre |
 |---|---|---|
-| `depahost-api` | `pnpm db:up` (solo después de reiniciar la máquina) y `pnpm dev` | `http://localhost:3000`, documentación en `/docs` |
-| `depahostcapital` | `pnpm dev` | `http://localhost:4321` |
-| `depahost-panel` | `pnpm dev` | `http://localhost:5173` |
-
-**Usa `localhost` en todas las URLs, nunca `127.0.0.1`**: si no, la cookie de sesión no se comparte
-entre sitio, panel y API.
+| `DH_panel` | `npm run dev` | `http://localhost:3000` |
+| `DHC_landing` | `pnpm dev` | `http://localhost:4321` |
 
 ### Variantes
 
-| Quiero… | Cambia |
+| Quiero… | Cambia en el `.env` del sitio |
 |---|---|
-| Trabajar solo en el sitio, sin API | `PUBLIC_API_URL=` vacío en el `.env` del sitio: los formularios ofrecen WhatsApp |
-| Probar formularios sin base de datos | `pnpm api:mock` y `PUBLIC_API_URL=http://127.0.0.1:4010` en el sitio |
-| Ver en el sitio los inmuebles de la base | `API_URL=http://localhost:3000` en el `.env` del sitio. El API debe estar encendido, y los inmuebles de ejemplo de la base no tienen fotos |
-| Desarrollar sin PostgreSQL instalado | `DATABASE_URL=pglite://./.data/pglite` en el `.env` del API |
-
-### Postgres local
-
-`scripts/pg-local.mjs`, en el API, crea un servidor PostgreSQL propio del proyecto. No necesita
-Docker ni `sudo`:
-
-- Usa los programas de PostgreSQL instalados en la máquina: la versión más nueva de
-  `/usr/lib/postgresql` en Ubuntu, o de `C:\Program Files\PostgreSQL` en Windows.
-- Guarda los datos en `.data/postgres`, que git ignora, y el log en `.data/postgres.log`.
-- Escucha solo en `localhost:15432`, con contraseña y en hora UTC, como Supabase.
-- Toma usuario, clave y base de `DATABASE_URL` en `.env`, y crea también la base de `.env.preprod`.
-
-| Comando | Qué hace |
-|---|---|
-| `pnpm db:up` | Lo crea la primera vez, lo inicia y crea las bases que falten. Se puede repetir |
-| `pnpm db:down` | Lo detiene |
-| `pnpm db:status` | Dice si está corriendo y qué bases tiene |
-| `pnpm db:psql` | Consola SQL en la base de `.env`; `pnpm db:psql depahost_preprod` para la otra |
-| `pnpm db:studio` | Drizzle Studio sobre la base de `.env` |
-
-Para abrirla con DBeaver, pgAdmin o TablePlus: host `localhost`, puerto `15432`, y el usuario y la
-clave de `DATABASE_URL`.
-
-Para empezar de cero, lo que borra los datos locales:
-
-```bash
-pnpm db:down && rm -rf .data/postgres && pnpm db:up
-```
-
-Después, otra vez `pnpm db:seed` y `pnpm user:create`.
-
-Si prefieres el PostgreSQL del sistema (servicio en el puerto 5432), crea el usuario y la base una
-vez y cambia `DATABASE_URL`. En ese caso no se usa `pnpm db:up`:
-
-```bash
-sudo -u postgres createuser --pwprompt depahost
-```
-
-```bash
-sudo -u postgres createdb -O depahost depahost_dev
-```
-
-```text
-DATABASE_URL=postgres://depahost:<clave>@localhost:5432/depahost_dev
-```
+| Trabajar solo en el sitio, sin panel | `PUBLIC_API_URL=` vacío: los formularios ofrecen WhatsApp. El sitio no tiene inmuebles |
+| Probar formularios sin panel | `pnpm api:mock` y `PUBLIC_API_URL=http://127.0.0.1:4010` |
+| Ver los inmuebles del panel | `API_URL=http://localhost:3000/api` y `PUBLIC_MEDIA_HOST` con el dominio de Supabase. El panel debe estar encendido |
+| Ver el sitio con el catálogo de ejemplo | `CATALOG_DIR=tests/e2e/catalogo pnpm dev` (36 inmuebles y 5 aliadas de prueba) |
 
 ### Arranque en segundo plano
 
@@ -189,480 +115,218 @@ Para forzar primer plano, por ejemplo en Playwright, se usa `--ignore-lock`.
 
 ## 4. Preproducción
 
-Es el mismo código que va a producción, compilado y con su configuración: `NODE_ENV=production`,
-cookie `Secure`, clave de admin y Turnstile obligatorios, y el sitio generado desde el API. Usa su
-propia base, `depahost_preprod`, así que lo que pruebes ahí no ensucia la de desarrollo.
+Es el mismo build que va a producción, con el catálogo leído del panel local y la clave de prueba de
+Turnstile.
 
 ### Primera vez
-
-En las tres apps, copia el ejemplo:
 
 ```bash
 cp .env.preprod.example .env.preprod
 ```
 
-En el `.env.preprod` del API, completa `ADMIN_API_KEY` con el resultado de `openssl rand -hex 32`.
-Después, en `depahost-api`:
-
-```bash
-pnpm db:up
-```
-
-```bash
-pnpm preprod:seed
-```
-
-```bash
-pnpm preprod:user --email tu@correo.com --name "Tu nombre" --role admin
-```
+Completa `PUBLIC_MEDIA_HOST` con el dominio de Supabase que usa tu panel local (sin `https://`).
 
 ### Levantarla
 
-El orden importa, porque el build del sitio lee el API:
+El orden importa, porque el build del sitio lee el panel:
 
 ```mermaid
 sequenceDiagram
     autonumber
     actor Dev as Tú
-    participant API as depahost-api<br/>pnpm preprod
-    participant DB as Postgres local<br/>depahost_preprod
-    participant Sitio as depahostcapital<br/>pnpm preprod
-    participant Panel as depahost-panel<br/>pnpm preprod
-    Dev->>API: compila y arranca en :3000
-    API->>DB: aplica migraciones pendientes
+    participant PN as DH_panel<br/>npm run dev
+    participant Sitio as DHC_landing<br/>pnpm preprod
+    Dev->>PN: arranca en :3000
     Dev->>Sitio: astro build --mode preprod
-    Sitio->>API: GET /v1/properties, /v1/developers, /v1/financing-assumptions
-    API-->>Sitio: catálogo de la base
+    Sitio->>PN: GET /api/v1/properties
+    PN-->>Sitio: catálogo de Supabase
     Sitio-->>Dev: vista previa en :4321
-    Dev->>Panel: vite build --mode preprod
-    Panel-->>Dev: vista previa en :4173
 ```
-
-| App | Comando | Abre |
-|---|---|---|
-| `depahost-api` | `pnpm preprod` | `http://localhost:3000` |
-| `depahostcapital` | `pnpm preprod` | `http://localhost:4321` |
-| `depahost-panel` | `pnpm preprod` | `http://localhost:4173` |
 
 ### Qué revisar
 
-- [ ] El sitio muestra los inmuebles de la base (sin fotos hasta que haya R2).
-- [ ] Ingresar en el panel y ver "Hola, …" en el sitio.
-- [ ] Enviar un formulario: aparece el widget de Turnstile y el lead llega a Leads del panel.
-- [ ] Un reclamo devuelve su código `LR-…`.
-- [ ] Un inmueble editado en el panel aparece en el sitio después de volver a correr `pnpm preprod` en
-  el sitio. En local no hay deploy hook.
+- [ ] El sitio muestra los inmuebles En cartera del panel, con sus fotos.
+- [ ] Enviar un formulario: aparece el widget de Turnstile y el lead llega al panel con canal Web.
+- [ ] Un inmueble editado en el panel aparece después de volver a correr `pnpm preprod`. En local no
+  hay deploy hook.
 
-### Diferencias con producción
-
-| | Preproducción local | Producción |
-|---|---|---|
-| Base | Postgres local, sin SSL | Supabase, con SSL verificado |
-| Turnstile | Claves de prueba (necesita internet) | Claves reales |
-| Correos | Quedan en el log del API | Resend |
-| Fotos | Sin R2: no se pueden subir | Cloudflare R2 |
-| Cambios de inmuebles | Volver a construir el sitio a mano | Deploy hook |
-
-La cookie `Secure` funciona en `http://localhost` porque los navegadores tratan `localhost` como
-un origen seguro. Está probado en Chrome.
-
-### Preproducción en internet (más adelante)
-
-Cuando exista el hosting de producción, preproducción puede pasar a la nube sin cambiar código, solo
-con los valores de `.env.preprod` en los paneles de cada hosting:
-
-- **Base:** un segundo proyecto de Supabase, con los mismos pasos de la [sección 8](#base-de-datos-en-supabase).
-  El plan gratuito sirve, pero se pausa tras una semana sin uso.
-- **API:** una segunda app en el mismo hosting.
-- **Sitio y panel:** despliegues de vista previa con subdominios propios, por ejemplo
-  `preprod.depahostperu.com`, `app.preprod.depahostperu.com` y `api.preprod.depahostperu.com`.
-- **Pendiente antes de hacerlo:** la cookie de sesión se llama igual en los dos entornos, y la de
-  producción (dominio `.depahostperu.com`) también llegaría a los subdominios de preproducción.
-  Hace falta un nombre de cookie configurable o un dominio aparte para preproducción.
+Para que el panel acepte los formularios, `WEB_ORIGINS` del panel debe incluir `http://localhost:4321`.
 
 ## 5. Comandos
 
-### Sitio
-
 | Comando | Qué hace |
 |---|---|
-| `pnpm dev` | Servidor de desarrollo |
+| `pnpm dev` | Servidor de desarrollo en `:4321` |
 | `pnpm build` / `pnpm preview` | Build de producción y vista previa |
-| `pnpm build:preprod` / `pnpm preprod` | Build con `.env.preprod` (lee el API) y vista previa en `:4321` |
+| `pnpm build:preprod` / `pnpm preprod` | Build con `.env.preprod` y vista previa en `:4321` |
 | `pnpm check` | Tipos de TypeScript y de los `.astro` |
-| `pnpm test` | Pruebas unitarias |
-| `pnpm test:e2e` | Pruebas en navegador (construye y sirve el sitio solo) |
+| `pnpm lint` / `pnpm lint:fix` | ESLint (antes corre `astro sync`) |
 | `pnpm format` / `pnpm format:check` | Prettier |
-| `pnpm api:sync` | Copia el contrato y regenera tipos |
-| `pnpm api:types` | Solo regenera tipos desde `openapi/depahost-api.json` |
-| `pnpm api:mock` | API falsa con Prism |
+| `pnpm test` / `pnpm test:watch` | Pruebas unitarias |
+| `pnpm test:e2e` | Pruebas en navegador (construye y sirve el sitio solo) |
+| `pnpm api:types` | Regenera `src/lib/api/schema.d.ts` desde `openapi/depahost-api.json` |
+| `pnpm api:mock` | API falsa con Prism en `http://127.0.0.1:4010` |
 
-### Panel
-
-| Comando | Qué hace |
-|---|---|
-| `pnpm dev` | Servidor de desarrollo en `:5173` |
-| `pnpm build` / `pnpm preview` | Build de producción y vista previa en `:4173` |
-| `pnpm build:preprod` / `pnpm preprod` | Build con `.env.preprod` y vista previa en `:4173` |
-| `pnpm typecheck`, `pnpm test`, `pnpm test:e2e` | Tipos, pruebas unitarias y de punta a punta |
-| `pnpm sync:brand` / `pnpm sync:api` | Copia la identidad visual o el contrato desde las apps hermanas |
-
-### API
-
-Ver [03 · API, sección 9](03-api.md#9-scripts).
+Los comandos del panel están en `DH_panel/README.md`.
 
 ## 6. Pruebas
 
 ```mermaid
 flowchart LR
-    subgraph Front["depahostcapital"]
-        U["Vitest · 22 pruebas<br/>lib/ y scripts/forms"]
-        E["Playwright · 16 pruebas × 2<br/>escritorio y móvil"]
-    end
-    subgraph Back["depahost-api"]
-        A["Vitest · 54 pruebas<br/>fastify.inject + PGlite en memoria"]
-    end
-    subgraph Panel["depahost-panel"]
-        PU["Vitest · 11 pruebas<br/>acceso, formularios, contacto"]
-        PE["Playwright · 7 pruebas<br/>contra el API real"]
-    end
+    U["Vitest · 55 pruebas<br/>tests/unit"]
+    E["Playwright · 21 pruebas × 2<br/>escritorio y móvil"]
+    CAT["tests/e2e/catalogo<br/>36 inmuebles de ejemplo"]
     U --> E
-    A -. "contrato openapi.json" .-> E
-    A -. "levanta el API" .-> PE
+    CAT --> E
 ```
 
-### Unitarias del frontend (`tests/unit`)
+### Unitarias (`tests/unit`)
 
-| Archivo | Prueba |
-|---|---|
-| `format.test.ts` | Moneda, rentabilidad, plazos, normalización, disclaimer con y sin supuestos |
-| `filters.test.ts` | Búsqueda con y sin tildes, filtros combinados, chips derivados |
-| `saved-store.test.ts` | Agregar, quitar, alternar, `touch`, máximo, datos corruptos, eventos entre pestañas |
-| `recommend.test.ts` | Similares, sin historial, no repetir guardados, lo nuevo antes que lo visto |
-| `profile.test.ts` | Primer nombre, enfriamiento de 7 días del aviso |
-| `forms.test.ts` | `formToObject`: anidado, tipos, vacíos, deshabilitados, token de Turnstile |
+Prueban `src/lib` (`facts`, `filters`, `format`, `media`, `profile`, `recommend`, `saved-store`) y
+`src/scripts/forms`. No necesitan navegador ni red.
 
 ### En navegador (`tests/e2e`)
 
-Construyen el sitio con `PUBLIC_API_URL=https://api.test.local` y responden esas llamadas con
-`page.route()`. No necesitan el API real. `playwright.config.ts` fija también `API_URL`,
-`PUBLIC_PANEL_URL` y las demás variables, para que el `.env` de cada máquina no cambie el resultado.
+La primera vez hay que instalar el navegador de Playwright:
+
+```bash
+pnpm exec playwright install chromium
+```
+
+`pnpm test:e2e` construye el sitio y lo sirve con `astro preview` en el puerto 4329. Corre cada
+prueba en escritorio (Desktop Chrome) y en móvil (Pixel 7). `playwright.config.ts` fija las variables
+para que el `.env` de cada máquina no cambie el resultado:
+
+- `PUBLIC_API_URL=https://api.test.local`: un dominio falso. Cada prueba responde esas llamadas con
+  `mockApi` (`tests/e2e/fixtures.ts`), que usa `page.route()`. No hace falta el panel.
+- `API_URL` vacío y `CATALOG_DIR=tests/e2e/catalogo`: el build lee el catálogo de ejemplo de las
+  pruebas, con 12 inmuebles de propietarios y 24 proyectos de 5 aliadas, y sus fotos en
+  `tests/e2e/catalogo/fotos`. Ese catálogo existe solo para las pruebas.
 
 | Archivo | Recorre |
 |---|---|
-| `capital.spec.ts` | Filtros y "Limpiar filtros", anclas, "Para ti" tras ver un inmueble, detalle con similares, Contactar, página de Urbana con Buscar y contador, 404 |
-| `mis-inmuebles.spec.ts` | Recorrido completo: Me interesa → Guarda tus inmuebles → Mis inmuebles → Te acompañamos → WhatsApp; redirección `/carrito`; "Seguir viendo" |
-| `forms.spec.ts` | Formulario en inglés (éxito y errores por campo), Libro de Reclamaciones, Propietarios (vender y `#alquiler`), banner de cookies |
-
-### API (`depahost-api/test`)
-
-| Archivo | Prueba |
-|---|---|
-| `properties.test.ts` | Visibilidad por estado, filtros, errores de validación, detalle, opciones de filtro, admin, slugs únicos, rebuild, fotos, financiamiento |
-| `developers.test.ts` | Inmobiliarias y conteo, origen y filtros, proyecto sin inmobiliaria, cambio de origen, duplicados, lead `saved-list` |
-| `leads.test.ts` | Lead completo con avisos, reglas de contacto, captcha, `cart` anónimo, honeypot, límite por minuto, CORS, health |
-| `complaints.test.ts` | Códigos correlativos y constancia, menores de edad, respuesta del admin, días hábiles en hora de Lima |
-| `accounts.test.ts` | Registro y cookie, roles permitidos, login sin revelar cuentas, cierre de sesión, CSRF, perfil, cambio y restablecimiento de contraseña, Mis inmuebles de la cuenta, leads vinculados |
-| `owner-requests.test.ts` | Solo propietarios, ciclo enviada → revisión → publicada con avisos e interés, solicitudes ajenas, subida no configurada |
-| `admin-panel.test.ts` | Acceso con sesión o clave, indicadores del resumen, usuarios y roles, embudo de leads |
-| `config.test.ts` | Producción exige claves, rechaza PGlite y una base remota sin `sslmode`; acepta Supabase con SSL y el Postgres local |
-| `database.test.ts` | Todas las tablas tienen RLS activado |
-
-Las pruebas del API corren como máximo dos archivos a la vez (`maxWorkers: 2`): cada uno usa
-cerca de 1 GB entre PGlite y scrypt.
-
-### Panel (`depahost-panel/tests`)
-
-| Archivo | Prueba |
-|---|---|
-| `unit/access.test.ts` | Reglas de acceso por rol, inicio de cada rol, "volver" solo a rutas internas |
-| `unit/contact.test.ts` | Links de WhatsApp a celulares peruanos, días hasta un plazo en hora de Lima |
-| `unit/use-form.test.ts` | Errores por campo del API, mensajes, campos numéricos |
-| `e2e/panel.spec.ts` | Sin sesión, comprador, propietario, administración completa, propietario publicado, menú en teléfono, cierre de sesión |
-
-Las pruebas de punta a punta del panel levantan el API desde `../depahost-api` con una base PGlite
-nueva y un admin de prueba, y construyen el panel apuntando a ese API. No usan el Postgres local.
+| `capital.spec.ts` | Filtros, anclas, menú, detalle y galería, Contactar, Todos los inmuebles (orden, páginas de 12), página de una aliada, 404 |
+| `mis-inmuebles.spec.ts` | Me interesa → Guarda tus inmuebles → Mis inmuebles → WhatsApp; redirecciones viejas con sus filtros; "Seguir viendo" |
+| `forms.spec.ts` | Propietarios (errores por campo, vender, `#alquiler`), Libro de Reclamaciones con respuesta simulada, banner de cookies |
 
 ## 7. Integración continua (GitHub Actions)
 
-Cada repo tiene su workflow en `.github/workflows/ci.yml`, que corre en los push a `main` y en los
-pull request. Por ahora solo valida calidad de código: las pruebas funcionales (`pnpm test`,
-`pnpm test:e2e`, migraciones) se corren a mano en cada repo. Todos los jobs usan Node 24, y también las
-acciones corren sobre Node 24: `actions/checkout@v7`, `actions/setup-node@v7`,
-`pnpm/action-setup@v6`, `actions/upload-artifact@v7` y `actions/download-artifact@v8`. Con las
-versiones `@v4`, GitHub avisa que se ejecutan en Node 20, que ya está obsoleto.
-
-**Frontend** (repo `depahostcapital`):
+`.github/workflows/ci.yml` corre en cada pull request y en cada push a `main`. Usa Node 24 y las
+acciones `actions/checkout@v7`, `actions/setup-node@v7`, `pnpm/action-setup@v6`,
+`actions/upload-artifact@v7` y `actions/download-artifact@v8`.
 
 ```mermaid
 flowchart TB
     F0(("push o PR"))
-    F1["Job check<br/>install · format:check · lint<br/>astro check · build"]
-    F3["Job lighthouse<br/>mide dist/ del job check"]
+    F1["Job check<br/>install · format:check · lint<br/>check · test · build"]
+    F2["Job lighthouse<br/>mide dist/ del job check"]
+    F3["Job deploy, solo push a main<br/>git push HEAD:deploy/sitio"]
     F0 --> F1
-    F1 -- "artefacto dist" --> F3
+    F1 -- "artefacto dist" --> F2
+    F2 --> F3
 ```
 
-**API** (repo `depahost-api`):
-
-```mermaid
-flowchart TB
-    B0(("push o PR"))
-    B1["install · format:check<br/>lint · typecheck"]
-    B2["openapi:check<br/>el contrato coincide con el código"]
-    B4["build"]
-    B0 --> B1 --> B2 --> B4
-```
-
-**Panel** (repo `depahost-panel`): formato, lint, tipos y build. `sync:brand` no se valida en la CI
-porque necesita el repo del sitio al lado: se corre a mano al cambiar el diseño del sitio.
-
-Umbrales de Lighthouse (`lighthouserc.json`): accesibilidad 95 y SEO 90 hacen fallar; rendimiento
-90 y buenas prácticas 90 solo advierten. Se miden `/` y `/capital`.
+- El job `check` guarda en caché `node_modules/.astro` (fotos ya optimizadas) para que el build no
+  tarde minutos.
+- El job `deploy` empuja sin `--force`: si una ejecución vieja termina después de una nueva, falla
+  en vez de volver atrás.
+- Las pruebas e2e no corren en la CI: se corren a mano con `pnpm test:e2e`.
+- Lighthouse (`lighthouserc.json`) mide `/` y `/capital`. Accesibilidad 95 y SEO 90 hacen fallar;
+  rendimiento 90 y buenas prácticas 90 solo advierten.
 
 ## 8. Publicar en producción
 
 ### Hostings
 
-| App | Hosting | Región | Dominio |
-|---|---|---|---|
-| Sitio | Cloudflare Pages | Red global de Cloudflare | `depahostperu.com` y `www.depahostperu.com` |
-| Panel | Cloudflare Pages | Red global de Cloudflare | `app.depahostperu.com` |
-| API | Railway | US East (Virginia) | `api.depahostperu.com` |
-| Base | Supabase | `us-east-1` (Virginia), la misma que el API | — |
-
-El API y la base van en la misma región porque cada pedido hace varias consultas. Ninguno de los
-hostings usa Docker: Cloudflare construye los frontends y Railway construye y arranca el API desde
-su repo.
-
-#### Sitio y panel en Cloudflare Pages
-
-Dos proyectos de Pages, cada uno conectado a su repo de GitHub (Workers & Pages → Create → Pages →
-Connect to Git). Los dos se construyen desde la raíz de su repo: ahí están `pnpm-lock.yaml` y el
-`.nvmrc` con Node 24.
-
-| Ajuste | Sitio | Panel |
+| App | Hosting | Dominio |
 |---|---|---|
-| Nombre del proyecto | `depahostcapital` | `depahost-panel` |
-| Rama de producción | `deploy/sitio` | `deploy/panel` |
-| Framework preset | None | None |
-| Root directory | vacío (raíz del repo) | vacío (raíz del repo) |
-| Build command | `pnpm build` | `pnpm build` |
-| Build output directory | `dist` | `dist` |
-| Build watch paths, include | `*` | `*` |
-| Variables | `PNPM_VERSION=11.24.0` y las de `.env.production.example` del repo | `PNPM_VERSION=11.24.0` y las de `.env.production.example` del repo |
+| Sitio | Cloudflare Workers con archivos estáticos (Workers Builds) | `depahostperu.com` |
+| Panel | Vercel (ver `DH_panel/README.md`) | El del panel |
+| Base, autenticación y fotos | Supabase del panel | — |
 
-- **Se publica después de las validaciones.** La rama de producción no es `main`: es
-  `deploy/sitio` o `deploy/panel`, y solo la mueve GitHub Actions (job `deploy` del `ci.yml` de
-  cada repo) cuando formato, lint, tipos y build pasaron en ese commit de `main`.
-  Nadie hace push a mano a esas ramas.
-- **`PNPM_VERSION` es obligatoria.** Sin ella, Pages usa pnpm 10, que no lee `allowBuilds` de
-  `pnpm-workspace.yaml`.
-- **Cabeceras:** cada app trae `public/_headers` (seguridad y caché larga para los archivos con
-  hash). Astro y Vite lo copian a `dist/`.
-- **Rutas del panel:** el panel no tiene `404.html`, así que Pages responde `index.html` a cualquier
-  ruta y Vue Router la resuelve. No hace falta `_redirects`.
-- **`www`:** agregar los dos dominios al proyecto del sitio y crear una regla en Rules → Redirect
-  Rules que mande `www.depahostperu.com/*` a `https://depahostperu.com/${1}` con 301.
-- **Deploy hook:** en el proyecto del sitio, Settings → Builds → Deploy hooks → rama `deploy/sitio`. Esa URL
-  va en `DEPLOY_HOOK_URL` del API, que la llama con POST cuando cambian los inmuebles.
-- **Vistas previas:** cada pull request genera una URL `*.pages.dev`. El `_headers` del sitio les
-  pone `X-Robots-Tag: noindex` para que Google no las indexe.
+### Sitio en Cloudflare Workers
 
-#### API en Railway
+`wrangler.jsonc` define el Worker `depahost-monorepo`: sirve `./dist` y responde `404.html` con
+estado 404 a las rutas que no existen. No hay código de servidor.
 
-Un proyecto de Railway con un solo servicio (New Project → Deploy from GitHub repo). Se conecta el
-repo `depahost-api`.
-
-| Ajuste (Settings del servicio) | Valor |
+| Ajuste de Workers Builds | Valor |
 |---|---|
-| Root directory | vacío (raíz del repo) |
-| Branch (Source → Branch connected to production) | `deploy/api` |
+| Rama de producción | `deploy/sitio` |
 | Build command | `pnpm build` |
-| Start command | `pnpm start` |
-| Watch paths | vacío (todo el repo) |
-| Healthcheck path | `/health` |
-| Región | US East (Virginia) |
-| Variables | `RAILPACK_NODE_VERSION=24` y las de `.env.production.example` del repo |
+| Deploy command | `npx wrangler deploy` |
+| Variables (Settings → Build → Variables and secrets) | Las de `.env.production.example` |
 
-- **Se publica después de las validaciones.** Railway sigue la rama `deploy/api`, que solo mueve el
-  job `deploy` del `ci.yml` del API cuando pasaron formato, lint, tipos, contrato y build.
-- **`RAILPACK_NODE_VERSION=24` es obligatoria.** Railway toma la versión de `engines`
-  (`>=22.12.0`) antes que la del `.nvmrc`, así que sin ella podría elegir otra versión.
-- **Instalación:** Railway corre `pnpm install` en la raíz con el pnpm de `packageManager`. Luego
-  construye y arranca solo el API.
-- **`PORT`:** no se define. Railway pone la suya y el API la lee.
-- **Migraciones:** se aplican solas al arrancar. Si fallan, el arranque falla, el chequeo de
-  `/health` no pasa y Railway mantiene la versión anterior.
-- **Dominio:** Settings → Networking → Custom Domain → `api.depahostperu.com`. Railway indica un
-  registro CNAME: se crea en el DNS de Cloudflare como "DNS only" (nube gris), para que Railway
-  emita el certificado.
-- La configuración queda en el panel de Railway, no en un archivo del repo: Railway dejará de leer
-  `railway.json` y su reemplazo, `.railway/railway.ts`, se aplica con su CLI. Con un solo servicio
-  no compensa todavía.
+Variables de producción:
+
+| Variable | Valor |
+|---|---|
+| `PNPM_VERSION` | `11.24.0` (sin ella Cloudflare usa otra versión) |
+| `PUBLIC_WHATSAPP_NUMBER` | `51` y el número, sin `+` ni espacios |
+| `PUBLIC_CLARITY_ID` | ID de Microsoft Clarity |
+| `PUBLIC_API_URL` y `API_URL` | `https://<dominio del panel>/api` |
+| `PUBLIC_TURNSTILE_SITE_KEY` | Site key de Turnstile |
+| `PUBLIC_SENTRY_DSN` | Opcional |
+| `PUBLIC_MEDIA_HOST` | `<proyecto>.supabase.co` |
+
+- **Se publica después de las validaciones.** Workers Builds sigue `deploy/sitio`, no `main`. Esa
+  rama solo la mueve el job `deploy` de la CI. Nadie hace push a mano.
+- **Guardia `WORKERS_CI`:** Workers Builds define `WORKERS_CI=1`. Con ella, `astro.config.mjs` hace
+  fallar el build si faltan `API_URL` o `PUBLIC_MEDIA_HOST`: sin ellas el sitio saldría sin inmuebles
+  o con fotos que caducan a las 6 horas.
+- **Cabeceras:** `public/_headers` pone `X-Frame-Options`, `nosniff`, `Referrer-Policy`, HSTS de un
+  año, caché inmutable para `/_astro/*` y `noindex` en `*.workers.dev`.
+- **Deploy hook:** se crea en el Worker (Settings → Builds → Deploy Hooks) para la rama
+  `deploy/sitio`. Su URL va en `CLOUDFLARE_DEPLOY_HOOK_URL` del panel, que la llama con POST al
+  presionar "Actualizar web". La URL es la credencial: se trata como un secreto.
+- **En el panel:** `WEB_ORIGINS` con los orígenes del sitio (por ejemplo `https://depahostperu.com`)
+  y `TURNSTILE_SECRET_KEY` con la clave secreta del mismo widget.
 
 ### Base de datos en Supabase
 
-Supabase se usa solo como PostgreSQL gestionado: el API se conecta con `DATABASE_URL` y nada más. No
-se usan Supabase Auth, Storage ni su Data API (ver [07 · Decisiones](07-decisiones-y-pendientes.md),
-decisión 20).
-
-1. **Proyecto:** crearlo en la región **East US (North Virginia)**, `us-east-1`, la misma del API
-   en Railway. Railway no tiene región en Sudamérica, y el API y la base deben estar juntos. Para producción,
-   el plan Pro: el gratuito se pausa tras una semana sin actividad y sus respaldos son limitados.
-2. **Data API:** desactivarla en la configuración del proyecto (Project Settings → Data API). Si
-   quedara activa, igual no expone nada: todas las tablas tienen RLS activado y sin políticas
-   (migración `0003_rls.sql`), y el API no se ve afectado porque se conecta como dueño de las tablas.
-3. **Certificado:** Project Settings → Database → SSL Configuration → Download certificate. Guardarlo
-   en el API como `certs/supabase-ca.crt` y subirlo al repo; es público. Conviene activar ahí
-   mismo "Enforce SSL".
-4. **Cadena de conexión:** botón Connect → **Session pooler**, que funciona con IPv4; la conexión
-   directa es solo IPv6. A esa URI se le agrega
-   `?sslmode=verify-full&sslrootcert=certs/supabase-ca.crt`. Si la clave tiene símbolos, va
-   codificada como en una URL. El modo transacción (puerto 6543) no hace falta: el API es un
-   servidor que vive todo el tiempo, no una función.
-5. **En el hosting del API:** poner esa cadena en `DATABASE_URL`. Al arrancar, el API aplica las
-   migraciones. Sin `sslmode`, no arranca: node-postgres se conectaría sin cifrar.
-
-El API abre hasta 10 conexiones (`max: 10` en `src/db/client.ts`). Con dos instancias durante un
-despliegue son 20: hay que tenerlo en cuenta frente al límite de conexiones del plan de Supabase.
-
-```mermaid
-flowchart LR
-    API["«executionEnvironment» depahost-api<br/>Railway · Virginia"]
-    POOL["Supavisor<br/>Session pooler :5432"]
-    DB[("«database» Postgres de Supabase<br/>RLS en todas las tablas")]
-    REST["Data API (PostgREST)<br/>desactivada"]
-    API -- "TLS verificado con certs/supabase-ca.crt<br/>usuario postgres, dueño de las tablas" --> POOL
-    POOL --> DB
-    REST -. "sin acceso: RLS sin políticas" .-> DB
-```
-
-### Fotos en Cloudflare R2
-
-El panel pide al API una URL prefirmada y sube cada foto directo al bucket; el API nunca recibe el
-archivo. Al construirse, el sitio descarga las fotos del bucket y las sirve optimizadas. Se usan dos
-buckets en la misma cuenta de Cloudflare, para que las pruebas no dejen fotos en producción:
-
-| | Producción | Desarrollo y preproducción |
-|---|---|---|
-| Bucket | `depahost-media` | `depahost-media-dev` |
-| URL pública | Dominio propio `media.depahostperu.com` | `https://pub-….r2.dev` |
-| Orígenes que suben | `https://app.depahostperu.com` | `http://localhost:5173`, `http://localhost:4173` |
-
-1. **Bucket:** R2 → Create bucket, con la ubicación en Automatic.
-
-2. **URL pública:** en producción, Settings → Custom Domains → `media.depahostperu.com`. La zona ya
-   está en Cloudflare, así que el registro DNS se crea solo. La URL `r2.dev` tiene límite de pedidos
-   y Cloudflare la recomienda solo para desarrollo: en el bucket de desarrollo, Settings → Public
-   Development URL → Enable.
-
-3. **CORS:** Settings → CORS Policy, con los orígenes de la tabla. Sin esta regla, el navegador bloquea
-   la subida y el panel muestra "No se pudo subir la foto".
-
-   ```json
-   [
-     {
-       "AllowedOrigins": ["https://app.depahostperu.com"],
-       "AllowedMethods": ["PUT"],
-       "AllowedHeaders": ["content-type"],
-       "MaxAgeSeconds": 3600
-     }
-   ]
-   ```
-
-4. **Token:** R2 → Manage API tokens → Create API token, con permiso **Object Read & Write** y
-   "Apply to specific buckets only" en ese bucket: un token por bucket. Cloudflare muestra el Access
-   Key ID y el Secret Access Key una sola vez. El Account ID es el que aparece en el endpoint
-   `https://<account-id>.r2.cloudflarestorage.com`.
-
-5. **API:** `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET` y
-   `R2_PUBLIC_URL` (la URL pública del paso 2, sin `/` al final). En producción van en Railway; en
-   desarrollo, en `.env` con el bucket de desarrollo. Si falta alguna, subir fotos responde 503 y el
-   panel dice "La subida de fotos todavía no está disponible".
-
-6. **Sitio:** `PUBLIC_MEDIA_HOST=media.depahostperu.com` en Cloudflare Pages. `*.r2.dev` ya está
-   permitido; un dominio propio no, y sin esta variable el build no puede optimizar sus fotos.
-
-Para probarlo, sube una foto desde Inmuebles en el panel y abre su enlace: debe responder desde la
-URL pública del bucket.
-
-### Primera vez
-
-Los valores de cada variable están en los `.env.production.example` de las tres apps.
-
-1. **Base de datos:** Supabase, como en la sección anterior.
-2. **API:** el servicio de Railway, como en [API en Railway](#api-en-railway), con las variables
-   de `depahost-api/.env.production.example`. Lee `certs/` desde la raíz del repo del API y al
-   arrancar aplica las migraciones.
-3. **Dominio del API:** `api.depahostperu.com` en Railway y su CNAME en el DNS de Cloudflare.
-4. **Fotos:** los dos buckets de R2, como en [Fotos en Cloudflare R2](#fotos-en-cloudflare-r2).
-5. **Datos:** cargar inmobiliarias, distritos, inmuebles, fotos y supuestos desde el panel o con las
-   rutas de admin (o `pnpm db:seed` solo para una demo).
-6. **Sitio:** el proyecto de Cloudflare Pages, como en
-   [Sitio y panel en Cloudflare Pages](#sitio-y-panel-en-cloudflare-pages), con los dominios
-   `depahostperu.com` y `www.depahostperu.com`.
-7. **Deploy hook:** crearlo en el proyecto del sitio en Pages y ponerlo en `DEPLOY_HOOK_URL` del API.
-8. **CORS:** `CORS_ORIGINS` con el sitio y el panel:
-   `https://depahostperu.com,https://www.depahostperu.com,https://app.depahostperu.com`.
-9. **Turnstile:** registrar el dominio y poner la clave pública en el sitio y el panel, y la secreta
-   en el API.
-10. **Resend:** verificar el dominio con sus registros DNS y poner la clave en el API.
-11. **Panel:** el segundo proyecto de Cloudflare Pages, con las variables de
-    `depahost-panel/.env.production.example` y el dominio `app.depahostperu.com`.
-12. **Cuentas:** en el API, `COOKIE_DOMAIN=.depahostperu.com` y `PANEL_URL=https://app.depahostperu.com`.
-    En el sitio, `PUBLIC_PANEL_URL=https://app.depahostperu.com`.
-13. **Primer administrador:** desde tu máquina, contra la base de producción:
-    `DATABASE_URL='<cadena de Supabase>' pnpm user:create --email … --name … --role admin`.
+Supabase es del panel: base, autenticación y fotos (bucket `inmuebles`). Su configuración está en
+`DH_panel/README.md`. El sitio solo necesita su dominio en `PUBLIC_MEDIA_HOST`.
 
 ### Cada cambio
 
 | Cambio | Qué hacer | Se publica |
 |---|---|---|
-| Código del sitio o del panel | Merge a `main` | Cloudflare Pages reconstruye solo el proyecto que cambió |
-| Código del API | Merge a `main` | Railway construye y arranca la nueva versión |
-| Un inmueble, foto, inmobiliaria o supuesto | Panel o rutas de admin | El deploy hook reconstruye el sitio en unos 30 s + el tiempo del build |
-| El contrato del API | API primero, luego `pnpm api:sync` en el sitio y en el panel | En ese orden |
-
-Antes de publicar un cambio grande, conviene probarlo en preproducción.
+| Código del sitio | Merge a `main` | Si la CI pasa, mueve `deploy/sitio` y Workers Builds publica |
+| Un inmueble o sus fotos | Panel y luego "Actualizar web" | Unos 2 minutos (ver [05 · Flujos](05-flujos.md#3-publicar-o-editar-un-inmueble)) |
+| El contrato del API | `openapi/depahost-api.json`, `pnpm api:types` y luego `DH_panel` | Ver [05 · Flujos](05-flujos.md#12-cambiar-el-contrato-del-api) |
 
 ### Antes de publicar, revisar
 
-- [ ] `PUBLIC_WHATSAPP_NUMBER` real (hoy `51XXXXXXXXX`).
-- [ ] Razón social, RUC y dirección en `src/data/empresa.ts` y `COMPANY_*` del API.
+- [ ] `PUBLIC_WHATSAPP_NUMBER` confirmado.
+- [ ] Razón social, RUC y dirección en `src/data/empresa.ts` (hoy "[pendiente]" en el footer).
 - [ ] Privacidad y términos revisados por un abogado.
-- [ ] Datos de ejemplo reemplazados (ver [04 · Datos, sección 5](04-datos.md#5-datos-de-ejemplo-demostración)).
-- [ ] Inmobiliarias reales, con permiso para usar su nombre y logo.
-- [ ] `NOTIFY_EMAIL` apuntando a un buzón que alguien revise: ahí llegan los reclamos.
-- [ ] Data API de Supabase desactivada y `certs/supabase-ca.crt` en el repo del API.
-- [ ] Una foto subida desde `app.depahostperu.com` se ve en el panel y, tras el rebuild, en el sitio.
+- [ ] Libro de Reclamaciones: falta `POST /v1/complaints` en el panel.
+- [ ] Inmobiliarias aliadas reales, con permiso para usar su nombre y logo.
+- [ ] `WEB_ORIGINS`, `TURNSTILE_SECRET_KEY` y `CLOUDFLARE_DEPLOY_HOOK_URL` definidas en el panel.
 
 ## 9. Monitoreo
 
 | Qué | Dónde |
 |---|---|
-| ¿El API responde y la base también? | `GET /health` (también sirve como chequeo de salud del hosting) |
-| Errores del API | Logs del proveedor (JSON de Pino) y Sentry si hay `SENTRY_DSN`; `SENTRY_ENVIRONMENT` separa preproducción de producción |
+| Builds y publicaciones del sitio | Historial de Workers Builds en Cloudflare y jobs de GitHub Actions |
 | Errores del navegador | Sentry si hay `PUBLIC_SENTRY_DSN`; el entorno es el modo del build (`production` o `preprod`) |
-| Uso del sitio | Microsoft Clarity, solo de quienes aceptan cookies y solo en producción |
-| Leads y reclamos | Panel, `GET /v1/admin/leads`, `GET /v1/admin/complaints?status=pending` y el correo de `NOTIFY_EMAIL` |
-| La base de producción | Panel de Supabase: uso, conexiones, respaldos y Security Advisor |
+| Uso del sitio | Microsoft Clarity, solo de quienes aceptan cookies |
+| Leads | Panel de DepaHost (canal Web) |
+| Panel y base | Logs de Vercel y panel de Supabase |
 
 ## 10. Problemas conocidos y soluciones
 
 | Síntoma | Causa | Solución |
 |---|---|---|
-| El API dice `ECONNREFUSED 127.0.0.1:15432` | El Postgres local está detenido | `pnpm db:up` en el API |
-| `password authentication failed` al levantar el API | Cambiaste usuario o clave en `.env` después de crear el Postgres local | Volver a los valores anteriores, o empezar de cero (sección 3) |
-| `pnpm db:up` dice que el puerto está ocupado | Otro programa usa el 15432 | Cambiar el puerto en `DATABASE_URL` de `.env` y `.env.preprod` antes de crear el servidor |
-| En producción el API no arranca: "Falta sslmode" | `DATABASE_URL` remota sin `sslmode` | Agregar `?sslmode=verify-full&sslrootcert=certs/supabase-ca.crt` |
-| `self-signed certificate in certificate chain` | Falta `sslrootcert` o el archivo no está en `certs/` | Descargar el certificado de Supabase (sección 8) |
-| `Hostname/IP does not match certificate's altnames` | El certificado del pooler no nombra ese host | Usar `sslmode=verify-ca&uselibpqcompat=true&sslrootcert=certs/supabase-ca.crt`: verifica el certificado, no el nombre |
-| En preproducción el build del sitio falla con `fetch failed` | El API de preproducción no está encendido | `pnpm preprod` en el API antes que en el sitio |
-| En desarrollo, un script falla con "504 Outdated Optimize Dep" | Vite optimizó una dependencia nueva después de cargar la página | Recargar o reiniciar `pnpm dev`. `openapi-fetch` ya está en `vite.optimizeDeps.include` |
-| Playwright dice que el servidor "terminó antes de tiempo" | Astro pasó `astro preview` a segundo plano | El comando ya usa `--ignore-lock` |
-| `pnpm openapi:export` no termina | PGlite no cierra si nunca se usó | El script ya no abre base de datos |
-| El build falla con un error de esquema | El API cambió de forma | Correr `pnpm api:sync` y ajustar `content.config.ts` |
-| Un cambio en el admin no aparece | Falta `DEPLOY_HOOK_URL` o el build falló | Revisar el log del API y el historial de builds del hosting |
+| El build de Cloudflare dice "Faltan variables de entorno en Cloudflare" | Falta `API_URL` o `PUBLIC_MEDIA_HOST` | Definirlas en el Worker y volver a construir |
+| El build falla con `fetch failed` | El panel no responde (en local: no está encendido) | `npm run dev` en `DH_panel` antes de construir el sitio |
+| El build falla con un error de esquema | La respuesta del panel cambió de forma | Ajustar el contrato y `content.config.ts` (ver [05 · Flujos](05-flujos.md#12-cambiar-el-contrato-del-api)) |
+| El sitio no tiene inmuebles | `API_URL` vacío: `src/content/properties.json` está vacío | Definir `API_URL`, o `CATALOG_DIR=tests/e2e/catalogo` para ver el catálogo de prueba |
+| Las fotos dejan de verse horas después del build | Falta `PUBLIC_MEDIA_HOST`: quedan las URLs firmadas, que caducan a las 6 horas | Definirla y reconstruir |
+| Un cambio del panel no aparece | No se presionó "Actualizar web", falta `CLOUDFLARE_DEPLOY_HOOK_URL` o el build falló | Revisar el mensaje del panel y el historial de Workers Builds |
+| Un cambio no aparece aunque el build pasó | El panel responde con `s-maxage=300` y el build leyó el catálogo anterior | Esperar 5 minutos y "Actualizar web" otra vez |
 | Los formularios dicen "por ahora por WhatsApp" | Falta `PUBLIC_API_URL` en el build | Definirla y reconstruir |
-| El navegador bloquea las llamadas al API | El origen no está en `CORS_ORIGINS` | Agregarlo en el API |
+| El navegador bloquea las llamadas al panel | El origen del sitio no está en `WEB_ORIGINS` | Agregarlo en el panel |
+| El Libro de Reclamaciones muestra error | El panel no implementa `POST /v1/complaints` | Pendiente; mientras tanto el formulario ofrece WhatsApp |
+| Playwright dice que falta el ejecutable del navegador | Chromium de Playwright no está instalado | `pnpm exec playwright install chromium` |
+| Playwright dice que el servidor "terminó antes de tiempo" | Astro pasó `astro preview` a segundo plano | El comando ya usa `--ignore-lock` |
+| En desarrollo, un script falla con "504 Outdated Optimize Dep" | Vite optimizó una dependencia nueva después de cargar la página | Recargar o reiniciar `pnpm dev`. `openapi-fetch` y `leaflet` ya están en `vite.optimizeDeps.include` |

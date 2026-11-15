@@ -2,8 +2,7 @@ import { test as base, expect, type Page, type Route } from '@playwright/test'
 
 export const API = 'https://api.test.local'
 
-// El sitio llama al API con credentials: 'include' (cookie de sesión). Con credenciales, el navegador
-// exige el origen exacto (no "*") y allow-credentials, igual que responde el API real.
+// Responde con el origen exacto y allow-credentials, igual que el panel (app/api/v1/leads).
 const cors = (route: Route) => ({
   'access-control-allow-origin': route.request().headers().origin ?? '*',
   'access-control-allow-credentials': 'true',

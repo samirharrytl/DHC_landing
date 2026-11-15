@@ -1,15 +1,18 @@
-# 02 · Frontend (`depahostcapital`)
+# 02 · Frontend (`DHC_landing`)
 
 ## 1. Estructura de carpetas
 
 ```text
-depahostcapital/
-├── astro.config.mjs        sitio, fuentes, variables de entorno, sitemap, redirección /carrito
+DHC_landing/
+├── astro.config.mjs        sitio, fuentes, variables de entorno, sitemap, redirecciones, fotos remotas
+├── wrangler.jsonc          Worker de Cloudflare que sirve dist/
+├── openapi/                contrato depahost-api.json (fuente de verdad, ver 03 · API)
+├── public/                 _headers, robots.txt, favicon, imagen Open Graph
 ├── src/
 │   ├── content.config.ts   colecciones de datos y su esquema (refleja el API)
-│   ├── content/            datos locales cuando no hay API: properties, developers, financing
-│   ├── assets/             fotos originales (Astro las optimiza en el build)
-│   ├── data/               datos fijos: contacto (WhatsApp), empresa (RUC), distritos
+│   ├── content/            properties.json y developers.json vacíos, financing.json sin valores
+│   ├── assets/             logo y foto del hero (Astro las optimiza en el build)
+│   ├── data/               datos fijos: contacto (WhatsApp), empresa (RUC), distritos, lugares
 │   ├── layouts/            BaseLayout, LegalLayout, PlaceholderLayout
 │   ├── components/         piezas de interfaz (.astro)
 │   ├── pages/              una página por archivo (rutas del sitio)
@@ -18,9 +21,8 @@ depahostcapital/
 │   ├── scripts/            JavaScript que solo corre en el navegador
 │   ├── styles/             tokens.css y global.css
 │   └── types/              tipos derivados del esquema (Property, Developer…)
-├── openapi/                copia del contrato del API
-├── scripts/                sync-openapi.mjs
-├── tests/unit, tests/e2e   Vitest y Playwright
+├── tests/unit              Vitest
+├── tests/e2e               Playwright, con su catálogo de ejemplo en tests/e2e/catalogo
 └── docs/                   esta documentación y la guía de CSS
 ```
 
@@ -50,7 +52,7 @@ classDiagram
         <<module>>
         getProperties(filters?) Property[]
         getOwnerProperties() Property[]
-        getSimilarProperties(p, limit) Property[]
+        getPropertyBySlug(slug) Property
         getFastFilters(list?) FastFilter[]
         getDevelopers() Developer[]
         getDeveloperProjects(id) Property[]
@@ -58,27 +60,23 @@ classDiagram
     }
     class filters {
         <<module>>
-        buildSearchText(p) string
-        toFilterable(p) FilterableProperty
         matchesFilters(p, query, filters) boolean
         parseFilters(active) PropertyFilters
         buildFastFilters(list) FastFilter[]
     }
-    class recommend {
+    class catalog_search {
         <<module>>
-        similarity(a, b) number
-        similarTo(target, list, limit) T[]
-        recommend(list, signals, limit) T[]
+        matchesQuery(d, query) boolean
+        sortDepas(list, sort) T[]
+        queryFromParams(params) DepaQuery
+        paginate(total, page) PageSlice
     }
     class format {
         <<module>>
         formatMoney(amount, currency) string
         formatYield(range) string
-        formatYears(n) string
-        formatFacts(p) string[]
         formatDate(iso) string
         normalizeText(s) string
-        buildDisclaimer(f) string
     }
     class saved_store {
         <<module>>
@@ -105,18 +103,15 @@ classDiagram
     class catalog {
         <<module>>
         loadCatalog() CatalogItem[]
-        asRecommendable(item)
     }
 
-    content_config --> loaders
+    content_config --> loaders : solo properties
     content_config ..> api_client : tipos del contrato
     properties --> content_config : getCollection
     properties --> filters
-    properties --> recommend
     filters --> format
+    catalog_search --> format
     forms --> api_client
-    profile --> saved_store
-    catalog ..> recommend
 ```
 
 ## 3. Páginas
@@ -126,35 +121,33 @@ Para cada página: de dónde salen sus datos en el build y qué scripts corren e
 | Ruta | Archivo | Datos del build | Scripts en el navegador |
 |---|---|---|---|
 | `/` | `pages/index.astro` | Ninguno (texto fijo y foto del hero) | Dropdown "Soy propietario" |
-| `/capital` | `pages/capital/index.astro` | `getOwnerProperties`, `getFastFilters`, `getDevelopers`, supuestos | Filtros, Me interesa, Para ti |
-| `/capital/inmuebles` | `pages/capital/inmuebles.astro` | `getProperties` (todos), `getDevelopers`, supuestos | Búsqueda con facetas, orden y conteos (`lib/catalog-search.ts`); los filtros quedan en la URL. "Cerca de": ubicación del navegador (no va a la URL) o un lugar de `data/lugares.ts` (`?cerca=larcomar&km=2`), orden "Más cercanos" y distancia en cada tarjeta (`lib/geo.ts`). "Lista \| Mapa" (`?vista=mapa`): pines con el precio en Leaflet (`scripts/depas-map.ts`), que se descarga al elegir "Mapa". La lista va en páginas de 12 (`?pagina=2`, `paginate` y `pageNumbers` en `lib/catalog-search.ts`): cada página entra al historial ("Atrás" vuelve a la anterior), un cambio en la búsqueda vuelve a la primera y el mapa lleva todos los pines |
-| `/capital/{slug}` | `pages/capital/[slug].astro` | Una página por inmueble de `getProperties`; `getSimilarProperties(p, 4)`; inmobiliaria | Galería (`PropertyGallery`), Me interesa; guarda la visita en el historial. "Contactar" lleva a `/mis-inmuebles?agregar={id}` |
-| `/capital/aliados/{slug}` | `pages/capital/aliados/[slug].astro` | Inmobiliarias con proyectos; `getDeveloperProjects` | Filtros con botón Buscar y contador |
-| `/mis-inmuebles` | `pages/mis-inmuebles.astro` | Ninguno | Pinta los guardados, resumen y total; agrega `?agregar={id}`; "Empecemos con estos" abre WhatsApp y registra el lead `cart`; Para ti |
-| `/propietarios` | `pages/propietarios.astro` | `getDevelopers` (franja de aliados) | Formulario con intención vender, alquilar o Airbnb |
-| `/libro-de-reclamaciones` | `pages/libro-de-reclamaciones.astro` | Datos de la empresa | Formulario de reclamo y constancia |
+| `/capital` | `pages/capital/index.astro` | `getOwnerProperties`, `getProperties` (total), `getFastFilters` | Filtros y Me interesa |
+| `/capital/inmuebles` | `pages/capital/inmuebles.astro` | `getProperties` (todos) | Búsqueda con facetas, orden y conteos (`lib/catalog-search.ts`); los filtros quedan en la URL. "Cerca de": ubicación del navegador (no va a la URL) o un lugar de `data/lugares.ts` (`?cerca=larcomar&km=2`), orden "Más cercanos" y distancia en cada tarjeta (`lib/geo.ts`). "Lista \| Mapa" (`?vista=mapa`): pines con el precio en Leaflet (`scripts/depas-map.ts`), que se descarga al elegir "Mapa". La lista va en páginas de 12 (`?pagina=2`) |
+| `/capital/{slug}` | `pages/capital/[slug].astro` | Una página por inmueble de `getProperties` | Galería con fotos y videos (`PropertyGallery`), Me interesa; guarda la visita en el historial. "Contactar" lleva a `/mis-inmuebles?agregar={id}` |
+| `/capital/aliados/{slug}` | `pages/capital/aliados/[slug].astro` | Inmobiliarias con `projectCount > 0`; `getDeveloperProjects`. Hoy no genera ninguna página | Filtros con botón Buscar y contador |
+| `/mis-inmuebles` | `pages/mis-inmuebles.astro` | Ninguno | Pinta los guardados, resumen y total; agrega `?agregar={id}`; "Conversemos ahora" abre WhatsApp y registra el lead `cart`; "Programar una sesión" (`ScheduleDialog`) |
+| `/propietarios` | `pages/propietarios.astro` | `getDevelopers` (franja de aliados, hoy vacía) | Formulario con intención vender, alquilar o Airbnb |
+| `/libro-de-reclamaciones` | `pages/libro-de-reclamaciones.astro` | Datos de la empresa | Formulario de reclamo y constancia. Hoy el panel no tiene la ruta: muestra error y ofrece WhatsApp (ver [03 · API](03-api.md)) |
 | `/privacidad`, `/terminos` | `pages/*.astro` con `LegalLayout` | Datos de la empresa | — |
 | `/estadias`, `/nosotros` | `PlaceholderLayout` | — | — |
 | `/404` | `pages/404.astro` | — | — |
 | `/data/properties.json` | `pages/data/properties.json.ts` | `getProperties` + `getImage` | — (lo consumen los scripts) |
+| `/mis-depas`, `/capital/depas` | `pages/mis-depas.astro`, `pages/capital/depas.astro` (`RedirectPage`) | — | Redirigen a la dirección nueva conservando `?filtros` y `?agregar=` |
 | `/carrito`, `/capital/empecemos` | redirecciones en `astro.config.mjs` | — | Redirigen a `/mis-inmuebles` |
 
 Páginas sin indexar (`<meta name="robots" content="noindex">` y fuera del sitemap):
-`/mis-inmuebles`, `/404`. `robots.txt` además bloquea `/carrito`, `/mis-inmuebles`, `/capital/empecemos`
-(hoy una redirección) y `/data/`.
+`/mis-inmuebles`, `/404` y las páginas de `RedirectPage`. `robots.txt` además bloquea `/carrito`,
+`/mis-inmuebles`, `/mis-depas`, `/capital/empecemos` y `/data/`.
 
 ### Detalle de la portada de Capital
 
 ```mermaid
 flowchart TB
-    A["Hero<br/>título serif en 2 líneas · subtítulo · Ver todos los proyectos → /capital/inmuebles"]
-    B["Cómo funciona<br/>Comparas · Consultas · Te acompañamos · Cierras"]
+    A["Hero<br/>título · subtítulo · Ver todos los proyectos → /capital/inmuebles"]
+    B["Cómo funciona<br/>Step × 4"]
     C["Buscador + chips<br/>SearchFilters"]
-    D["Grilla de inmuebles de propietarios<br/>PropertyCard × N · #lista-inmuebles · al final, tarjeta Ver todos los proyectos"]
-    E["Nota de cuota estimada<br/>buildDisclaimer"]
-    F["Para ti, según lo que has visto<br/>ForYouRow · oculta sin historial"]
-    G["Proyectos de aliados<br/>AlliesStrip · #aliados"]
-    A --> B --> C --> D --> E --> F --> G
+    D["Grilla de inmuebles de propietarios<br/>PropertyCard × N · al final, tarjeta Ver todos los proyectos"]
+    A --> B --> C --> D
 ```
 
 ## 4. Layouts
@@ -169,22 +162,27 @@ flowchart TB
 
 | Componente | Props | Qué hace |
 |---|---|---|
-| `Header` | — | Logo (escala con la altura del header: 64, 72, 80 y 88px desde 1280), menú (Inicio, Compra → `/capital`, Vende → `/propietarios`; Compra queda marcado en `/capital/*` y `/mis-inmuebles`), saludo "Hola, {nombre}", acceso a Mis inmuebles con contador, WhatsApp, menú móvil (`<dialog>`) y botón flotante de WhatsApp |
+| `Header` | — | Logo, menú (Inicio, Compra → `/capital`, Vende → `/propietarios`; Compra queda marcado en `/capital/*` y `/mis-inmuebles`), selector ES · EN, saludo "Hola, {nombre}", acceso a Mis inmuebles con contador, WhatsApp, menú móvil (`<dialog>`) y botón flotante de WhatsApp. Sin botón de ingreso: el sitio no tiene cuentas |
 | `Footer` | — | Banda de WhatsApp, links legales, RUC y "Preferencias de cookies" |
 | `Logo` | `inverse?` | Marca de Depahost Capital (variante clara para fondos oscuros) |
 | `Button` | `href`, `variant?`, `size?`, `block?` | Link con estilo de botón. Si apunta a `wa.me`, siempre sale verde y abre en otra pestaña |
-| `Icon` | `name`, `size?`, `strokeWidth?` | Set único de íconos de línea (24×24, trazo 1.6) |
-| `PropertyCard` | `property`, `priority?` | Tarjeta de la portada: foto, etiqueta de origen, badge, valor, rentabilidad, plazo, Me interesa |
-| `ProjectCard` | `property`, `priority?` | Tarjeta de proyecto: "Precio desde", recuadro de rentabilidad, descripción |
-| `MiniCard` | `property?` | Tarjeta chica. Con `property` se pinta en el build (similares); sin `property` es plantilla del navegador (Para ti) |
+| `Icon` | `name`, `size?`, `strokeWidth?` | Set único de íconos de línea (trazos en `lib/icons.ts`) |
+| `PropertyCard` | `property`, `priority?` | Tarjeta de inmueble: foto, etiqueta de origen, badge, valor, rentabilidad, datos (`FactRow`), Me interesa |
+| `ProjectCard` | `property`, `priority?` | Tarjeta de proyecto de inmobiliaria: "Precio desde", rentabilidad, descripción |
+| `FactRow` | `facts`, `label` | Fila de datos con ícono (dormitorios, área, antigüedad, rentabilidad) en la tarjeta y el detalle |
+| `PropertyGallery` | `images`, `videos?`, `title` | Galería del detalle: miniaturas, deslizar en móvil, vista a pantalla completa; videos después de las fotos |
+| `VideoPlayer` | `url`, `title`, `poster?` | Video de la galería: archivo nativo o portada de YouTube/Vimeo que carga el reproductor al tocarla |
+| `MiniCard` | `property?` | Tarjeta chica; sin `property` es plantilla del navegador |
 | `PropertyGrid` | `label?`, `id?` | Grilla de tarjetas: carrusel en móvil, 2 columnas en tablet, 3 en escritorio |
 | `PropertyImage` | `image`, `widths`, `sizes`, `priority?` | Foto local o remota, en AVIF/WebP con varios tamaños |
 | `SaveButton` | `id`, `name`, `variant?` | Botón "Me interesa" con corazón; alterna guardado y quitado |
 | `SearchFilters` | `filters`, `placeholder?`, `withButton?`, `count?` | Buscador, chips, "Limpiar filtros" y contador |
-| `ForYouRow` | `title?`, `seeAllHref?` | Fila de recomendaciones; se arma en el navegador |
-| `AlliesStrip` | `developers`, `title?`, `id?` | Inmobiliarias como marcas tipográficas; las que tienen proyectos son links |
+| `ForYouRow` | `title?`, `seeAllHref?` | Fila "Para ti, según lo que has visto". Hoy ninguna página la usa |
+| `AlliesStrip` | `developers`, `title?`, `id?` | Inmobiliarias como marcas tipográficas. Sin aliados no muestra nada |
 | `SavedDepa` | — | Plantilla `<template>` de un inmueble en Mis inmuebles |
-| `SaveListDialog` | — | Diálogo "Guarda tus inmuebles" (en todas las páginas) |
+| `SaveListDialog` | — | Diálogo "Guarda tus inmuebles" (lead `saved-list`, en todas las páginas) |
+| `ScheduleDialog` | — | "Programar una sesión" de Mis inmuebles: contacto, día, horario y modalidad (lead `cart`) |
+| `RedirectPage` | `to` | Página que redirige a una dirección nueva conservando `?query` y `#ancla` |
 | `ConsentBanner` | — | Aviso de cookies; carga Clarity solo si se acepta |
 | `Turnstile` | `theme?` | Widget anti-bots; no aparece sin `PUBLIC_TURNSTILE_SITE_KEY` |
 | `Step` | `number`, `title`, `text?` | Paso del "Cómo funciona" |
@@ -199,15 +197,20 @@ Se usan en el build y en el navegador. No tocan el DOM, salvo `getSavedStore`,
 
 | Módulo | Funciones principales | Para qué |
 |---|---|---|
-| `properties.ts` | `getProperties`, `getOwnerProperties`, `getSimilarProperties`, `getDevelopers`, `getDeveloperProjects`, `getFastFilters`, `getFinancingAssumptions` | Única puerta a los datos en el build |
-| `filters.ts` | `buildSearchText`, `toFilterable`, `matchesFilters`, `parseFilters`, `buildFastFilters` | Búsqueda y filtros (funciones puras) |
+| `properties.ts` | `getProperties`, `getOwnerProperties`, `getPropertyBySlug`, `getSimilarProperties`, `getDevelopers`, `getDeveloperProjects`, `getFastFilters`, `getFinancingAssumptions` | Única puerta a los datos en el build |
+| `filters.ts` | `buildSearchText`, `toFilterable`, `matchesFilters`, `parseFilters`, `buildFastFilters` | Búsqueda y chips de la portada y de aliados (funciones puras) |
+| `catalog-search.ts` | `matchesQuery`, `sortDepas`, `queryFromParams`, `queryToParams`, `paginate`, `pageNumbers`, `priceRanges` | Búsqueda con facetas de Todos los inmuebles |
+| `geo.ts` | `distanceKm`, `depaPosition`, `districtCenter`, `formatDistance` | "Cerca de": ubicación exacta o centro del distrito |
+| `facts.ts` | `propertyFacts` | Datos del inmueble para `FactRow` |
+| `media.ts` | `parseVideo` | Reconoce YouTube, Vimeo o archivo de video |
+| `icons.ts` | `ICONS` | Trazos del set de íconos |
 | `recommend.ts` | `similarity`, `similarTo`, `recommend` | Similares y "Para ti" |
-| `format.ts` | `formatMoney`, `formatPEN`, `formatYield`, `formatYears`, `formatFacts`, `formatDate`, `normalizeText`, `slugify`, `buildDisclaimer` | Textos consistentes en todo el sitio |
-| `saved-store.ts` | `createIdListStore`, `getSavedStore`, `getHistoryStore`, `browserStorage` | Listas de IDs en `localStorage` con eventos |
-| `profile.ts` | `firstNameOf`, `createProfileStore`, `getProfileStore` | Nombre para el saludo y control del aviso |
-| `api/client.ts` | `api`, `apiConfigured`, tipos `LeadCreate`, `ComplaintCreate`, `ApiError` | Cliente HTTP tipado |
+| `format.ts` | `formatMoney`, `formatPEN`, `formatYield`, `formatYears`, `formatFacts`, `formatDate`, `normalizeText`, `slugify` | Textos consistentes en todo el sitio |
+| `saved-store.ts` | `createIdListStore`, `getSavedStore`, `getHistoryStore`, `browserStorage` | Listas de IDs en `localStorage` con eventos (máx. 20 guardados, 12 en historial) |
+| `profile.ts` | `firstNameOf`, `createProfileStore`, `getProfileStore` | Primer nombre para el saludo, solo en `localStorage` |
+| `api/client.ts` | `api`, `apiConfigured`, tipos `LeadCreate`, `ComplaintCreate`, `ComplaintReceipt`, `ApiError` | Cliente HTTP tipado (sin `credentials`: no hay sesión) |
 | `api/loaders.ts` | `hybridLoader`, `fetchJson` | Leer el API o el JSON local en el build |
-| `api/schema.d.ts` | (generado) | Tipos del contrato OpenAPI. No se edita a mano |
+| `api/schema.d.ts` | (generado con `pnpm api:types`) | Tipos del contrato OpenAPI. No se edita a mano |
 
 ## 7. Scripts del navegador (`src/scripts`)
 
@@ -215,45 +218,58 @@ Se usan en el build y en el navegador. No tocan el DOM, salvo `getSavedStore`,
 |---|---|---|
 | `saved-buttons.ts` | `SaveButton` | Escucha clics en `[data-add-property]` (delegación) y alterna Mis inmuebles; actualiza texto y `aria-pressed` |
 | `property-filters.ts` | `SearchFilters` | Filtra tarjetas dentro de cada `[data-filter-root]`; contador y "Limpiar filtros" |
-| `catalog.ts` | Mis inmuebles, Te acompañamos, Para ti, diálogo | Descarga `/data/properties.json` una sola vez por página |
+| `catalog.ts` | Mis inmuebles, `SaveListDialog`, `ScheduleDialog` | Descarga `/data/properties.json` una sola vez por página |
+| `depas-map.ts` | Todos los inmuebles | Mapa Leaflet con pines de precio; se importa solo al elegir "Mapa" |
+| `video.ts` | `VideoPlayer` | Inserta YouTube/Vimeo al tocar la portada y detiene los videos al cambiar de foto |
 | `forms.ts` | Todos los formularios | Arma el JSON, valida, envía, muestra errores por campo y ofrece WhatsApp |
 | `consent.ts` | `ConsentBanner` | Guarda la elección y carga Clarity |
 | `monitoring.ts` | `BaseLayout` | Inicia Sentry solo si hay DSN (descarga diferida) |
 
-Los scripts del Header, Mis inmuebles, Te acompañamos, el detalle y el diálogo están dentro de su
-`.astro`. Astro los empaqueta y los carga una sola vez aunque el componente aparezca varias veces.
+Los scripts del Header, Mis inmuebles, el detalle y los diálogos están dentro de su `.astro`.
+Astro los empaqueta y los carga una sola vez aunque el componente aparezca varias veces.
 
 ## 8. Datos de contenido (Content Layer)
 
-`src/content.config.ts` define tres colecciones. Cada una usa `hybridLoader`:
+`src/content.config.ts` define tres colecciones. Solo `properties` lee el API:
 
-| Colección | Con `API_URL` | Sin `API_URL` |
-|---|---|---|
-| `properties` | `GET /v1/properties` paginado de a 100 | `src/content/properties.json` |
-| `developers` | `GET /v1/developers` | `src/content/developers.json` |
-| `financing` | `GET /v1/financing-assumptions` (404 = sin supuestos) | `src/content/financing.json` |
+| Colección | Loader | Con `API_URL` | Sin `API_URL` |
+|---|---|---|---|
+| `properties` | `hybridLoader` | `GET {API_URL}/v1/properties` paginado de a 100 (el panel) | `src/content/properties.json`: `[]`, el sitio queda sin inmuebles |
+| `developers` | `file` | — | `src/content/developers.json`: `[]`, no hay inmobiliarias aliadas |
+| `financing` | `file` | — | `src/content/financing.json`: supuestos en `null`, no se muestra cuota estimada |
 
-El esquema Zod de cada colección **refleja la respuesta del API**. Si el API cambia de forma, el
-build falla aquí y no en una página. Las fotos aceptan una URL (`https://…`, del API) o una ruta
-local (`../assets/…`), que Astro optimiza.
+El esquema Zod de `properties` **refleja la respuesta del API**. Si el API cambia de forma, el
+build falla aquí y no en una página. Si el API no responde, el build también falla. Las fotos
+llegan como URLs firmadas de Supabase Storage (válidas 6 horas): Astro las descarga y optimiza
+en el build, por eso `PUBLIC_MEDIA_HOST` debe ser el dominio de Supabase del panel. El esquema
+también acepta rutas locales (`../assets/…`), que usa el catálogo de pruebas.
+
+Las pruebas e2e cambian la carpeta con `CATALOG_DIR=tests/e2e/catalogo`: 36 inmuebles de
+ejemplo (12 de propietarios y 24 proyectos de 5 aliadas), con sus fotos en
+`tests/e2e/catalogo/fotos`. Ese catálogo es **solo para pruebas**: nunca se publica.
 
 ## 9. Variables de entorno
 
 Se declaran en `astro.config.mjs` (`env.schema`) y se completan en `.env` (desarrollo),
-`.env.preprod` (preproducción, con `--mode preprod`) o en el panel del hosting (producción). Los
-valores de cada entorno están en `.env.example`, `.env.preprod.example` y `.env.production.example`.
+`.env.preprod` (preproducción, con `--mode preprod`) o en Cloudflare → Worker → Settings →
+Build → Variables and secrets (producción). Los valores de cada entorno están en `.env.example`,
+`.env.preprod.example` y `.env.production.example`.
 
 | Variable | Contexto | Uso |
 |---|---|---|
-| `PUBLIC_WHATSAPP_NUMBER` | Navegador | Número de todos los links de WhatsApp. Por defecto `51XXXXXXXXX` (relleno) |
-| `PUBLIC_API_URL` | Navegador | API de los formularios. Vacío = los formularios ofrecen WhatsApp |
-| `API_URL` | Solo build | API de la que se leen los datos. Vacío = JSON locales |
+| `PUBLIC_WHATSAPP_NUMBER` | Navegador | Número de todos los links de WhatsApp. Por defecto `51981352247` |
+| `PUBLIC_API_URL` | Navegador | Panel al que van los formularios (`https://<dominio del panel>/api`). Vacío = los formularios ofrecen WhatsApp |
+| `API_URL` | Solo build | Panel del que se leen los inmuebles. Vacío = `src/content/properties.json` (vacío) |
 | `PUBLIC_TURNSTILE_SITE_KEY` | Navegador | Widget anti-bots |
 | `PUBLIC_CLARITY_ID` | Navegador | Analítica, solo con consentimiento |
 | `PUBLIC_SENTRY_DSN` | Navegador | Errores del navegador |
-| `PUBLIC_MEDIA_HOST` | Build | Dominio de fotos permitido para optimizar (además de `*.r2.dev`) |
+| `PUBLIC_MEDIA_HOST` | Build | Dominio de Supabase del panel (`<proyecto>.supabase.co`), permitido para optimizar fotos |
+| `PUBLIC_MAP_TILE_URL`, `PUBLIC_MAP_ATTRIBUTION` | Navegador | Mosaicos del mapa. Vacío = OpenStreetMap |
+| `CATALOG_DIR` | Solo build (pruebas e2e) | Carpeta del catálogo de ejemplo |
 
-Todas las `PUBLIC_*` terminan en el JavaScript público. Nunca deben contener secretos.
+En el build de Cloudflare (`WORKERS_CI=1`), `astro.config.mjs` hace fallar el build si faltan
+`API_URL` o `PUBLIC_MEDIA_HOST`. Todas las `PUBLIC_*` terminan en el JavaScript público. Nunca
+deben contener secretos.
 
 ## 10. Sistema de diseño
 
@@ -276,14 +292,14 @@ Todas las `PUBLIC_*` terminan en el JavaScript público. Nunca deben contener se
 |---|---|
 | `.container`, `.section` | Ancho máximo y aire vertical |
 | `.btn` + `--primary`, `--secondary`, `--whatsapp`, `--sm`, `--block` | Botones |
-| `.display` | Títulos en serif (Capital, Propietarios y sus páginas) |
+| `.display` | Títulos editoriales en Poppins negrita (Capital, Propietarios y sus páginas) |
 | `.eyebrow` | Etiqueta en mayúsculas: "DE PROPIETARIO", "INMOBILIARIA ALIADA" |
 | `.lead`, `.disclaimer` | Subtítulos y notas legales |
 | `.form`, `.field`, `.check`, `.field-error`, `.form-status`, `.hp` | Formularios, errores, resultado y honeypot |
 | `.sr-only`, `.skip-link` | Accesibilidad |
 
 **Reglas de diseño que conviene mantener:** azul marino como color principal; verde solo para
-WhatsApp; serif solo en títulos; íconos de línea del componente `Icon`; sin degradados ni
+WhatsApp; `.display` solo en títulos; íconos de línea del componente `Icon`; sin degradados ni
 íconos con fondos de color pastel.
 
 ## 11. Accesibilidad, SEO y rendimiento

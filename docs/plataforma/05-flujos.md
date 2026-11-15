@@ -2,27 +2,27 @@
 
 Cada flujo indica qué archivo hace cada paso, para que puedas seguirlo en el código.
 
-Los flujos de cuentas y del panel (crear cuenta, ingresar, recuperar la contraseña, sincronizar
-Mis inmuebles con la cuenta y publicar un inmueble como propietario) están en
-[08 · Panel y cuentas](08-panel-y-cuentas.md#4-flujos-de-cuenta).
+El sitio no tiene cuentas ni login. Mis inmuebles, el historial de vistos y el nombre del saludo viven
+solo en el navegador (`localStorage`). Los datos que deja la persona llegan como leads al panel de
+DepaHost (repo `DH_panel`), que también es la fuente del catálogo. El API que usa el sitio está en
+[03 · API](03-api.md).
 
 **Índice**
 
 1. [Recorrido completo del visitante](#1-recorrido-completo-del-visitante)
 2. [Generar el sitio (build)](#2-generar-el-sitio-build)
 3. [Publicar o editar un inmueble](#3-publicar-o-editar-un-inmueble)
-4. [Subir fotos](#4-subir-fotos)
-5. [Buscar y filtrar](#5-buscar-y-filtrar)
-6. [Me interesa](#6-me-interesa)
-7. [Guarda tus inmuebles](#7-guarda-tus-inmuebles)
-8. [Ver el detalle de un inmueble](#8-ver-el-detalle-de-un-inmueble)
-9. [Para ti, según lo que has visto](#9-para-ti-según-lo-que-has-visto)
-10. [Mis inmuebles](#10-mis-inmuebles)
-11. [Empecemos con estos: WhatsApp desde Mis inmuebles](#11-empecemos-con-estos-whatsapp-desde-mis-inmuebles)
-12. [Formularios: inglés, propietarios y Libro de Reclamaciones](#12-formularios)
-13. [Cambiar el contrato del API](#13-cambiar-el-contrato-del-api)
-14. [Cookies y analítica](#14-cookies-y-analítica)
-15. [Qué pasa cuando algo falla](#15-qué-pasa-cuando-algo-falla)
+4. [Buscar y filtrar](#4-buscar-y-filtrar)
+5. [Me interesa](#5-me-interesa)
+6. [Guarda tus inmuebles](#6-guarda-tus-inmuebles)
+7. [Ver el detalle de un inmueble](#7-ver-el-detalle-de-un-inmueble)
+8. [Para ti, según lo que has visto](#8-para-ti-según-lo-que-has-visto)
+9. [Mis inmuebles](#9-mis-inmuebles)
+10. [WhatsApp y sesión desde Mis inmuebles](#10-whatsapp-y-sesión-desde-mis-inmuebles)
+11. [Formularios: propietarios y Libro de Reclamaciones](#11-formularios)
+12. [Cambiar el contrato del API](#12-cambiar-el-contrato-del-api)
+13. [Cookies y analítica](#13-cookies-y-analítica)
+14. [Qué pasa cuando algo falla](#14-qué-pasa-cuando-algo-falla)
 
 ---
 
@@ -37,20 +37,18 @@ flowchart TB
     BUSCA["Busca o filtra<br/>SearchFilters · /capital/inmuebles"]
     FICHA["Abre la ficha<br/>/capital/{slug}"]
     MARCA["Marca Me interesa<br/>SaveButton"]
-    ALIADO["Clic en un aliado<br/>/capital/aliados/{slug}"]
     ACUM["Acumula en Mis inmuebles<br/>localStorage"]
     DEC{"¿Deja sus datos en<br/>Guarda tus inmuebles?"}
     NAV["Sigue navegando<br/>el navegador recuerda"]
-    REG["Deja nombre y celular<br/>lead saved-list en el API"]
+    REG["Deja nombre y celular<br/>lead saved-list en el panel"]
     PERS["Capital personalizada<br/>Para ti, según lo que has visto · Hola, Ana"]
     ELIGE["Elige uno o varios<br/>/mis-inmuebles"]
-    WA["Empecemos con estos<br/>abre WhatsApp · lead cart en el API"]
-    CIERRE(("Te acompañamos y cierras<br/>con la inmobiliaria o el propietario"))
+    WA["Conversemos ahora o Programar una sesión<br/>WhatsApp · lead cart en el panel"]
+    CIERRE(("Te acompañamos y cierras<br/>con el propietario"))
 
     START --> HOME
-    HOME --> BUSCA & FICHA & MARCA & ALIADO
+    HOME --> BUSCA & FICHA & MARCA
     BUSCA --> FICHA
-    ALIADO --> FICHA
     FICHA --> MARCA
     MARCA --> ACUM
     ACUM --> DEC
@@ -62,129 +60,105 @@ flowchart TB
     FICHA -- "Contactar" --> ELIGE
 ```
 
-Puntos de registro en el API durante el recorrido:
+Puntos de registro en el panel durante el recorrido (todos por `POST /api/v1/leads`):
 
 | Momento | Lead | Datos personales |
 |---|---|---|
 | Deja sus datos en "Guarda tus inmuebles" | `saved-list` | Nombre, celular, correo opcional |
-| Hace clic en "Empecemos con estos" en Mis inmuebles | `cart` | Ninguno: solo los IDs de los inmuebles |
-| Envía el formulario de propietarios | `owner-sell` u `owner-rent` | Nombre, celular, datos del inmueble |
+| Hace clic en "Conversemos ahora" en Mis inmuebles | `cart` | Ninguno: solo los IDs de los inmuebles |
+| Envía "Programar una sesión" en Mis inmuebles | `cart` | Nombre, celular, día, horario y modalidad |
+| Envía el formulario de propietarios | `owner-sell` | Nombre, celular, datos del inmueble |
+
+`owner-rent` (alquiler o Airbnb) responde 201 pero el panel no lo registra: la persona sigue por
+WhatsApp.
 
 ---
 
 ## 2. Generar el sitio (build)
 
-Pasa al publicar el frontend, al subir cambios a `main` y cada vez que el API llama al deploy hook.
+Pasa cada vez que GitHub Actions mueve la rama `deploy/sitio` y cada vez que el panel llama al deploy
+hook ("Actualizar web", flujo 3).
 
 ```mermaid
 sequenceDiagram
     autonumber
-    participant H as Hosting
+    participant CF as Cloudflare Workers Builds
     participant A as Astro build
-    participant L as Loaders
-    participant API as depahost-api
-    participant PG as Páginas
+    participant L as Loader properties
+    participant P as DH_panel
+    participant SB as Supabase
 
-    H->>A: pnpm build con API_URL
-    par colección properties
-        loop de 100 en 100
-            L->>API: GET /v1/properties
-            API-->>L: PropertyPage
-        end
-    and colección developers
-        L->>API: GET /v1/developers
-        API-->>L: Developer[]
-    and colección financing
-        L->>API: GET /v1/financing-assumptions
-        API-->>L: supuestos o 404
+    CF->>A: pnpm build con API_URL y PUBLIC_MEDIA_HOST
+    Note over A: con WORKERS_CI, sin esas variables el build falla
+    loop de 100 en 100
+        L->>P: GET /api/v1/properties?page&pageSize=100
+        P->>SB: rpc inmuebles_web (En cartera y autorizados)
+        SB-->>P: inmuebles y fotos
+        P-->>L: PropertyPage con URLs firmadas (6 horas)
     end
     L->>L: images[].url pasa a images[].src
     L->>A: valida cada item con Zod
-    alt el API cambió de forma
-        A-->>H: el build falla
+    alt la respuesta cambió de forma
+        A-->>CF: el build falla
     end
-    A->>PG: genera cada ruta con lib/properties.ts
-    PG->>A: pide fotos optimizadas a astro:assets
-    A->>A: /data/properties.json, sitemap, redirección /carrito
-    A-->>H: dist/ listo
+    Note over A: developers y financing salen de src/content
+    A->>A: genera cada ruta con lib/properties.ts
+    A->>SB: descarga las fotos y las optimiza (astro:assets)
+    A->>A: /data/properties.json, sitemap, redirecciones
+    A-->>CF: dist/ listo
+    CF->>CF: npx wrangler deploy
 ```
 
 Reglas importantes:
 
-- **Sin `API_URL`:** los loaders leen `src/content/*.json`. En desarrollo, editar esos JSON
-  recarga el sitio solo.
+- **Sin `API_URL`:** el loader lee `src/content/properties.json`, que está vacío: el sitio funciona,
+  pero sin inmuebles. Las pruebas e2e usan su propio catálogo con `CATALOG_DIR=tests/e2e/catalogo`.
 - **Si el API falla durante el build, el build falla.** Es a propósito: es mejor no publicar que
-  publicar datos viejos o de ejemplo.
-- **Páginas que se generan:** una por inmueble visible, una por inmobiliaria con proyectos, y el resto
-  de rutas fijas. Los inmuebles vendidos no generan página.
+  publicar un catálogo vacío. Cloudflare mantiene la versión anterior.
+- **Fotos:** son URLs firmadas de Supabase Storage que caducan a las 6 horas. Por eso el build las
+  descarga y las sirve optimizadas desde el sitio; necesita `PUBLIC_MEDIA_HOST` en
+  `image.remotePatterns`.
+- **Caché:** el panel responde con `s-maxage=300`. Un rebuild inmediato puede leer el catálogo
+  anterior hasta 5 minutos.
+- **Páginas que se generan:** una por inmueble que entrega el panel, una por inmobiliaria con
+  proyectos (hoy ninguna) y el resto de rutas fijas.
 
 ---
 
 ## 3. Publicar o editar un inmueble
 
-Hoy no hay panel visual: se usa `/docs` del API, Drizzle Studio o cualquier cliente HTTP con la
-clave de administración.
+Se hace en el panel de DepaHost. El sitio no cambia hasta que alguien presiona "Actualizar web".
 
 ```mermaid
 sequenceDiagram
     autonumber
     actor E as Equipo
-    participant API as depahost-api
-    participant DB as PostgreSQL
+    participant P as DH_panel
+    participant SB as Supabase
     participant DH as Deploy hook
-    participant H as Hosting
+    participant CF as Cloudflare Workers Builds
 
-    E->>API: POST /v1/admin/properties con Bearer ADMIN_API_KEY
-    API->>API: admin-auth compara la clave
-    API->>DB: ¿existe el distrito? ¿y la inmobiliaria, si es proyecto?
-    API->>DB: ¿slug libre? si no, agrega -2, -3…
-    API->>DB: INSERT inmueble y fotos en una transacción
-    API-->>E: 201 AdminProperty
-    alt el inmueble no es borrador
-        API->>DH: triggerDeploy create
-        Note over DH: espera 30 s por si llegan más cambios
-        E->>API: PATCH de otro inmueble dentro de esos 30 s
-        API->>DH: triggerDeploy update, reinicia la espera
-        DH->>H: POST DEPLOY_HOOK_URL, una sola vez
-        H->>H: build, ver flujo 2
+    E->>P: Inmuebles → Nuevo inmueble (propietario, inmueble y contrato)
+    P->>SB: lo guarda En cartera
+    E->>P: sube las fotos en la ficha del inmueble
+    P->>SB: Storage, bucket inmuebles
+    E->>P: Actualizar web
+    P->>DH: POST CLOUDFLARE_DEPLOY_HOOK_URL
+    alt Cloudflare acepta
+        P-->>E: "La web se está actualizando"
+        DH->>CF: build de deploy/sitio, ver flujo 2 (unos 2 minutos)
+    else falta la variable o Cloudflare rechaza
+        P-->>E: mensaje de error, se puede reintentar
     end
 ```
 
-El mismo patrón aplica a editar (`PATCH`), borrar (`DELETE`), crear o editar inmobiliarias y
-agregar supuestos de financiamiento. Editar un borrador que sigue siendo borrador no reconstruye
-el sitio, porque no cambia nada visible.
+- Solo se publican los inmuebles En cartera con autorización para publicar (rpc `inmuebles_web`).
+- Editar o retirar un inmueble sigue el mismo camino: el cambio en el panel y luego "Actualizar web".
+- El sitio nunca muestra la dirección exacta: en su lugar va el tipo de inmueble.
 
 ---
 
-## 4. Subir fotos
-
-```mermaid
-sequenceDiagram
-    autonumber
-    actor E as Equipo (panel o script)
-    participant API as depahost-api
-    participant R2 as Cloudflare R2
-
-    E->>API: POST /v1/admin/uploads { filename, contentType }
-    alt R2 no configurado
-        API-->>E: 503
-    else
-        API->>API: arma la clave properties/{uuid}-{nombre}.{ext}
-        API-->>E: { uploadUrl (10 min), publicUrl, key }
-        E->>R2: PUT uploadUrl con el archivo
-        R2-->>E: 200
-        E->>API: PATCH /v1/admin/properties/{id} { images: [{ url: publicUrl, alt }] }
-        API-->>E: 200 · dispara el rebuild
-    end
-```
-
-En el build, Astro descarga la foto desde R2 y la sirve optimizada desde el hosting. Para que
-lo permita, el dominio de las fotos debe estar en `image.remotePatterns` (`*.r2.dev` o
-`PUBLIC_MEDIA_HOST`).
-
----
-
-## 5. Buscar y filtrar
+## 4. Buscar y filtrar
 
 Funciona igual en la portada de Capital y en la página de cada inmobiliaria. No llama al API:
 todas las tarjetas ya están en el HTML y el script solo las muestra u oculta.
@@ -229,7 +203,7 @@ Cómo se arman los chips (en el build, `buildFastFilters`):
 
 ---
 
-## 6. Me interesa
+## 5. Me interesa
 
 ```mermaid
 sequenceDiagram
@@ -250,15 +224,15 @@ sequenceDiagram
     ST-->>B: evento saved-depas-updated
     B->>V: Guardado, corazón lleno, aria-pressed true
     ST-->>HD: mismo evento: actualiza el contador
-    ST-->>DL: mismo evento: ¿pasó a 2 o más? ver flujo 7
+    ST-->>DL: mismo evento: ¿pasó a 2 o más? ver flujo 6
 ```
 
 Si la persona tiene el sitio abierto en otra pestaña, el evento nativo `storage` actualiza esa
-pestaña también.
+pestaña también. La lista no se sincroniza con ningún servidor: en otro navegador empieza vacía.
 
 ---
 
-## 7. Guarda tus inmuebles
+## 6. Guarda tus inmuebles
 
 ### Cuándo aparece (UML de estados)
 
@@ -293,8 +267,8 @@ sequenceDiagram
     actor V as Visitante
     participant D as Diálogo<br/>SaveListDialog + forms.ts
     participant CAT as Catálogo JSON
-    participant API as depahost-api
-    participant DB as PostgreSQL
+    participant P as DH_panel
+    participant SB as Supabase
     participant HD as Header
 
     D->>CAT: loadCatalog()
@@ -303,11 +277,10 @@ sequenceDiagram
     V->>D: nombre, celular, correo opcional, acepta privacidad
     V->>D: Guardar y continuar
     D->>D: validación nativa del navegador
-    D->>API: POST /v1/leads (saved-list)
-    API->>API: Turnstile, honeypot y reglas de contacto
-    API->>DB: INSERT leads
-    API--)API: aviso al equipo y al CRM, sin esperar
-    API-->>D: 201
+    D->>P: POST /api/v1/leads (saved-list)
+    P->>P: honeypot, validación y Turnstile
+    P->>SB: rpc registrar_lead_web: crea o une el lead (canal Web)
+    P-->>D: 201
     D->>D: profile.set("ana lucía") guarda firstName Ana
     D-->>HD: evento profile-updated
     HD->>V: Hola, Ana
@@ -317,9 +290,19 @@ sequenceDiagram
 El cuerpo del `POST` lleva `source: saved-list`, `name`, `phone`, `email` (opcional),
 `propertyIds`, `consent`, `utm` y `turnstileToken`.
 
+### Reglas del panel para cualquier lead
+
+- `source` debe ser `saved-list`, `cart`, `contact`, `intl-form`, `owner-sell` u `owner-rent`.
+- Valida nombre, celular (obligatorio si hay nombre), correo, `propertyIds` (UUID, máximo 20),
+  `details` y `utm`. Un error responde 400 con `issues` por campo.
+- **Honeypot:** si llega el campo oculto `website`, responde 201 sin registrar.
+- **Turnstile:** si hay celular y el panel tiene `TURNSTILE_SECRET_KEY`, verifica el token.
+- **CORS:** solo para los orígenes de `WEB_ORIGINS`.
+- Sin celular solo guarda el interés por los inmuebles. No hay límite de envíos por IP (pendiente).
+
 ---
 
-## 8. Ver el detalle de un inmueble
+## 7. Ver el detalle de un inmueble
 
 ```mermaid
 sequenceDiagram
@@ -333,24 +316,25 @@ sequenceDiagram
     V->>PG: abre la ficha
     PG->>HS: touch(id)
     HS->>LS: mueve el id al final de depahost:viewed-depas (máximo 12)
-    V->>PG: Me interesa (flujo 6)
+    V->>PG: Me interesa (flujo 5)
     V->>PG: Contactar
-    PG-->>V: /mis-inmuebles?agregar={id}: el inmueble entra a Mis inmuebles (flujo 11)
+    PG-->>V: /mis-inmuebles?agregar={id}: el inmueble entra a Mis inmuebles (flujo 10)
 ```
 
 Qué muestra el detalle:
 
-- **Etiqueta:** "De propietario" o "De proyecto · Urbana", más "Reservado" o el badge.
+- **Etiqueta:** "De propietario" (hoy todos los del panel) o "De proyecto · {inmobiliaria}", más
+  "Reservado" o el badge.
 - **Tres datos con ícono:** valor ("Precio de compra" o "Precio desde"), rentabilidad en verde
   ("Estimada") y plazo ("Plazo de inversión").
 - **Características:** dormitorios, baños y m², solo si existen.
 - **Bloque de aliado:** la inmobiliaria con link a sus proyectos, o "Te acompaña · DepaHost
   Capital" si es de propietario.
-- **Inmuebles similares:** los 4 más parecidos según `similarTo` (ver flujo 9).
+- **Inmuebles similares:** los 4 más parecidos según `similarTo` (ver flujo 8).
 
 ---
 
-## 9. Para ti, según lo que has visto
+## 8. Para ti, según lo que has visto
 
 Aparece en `/capital` y, con el título "Parecidos a los que guardaste", en `/mis-inmuebles`.
 
@@ -413,7 +397,7 @@ como referencia (`similarTo`).
 
 ---
 
-## 10. Mis inmuebles
+## 9. Mis inmuebles
 
 ```mermaid
 sequenceDiagram
@@ -436,10 +420,10 @@ sequenceDiagram
         P->>T: clona la plantilla: foto, ubicación, datos con ícono, descripción, precio
     end
     P->>P: resumen: cantidad, lista con precios, inversión total por moneda
-    alt 0 guardados
-        P->>V: mensaje vacío · botón deshabilitado
+    alt nada elegido
+        P->>V: mensaje vacío · botones deshabilitados
     else
-        P->>V: "Empecemos con estos" con el link de WhatsApp armado (flujo 11)
+        P->>V: "Conversemos ahora" con el link de WhatsApp armado (flujo 10)
     end
     V->>P: Quitar (X)
     P->>ST: remove(id) · se vuelve a pintar todo
@@ -450,10 +434,11 @@ La inversión total suma por moneda. Si hay inmuebles en soles y en dólares, mu
 
 ---
 
-## 11. Empecemos con estos: WhatsApp desde Mis inmuebles
+## 10. WhatsApp y sesión desde Mis inmuebles
 
 "Te acompañamos" (`/capital/empecemos`) se unió a Mis inmuebles: la lista es el último paso y desde ahí
-se escribe por WhatsApp. `/capital/empecemos` redirige a `/mis-inmuebles`.
+se escribe por WhatsApp o se pide una sesión. `/capital/empecemos` y `/carrito` redirigen a
+`/mis-inmuebles`.
 
 ```mermaid
 sequenceDiagram
@@ -461,29 +446,35 @@ sequenceDiagram
     actor V as Visitante
     participant P as /mis-inmuebles
     participant ST as Mis inmuebles
-    participant API as depahost-api
+    participant PN as DH_panel
     participant WA as WhatsApp
 
     alt llega desde "Contactar" del detalle
         V->>P: /mis-inmuebles?agregar={id}
         P->>ST: add(id) · limpia la URL
     end
-    P->>V: lista, resumen y "Empecemos con estos" con el mensaje armado
-    V->>P: Empecemos con estos
-    par
-        P-)API: POST /v1/leads { source: cart, propertyIds } (sin esperar)
-    and
-        P->>WA: abre wa.me/{número}?text=…
+    P->>V: lista, resumen y botones con el mensaje armado
+    alt Conversemos ahora
+        par
+            P-)PN: POST /api/v1/leads { source: cart, propertyIds } (sin esperar)
+        and
+            P->>WA: abre wa.me/{número}?text=…
+        end
+    else Programar una sesión
+        V->>P: nombre, celular, día, horario y modalidad (ScheduleDialog)
+        P->>PN: POST /api/v1/leads { source: cart, details.contacto "Programar una sesión" }
+        PN-->>P: 201 · confirmación con día y horario
     end
 ```
 
-- El mensaje incluye cada inmueble con distrito, dirección y precio.
-- Sin inmuebles guardados el botón está deshabilitado y la página invita a explorar.
-- El lead `cart` no lleva datos personales ni captcha. Si el API falla, WhatsApp se abre igual.
+- El mensaje de WhatsApp incluye cada inmueble con distrito, dirección y precio.
+- Sin inmuebles elegidos los botones están deshabilitados y la página invita a explorar.
+- El lead de "Conversemos ahora" no lleva datos personales ni captcha. Si el panel falla, WhatsApp se
+  abre igual.
 
 ---
 
-## 12. Formularios
+## 11. Formularios
 
 ### Flujo común (`scripts/forms.ts`, UML de actividad)
 
@@ -519,93 +510,76 @@ flowchart TB
     K --> L
 ```
 
+El panel hoy no responde 429 (no limita por IP), pero el sitio ya maneja ese caso.
+
 ### Los formularios
 
 | Formulario | Página | Payload | Al terminar |
 |---|---|---|---|
 | Propietarios | `/propietarios` | `owner-sell` si "Vender"; `owner-rent` si "Alquilar" o "Airbnb"; `details: { district, propertyType, intent, expectedPrice }` | "Te escribimos por WhatsApp" + link |
-| Guarda tus inmuebles | Diálogo global | `saved-list` + `propertyIds` | Saludo y paso "Listo" (flujo 7) |
-| Libro de Reclamaciones | `/libro-de-reclamaciones` | `consumer`, `item`, `kind`, `detail`, `request`, `consent` | Constancia en pantalla e imprimible |
+| Guarda tus inmuebles | Diálogo global | `saved-list` + `propertyIds` | Saludo y paso "Listo" (flujo 6) |
+| Programar una sesión | Diálogo de `/mis-inmuebles` | `cart` + `details: { contacto, fecha, horario, modalidad }` | Confirmación con el día y el horario (flujo 10) |
+| Libro de Reclamaciones | `/libro-de-reclamaciones` | `consumer`, `item`, `kind`, `detail`, `request`, `consent` | Hoy falla: ver abajo |
 
 En Propietarios, los botones "Quiero vender" y "Poner en alquiler" eligen la opción del select y
 llevan el foco al nombre. Las URLs `/propietarios#vender` y `#alquiler` también la preseleccionan.
-Si eligen alquiler o Airbnb, el campo de precio pasa a "Alquiler mensual esperado".
+Si eligen alquiler o Airbnb, el campo de precio pasa a "Alquiler mensual esperado". El panel responde
+201 a `owner-rent` pero no lo registra.
 
-### Libro de Reclamaciones (UML de secuencia)
+### Libro de Reclamaciones
+
+El formulario envía `POST /v1/complaints`, pero el panel todavía no implementa esa ruta. Hoy el envío
+termina en error y el sitio ofrece WhatsApp con el mensaje armado. Es un pendiente legal: INDECOPI
+exige un código correlativo y una constancia.
 
 ```mermaid
 sequenceDiagram
     autonumber
     actor C as Consumidor
     participant F as Formulario
-    participant API as depahost-api
-    participant TS as Turnstile
-    participant DB as PostgreSQL
-    participant M as Resend
+    participant P as DH_panel
 
     C->>F: completa datos, bien contratado, detalle y pedido
     opt es menor de edad
         F->>C: pide nombre del padre, madre o apoderado
     end
     C->>F: Enviar reclamo
-    F->>API: POST /v1/complaints
-    API->>TS: verifica el token
-    TS-->>API: ok
-    API->>DB: BEGIN · nextval('complaint_seq')
-    API->>DB: INSERT complaints con código LR-2026-00000N y plazo de 15 días hábiles
-    API->>DB: COMMIT
-    API-)M: constancia al consumidor y al equipo (sin esperar)
-    API-->>F: 201 { code, createdAt, responseDeadline }
-    F->>C: "Recibimos tu reclamo" · código · fecha límite · Imprimir
-```
-
-### Estados de un reclamo
-
-```mermaid
-stateDiagram-v2
-    [*] --> pending : POST /v1/complaints
-    pending --> answered : POST /v1/admin/complaints/{id}/response
-    answered --> answered : se puede volver a responder
-    note right of pending
-        response_deadline = fecha de Lima + 15 días hábiles
-        (sábados y domingos no cuentan)
-    end note
-    note right of answered
-        Se guarda responded_at y se envía
-        la respuesta por correo al consumidor
-    end note
+    F->>P: POST /v1/complaints
+    P-->>F: la ruta no existe
+    F->>C: mensaje de error + link de WhatsApp
+    Note over F: cuando exista la ruta, el 201 { code, responseDeadline }<br/>muestra la constancia imprimible
 ```
 
 ---
 
-## 13. Cambiar el contrato del API
+## 12. Cambiar el contrato del API
+
+El contrato vive en este repo, en `openapi/depahost-api.json`, y es la fuente de verdad. El panel
+implementa a mano la parte que el sitio usa.
 
 ```mermaid
 sequenceDiagram
     autonumber
     actor Dev as Desarrollador
-    participant API as Repo depahost-api
-    participant FE as Repo depahostcapital
+    participant FE as Repo DHC_landing
     participant TS as TypeScript
+    participant P as Repo DH_panel
 
-    Dev->>API: cambia un esquema Zod (por ejemplo, agrega un campo)
-    opt cambia la base de datos
-        Dev->>API: edita db/schema.ts y corre pnpm db:generate
-    end
-    Dev->>API: pnpm test · pnpm openapi:export
-    API->>API: escribe openapi.json
-    Note over API: la CI falla si openapi.json no se regeneró
-    Dev->>FE: pnpm api:sync
-    FE->>API: copia ../depahost-api/openapi.json (o OPENAPI_URL)
+    Dev->>FE: edita openapi/depahost-api.json
+    Dev->>FE: pnpm api:types
     FE->>FE: openapi-typescript genera src/lib/api/schema.d.ts
     Dev->>FE: pnpm check
     TS-->>Dev: errores donde el sitio usa algo que cambió
     Dev->>FE: ajusta content.config.ts, loaders y componentes
+    Dev->>P: ajusta app/api/v1/properties o app/api/v1/leads
+    opt probar sin el panel
+        Dev->>FE: pnpm api:mock (Prism en :4010)
+    end
 ```
 
 ---
 
-## 14. Cookies y analítica
+## 13. Cookies y analítica
 
 ```mermaid
 stateDiagram-v2
@@ -635,19 +609,20 @@ se carga si hay `PUBLIC_SENTRY_DSN`.
 
 ---
 
-## 15. Qué pasa cuando algo falla
+## 14. Qué pasa cuando algo falla
 
 | Situación | Qué pasa | Qué ve la persona |
 |---|---|---|
-| El API no responde durante el build | El build falla y el hosting mantiene la versión anterior | Nada cambia |
-| El API cambió de forma | El esquema de `content.config.ts` rechaza los datos y el build falla | Nada cambia |
+| El panel no responde durante el build | El build falla y Cloudflare mantiene la versión anterior | Nada cambia |
+| La respuesta del panel cambió de forma | El esquema de `content.config.ts` rechaza los datos y el build falla | Nada cambia |
+| Faltan `API_URL` o `PUBLIC_MEDIA_HOST` en Cloudflare | El build falla a propósito (`WORKERS_CI`) | Nada cambia |
 | `PUBLIC_API_URL` vacío | Los formularios no envían y ofrecen WhatsApp | "Por ahora recibimos estas consultas por WhatsApp" |
-| El API cae mientras alguien llena un formulario | Error de red | Mensaje de error + link de WhatsApp con su mensaje |
-| Envía demasiadas veces | 429 | "Espera un minuto" |
-| Un campo no pasa la validación del API | 400 con `issues` | El campo se marca con el mensaje del API |
+| El panel cae mientras alguien llena un formulario | Error de red | Mensaje de error + link de WhatsApp con su mensaje |
+| Un campo no pasa la validación del panel | 400 con `issues` | El campo se marca con el mensaje del panel |
 | Falla Turnstile | 400 | "No pudimos verificar que no eres un robot…" |
+| Envía un reclamo | La ruta no existe en el panel | Mensaje de error + link de WhatsApp |
 | No carga `/data/properties.json` | Mis inmuebles muestra un aviso; Para ti queda oculta | "No pudimos cargar tus inmuebles guardados" |
 | Un inmueble guardado ya no existe | Se quita solo de Mis inmuebles | No aparece |
 | `localStorage` bloqueado | Las listas funcionan en memoria en esa página | Mis inmuebles se vacía al recargar |
-| Falla el correo o el CRM | El lead o reclamo ya quedó guardado; se registra en el log | Nada |
-| Falla el deploy hook | Se registra en el log | El cambio no aparece hasta el próximo build |
+| "Actualizar web" falla | El panel muestra el error (falta `CLOUDFLARE_DEPLOY_HOOK_URL` o Cloudflare lo rechazó) | El cambio no aparece hasta el próximo build |
+| Rebuild justo después de un cambio | La caché del panel (`s-maxage=300`) puede servir el catálogo anterior | El cambio aparece en el siguiente build |

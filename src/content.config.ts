@@ -1,7 +1,8 @@
 // Colecciones de datos del sitio. El esquema refleja la respuesta de la API (el panel de DepaHost, /api/v1):
 // si la API cambia de forma, el build falla aquí en vez de romper una página.
 // Los inmuebles vienen solo del panel; sin API_URL, de src/content/properties.json (vacío). Las inmobiliarias
-// aliadas y los supuestos de financiamiento viven solo en el sitio, en src/content/*.json.
+// aliadas (hoy ninguna) y los supuestos de financiamiento viven solo en el sitio, en src/content/*.json.
+// Las pruebas e2e cambian la carpeta con CATALOG_DIR para usar su catálogo de ejemplo (tests/e2e/catalogo).
 import { defineCollection } from 'astro:content'
 import { file } from 'astro/loaders'
 import { z } from 'astro/zod'
@@ -13,11 +14,12 @@ type ApiPropertyPage = components['schemas']['PropertyPage']
 
 // Se lee en el build. Ver .env.example
 const API_URL = import.meta.env.API_URL
+const CATALOG_DIR = process.env.CATALOG_DIR ?? 'src/content'
 
 const properties = defineCollection({
   loader: hybridLoader({
     name: 'properties',
-    localFile: 'src/content/properties.json',
+    localFile: `${CATALOG_DIR}/properties.json`,
     apiUrl: API_URL,
     async fetchRemote(apiUrl) {
       const all: ApiProperty[] = []
@@ -85,7 +87,7 @@ const financing = defineCollection({
 
 // Inmobiliarias aliadas: tienen su página /capital/aliados/{slug}
 const developers = defineCollection({
-  loader: file('src/content/developers.json'),
+  loader: file(`${CATALOG_DIR}/developers.json`),
   schema: z.object({
     id: z.string(),
     slug: z.string(),

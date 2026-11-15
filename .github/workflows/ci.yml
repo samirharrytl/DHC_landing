@@ -10,9 +10,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # Solo calidad de código. Las pruebas funcionales (pnpm test, pnpm test:e2e) se corren a mano por ahora.
+  # Calidad de código y pruebas unitarias. Las pruebas en navegador (pnpm test:e2e) se corren a mano por ahora.
   check:
-    name: Formato, lint, tipos y build
+    name: Formato, lint, tipos, pruebas y build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -31,6 +31,7 @@ jobs:
       - run: pnpm format:check
       - run: pnpm lint
       - run: pnpm check
+      - run: pnpm test
       - run: pnpm build
       - uses: actions/upload-artifact@v7
         with:

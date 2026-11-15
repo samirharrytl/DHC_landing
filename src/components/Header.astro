@@ -5,9 +5,7 @@ import Logo from './Logo.astro'
 import LangSwitch from './LangSwitch.astro'
 import WhatsAppIcon from './WhatsAppIcon.astro'
 import CartIcon from './CartIcon.astro'
-import Icon from './Icon.astro'
 import { waLink } from '../data/contacto'
-import { PUBLIC_LOGIN_ENABLED, PUBLIC_PANEL_URL } from 'astro:env/client'
 
 // Menú principal: comprar (Capital y Mis inmuebles) y vender (Propietarios).
 // `section`: páginas en las que el link queda marcado, aunque no sea la página exacta
@@ -26,7 +24,6 @@ const current = (link: (typeof links)[number]) =>
     : link.section.some((s) => path === s || path.startsWith(`${s}/`))
       ? 'true'
       : undefined
-const panelUrl = PUBLIC_PANEL_URL?.replace(/\/$/, '')
 const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
 ---
 
@@ -48,21 +45,13 @@ const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
     </nav>
 
     <div class="actions">
-      <!-- Saludo: con la cuenta (lleva al panel) o con el nombre de "Guarda tus inmuebles" -->
-      <a class="greeting" href="/mis-inmuebles" data-greeting data-panel-url={panelUrl} hidden>
+      <!-- Saludo con el nombre que dejó en "Guarda tus inmuebles" -->
+      <a class="greeting" href="/mis-inmuebles" data-greeting hidden>
         <span class="avatar" aria-hidden="true" data-greeting-initial></span>
         <span class="greeting-text">
           Hola, <span data-greeting-name></span>
         </span>
       </a>
-
-      <!-- Ingresar al panel (solo si hay panel configurado y no hay sesión) -->
-      {PUBLIC_LOGIN_ENABLED && panelUrl && (
-        <a class="login" href={`${panelUrl}/ingresar`} data-login>
-          <Icon name="lock" size={20} />
-          <span class="login-text">Ingresar</span>
-        </a>
-      )}
 
       <!-- Acceso a los inmuebles guardados -->
       <a class="cart" href="/mis-inmuebles" aria-label="Mis inmuebles" data-cart-link>
@@ -147,11 +136,6 @@ const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
     </nav>
 
     <div class="drawer-bottom">
-      {PUBLIC_LOGIN_ENABLED && panelUrl && (
-        <a class="btn btn--secondary btn--block" href={`${panelUrl}/ingresar`} data-login-drawer>
-          Ingresar a mi cuenta
-        </a>
-      )}
       <LangSwitch />
       <a class="btn btn--whatsapp btn--block" href={whatsapp} target="_blank" rel="noopener noreferrer">
         <WhatsAppIcon />
@@ -175,8 +159,7 @@ const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
 
 <script>
   import { getSavedStore } from '../lib/saved-store'
-  import { firstNameOf, getProfileStore, PROFILE_EVENT } from '../lib/profile'
-  import { getAccount, syncSavedWithAccount } from '../lib/account'
+  import { getProfileStore, PROFILE_EVENT } from '../lib/profile'
 
   // ---------- Mis inmuebles: contador ----------
   // Los botones "Me interesa" viven en cada tarjeta (src/scripts/saved-buttons.ts); aquí solo el contador.
@@ -196,32 +179,19 @@ const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
   store.subscribe(renderCount)
   renderCount(store.list())
 
-  // ---------- Saludo e "Ingresar" ----------
-  // Con sesión: "Hola, {nombre de la cuenta}" lleva al panel y se oculta "Ingresar".
-  // Sin sesión: saludo con el nombre de "Guarda tus inmuebles", si lo dejó.
+  // ---------- Saludo ----------
+  // "Hola, {nombre}" con el nombre de "Guarda tus inmuebles", si lo dejó.
   const profile = getProfileStore()
-  let accountName: string | undefined
   const renderGreeting = () => {
-    const name = accountName ?? profile.get()?.firstName
+    const name = profile.get()?.firstName
     document.querySelectorAll<HTMLAnchorElement>('[data-greeting]').forEach((el) => {
       el.hidden = !name
       el.querySelector('[data-greeting-name]')!.textContent = name ?? ''
       el.querySelector('[data-greeting-initial]')!.textContent = name?.charAt(0) ?? ''
-      if (accountName && el.dataset.panelUrl) el.href = el.dataset.panelUrl
-    })
-    document.querySelectorAll<HTMLElement>('[data-login], [data-login-drawer]').forEach((el) => {
-      el.hidden = Boolean(accountName)
     })
   }
   window.addEventListener(PROFILE_EVENT, renderGreeting)
   renderGreeting()
-
-  getAccount().then((user) => {
-    if (!user) return
-    accountName = firstNameOf(user.name)
-    renderGreeting()
-    void syncSavedWithAccount()
-  })
 
   // ---------- Sombra del header al hacer scroll ----------
   // En vez de leer window.scrollY (obliga al navegador a recalcular la página),
@@ -463,32 +433,6 @@ const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
     font-weight: var(--fw-semibold);
   }
 
-  /* "Ingresar" con candado (desde 640px; en móvil va en el menú) */
-  .login {
-    display: none;
-    align-items: center;
-    gap: var(--space-2);
-    min-height: var(--control-h-sm);
-    padding: 0 var(--space-2);
-    border-radius: var(--radius-md);
-    color: var(--color-text);
-    font-size: var(--fs-15);
-    text-decoration: none;
-    white-space: nowrap;
-  }
-  .login :global(svg) {
-    color: var(--color-navy-800);
-  }
-  .login:hover {
-    background: var(--color-navy-50);
-  }
-  .login[hidden] {
-    display: none !important;
-  }
-  .drawer-bottom [hidden] {
-    display: none;
-  }
-
   /* Acceso a Mis inmuebles con icono de carpeta y contador */
   .cart {
     position: relative;
@@ -557,17 +501,15 @@ const whatsapp = waLink('Hola, les escribo desde la web de Depa Host Perú.')
   /* Tablet: aparece el botón de WhatsApp */
   @media (min-width: 640px) {
     .wa,
-    .greeting,
-    .login {
+    .greeting {
       display: inline-flex;
     }
   }
 
-  /* Entre 1024 y 1279 px no caben menú, saludo y WhatsApp: saludo e "Ingresar" solo con ícono
+  /* Entre 1024 y 1279 px no caben menú, saludo y WhatsApp: el saludo va solo con ícono
      (el texto queda para lectores de pantalla) */
   @media (min-width: 1024px) and (max-width: 1279px) {
-    .greeting-text,
-    .login-text {
+    .greeting-text {
       position: absolute;
       width: 1px;
       height: 1px;
