@@ -1601,7 +1601,7 @@ export interface paths {
             parameters: {
                 query?: {
                     /** @description intl-form: formulario en inglés · owner-*: propietarios · cart: "Conversemos ahora" o "Programar una sesión" de Mis inmuebles · saved-list: "Guarda tus inmuebles" */
-                    source?: "intl-form" | "owner-sell" | "owner-rent" | "cart" | "contact" | "saved-list";
+                    source?: "intl-form" | "owner-sell" | "owner-rent" | "cart" | "contact" | "saved-list" | "ad-buy" | "ad-sell";
                     /** @description new: sin contactar · contacted: en conversación · closed: cerrado */
                     status?: "new" | "contacted" | "closed";
                     page?: number;
@@ -2679,10 +2679,10 @@ export interface components {
         };
         LeadCreateInput: {
             /**
-             * @description intl-form: formulario en inglés · owner-*: propietarios · cart: "Conversemos ahora" o "Programar una sesión" de Mis inmuebles · saved-list: "Guarda tus inmuebles"
+             * @description intl-form: formulario en inglés · owner-*: propietarios · cart: "Conversemos ahora" o "Programar una sesión" de Mis inmuebles · saved-list: "Guarda tus inmuebles" · ad-buy / ad-sell: formulario /registro de las pautas digitales (quiere comprar / vender)
              * @enum {string}
              */
-            source: "intl-form" | "owner-sell" | "owner-rent" | "cart" | "contact" | "saved-list";
+            source: "intl-form" | "owner-sell" | "owner-rent" | "cart" | "contact" | "saved-list" | "ad-buy" | "ad-sell";
             name?: string;
             /** Format: email */
             email?: string;
@@ -2704,6 +2704,8 @@ export interface components {
              * @default false
              */
             consent: boolean;
+            /** @description Aceptó recibir novedades y ofertas (publicidad). Si no se envía, cuenta como false */
+            marketingConsent?: boolean;
             utm?: {
                 source?: string;
                 medium?: string;
@@ -2728,7 +2730,7 @@ export interface components {
              * @description intl-form: formulario en inglés · owner-*: propietarios · cart: "Conversemos ahora" o "Programar una sesión" de Mis inmuebles · saved-list: "Guarda tus inmuebles"
              * @enum {string}
              */
-            source: "intl-form" | "owner-sell" | "owner-rent" | "cart" | "contact" | "saved-list";
+            source: "intl-form" | "owner-sell" | "owner-rent" | "cart" | "contact" | "saved-list" | "ad-buy" | "ad-sell";
             /**
              * @description new: sin contactar · contacted: en conversación · closed: cerrado
              * @enum {string}
@@ -2955,7 +2957,7 @@ export interface components {
             role: ("buyer" | "seller") | null;
             /** @description Estado de su consulta más reciente */
             leadStatus: ("new" | "contacted" | "closed") | null;
-            sources: ("intl-form" | "owner-sell" | "owner-rent" | "cart" | "contact" | "saved-list")[];
+            sources: ("intl-form" | "owner-sell" | "owner-rent" | "cart" | "contact" | "saved-list" | "ad-buy" | "ad-sell")[];
             lastActivityAt: string | null;
             profile: {
                 /** @description Distritos de lo que le interesó, del más frecuente al menos */
@@ -3687,10 +3689,10 @@ export interface components {
         };
         LeadCreate: {
             /**
-             * @description intl-form: formulario en inglés · owner-*: propietarios · cart: "Conversemos ahora" o "Programar una sesión" de Mis inmuebles · saved-list: "Guarda tus inmuebles"
+             * @description intl-form: formulario en inglés · owner-*: propietarios · cart: "Conversemos ahora" o "Programar una sesión" de Mis inmuebles · saved-list: "Guarda tus inmuebles" · ad-buy / ad-sell: formulario /registro de las pautas digitales (quiere comprar / vender)
              * @enum {string}
              */
-            source: "intl-form" | "owner-sell" | "owner-rent" | "cart" | "contact" | "saved-list";
+            source: "intl-form" | "owner-sell" | "owner-rent" | "cart" | "contact" | "saved-list" | "ad-buy" | "ad-sell";
             name?: string;
             /** Format: email */
             email?: string;
@@ -3712,6 +3714,8 @@ export interface components {
              * @default false
              */
             consent: boolean;
+            /** @description Aceptó recibir novedades y ofertas (publicidad). Si no se envía, cuenta como false */
+            marketingConsent?: boolean;
             utm?: {
                 source?: string;
                 medium?: string;
@@ -3736,7 +3740,7 @@ export interface components {
              * @description intl-form: formulario en inglés · owner-*: propietarios · cart: "Conversemos ahora" o "Programar una sesión" de Mis inmuebles · saved-list: "Guarda tus inmuebles"
              * @enum {string}
              */
-            source: "intl-form" | "owner-sell" | "owner-rent" | "cart" | "contact" | "saved-list";
+            source: "intl-form" | "owner-sell" | "owner-rent" | "cart" | "contact" | "saved-list" | "ad-buy" | "ad-sell";
             /**
              * @description new: sin contactar · contacted: en conversación · closed: cerrado
              * @enum {string}
@@ -3963,7 +3967,7 @@ export interface components {
             role: ("buyer" | "seller") | null;
             /** @description Estado de su consulta más reciente */
             leadStatus: ("new" | "contacted" | "closed") | null;
-            sources: ("intl-form" | "owner-sell" | "owner-rent" | "cart" | "contact" | "saved-list")[];
+            sources: ("intl-form" | "owner-sell" | "owner-rent" | "cart" | "contact" | "saved-list" | "ad-buy" | "ad-sell")[];
             lastActivityAt: string | null;
             profile: {
                 /** @description Distritos de lo que le interesó, del más frecuente al menos */

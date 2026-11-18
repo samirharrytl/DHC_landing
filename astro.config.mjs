@@ -42,8 +42,11 @@ export default defineConfig({
     sitemap({
       // "Mis inmuebles" depende del navegador de cada persona y las direcciones viejas solo redirigen:
       // no se indexan
+      // /registro es el destino de las pautas digitales: tampoco se indexa
       filter: (page) =>
-        !/\/(carrito|mis-depas|mis-inmuebles|capital\/empecemos|capital\/depas)\/?$/.test(page),
+        !/\/(carrito|mis-depas|mis-inmuebles|capital\/empecemos|capital\/depas|registro|registro\/gracias)\/?$/.test(
+          page,
+        ),
     }),
   ],
 

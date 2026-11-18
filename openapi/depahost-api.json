@@ -2271,9 +2271,11 @@
               "owner-rent",
               "cart",
               "contact",
-              "saved-list"
+              "saved-list",
+              "ad-buy",
+              "ad-sell"
             ],
-            "description": "intl-form: formulario en inglés · owner-*: propietarios · cart: \"Conversemos ahora\" o \"Programar una sesión\" de Mis inmuebles · saved-list: \"Guarda tus inmuebles\""
+            "description": "intl-form: formulario en inglés · owner-*: propietarios · cart: \"Conversemos ahora\" o \"Programar una sesión\" de Mis inmuebles · saved-list: \"Guarda tus inmuebles\" · ad-buy / ad-sell: formulario /registro de las pautas digitales (quiere comprar / vender)"
           },
           "name": {
             "type": "string",
@@ -2341,6 +2343,10 @@
           "consent": {
             "default": false,
             "description": "Aceptó la política de privacidad",
+            "type": "boolean"
+          },
+          "marketingConsent": {
+            "description": "Aceptó recibir novedades y ofertas (publicidad). Si no se envía, cuenta como false",
             "type": "boolean"
           },
           "utm": {
@@ -2417,7 +2423,9 @@
               "owner-rent",
               "cart",
               "contact",
-              "saved-list"
+              "saved-list",
+              "ad-buy",
+              "ad-sell"
             ],
             "description": "intl-form: formulario en inglés · owner-*: propietarios · cart: \"Conversemos ahora\" o \"Programar una sesión\" de Mis inmuebles · saved-list: \"Guarda tus inmuebles\""
           },
@@ -3474,7 +3482,9 @@
                 "owner-rent",
                 "cart",
                 "contact",
-                "saved-list"
+                "saved-list",
+                "ad-buy",
+                "ad-sell"
               ],
               "description": "intl-form: formulario en inglés · owner-*: propietarios · cart: \"Conversemos ahora\" o \"Programar una sesión\" de Mis inmuebles · saved-list: \"Guarda tus inmuebles\""
             }
@@ -6687,9 +6697,11 @@
               "owner-rent",
               "cart",
               "contact",
-              "saved-list"
+              "saved-list",
+              "ad-buy",
+              "ad-sell"
             ],
-            "description": "intl-form: formulario en inglés · owner-*: propietarios · cart: \"Conversemos ahora\" o \"Programar una sesión\" de Mis inmuebles · saved-list: \"Guarda tus inmuebles\""
+            "description": "intl-form: formulario en inglés · owner-*: propietarios · cart: \"Conversemos ahora\" o \"Programar una sesión\" de Mis inmuebles · saved-list: \"Guarda tus inmuebles\" · ad-buy / ad-sell: formulario /registro de las pautas digitales (quiere comprar / vender)"
           },
           "name": {
             "type": "string",
@@ -6757,6 +6769,10 @@
           "consent": {
             "default": false,
             "description": "Aceptó la política de privacidad",
+            "type": "boolean"
+          },
+          "marketingConsent": {
+            "description": "Aceptó recibir novedades y ofertas (publicidad). Si no se envía, cuenta como false",
             "type": "boolean"
           },
           "utm": {
@@ -6838,7 +6854,9 @@
               "owner-rent",
               "cart",
               "contact",
-              "saved-list"
+              "saved-list",
+              "ad-buy",
+              "ad-sell"
             ],
             "description": "intl-form: formulario en inglés · owner-*: propietarios · cart: \"Conversemos ahora\" o \"Programar una sesión\" de Mis inmuebles · saved-list: \"Guarda tus inmuebles\""
           },
@@ -7916,7 +7934,9 @@
                 "owner-rent",
                 "cart",
                 "contact",
-                "saved-list"
+                "saved-list",
+                "ad-buy",
+                "ad-sell"
               ],
               "description": "intl-form: formulario en inglés · owner-*: propietarios · cart: \"Conversemos ahora\" o \"Programar una sesión\" de Mis inmuebles · saved-list: \"Guarda tus inmuebles\""
             }
@@ -10428,7 +10448,9 @@
                 "owner-rent",
                 "cart",
                 "contact",
-                "saved-list"
+                "saved-list",
+                "ad-buy",
+                "ad-sell"
               ]
             },
             "in": "query",

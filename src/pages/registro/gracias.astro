@@ -1,0 +1,33 @@
+---
+// Llega aquí quien envió el formulario de /registro. Meta y Google Ads pueden contar esta URL como conversión.
+import BaseLayout from '../../layouts/BaseLayout.astro'
+---
+
+<BaseLayout title="Gracias" description="Recibimos tus datos." noindex>
+  <section class="container thanks">
+    <h1 class="display">¡Gracias! Recibimos tus datos</h1>
+    <p class="lead">Te escribimos por WhatsApp para ayudarte a comprar o vender tu inmueble.</p>
+    <div class="btn-group">
+      <a class="btn btn--primary" href="/capital">
+        Ver inmuebles en venta
+      </a>
+      <a class="btn btn--secondary" href="/">
+        Ir al inicio
+      </a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .thanks {
+    display: grid;
+    gap: var(--space-5);
+    justify-items: start;
+    padding-block: var(--space-10);
+  }
+  .thanks h1 {
+    font-size: clamp(2rem, 1.5rem + 2.4vw, 3.25rem);
+    line-height: 1.05;
+    color: var(--color-navy-800);
+  }
+</style>

@@ -46,6 +46,12 @@ body {
   line-height: var(--lh-body);
   color: var(--color-text);
   background: var(--color-bg);
+  /* Columna de alto mínimo = la pantalla: el <main> crece (BaseLayout) y el footer queda abajo
+     aunque la página sea corta. 100vh primero para navegadores sin dvh. */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
 }
 
 img {

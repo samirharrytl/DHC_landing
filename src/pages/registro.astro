@@ -1,0 +1,62 @@
+---
+// Destino de todas las pautas digitales (Meta, Google…). Una sola URL: cada campaña se reconoce por los
+// utm_* del link del anuncio, que el formulario envía al panel. No se indexa (no está en el sitemap).
+import BaseLayout from '../layouts/BaseLayout.astro'
+import LeadCaptureForm from '../components/LeadCaptureForm.astro'
+
+const points = [
+  { title: 'Si vendes', text: 'Te sugerimos el precio con el que tu inmueble se mueve y lo publicamos.' },
+  { title: 'Si compras', text: 'Te mostramos inmuebles en Lima según lo que buscas y tu presupuesto.' },
+]
+---
+
+<BaseLayout
+  title="Compra o vende tu inmueble"
+  description="Déjanos tus datos y te escribimos por WhatsApp para ayudarte a comprar o vender tu inmueble en Lima."
+  noindex
+>
+  <section class="container campaign">
+    <div class="campaign-copy">
+      <h1 class="display">Compra o vende tu inmueble en Lima</h1>
+      <p class="lead">Déjanos tus datos y te escribimos por WhatsApp para ayudarte.</p>
+      <ul>
+        {points.map((point) => (
+          <li>
+            <strong>{point.title}:</strong> {point.text}
+          </li>
+        ))}
+      </ul>
+    </div>
+    <LeadCaptureForm idPrefix="registro" />
+  </section>
+</BaseLayout>
+
+<style>
+  .campaign {
+    display: grid;
+    gap: var(--space-8);
+    padding-block: var(--space-8) var(--space-10);
+  }
+  .campaign-copy h1 {
+    font-size: clamp(2.25rem, 1.5rem + 3vw, 4rem);
+    line-height: 1.05;
+    color: var(--color-navy-800);
+  }
+  .campaign-copy .lead {
+    max-width: 32rem;
+    margin-top: var(--space-5);
+  }
+  .campaign-copy ul {
+    display: grid;
+    gap: var(--space-3);
+    max-width: 32rem;
+    margin: var(--space-6) 0 0;
+    padding-left: var(--space-5);
+  }
+  @media (min-width: 960px) {
+    .campaign {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 28rem);
+      align-items: start;
+    }
+  }
+</style>
