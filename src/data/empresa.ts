@@ -2,8 +2,8 @@
 // TODO: completar con los datos reales (también en las variables COMPANY_* de la API).
 export const COMPANY = {
   name: 'Depa Host Perú',
-  legalName: '[Razón social pendiente]',
-  ruc: '[pendiente]',
+  legalName: 'GRUPO DEPA HOST CAPITAL S.A.C.S.',
+  ruc: '20616738781',
   address: '[Dirección fiscal pendiente]',
-  email: 'admin@depahostperu.com',
+  email: 'administrador@depahostcapital.com',
 }
